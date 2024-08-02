@@ -205,50 +205,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &87519674
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 87519675}
-  - component: {fileID: 87519676}
-  m_Layer: 0
-  m_Name: Drop
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &87519675
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87519674}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1703776084}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &87519676
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87519674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25d93f9b2c4ece842a361129cbccc8a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &107869226
 GameObject:
   m_ObjectHideFlags: 0
@@ -450,7 +406,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 162.1
+  m_fontSize: 162.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6530,6 +6486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e72c357f5c637642b1b17ac1b317ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _initOrder: 0
   _canvasGroup: {fileID: 1964262984}
   _canvas: {fileID: 1964262987}
   _firstSlot: {fileID: 814567761783011798}
@@ -17810,7 +17767,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
-  _wavesToDrop: 3
+  _wavesToDrop: 2
   _selector: {fileID: 451053694}
   _drops:
   - {fileID: 11400000, guid: f260894ac0b24ca4199cf83103e9334a, type: 2}
@@ -18082,6 +18039,7 @@ MonoBehaviour:
   - {fileID: 1359073987}
   - {fileID: 1390426417}
   - {fileID: 1140782398}
+  - {fileID: 451053694}
 --- !u!1 &1198772315
 GameObject:
   m_ObjectHideFlags: 0
@@ -29300,7 +29258,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1698639998}
-  - component: {fileID: 1698639999}
   m_Layer: 5
   m_Name: ToDrop
   m_TagString: Untagged
@@ -29329,18 +29286,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1698639999
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1698639997}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3553a84206c4fa74aa5b35fa2ce84687, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1703230131
 GameObject:
   m_ObjectHideFlags: 0
@@ -29420,7 +29365,6 @@ Transform:
   - {fileID: 517946793}
   - {fileID: 1792699404}
   - {fileID: 1359073988}
-  - {fileID: 87519675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1713936180
