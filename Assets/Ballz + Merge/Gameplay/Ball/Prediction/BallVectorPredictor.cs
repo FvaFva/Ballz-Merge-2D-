@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class BallVectorPredictor : CyclicBehaviour
+public class BallVectorPredictor : CyclicBehaviour, IInitializable
 {
     private const float StepTime = 0.02f;
     private const int MaxStepCount = 400;
@@ -33,7 +33,7 @@ public class BallVectorPredictor : CyclicBehaviour
         _vectorReader.Changed -= Predict;
     }
 
-    public override void Init()
+    public void Init()
     {
         _ballSimulated = _factory.CreateBall(_ballOriginal);
         _physicsScene = _factory.GetPhysicScene();

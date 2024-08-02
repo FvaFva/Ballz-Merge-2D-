@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-public class PlayerScore : CyclicBehaviour, ILevelStarter, ILevelFinisher
+public class PlayerScore : CyclicBehaviour, ILevelStarter, ILevelFinisher, IInitializable
 {
     private const string ScoreName = "Score";
 
@@ -23,7 +23,7 @@ public class PlayerScore : CyclicBehaviour, ILevelStarter, ILevelFinisher
         _blocks.WaveLoaded -= OnWaveLoaded;
     }
 
-    public override void Init()
+    public void Init()
     {
         BestScore = PlayerPrefs.GetInt(ScoreName, 0);
         ScoreChanged?.Invoke();

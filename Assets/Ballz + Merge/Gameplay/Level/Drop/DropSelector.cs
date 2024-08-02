@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-public class DropSelector : MonoBehaviour
+public class DropSelector : CyclicBehaviour, ILevelFinisher
 {
     private const float AnimationTime = 0.5f;
 
@@ -33,11 +33,22 @@ public class DropSelector : MonoBehaviour
         _canvasGroup.DOFade(1, AnimationTime);
     }
 
+    public void FinishLevel()
+    {
+        _canvasGroup.alpha = 0;
+        _canvas.enabled = false;
+    }
+
     private void OnSelect(Drop drop, float count)
+    {
+        Hide();
+        DropSelected?.Invoke(drop.WaveDropType, count);
+    }
+
+    private void Hide ()
     {
         _firstSlot.Show(null);
         _secondSlot.Show(null);
         _canvasGroup.DOFade(0, AnimationTime).OnComplete(() => _canvas.enabled = false);
-        DropSelected?.Invoke(drop.WaveDropType, count);
     }
 }

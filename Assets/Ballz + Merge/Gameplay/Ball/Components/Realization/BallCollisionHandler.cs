@@ -5,6 +5,7 @@ using UnityEngine;
 public class BallCollisionHandler : BallComponent
 {
     private const float MinDelta = 0.02f;
+    private const float ExtraFlip = 0.4f;
 
     private Rigidbody2D _rb;
     private Transform _transform;
@@ -37,19 +38,25 @@ public class BallCollisionHandler : BallComponent
     {
         direction.Normalize();
 
+
         if (Math.Abs(direction.y) < MinDelta)
         {
             Vector2 correctVelocity = _rb.velocity;
-            correctVelocity.y = Math.Sign(correctVelocity.y) * (Math.Abs(correctVelocity.y) + MinDelta);
-            correctVelocity.x = Math.Sign(correctVelocity.x) * (Math.Abs(correctVelocity.x) - MinDelta);
+            correctVelocity.y = GetSign() * (Math.Abs(correctVelocity.y) + ExtraFlip);
+            correctVelocity.x = Math.Sign(correctVelocity.x) * (Math.Abs(correctVelocity.x) - ExtraFlip);
             _rb.velocity = correctVelocity;
         }
         else if (Math.Abs(direction.x) < MinDelta)
         {
             Vector2 correctVelocity = _rb.velocity;
-            correctVelocity.y = Math.Sign(correctVelocity.y) * (Math.Abs(correctVelocity.y) - MinDelta);
-            correctVelocity.x = Math.Sign(correctVelocity.x) * (Math.Abs(correctVelocity.x) + MinDelta);
+            correctVelocity.x = GetSign() * (Math.Abs(correctVelocity.x) + ExtraFlip);
+            correctVelocity.y = Math.Sign(correctVelocity.y) * (Math.Abs(correctVelocity.y) - ExtraFlip);
             _rb.velocity = correctVelocity;
         }
+    }
+
+    private int GetSign()
+    {
+        return UnityEngine.Random.Range(0, 2) == 0 ? -1 : 1;
     }
 }

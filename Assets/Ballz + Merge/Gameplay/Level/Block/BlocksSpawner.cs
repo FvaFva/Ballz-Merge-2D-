@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Zenject;
 
-public class BlocksSpawner : CyclicBehaviour, ILevelStarter
+public class BlocksSpawner : CyclicBehaviour, ILevelStarter, IInitializable
 {
     [SerializeField] private int _countPreload;
     [SerializeField] private Transform _blockParent;
@@ -19,7 +19,7 @@ public class BlocksSpawner : CyclicBehaviour, ILevelStarter
     private List<Block> _allBlocks = new List<Block>();
     private int _currentWave;
 
-    public override void Init()
+    public void Init()
     {
         for(int i  = 0; i < _countPreload; i++)
             _blocks.Enqueue(Generate());

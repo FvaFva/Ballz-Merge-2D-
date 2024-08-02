@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
@@ -22,7 +23,8 @@ public class GameCycler: MonoBehaviour
     {
         foreach (var cyclical in _components.OrderBy(item => item.Order))
         {
-            cyclical.Init();
+            if (cyclical is IInitializable initializable)
+                initializable.Init();
 
             if(cyclical is ILevelFinisher finisher)
                 _finishers.Add(finisher);
@@ -41,13 +43,13 @@ public class GameCycler: MonoBehaviour
     private void OnEnable()
     {
         _blocksBus.BlockFinished += OnBlockFinished;
-        _ball.EnterAim += OnWaveFinish;
+        _ball.EnterAim += OnBallEnterAim;
     }
 
     private void OnDisable()
     {
         _blocksBus.BlockFinished -= OnBlockFinished;
-        _ball.EnterAim -= OnWaveFinish;
+        _ball.EnterAim -= OnBallEnterAim;
     }
 
     private void OnDestroy()
@@ -55,7 +57,7 @@ public class GameCycler: MonoBehaviour
         _userInput.Disable();
     }
 
-    private void OnWaveFinish()
+    private void OnBallEnterAim()
     {
         foreach(IWaveUpdater waver in _wavers)
             waver.UpdateWave();
@@ -63,7 +65,14 @@ public class GameCycler: MonoBehaviour
 
     private void OnBlockFinished()
     {
-        foreach(ILevelFinisher finisher in _finishers)
+        StartCoroutine(DelayedLevelFinish());
+    }
+
+    private IEnumerator DelayedLevelFinish()
+    {
+        yield return new WaitForFixedUpdate();
+
+        foreach (ILevelFinisher finisher in _finishers)
             finisher.FinishLevel();
 
         _userQuestioner.Show(new UserQuestion(RestartQuestName, $"Want one more game?"));
