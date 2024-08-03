@@ -9,9 +9,10 @@ public class Block : MonoBehaviour
     private const float AnimationTime = 0.3f;
     private const float FadeTime = 0.6f;
     private const float MoveScaleCoefficient = 0.85f;
+    private const float BounceScaleCoefficient = 0.15f;
     private const string FadeProperty = "_fade";
 
-    [SerializeField] private SpriteRenderer _vew;
+    [SerializeField] private SpriteRenderer _view;
     [SerializeField] private TMP_Text _numberView;
 
     [Inject] private GridSettings _gridSettings;
@@ -32,7 +33,7 @@ public class Block : MonoBehaviour
     {
         _transform = transform;
         _baseScale = transform.localScale;
-        _material = _vew.material;
+        _material = _view.material;
     }
 
     public Block Initialize(Transform parent)
@@ -46,8 +47,8 @@ public class Block : MonoBehaviour
     {
         Number = number;
         _material.DOFloat(1, FadeProperty, FadeTime);
-        _vew.enabled = true;
-        _vew.color = color;
+        _view.enabled = true;
+        _view.color = color;
         _numberView.enabled = true;
         _numberView.text = number.ToString();
         _transform.localPosition = (Vector2)gridPosition * _gridSettings.CellSize;
@@ -82,9 +83,19 @@ public class Block : MonoBehaviour
         _material.DOFloat(0, FadeProperty, FadeTime);
     }
 
+    public void Shake(Vector2 direction)
+    {
+        Vector2 startPosition = (Vector2)_transform.position;
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(_transform.DOMove(startPosition + direction * MoveScaleCoefficient, AnimationTime).SetLoops(2, LoopType.Yoyo));
+        Vector3 newScale = new Vector3((direction.y + BounceScaleCoefficient) * _transform.localScale.x, (direction.x + BounceScaleCoefficient) * _transform.localScale.y);
+        sequence.Join(_transform.DOScale(newScale, AnimationTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale));
+        sequence.Play();
+    }
+
     public void Deactivate()
     {
-        _vew.enabled = false;
+        _view.enabled = false;
         _numberView.enabled = false;
         _transform.localPosition = Vector2.zero;
         Deactivated?.Invoke(this);

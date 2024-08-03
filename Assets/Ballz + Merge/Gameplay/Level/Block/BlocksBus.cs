@@ -42,6 +42,11 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
         _activeBlocks.ChangedCellActivity -= OnChangedCellActivity;
     }
 
+<<<<<<< Updated upstream
+=======
+    public override void Init() { }
+
+>>>>>>> Stashed changes
     public void FinishLevel()
     {
         _mover.Clear();
@@ -58,7 +63,7 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
             return;
         }
 
-        if(_ballLevelVolume.CheckValue(BallVolumesTypes.Crush))
+        if (_ballLevelVolume.CheckValue(BallVolumesTypes.Crush))
         {
             _activeBlocks.Remove(block);
             block.Merge(block.WorldPosition);
@@ -67,15 +72,15 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
 
         Vector2Int direction = hitPosition.CalculateDirection(block.WorldPosition);
 
-        if (direction == Vector2Int.down) 
+        if (direction == Vector2Int.down)
             return;
 
         Vector2Int nextPosition = block.GridPosition + direction;
 
         if (nextPosition.x < 0 || nextPosition.y >= _gridSettings.GridSize.y || nextPosition.x >= _gridSettings.GridSize.x)
-            return;
-
-        HandleMove(block, direction);
+            block.Shake(direction);
+        else
+            HandleMove(block, direction);
     }
 
     private void HandleMove(Block block, Vector2Int direction)
@@ -84,9 +89,9 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
         {
             _mover.Move(block, direction);
         }
-        else
+        else if (TryMergeCell(block, direction) == false)
         {
-            TryMergeCell(block, direction);
+            block.Shake(direction);
         }
     }
 
