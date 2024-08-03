@@ -15,4 +15,4 @@ MonoBehaviour:
   _volume: {fileID: 11400000, guid: 633131de00ef3bb44a8a18b2acf5d1e1, type: 2}
   _rarity: {fileID: 11400000, guid: a3ee3d68bf5a68a47b9136ccd18ae439, type: 2}
   _countDiceMin: 0.1
-  _countDiceMax: 0.3
+  _countDiceMax: 0.25

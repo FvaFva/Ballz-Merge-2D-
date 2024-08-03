@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball : CyclicBehaviour, ILevelFinisher, ILevelStarter
+public class Ball : CyclicBehaviour, ILevelFinisher, ILevelStarter, IInitializable
 {
     [SerializeField] private BallState _simulation;
     [SerializeField] private BallState _aim;
@@ -25,7 +25,7 @@ public class Ball : CyclicBehaviour, ILevelFinisher, ILevelStarter
         _start = _transform.position;
     }
 
-    public override void Init()
+    public void Init()
     {
         ChangeState(null);
     }

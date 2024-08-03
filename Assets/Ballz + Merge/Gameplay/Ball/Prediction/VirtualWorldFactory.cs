@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEngine.UI.Image;
 
-public class VirtualWorldFactory : CyclicBehaviour
+public class VirtualWorldFactory : CyclicBehaviour, IInitializable
 {
     [SerializeField] private PalyZoneBoards _boards;
     [SerializeField] private GridVirtualCell _prefab;
@@ -25,7 +24,7 @@ public class VirtualWorldFactory : CyclicBehaviour
         return boxes;
     }
 
-    public override void Init()
+    public void Init()
     {
         _boxParentForeMoveToVirtual.parent = null;
         _scene = SceneManager.CreateScene("Physics simulation", new CreateSceneParameters(LocalPhysicsMode.Physics2D));

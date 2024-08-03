@@ -42,8 +42,6 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
         _activeBlocks.ChangedCellActivity -= OnChangedCellActivity;
     }
 
-    public override void Init(){}
-
     public void FinishLevel()
     {
         _mover.Clear();

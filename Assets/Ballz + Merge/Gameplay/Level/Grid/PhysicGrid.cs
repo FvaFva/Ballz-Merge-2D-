@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Zenject;
 
-public class PhysicGrid : CyclicBehaviour, ILevelFinisher
+public class PhysicGrid : CyclicBehaviour, ILevelFinisher, IInitializable
 {
     [SerializeField] private GridCell _prefab;
     [SerializeField] private Transform _cellParent;
@@ -13,7 +13,7 @@ public class PhysicGrid : CyclicBehaviour, ILevelFinisher
 
     private Dictionary<Vector2Int, GridCell> _grid = new Dictionary<Vector2Int, GridCell>();
 
-    public override void Init()
+    public void Init()
     {
         BoxCollider2D[,] boxes = _factory.CreateBoxes(_settings);
 
@@ -44,6 +44,7 @@ public class PhysicGrid : CyclicBehaviour, ILevelFinisher
     private void InitCell(int x, int y, BoxCollider2D virtualCollider)
     {
         GridCell cell = Instantiate(_prefab, _cellParent);
+        cell.name = $"[{x}] - [{y}]";
         Vector2Int gridPosition = new Vector2Int(x, y);
         cell.Init(gridPosition, _settings.CellSize, virtualCollider);
         _grid.Add(gridPosition, cell);

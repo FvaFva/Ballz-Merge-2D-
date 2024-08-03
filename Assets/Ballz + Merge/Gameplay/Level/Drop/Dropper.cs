@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 
-public class Dropper : CyclicBehaviour, IWaveUpdater
+public class Dropper : CyclicBehaviour, IWaveUpdater, IInitializable, ILevelStarter
 {
     [SerializeField] private int _wavesToDrop;
     [SerializeField] private DropSelector _selector;
@@ -13,9 +13,8 @@ public class Dropper : CyclicBehaviour, IWaveUpdater
     private List<Drop> _pool;
     private int _waveCount;
 
-    public override void Init()
+    public void Init()
     {
-        _waveCount = _wavesToDrop;
         _pool = new List<Drop>();
 
         foreach (Drop drop in _drops)
@@ -23,6 +22,11 @@ public class Dropper : CyclicBehaviour, IWaveUpdater
             for (int i = 0; i < drop.CountInPool; i++)
                 _pool.Add(drop);
         }
+    }
+
+    public void StartLevel()
+    {
+        _waveCount = _wavesToDrop;
     }
 
     public void UpdateWave()
