@@ -44,6 +44,7 @@ public class PhysicGrid : CyclicBehaviour, ILevelFinisher, IInitializable
     private void InitCell(int x, int y, BoxCollider2D virtualCollider)
     {
         GridCell cell = Instantiate(_prefab, _cellParent);
+        cell.name = $"[{x}] - [{y}]";
         Vector2Int gridPosition = new Vector2Int(x, y);
         cell.Init(gridPosition, _settings.CellSize, virtualCollider);
         _grid.Add(gridPosition, cell);

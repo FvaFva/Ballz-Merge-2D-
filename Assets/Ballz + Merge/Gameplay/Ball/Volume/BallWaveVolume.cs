@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BallWaveVolume : CyclicBehaviour, IWaveUpdater, IInitializable
+public class BallWaveVolume : CyclicBehaviour, IWaveUpdater, IInitializable, ILevelFinisher
 {
     [SerializeField] private DropSelector _dropSelector;
 
@@ -46,5 +46,11 @@ public class BallWaveVolume : CyclicBehaviour, IWaveUpdater, IInitializable
         }
 
         return false;
+    }
+
+    public void FinishLevel()
+    {
+        _globalVolumes.Changed -= UpdateWave;
+        Init();
     }
 }
