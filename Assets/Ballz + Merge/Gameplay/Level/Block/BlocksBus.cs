@@ -42,11 +42,6 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
         _activeBlocks.ChangedCellActivity -= OnChangedCellActivity;
     }
 
-<<<<<<< Updated upstream
-=======
-    public override void Init() { }
-
->>>>>>> Stashed changes
     public void FinishLevel()
     {
         _mover.Clear();
