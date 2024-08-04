@@ -65,6 +65,11 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
             return;
         }
 
+        if (_ballLevelVolume.CheckValue(BallVolumesTypes.NumberReductor))
+        {
+            block.ReduceNumber();
+        }
+
         Vector2Int direction = hitPosition.CalculateDirection(block.WorldPosition);
 
         if (direction == Vector2Int.down)

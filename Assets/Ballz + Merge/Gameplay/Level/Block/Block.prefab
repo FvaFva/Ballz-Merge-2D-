@@ -270,6 +270,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _view: {fileID: 2270483506801229240}
   _numberView: {fileID: 8197381173803674294}
+  _colorMap: {fileID: 11400000, guid: 08e5dfa7b504e9e40bc38346faa55387, type: 2}
 --- !u!1 &7307838541846937296
 GameObject:
   m_ObjectHideFlags: 0

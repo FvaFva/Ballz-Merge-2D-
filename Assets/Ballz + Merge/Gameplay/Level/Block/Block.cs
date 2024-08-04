@@ -14,6 +14,7 @@ public class Block : MonoBehaviour
 
     [SerializeField] private SpriteRenderer _view;
     [SerializeField] private TMP_Text _numberView;
+    [SerializeField] private MoveColorMap _colorMap;
 
     [Inject] private GridSettings _gridSettings;
 
@@ -81,6 +82,16 @@ public class Block : MonoBehaviour
         _transform.DOShakeScale(AnimationTime, 0.3f, 50, 200);
         _transform.DOScale(_baseScale * 0.5f, AnimationTime);
         _material.DOFloat(0, FadeProperty, FadeTime);
+    }
+
+    public void ReduceNumber()
+    {
+        Number--;
+        _numberView.text = Number.ToString();
+        _view.color = _colorMap.GetColor(Number);
+
+        if (Number == 0)
+            Merge(transform.localPosition);
     }
 
     public void Shake(Vector2 direction)

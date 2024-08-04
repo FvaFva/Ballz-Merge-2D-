@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
+  m_Name: NumberReductor
+  m_EditorClassIdentifier: 
+  _waveDropType: 2
+  _icon: {fileID: -4284386676575201382, guid: 790e0ec374d6fe149b13d7b3a221f3eb, type: 3}
+  _name: Number reductor
+  _description: When ball is contacts with block there is a chance to reduce his
+    number
