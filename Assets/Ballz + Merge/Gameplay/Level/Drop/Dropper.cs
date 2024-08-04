@@ -1,5 +1,4 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -8,7 +7,7 @@ public class Dropper : CyclicBehaviour, IWaveUpdater, IInitializable, ILevelStar
     [SerializeField] private int _wavesToDrop;
     [SerializeField] private DropSelector _selector;
     [SerializeField] private List<Drop> _drops;
-    [SerializeField] private TMP_Text _view;
+    [SerializeField] private InfoPanel _view;
 
     private List<Drop> _pool;
     private int _waveCount;
@@ -38,6 +37,6 @@ public class Dropper : CyclicBehaviour, IWaveUpdater, IInitializable, ILevelStar
             _waveCount = _wavesToDrop;
         }
 
-        _view.text = _waveCount.ToString();
+        _view.Show(_waveCount);
     }
 }

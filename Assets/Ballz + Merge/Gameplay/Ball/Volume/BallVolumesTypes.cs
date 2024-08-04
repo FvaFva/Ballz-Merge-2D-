@@ -1,5 +1,6 @@
 ﻿public enum BallVolumesTypes
 {
     Crush,
-    BotBounce
+    BotBounce,
+    ExtraAimPoints
 }

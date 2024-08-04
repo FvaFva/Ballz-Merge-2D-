@@ -9,7 +9,7 @@ public class Block : MonoBehaviour
     private const float AnimationTime = 0.3f;
     private const float FadeTime = 0.6f;
     private const float MoveScaleCoefficient = 0.85f;
-    private const float BounceScaleCoefficient = 0.15f;
+    private const float BounceScaleCoefficient = 0.5f;
     private const string FadeProperty = "_fade";
 
     [SerializeField] private SpriteRenderer _view;
