@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e01c241b58faef14b9ad1c490036290b, type: 3}
-  m_Name: CommonCrusher
+  m_Name: '[Crusher] - [Legendary]'
   m_EditorClassIdentifier: 
   _volume: {fileID: 11400000, guid: f1fb058d57eab7842be4166ded94430e, type: 2}
-  _rarity: {fileID: 11400000, guid: a3ee3d68bf5a68a47b9136ccd18ae439, type: 2}
+  _rarity: {fileID: 11400000, guid: 0cf2a46033e6a4e41980736da5596fbd, type: 2}
   _countDiceMin: 0.05
   _countDiceMax: 0.1

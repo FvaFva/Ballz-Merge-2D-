@@ -56,8 +56,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _Emission: 4
-    - _MaxDistance: 2.5
-    - _Offset: 1.5
+    - _MaxDistance: 2
+    - _Offset: 1.7
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:

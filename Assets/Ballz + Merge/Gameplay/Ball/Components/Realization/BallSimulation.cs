@@ -2,8 +2,10 @@
 
 public class BallSimulation : BallComponent
 {
+    private const int BaseCollisions = 1;
+
     [SerializeField] private float _simulationForce;
-    [SerializeField] private int _maxCollisions;
+    [SerializeField] private BallWaveVolume _waveVolume;
 
     private Rigidbody2D _rb;
     private Transform _transform;
@@ -19,7 +21,7 @@ public class BallSimulation : BallComponent
 
     public void Restart(Vector2 position, Vector2 direction)
     {
-        CollisionsLeft = _maxCollisions;
+        CollisionsLeft = BaseCollisions + (int)_waveVolume.GetMaxVolume(BallVolumesTypes.ExtraAimPoints);
         _transform.position = position;
         _rb.velocity = Vector2.zero;
         _rb.AddForce(direction * _simulationForce);

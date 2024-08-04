@@ -2,5 +2,6 @@
 {
     Crush,
     BotBounce,
-    NumberReductor
+    NumberReductor,
+    ExtraAimPoints
 }
