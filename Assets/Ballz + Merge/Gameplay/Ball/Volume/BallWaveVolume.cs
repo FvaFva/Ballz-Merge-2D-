@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,9 @@ public class BallWaveVolume : CyclicBehaviour, IWaveUpdater, IInitializable, ILe
     private BallGlobalVolume _globalVolumes;
     private Dictionary<BallVolumesTypes, float> _volumes;
 
+    public event Action<IDictionary<BallVolumesTypes, float>> Updated;
+    public event Action<BallVolumesTypes, float> Changed;
+
     public void Init()
     {
         _globalVolumes = new BallGlobalVolume(_dropSelector);
@@ -16,15 +20,21 @@ public class BallWaveVolume : CyclicBehaviour, IWaveUpdater, IInitializable, ILe
 
         foreach (var volume in _globalVolumes.Volumes)
             _volumes.Add(volume.Key, volume.Value);
+
+        Updated?.Invoke(_volumes);
     }
 
     public void UpdateWave()
     {
         foreach (var volume in _globalVolumes.Volumes)
             _volumes[volume.Key] = volume.Value;
+
+        Updated?.Invoke(_volumes);
     }
 
-    public bool CheckValue(BallVolumesTypes ballVolume)
+    public float GetMaxVolume(BallVolumesTypes ballVolume) => _globalVolumes.Volumes[ballVolume];
+
+    public bool CheckVolume(BallVolumesTypes ballVolume)
     {
         float volume = _volumes[ballVolume];
 
@@ -34,14 +44,16 @@ public class BallWaveVolume : CyclicBehaviour, IWaveUpdater, IInitializable, ILe
         if(volume >= 1)
         {
             _volumes[ballVolume]--;
+            Changed?.Invoke(ballVolume, _volumes[ballVolume]);
             return true;
         }
 
-        float dice = Random.Range(0f, 1f);
+        float dice = UnityEngine.Random.Range(0f, 1f);
 
         if(volume >= dice)
         {
             _volumes[ballVolume] = 0;
+            Changed?.Invoke(ballVolume, _volumes[ballVolume]);
             return true;
         }
 

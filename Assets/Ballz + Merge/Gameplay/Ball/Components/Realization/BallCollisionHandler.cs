@@ -4,8 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class BallCollisionHandler : BallComponent
 {
-    private const float MinDelta = 0.02f;
-    private const float ExtraFlip = 0.4f;
+    private const float MinDelta = 0.002f;
+    private const float ExtraFlip = 0.04f;
 
     private Rigidbody2D _rb;
     private Transform _transform;

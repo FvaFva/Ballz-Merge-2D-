@@ -1,10 +1,9 @@
-using TMPro;
 using UnityEngine;
 
 public class PlayerScoreView : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _score;
-    [SerializeField] private TMP_Text _best;
+    [SerializeField] private InfoPanel _score;
+    [SerializeField] private InfoPanel _best;
     [SerializeField] private PlayerScore _playerScore;
 
     private void Awake()
@@ -24,7 +23,7 @@ public class PlayerScoreView : MonoBehaviour
 
     private void UpdateScore()
     {
-        _score.text = _playerScore.Score.ToString();
-        _best.text = _playerScore.BestScore.ToString();
+        _score.Show(_playerScore.Score);
+        _best.Show(_playerScore.BestScore);
     }
 }

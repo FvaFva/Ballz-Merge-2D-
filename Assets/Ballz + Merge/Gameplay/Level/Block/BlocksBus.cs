@@ -58,7 +58,7 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
             return;
         }
 
-        if (_ballLevelVolume.CheckValue(BallVolumesTypes.Crush))
+        if (_ballLevelVolume.CheckVolume(BallVolumesTypes.Crush))
         {
             _activeBlocks.Remove(block);
             block.Merge(block.WorldPosition);
