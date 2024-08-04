@@ -9,7 +9,8 @@ public class Block : MonoBehaviour
     private const float AnimationTime = 0.3f;
     private const float FadeTime = 0.6f;
     private const float MoveScaleCoefficient = 0.85f;
-    private const float BounceScaleCoefficient = 0.5f;
+    private const float BounceScaleCoefficient = 0.15f;
+    private const float ShakeTime = 0.15f;
     private const string FadeProperty = "_fade";
 
     [SerializeField] private SpriteRenderer _view;
@@ -85,11 +86,11 @@ public class Block : MonoBehaviour
 
     public void Shake(Vector2 direction)
     {
-        Vector2 startPosition = (Vector2)_transform.position;
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(_transform.DOMove(startPosition + direction * MoveScaleCoefficient, AnimationTime).SetLoops(2, LoopType.Yoyo));
-        Vector3 newScale = new Vector3((direction.y + BounceScaleCoefficient) * _transform.localScale.x, (direction.x + BounceScaleCoefficient) * _transform.localScale.y);
-        sequence.Join(_transform.DOScale(newScale, AnimationTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale));
+        sequence.Append(_transform.DOLocalMove((Vector2)_transform.localPosition + (direction * BounceScaleCoefficient), ShakeTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localPosition = (Vector2)GridPosition * _gridSettings.CellSize));
+        float xScale = _transform.localScale.x * (1 + (direction.y == 0 ? -1 * BounceScaleCoefficient : BounceScaleCoefficient));
+        float yScale = _transform.localScale.y * (1 + (direction.x == 0 ? -1 * BounceScaleCoefficient : BounceScaleCoefficient));
+        sequence.Join(_transform.DOScale(new Vector3(xScale, yScale), ShakeTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale));
         sequence.Play();
     }
 

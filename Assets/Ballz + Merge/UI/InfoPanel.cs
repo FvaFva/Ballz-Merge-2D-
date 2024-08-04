@@ -15,7 +15,7 @@ public class InfoPanel : MonoBehaviour
 
     public void Show(float value)
     {
-        Show(value.ToString());
+        Show(value.ToString("F0"));
     }
 
     public void Show(string value)
