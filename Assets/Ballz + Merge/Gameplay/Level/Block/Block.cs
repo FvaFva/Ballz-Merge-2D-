@@ -16,6 +16,7 @@ public class Block : MonoBehaviour
     [SerializeField] private SpriteRenderer _view;
     [SerializeField] private TMP_Text _numberView;
     [SerializeField] private MoveColorMap _colorMap;
+    [SerializeField] private CanvasGroup _canvasGroup;
 
     [Inject] private GridSettings _gridSettings;
 
@@ -76,7 +77,6 @@ public class Block : MonoBehaviour
     public void Merge(Vector3 worldPositionMergedBlock)
     {
         GridPosition = Vector2Int.zero;
-        _numberView.enabled = false;
         StopCurrentMoveTween();
         Vector3 midpoint = Vector3.Lerp(WorldPosition, worldPositionMergedBlock, 0.5f);
         _transform.DOMove(midpoint, AnimationTime).OnComplete(Deactivate);
@@ -85,14 +85,19 @@ public class Block : MonoBehaviour
         _material.DOFloat(0, FadeProperty, FadeTime);
     }
 
+    public void Destroy()
+    {
+        StopCurrentMoveTween();
+        _canvasGroup.DOFade(0f, FadeTime).SetEase(Ease.InOutQuad).OnComplete(Deactivate);
+        _transform.DOScale(0, FadeTime);
+        _transform.DORotate(new Vector3(0, 0, 360), FadeTime, RotateMode.FastBeyond360).SetEase(Ease.OutElastic);
+    }
+
     public void ReduceNumber()
     {
         Number--;
         _numberView.text = Number.ToString();
         _view.color = _colorMap.GetColor(Number);
-
-        if (Number == 0)
-            Merge(transform.localPosition);
     }
 
     public void Shake(Vector2 direction)
@@ -110,6 +115,7 @@ public class Block : MonoBehaviour
         _view.enabled = false;
         _numberView.enabled = false;
         _transform.localPosition = Vector2.zero;
+        _transform.rotation = Quaternion.identity;
         Deactivated?.Invoke(this);
     }
 

@@ -51,6 +51,7 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
     private void OnBlockHit(GridCell cell, Vector2 hitPosition)
     {
         Block block = _activeBlocks.GetAtPosition(cell.GridPosition);
+        Vector2Int direction = hitPosition.CalculateDirection(block.WorldPosition);
 
         if (block == null)
         {
@@ -61,37 +62,53 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
         if (_ballLevelVolume.CheckVolume(BallVolumesTypes.Crush))
         {
             _activeBlocks.Remove(block);
-            block.Merge(block.WorldPosition);
+            block.Destroy();
             return;
         }
 
-        if (_ballLevelVolume.CheckValue(BallVolumesTypes.NumberReductor))
+        if (_ballLevelVolume.CheckVolume(BallVolumesTypes.NumberReductor))
         {
             block.ReduceNumber();
+
+            if (block.Number == 0)
+            {
+                _activeBlocks.Remove(block);
+                block.Destroy();
+                return;
+            }
+
+            if (TryMoveBlock(block, direction))
+                return;
         }
 
-        Vector2Int direction = hitPosition.CalculateDirection(block.WorldPosition);
+        TryMoveBlock(block, direction);
+    }
 
+    private bool TryMoveBlock(Block block, Vector2Int direction)
+    {
         if (direction == Vector2Int.down)
-            return;
+            return false;
 
         Vector2Int nextPosition = block.GridPosition + direction;
 
         if (nextPosition.x < 0 || nextPosition.y >= _gridSettings.GridSize.y || nextPosition.x >= _gridSettings.GridSize.x)
+        {
             block.Shake(direction);
-        else
-            HandleMove(block, direction);
-    }
-
-    private void HandleMove(Block block, Vector2Int direction)
-    {
-        if (_activeBlocks.GetAtPosition(block.GridPosition + direction) == null)
+            return false;
+        }
+        else if (_activeBlocks.GetAtPosition(block.GridPosition + direction) == null)
         {
             _mover.Move(block, direction);
+            return true;
         }
-        else if (TryMergeCell(block, direction) == false)
+        else if (TryMergeCell(block, direction))
+        {
+            return true;
+        }
+        else
         {
             block.Shake(direction);
+            return false;
         }
     }
 

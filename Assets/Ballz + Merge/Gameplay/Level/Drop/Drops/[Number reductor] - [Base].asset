@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e01c241b58faef14b9ad1c490036290b, type: 3}
-  m_Name: CommonReductor
+  m_Name: '[Number reductor] - [Base]'
   m_EditorClassIdentifier: 
   _volume: {fileID: 11400000, guid: 8eaa075cc9c38ce45b9609f930942331, type: 2}
   _rarity: {fileID: 11400000, guid: a3ee3d68bf5a68a47b9136ccd18ae439, type: 2}
