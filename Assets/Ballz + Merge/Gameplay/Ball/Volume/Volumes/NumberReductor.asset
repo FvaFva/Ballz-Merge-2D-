@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
-  m_Name: ExtraAimPoint
+  m_Name: NumberReductor
   m_EditorClassIdentifier: 
-  _waveDropType: 3
-  _icon: {fileID: 21300000, guid: 1a862a305a44ca64e939c2b35b24e829, type: 3}
-  _name: Extra AIM
-  _description: Add point for Aim
+  _waveDropType: 2
+  _icon: {fileID: -4284386676575201382, guid: 790e0ec374d6fe149b13d7b3a221f3eb, type: 3}
+  _name: Number reductor
+  _description: When ball is contacts with block there is a chance to reduce his
+    number
