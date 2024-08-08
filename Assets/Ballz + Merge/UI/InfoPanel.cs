@@ -9,6 +9,7 @@ public class InfoPanel : MonoBehaviour
     public InfoPanel Init(float value, string label)
     {
         Show(value);
+        Hide();
         _label.text = label;
         return this;
     }
@@ -20,6 +21,12 @@ public class InfoPanel : MonoBehaviour
 
     public void Show(string value)
     {
+        gameObject.SetActive(true);
         _value.text = value;
     }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }    
 }

@@ -15,26 +15,32 @@ public class BallWaveVolumeView : MonoBehaviour
         _views = new Dictionary<BallVolumesTypes, InfoPanel>();
 
         foreach (BallVolumesTypes volume in Enum.GetValues(typeof(BallVolumesTypes)))
-            _views.Add(volume, Instantiate(_infoPanelPrefab, _viewPort).Init(0, volume.ToString()));
+            _views.Add(volume, Instantiate(_infoPanelPrefab, _viewPort).Init(0, $"{volume} chance:"));
     }
 
     private void OnEnable()
     {
         _source.Updated += OnSourceUpdate;
-        _source.Changed += OnSourceChanged;
+        _source.Changed += UpdateValue;
     }
 
     private void OnDisable()
     {
         _source.Updated -= OnSourceUpdate;
-        _source.Changed -= OnSourceChanged;
+        _source.Changed -= UpdateValue;
     }
 
     private void OnSourceUpdate(IDictionary<BallVolumesTypes, float> valuePairs)
     {
         foreach (var newValue in valuePairs)
-            _views[newValue.Key].Show(newValue.Value * 100);
+            UpdateValue(newValue.Key, newValue.Value);
     }
 
-    private void OnSourceChanged(BallVolumesTypes type, float value) => _views[type].Show(value);
+    private void UpdateValue(BallVolumesTypes type, float value)
+    {
+        if (value.Equals(0))
+            _views[type].Hide();
+        else
+            _views[type].Show($"{(int)(value * 100)}%");
+    }
 }
