@@ -56,6 +56,7 @@ public class Block : MonoBehaviour
         _numberView.text = number.ToString();
         _transform.localPosition = (Vector2)gridPosition * _gridSettings.CellSize;
         _transform.localScale = _baseScale;
+        _canvasGroup.alpha = 1;
         GridPosition = gridPosition;
     }
 
