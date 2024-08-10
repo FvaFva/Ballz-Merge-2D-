@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
   m_Name: NumberReductor
   m_EditorClassIdentifier: 
-  _waveDropType: 2
+  _type: 2
+  _counting: 0
   _icon: {fileID: -4284386676575201382, guid: 790e0ec374d6fe149b13d7b3a221f3eb, type: 3}
   _name: Number reductor
   _description: When ball is contacts with block there is a chance to reduce his
