@@ -12,7 +12,7 @@ public class Drop : ScriptableObject
     [SerializeField, Range(DiceStep, MaxValue)] private float _countDiceMin;
     [SerializeField, Range(DiceStep, MaxValue)] private float _countDiceMax;
 
-    public BallVolumesTypes WaveDropType => _volume.WaveDropType;
+    public BallVolumesTypes WaveDropType => _volume.Type;
     public Sprite Icon => _volume.Icon;
     public string Name => _volume.Name;
     public string Description => _volume.Description;
