@@ -5,6 +5,7 @@ using Zenject;
 public class BlocksBus : CyclicBehaviour, ILevelFinisher
 {
     [SerializeField] private BlocksSpawner _spawner;
+    [SerializeField] private ExplosionPull _explosionPull;
     [SerializeField] private BlocksMergeImpact _mergeImpact;
 
     [Inject] private Ball _ball;
@@ -63,6 +64,7 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
         {
             _activeBlocks.Remove(block);
             block.Destroy();
+            _explosionPull.SpawnEffect(block.WorldPosition);
             return;
         }
 
@@ -74,6 +76,7 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
             {
                 _activeBlocks.Remove(block);
                 block.Destroy();
+                _explosionPull.SpawnEffect(block.WorldPosition);
                 return;
             }
 
