@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
-  m_Name: NumberReductor
+  m_Name: Magnet
   m_EditorClassIdentifier: 
-  _type: 2
+  _type: 4
   _counting: 0
-  _icon: {fileID: -8346272617545206613, guid: 239c67cac2d3a76488ef1edec1af1e59, type: 3}
-  _name: Number reductor
-  _description: When ball is contacts with block there is a chance to reduce his
-    number
+  _icon: {fileID: 4877825377717948546, guid: 4fa7b8d359c0fb440863a5be50d9d8cd, type: 3}
+  _name: Magnet
+  _description: When ball is contacts with block there is a chance to destroy other
+    block with the same number

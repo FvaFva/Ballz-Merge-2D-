@@ -12,6 +12,7 @@ public class BallCollisionHandler : BallComponent
 
     public event Action<Vector2> Hit;
     public event Action<GridCell, Vector2> HitBlock;
+    public event Action NonBlockHit;
     public event Action GameZoneLeft;
 
     private void Awake()
@@ -28,10 +29,13 @@ public class BallCollisionHandler : BallComponent
 
         CorrectingBounceDirection(contactPoint - (Vector2)_transform.position);
 
-        if (hitTarget.TryGetComponent<PlayZoneEdg>(out PlayZoneEdg _))
-            GameZoneLeft?.Invoke();
-        if (hitTarget.TryGetComponent<GridCell>(out GridCell hitBlock))
+        if (hitTarget.TryGetComponent(out GridCell hitBlock))
             HitBlock?.Invoke(hitBlock, contactPoint);
+        else
+            NonBlockHit?.Invoke();
+
+        if (hitTarget.TryGetComponent(out PlayZoneEdg _))
+            GameZoneLeft?.Invoke();
     }
 
     private void CorrectingBounceDirection(Vector2 direction)

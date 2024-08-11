@@ -3,5 +3,6 @@
     Crush,
     BotBounce,
     NumberReductor,
-    ExtraAimPoints
+    ExtraAimPoints,
+    Magnet
 }
