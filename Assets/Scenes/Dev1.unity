@@ -22834,7 +22834,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1252848193
 Transform:
   m_ObjectHideFlags: 0
@@ -44951,7 +44951,6 @@ GameObject:
   - component: {fileID: 2090727812}
   - component: {fileID: 2090727813}
   - component: {fileID: 2090727814}
-  - component: {fileID: 2090727815}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -45140,7 +45139,6 @@ MonoBehaviour:
     - {fileID: 2090727812}
     - {fileID: 2090727813}
     - {fileID: 2090727814}
-    - {fileID: 2090727815}
     _triggers:
     - {fileID: 2090727813}
   _components:
@@ -45192,26 +45190,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _field: {fileID: 733210647}
---- !u!114 &2090727815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2090727802}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f64e3d254fe3b24f99508113121eab0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _effects:
-  - Particles: {fileID: 1252848195}
-    Type: 0
-  - Particles: {fileID: 1523628917}
-    Type: 1
-  - Particles: {fileID: 540701838}
-    Type: 2
-  _volume: {fileID: 1359073987}
 --- !u!1001 &524238652718409908
 PrefabInstance:
   m_ObjectHideFlags: 0
