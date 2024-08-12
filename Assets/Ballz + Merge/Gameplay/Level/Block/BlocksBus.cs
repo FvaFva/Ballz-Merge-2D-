@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-public class BlocksBus : CyclicBehaviour, ILevelFinisher
+public class BlocksBus : CyclicBehaviour, ILevelFinisher, IInitializable
 {
     [SerializeField] private BlocksSpawner _spawner;
     [SerializeField] private ExplosionPool _explosionPool;
@@ -21,30 +21,35 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
     public event Action BlockFinished;
     public event Action WaveLoaded;
 
-    private void Awake()
-    {
-        _collisionHandler = _ball.GetBallComponent<BallCollisionHandler>();
-        _blockMagneticObserver = new(_collisionHandler);
-    }
-
     private void OnEnable()
     {
-        _collisionHandler.HitBlock += OnBlockHit;
+        if (_collisionHandler != null)
+            _collisionHandler.HitBlock += OnBlockHit;
+
         _ball.EnterAim += OnStartLevel;
         _mover.BlockMoved += OnBlockComeToNewPosition;
         _mover.ChangedCellActivity += OnChangedCellActivity;
         _activeBlocks.ChangedCellActivity += OnChangedCellActivity;
-        _blockMagneticObserver.UpdateSubscribe(true);
+        _blockMagneticObserver?.UpdateSubscribe(true);
     }
 
     private void OnDisable()
     {
-        _collisionHandler.HitBlock -= OnBlockHit;
+        if (_collisionHandler != null)
+            _collisionHandler.HitBlock -= OnBlockHit;
+
         _ball.EnterAim -= OnStartLevel;
         _mover.BlockMoved -= OnBlockComeToNewPosition;
         _mover.ChangedCellActivity -= OnChangedCellActivity;
         _activeBlocks.ChangedCellActivity -= OnChangedCellActivity;
-        _blockMagneticObserver.UpdateSubscribe(false);
+        _blockMagneticObserver?.UpdateSubscribe(false);
+    }
+
+    public void Init()
+    {
+        _collisionHandler = _ball.GetBallComponent<BallCollisionHandler>();
+        _blockMagneticObserver = new BlockMagneticObserver(_collisionHandler);
+        _collisionHandler.HitBlock += OnBlockHit;
     }
 
     public void FinishLevel()

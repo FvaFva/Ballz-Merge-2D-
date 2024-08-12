@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zenject;
 
 public class BallLevelView : BallComponent
 {
     private const int DisableValue = 0;
 
     [SerializeField] private List<BallVolumeEffectHandler> _effects;
-    [SerializeField] private BallWaveVolume _volume;
+
+    [Inject] private BallWaveVolume _volume;
 
     private void OnEnable()
     {

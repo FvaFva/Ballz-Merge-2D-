@@ -3,6 +3,8 @@ using UnityEngine;
 
 public abstract class BallComponent : MonoBehaviour
 {
+    protected Rigidbody2D MyBody {  get; private set; }
+
     public event Action Triggered;
 
     public virtual void ChangeActivity(bool state)
@@ -10,12 +12,12 @@ public abstract class BallComponent : MonoBehaviour
         enabled = state;
     }
 
-    protected Rigidbody2D GetRigidbody()
+    public void SetBody(Rigidbody2D myBody)
     {
-        if (TryGetComponent<Rigidbody2D>(out Rigidbody2D rb) == false)
-            Debug.LogError($"Achtung!! Ball {name} without Rigidbody!");
+        if (MyBody != null) 
+            return;
 
-        return rb;
+        MyBody = myBody;
     }
 
     protected void ActivateTrigger() => Triggered?.Invoke();

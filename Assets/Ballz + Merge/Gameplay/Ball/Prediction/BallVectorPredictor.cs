@@ -18,23 +18,22 @@ public class BallVectorPredictor : CyclicBehaviour, IInitializable
 
     public event Action<IEnumerable<Vector3>> Predicted;
 
-    private void Awake()
-    {
-        _vectorReader = _ballOriginal.GetBallComponent<BallStrikeVectorReader>();
-    }
-
     private void OnEnable()
     {
-        _vectorReader.Changed += Predict;
+        if (_vectorReader != null)
+            _vectorReader.Changed += Predict;
     }
 
     private void OnDisable()
     {
-        _vectorReader.Changed -= Predict;
+        if (_vectorReader != null)
+            _vectorReader.Changed -= Predict;
     }
 
     public void Init()
     {
+        _vectorReader = _ballOriginal.GetBallComponent<BallStrikeVectorReader>();
+        _vectorReader.Changed += Predict;
         _ballSimulated = _factory.CreateBall(_ballOriginal);
         _physicsScene = _factory.GetPhysicScene();
     }

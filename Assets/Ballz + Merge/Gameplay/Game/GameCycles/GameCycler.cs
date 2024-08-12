@@ -21,23 +21,7 @@ public class GameCycler: MonoBehaviour
 
     private void Start()
     {
-        foreach (var cyclical in _components.OrderBy(item => item.Order))
-        {
-            if (cyclical is IInitializable initializable)
-                initializable.Init();
-
-            if(cyclical is ILevelFinisher finisher)
-                _finishers.Add(finisher);
-
-            if(cyclical is ILevelStarter starter)
-                _starters.Add(starter);
-
-            if (cyclical is IWaveUpdater waver)
-                _wavers.Add(waver);
-        }
-
-        _userInput.Enable();
-        RestartLevel();
+        StartCoroutine(DelayedStart());
     }
 
     private void OnEnable()
@@ -68,7 +52,29 @@ public class GameCycler: MonoBehaviour
         StartCoroutine(DelayedLevelFinish());
     }
 
-    private IEnumerator DelayedLevelFinish()
+    private IEnumerator DelayedStart()
+    {
+        yield return new WaitForFixedUpdate();
+
+        foreach (var cyclical in _components.OrderBy(item => item.Order))
+        {
+            if (cyclical is IInitializable initializable)
+                initializable.Init();
+
+            if (cyclical is ILevelFinisher finisher)
+                _finishers.Add(finisher);
+
+            if (cyclical is ILevelStarter starter)
+                _starters.Add(starter);
+
+            if (cyclical is IWaveUpdater waver)
+                _wavers.Add(waver);
+        }
+
+        _userInput.Enable();
+        RestartLevel();
+    }
+        private IEnumerator DelayedLevelFinish()
     {
         yield return new WaitForFixedUpdate();
 

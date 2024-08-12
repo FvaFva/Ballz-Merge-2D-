@@ -13,13 +13,7 @@ public class BallShooter : BallComponent
 
     [Inject] private MainInputMap _userInput;
 
-    private Rigidbody2D _rb;
     private bool _isOverUI;
-
-    private void Awake()
-    {
-        _rb = GetRigidbody();
-    }
 
     private void OnEnable()
     {
@@ -56,7 +50,7 @@ public class BallShooter : BallComponent
 
     private void Shot(Vector3 vector)
     {
-        _rb.AddForce(vector * _force, ForceMode2D.Force);
+        MyBody.AddForce(vector * _force, ForceMode2D.Force);
         ActivateTrigger();
     }
 }

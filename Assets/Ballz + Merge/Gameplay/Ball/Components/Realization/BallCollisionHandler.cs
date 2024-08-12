@@ -7,7 +7,6 @@ public class BallCollisionHandler : BallComponent
     private const float MinDelta = 0.0002f;
     private const float ExtraFlip = 0.04f;
 
-    private Rigidbody2D _rb;
     private Transform _transform;
 
     public event Action<Vector2> Hit;
@@ -17,7 +16,6 @@ public class BallCollisionHandler : BallComponent
 
     private void Awake()
     {
-        _rb = GetRigidbody();
         _transform = transform;
     }
 
@@ -44,17 +42,17 @@ public class BallCollisionHandler : BallComponent
 
         if (Math.Abs(direction.y) < MinDelta)
         {
-            Vector2 correctVelocity = _rb.velocity;
+            Vector2 correctVelocity = MyBody.velocity;
             correctVelocity.y = GetSign() * (Math.Abs(correctVelocity.y) + ExtraFlip);
             correctVelocity.x = Math.Sign(correctVelocity.x) * (Math.Abs(correctVelocity.x) - ExtraFlip);
-            _rb.velocity = correctVelocity;
+            MyBody.velocity = correctVelocity;
         }
         else if (Math.Abs(direction.x) < MinDelta)
         {
-            Vector2 correctVelocity = _rb.velocity;
+            Vector2 correctVelocity = MyBody.velocity;
             correctVelocity.x = GetSign() * (Math.Abs(correctVelocity.x) + ExtraFlip);
             correctVelocity.y = Math.Sign(correctVelocity.y) * (Math.Abs(correctVelocity.y) - ExtraFlip);
-            _rb.velocity = correctVelocity;
+            MyBody.velocity = correctVelocity;
         }
     }
 

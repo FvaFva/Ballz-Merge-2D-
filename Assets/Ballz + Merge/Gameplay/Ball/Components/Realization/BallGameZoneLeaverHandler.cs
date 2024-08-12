@@ -7,13 +7,11 @@ public class BallGameZoneLeaverHandler : BallComponent
 
     [Inject] private BallWaveVolume _ballVolume;
 
-    private Rigidbody2D _rb;
     private Transform _transform;
 
     private void Awake()
     {
         _transform = transform;
-        _rb = GetRigidbody();
     }
 
     private void OnEnable()
@@ -31,7 +29,7 @@ public class BallGameZoneLeaverHandler : BallComponent
         if (_ballVolume.CheckVolume(BallVolumesTypes.BotBounce))
             return;
 
-        _rb.velocity = Vector2.zero;
+        MyBody.velocity = Vector2.zero;
         _transform.position += new Vector3(0, 0.1f);
         ActivateTrigger();
     }

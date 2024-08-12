@@ -7,7 +7,6 @@ public class BallSimulation : BallComponent
     [SerializeField] private float _simulationForce;
     [SerializeField] private BallWaveVolume _waveVolume;
 
-    private Rigidbody2D _rb;
     private Transform _transform;
 
     public int CollisionsLeft { get; private set; }
@@ -15,7 +14,6 @@ public class BallSimulation : BallComponent
 
     private void Awake()
     {
-        _rb = GetRigidbody();
         _transform = transform;
     }
 
@@ -23,8 +21,8 @@ public class BallSimulation : BallComponent
     {
         CollisionsLeft = BaseCollisions + (int)_waveVolume.GetMaxVolume(BallVolumesTypes.ExtraAimPoints);
         _transform.position = position;
-        _rb.velocity = Vector2.zero;
-        _rb.AddForce(direction * _simulationForce);
+        MyBody.velocity = Vector2.zero;
+        MyBody.AddForce(direction * _simulationForce);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

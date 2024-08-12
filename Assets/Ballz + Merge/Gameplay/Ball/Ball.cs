@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Ball : CyclicBehaviour, ILevelFinisher, ILevelStarter, IInitializable
@@ -7,8 +8,9 @@ public class Ball : CyclicBehaviour, ILevelFinisher, ILevelStarter, IInitializab
     [SerializeField] private BallState _simulation;
     [SerializeField] private BallState _aim;
     [SerializeField] private BallState _inGame;
-    [SerializeField] private List<BallComponent> _components;
+    [SerializeField] private Rigidbody2D _myBody;
 
+    private List<BallComponent> _components;
     private Transform _transform;
     private BallState _current;
     private Vector3 _start;
@@ -16,6 +18,7 @@ public class Ball : CyclicBehaviour, ILevelFinisher, ILevelStarter, IInitializab
     public bool IsInAim { get; private set; }
     public Vector2 Position => _transform.position;
     public event Action EnterAim;
+    public event Action EnterGame;
 
     private void Awake()
     {
@@ -23,10 +26,18 @@ public class Ball : CyclicBehaviour, ILevelFinisher, ILevelStarter, IInitializab
         _aim.SetTarget(_inGame);
         _inGame.SetTarget(_aim);
         _start = _transform.position;
+        var partOfComponents = _aim.GetActiveComponents().Union(_inGame.GetActiveComponents());
+        _components = partOfComponents.Union(_simulation.GetActiveComponents()).ToList();
+
+        foreach (BallComponent component in _components)
+            component.SetBody(_myBody);
     }
 
     public void Init()
     {
+        _aim.Exit();
+        _simulation.Exit();
+        _inGame.Exit();
         ChangeState(null);
     }
 
@@ -43,8 +54,11 @@ public class Ball : CyclicBehaviour, ILevelFinisher, ILevelStarter, IInitializab
 
     public void EnterSimulation()
     {
-        if (_current == null)
-            ChangeState(_simulation);
+        if (_current != null)
+            return;
+
+        Init();
+        ChangeState(_simulation);
     }
 
     public T GetBallComponent<T>() where T : BallComponent
@@ -76,6 +90,8 @@ public class Ball : CyclicBehaviour, ILevelFinisher, ILevelStarter, IInitializab
 
         if (IsInAim)
             EnterAim?.Invoke();
+        else if(_current == _inGame)
+            EnterGame?.Invoke();
 
         if (_current != null)
         {

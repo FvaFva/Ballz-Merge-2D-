@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -34,6 +35,11 @@ public class BallState
 
         foreach (BallComponent component in _triggers)
             component.Triggered -= OnTriggered;
+    }
+
+    public IEnumerable<BallComponent> GetActiveComponents()
+    {
+        return _activeComponents.Union(_triggers);
     }
 
     private void OnTriggered()
