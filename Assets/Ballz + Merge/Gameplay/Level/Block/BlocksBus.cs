@@ -5,8 +5,9 @@ using Zenject;
 public class BlocksBus : CyclicBehaviour, ILevelFinisher
 {
     [SerializeField] private BlocksSpawner _spawner;
-    [SerializeField] private ExplosionPull _explosionPull;
+    [SerializeField] private ExplosionPool _explosionPool;
     [SerializeField] private BlocksMergeImpact _mergeImpact;
+    [SerializeField] private BlockMagneticObserver _blockMagneticObserver;
 
     [Inject] private Ball _ball;
     [Inject] private PhysicGrid _physicsGrid;
@@ -23,6 +24,7 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
     private void Awake()
     {
         _collisionHandler = _ball.GetBallComponent<BallCollisionHandler>();
+        _blockMagneticObserver = new(_collisionHandler);
     }
 
     private void OnEnable()
@@ -32,6 +34,7 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
         _mover.BlockMoved += OnBlockComeToNewPosition;
         _mover.ChangedCellActivity += OnChangedCellActivity;
         _activeBlocks.ChangedCellActivity += OnChangedCellActivity;
+        _blockMagneticObserver.UpdateSubscribe(true);
     }
 
     private void OnDisable()
@@ -41,6 +44,7 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
         _mover.BlockMoved -= OnBlockComeToNewPosition;
         _mover.ChangedCellActivity -= OnChangedCellActivity;
         _activeBlocks.ChangedCellActivity -= OnChangedCellActivity;
+        _blockMagneticObserver.UpdateSubscribe(false);
     }
 
     public void FinishLevel()
@@ -64,7 +68,13 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
         {
             _activeBlocks.Remove(block);
             block.Destroy();
-            _explosionPull.SpawnEffect(block.WorldPosition);
+            _explosionPool.SpawnEffect(block.WorldPosition);
+            return;
+        }
+
+        if (_blockMagneticObserver.CheckBlock(block, out Block secondBlock) && _ballLevelVolume.CheckVolume(BallVolumesTypes.Magnet))
+        {
+            MergeBlocks(block, secondBlock);
             return;
         }
 
@@ -76,7 +86,7 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
             {
                 _activeBlocks.Remove(block);
                 block.Destroy();
-                _explosionPull.SpawnEffect(block.WorldPosition);
+                _explosionPool.SpawnEffect(block.WorldPosition);
                 return;
             }
 
@@ -121,10 +131,7 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
 
         if (blockInNextCell != null && blockInNextCell.Number == block.Number)
         {
-            _activeBlocks.Remove(blockInNextCell);
-            _activeBlocks.Remove(block);
-            _mover.Merge(blockInNextCell, block);
-            _mergeImpact.ShowImpact();
+            MergeBlocks(block, blockInNextCell);
             return true;
         }
         else
@@ -132,6 +139,14 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher
             return false;
         }
     }
+
+    private void MergeBlocks(Block firstBlock, Block secondBlock)
+    {
+        _activeBlocks.Remove(secondBlock);
+        _activeBlocks.Remove(firstBlock);
+        _mover.Merge(secondBlock, firstBlock);
+        _mergeImpact.ShowImpact();
+    }    
 
     private void OnStartLevel()
     {

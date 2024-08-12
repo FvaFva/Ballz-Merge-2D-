@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class ExplosionPull : CyclicBehaviour, IInitializable
+public class ExplosionPool : CyclicBehaviour, IInitializable
 {
     [SerializeField] private ExplosionEffect _prefab;
     [SerializeField] private Transform _effectParent;
@@ -18,7 +18,7 @@ public class ExplosionPull : CyclicBehaviour, IInitializable
 
     public ExplosionEffect SpawnEffect(Vector3 position)
     {
-        ExplosionEffect effect = new();
+        ExplosionEffect effect = null;
 
         if (_effects.TryDequeue(out effect) == false)
             effect = Generate();
