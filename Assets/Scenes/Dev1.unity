@@ -406,7 +406,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 162.1
+  m_fontSize: 162.05
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -673,7 +673,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.2023317, y: 0.34155732}
   m_AnchorMax: {x: 0.45333174, y: 0.47714758}
-  m_AnchoredPosition: {x: 1, y: -0.01159668}
+  m_AnchoredPosition: {x: 1.000061, y: -0.01159668}
   m_SizeDelta: {x: 2, y: -0.023000717}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &213724650
@@ -760,7 +760,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 68.85
+  m_fontSize: 68.9
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6251,7 +6251,7 @@ RectTransform:
   m_GameObject: {fileID: 451053688}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2470766, y: 1.2470766, z: 1.2470766}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1975204862}
@@ -6260,8 +6260,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.01, y: 0.01}
   m_AnchorMax: {x: 0.99, y: 0.99}
-  m_AnchoredPosition: {x: 0, y: -0.00012207031}
-  m_SizeDelta: {x: -223.6748, y: -125.81714}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &451053692
 MonoBehaviour:
@@ -6453,7 +6453,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 1
-  far clip plane: 1000
+  far clip plane: 998.25
   field of view: 167
   orthographic: 1
   orthographic size: 10
@@ -21646,6 +21646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initOrder: 1
   _spawner: {fileID: 785619883}
+  _explosionPull: {fileID: 0}
   _mergeImpact: {fileID: 1374338388}
 --- !u!1 &958183827
 GameObject:
@@ -39757,7 +39758,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 300
+  m_fontSize: 108.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
