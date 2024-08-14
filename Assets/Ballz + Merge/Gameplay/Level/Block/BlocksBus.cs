@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -20,6 +21,7 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher, IInitializable
 
     public event Action BlockFinished;
     public event Action WaveLoaded;
+    public event Action<IEnumerable<Block>> WaveSpawned;
 
     private void OnEnable()
     {
@@ -57,6 +59,8 @@ public class BlocksBus : CyclicBehaviour, ILevelFinisher, IInitializable
         _mover.Clear();
         _activeBlocks.Clear();
     }
+
+    public Block GetRandomBlock(Block selfExcluding = null) => _activeBlocks.GetRandomBlock(selfExcluding);
 
     private void OnBlockHit(GridCell cell, Vector2 hitPosition)
     {

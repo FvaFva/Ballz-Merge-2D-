@@ -11,12 +11,15 @@ public class Block : MonoBehaviour
     private const float MoveScaleCoefficient = 0.85f;
     private const float BounceScaleCoefficient = 0.15f;
     private const float ShakeTime = 0.15f;
+    private const float UpscaleModifier = 1.5f;
+    private const float DownscaleModifier = 0.25f;
+    private const float ScaleTime = 0.25f;
+    private const float FadeDestroy = 0.15f;
     private const string FadeProperty = "_fade";
 
     [SerializeField] private SpriteRenderer _view;
     [SerializeField] private TMP_Text _numberView;
     [SerializeField] private MoveColorMap _colorMap;
-    [SerializeField] private CanvasGroup _canvasGroup;
 
     [Inject] private GridSettings _gridSettings;
 
@@ -25,9 +28,9 @@ public class Block : MonoBehaviour
     private Vector3 _baseScale;
     private Material _material;
 
-    public Vector2Int GridPosition {  get; private set; }
+    public Vector2Int GridPosition { get; private set; }
     public Vector2 WorldPosition => _transform.position;
-    public int Number {  get; private set; }
+    public int Number { get; private set; }
 
     public event Action<Block> Deactivated;
     public event Action<Block> CameToNewCell;
@@ -56,7 +59,6 @@ public class Block : MonoBehaviour
         _numberView.text = number.ToString();
         _transform.localPosition = (Vector2)gridPosition * _gridSettings.CellSize;
         _transform.localScale = _baseScale;
-        _canvasGroup.alpha = 1;
         GridPosition = gridPosition;
     }
 
@@ -64,7 +66,7 @@ public class Block : MonoBehaviour
     {
         GridPosition += step;
         StopCurrentMoveTween();
-        _moveTween = _transform.DOLocalMove((Vector2)GridPosition * _gridSettings.CellSize, AnimationTime).SetEase(Ease.OutBack).OnComplete(() => CameToNewCell?.Invoke(this));
+        _moveTween = _transform.DOLocalMove((Vector2)GridPosition * _gridSettings.CellSize, AnimationTime).OnComplete(() => CameToNewCell?.Invoke(this));
         Vector3 scale = _baseScale;
 
         if (step.y != 0)
@@ -89,14 +91,27 @@ public class Block : MonoBehaviour
     public void Destroy()
     {
         StopCurrentMoveTween();
-        _canvasGroup.DOFade(0f, FadeTime).SetEase(Ease.InOutQuad).OnComplete(Deactivate);
-        _transform.DOScale(0, FadeTime);
-        _transform.DORotate(new Vector3(0, 0, 360), FadeTime, RotateMode.FastBeyond360).SetEase(Ease.OutElastic);
+        _numberView.text = "";
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(_transform.DOScale(_transform.localScale * DownscaleModifier, ScaleTime));
+        sequence.Append(_transform.DOScale(_transform.localScale * UpscaleModifier, ScaleTime)).Join(_view.DOFade(0f, FadeDestroy)).OnComplete(Deactivate).SetDelay(0.1f);
+        sequence.Play();
     }
 
     public void ReduceNumber()
     {
         Number--;
+
+        if (Number != 0)
+        {
+            _numberView.text = Number.ToString();
+            _view.color = _colorMap.GetColor(Number);
+        }
+    }
+
+    public void IncreaseNumber()
+    {
+        Number++;
         _numberView.text = Number.ToString();
         _view.color = _colorMap.GetColor(Number);
     }

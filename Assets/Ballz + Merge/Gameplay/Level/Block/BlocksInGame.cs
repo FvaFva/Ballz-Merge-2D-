@@ -62,4 +62,14 @@ public class BlocksInGame
             _blocks.Remove(_blocks[i]);
         }
     }
+
+    public Block GetRandomBlock(Block selfExcluding)
+    {
+        var otherBlocks = _blocks.Where(block => block != selfExcluding);
+
+        if (otherBlocks.Any())
+            return otherBlocks.ToArray()[UnityEngine.Random.Range(0, otherBlocks.Count())];
+        else
+            return null;
+    }
 }
