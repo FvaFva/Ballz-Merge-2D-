@@ -1,0 +1,21 @@
+# ninja log v5
+75	1377	7457989438427346	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	5eb0e2482a1b0bd
+13	3015	7457989454973857	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	62c4bb6e029649bd
+1377	1903	7457989442941670	C:/WorkSpace/BallzMerge2D/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5j502l70/obj/arm64-v8a/libswappywrapper.so	ed74a44eced194e6
+22	2402	7457989448770285	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	972231354ccaf84b
+69	2281	7457989447574529	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	703b2c27ed34cf56
+49	2534	7457989450122417	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	981d02cb9ff91791
+57	2405	7457989448618687	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	c5678e4a9d03be81
+64	2478	7457989449606878	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	e6d4f3317896bc8d
+39	2879	7457989453657726	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	eefa641b2fdfa7fc
+3016	3204	7457989456266642	C:/WorkSpace/BallzMerge2D/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5j502l70/obj/arm64-v8a/libgame.so	cfac8e10a79aaf79
+40	285	7458023426855160	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	5eb0e2482a1b0bd
+286	506	7458023428523893	C:/WorkSpace/BallzMerge2D/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5j502l70/obj/arm64-v8a/libswappywrapper.so	ed74a44eced194e6
+29	977	7458023433719569	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	703b2c27ed34cf56
+14	993	7458023433875764	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	972231354ccaf84b
+34	1027	7458023434237824	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	c5678e4a9d03be81
+23	1130	7458023435244742	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	e6d4f3317896bc8d
+19	1159	7458023435578904	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	981d02cb9ff91791
+9	1337	7458023437354582	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	eefa641b2fdfa7fc
+4	1400	7458023437990135	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	62c4bb6e029649bd
+1401	1528	7458023438816449	C:/WorkSpace/BallzMerge2D/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5j502l70/obj/arm64-v8a/libgame.so	cfac8e10a79aaf79
