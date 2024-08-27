@@ -1,5 +1,6 @@
 ﻿using Zenject;
 using UnityEngine;
+using BallzMerge.Gameplay.BallSpace;
 
 public class BallGameZoneLeaverHandler : BallComponent
 {

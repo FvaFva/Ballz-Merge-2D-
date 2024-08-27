@@ -1,38 +1,43 @@
-public class BlockMagneticObserver
+using BallzMerge.Gameplay.BlockSpace;
+
+namespace BallzMerge.Gameplay.BallSpace
 {
-    private Block _lastBlock;
-    private BallCollisionHandler _collisionHandler;
-
-    public BlockMagneticObserver(BallCollisionHandler collisionHandler)
+    public class BlockMagneticObserver
     {
-        _collisionHandler = collisionHandler;
-        _collisionHandler.NonBlockHit += Clear;
-    }
+        private Block _lastBlock;
+        private BallCollisionHandler _collisionHandler;
 
-    public void UpdateSubscribe(bool isSubscribed)
-    {
-        if (isSubscribed)
-            _collisionHandler.NonBlockHit += Clear;
-        else
-            _collisionHandler.NonBlockHit -= Clear;
-    }
-
-    public bool CheckBlock(Block checkedBlock, out Block lastBlock)
-    {
-        if (_lastBlock != null && _lastBlock != checkedBlock && _lastBlock.Number == checkedBlock.Number)
+        public BlockMagneticObserver(BallCollisionHandler collisionHandler)
         {
-            lastBlock = _lastBlock;
-            Clear();
-            return true;
+            _collisionHandler = collisionHandler;
+            _collisionHandler.NonBlockHit += Clear;
         }
 
-        _lastBlock = checkedBlock;
-        lastBlock = null;
-        return false;
-    }
+        public void UpdateSubscribe(bool isSubscribed)
+        {
+            if (isSubscribed)
+                _collisionHandler.NonBlockHit += Clear;
+            else
+                _collisionHandler.NonBlockHit -= Clear;
+        }
 
-    public void Clear()
-    {
-        _lastBlock = null;
+        public bool CheckBlock(Block checkedBlock, out Block lastBlock)
+        {
+            if (_lastBlock != null && _lastBlock != checkedBlock && _lastBlock.Number == checkedBlock.Number)
+            {
+                lastBlock = _lastBlock;
+                Clear();
+                return true;
+            }
+
+            _lastBlock = checkedBlock;
+            lastBlock = null;
+            return false;
+        }
+
+        public void Clear()
+        {
+            _lastBlock = null;
+        }
     }
 }

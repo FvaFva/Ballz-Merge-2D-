@@ -2,41 +2,44 @@
 using System.Linq;
 using System.Collections.Generic;
 
-public class Dropper : CyclicBehavior, IWaveUpdater, IInitializable, ILevelStarter
+namespace BallzMerge.Gameplay.Level
 {
-    [SerializeField] private int _wavesToDrop;
-    [SerializeField] private DropSelector _selector;
-    [SerializeField] private List<Drop> _drops;
-    [SerializeField] private InfoPanel _view;
-
-    private List<Drop> _pool;
-    private int _waveCount;
-
-    public void Init()
+    public class Dropper : CyclicBehavior, IWaveUpdater, IInitializable, ILevelStarter
     {
-        _pool = new List<Drop>();
+        [SerializeField] private int _wavesToDrop;
+        [SerializeField] private DropSelector _selector;
+        [SerializeField] private List<Drop> _drops;
+        [SerializeField] private InfoPanel _view;
 
-        foreach (Drop drop in _drops)
+        private List<Drop> _pool;
+        private int _waveCount;
+
+        public void Init()
         {
-            for (int i = 0; i < drop.CountInPool; i++)
-                _pool.Add(drop);
+            _pool = new List<Drop>();
+
+            foreach (Drop drop in _drops)
+            {
+                for (int i = 0; i < drop.CountInPool; i++)
+                    _pool.Add(drop);
+            }
         }
-    }
 
-    public void StartLevel()
-    {
-        _waveCount = _wavesToDrop;
-    }
-
-    public void UpdateWave()
-    {
-        if(--_waveCount == 0)
+        public void StartLevel()
         {
-            List<Drop> temp = _pool.ToList();
-            _selector.Show(temp.TakeRandom(), temp.TakeRandom());
             _waveCount = _wavesToDrop;
         }
 
-        _view.Show(_waveCount);
+        public void UpdateWave()
+        {
+            if (--_waveCount == 0)
+            {
+                List<Drop> temp = _pool.ToList();
+                _selector.Show(temp.TakeRandom(), temp.TakeRandom());
+                _waveCount = _wavesToDrop;
+            }
+
+            _view.Show(_waveCount);
+        }
     }
 }

@@ -2,53 +2,56 @@
 using System;
 using UnityEngine;
 
-public class DropSelector : CyclicBehavior, ILevelFinisher
+namespace BallzMerge.Gameplay.Level
 {
-    private const float AnimationTime = 0.5f;
-
-    [SerializeField] private CanvasGroup _canvasGroup;
-    [SerializeField] private Canvas _canvas;
-    [SerializeField] private DropView _firstSlot;
-    [SerializeField] private DropView _secondSlot;
-
-    public event Action<BallVolumesTypes, float> DropSelected;
-
-    private void OnEnable()
+    public class DropSelector : CyclicBehavior, ILevelFinisher
     {
-        _firstSlot.Selected += OnSelect;
-        _secondSlot.Selected += OnSelect;
-    }
+        private const float AnimationTime = 0.5f;
 
-    private void OnDisable()
-    {
-        _firstSlot.Selected -= OnSelect;
-        _secondSlot.Selected -= OnSelect;
-    }
+        [SerializeField] private CanvasGroup _canvasGroup;
+        [SerializeField] private Canvas _canvas;
+        [SerializeField] private DropView _firstSlot;
+        [SerializeField] private DropView _secondSlot;
 
-    public void Show(Drop first, Drop second)
-    {
-        _firstSlot.Show(first);
-        _secondSlot.Show(second);
-        _canvas.enabled = true;
-        _canvasGroup.DOFade(1, AnimationTime);
-    }
+        public event Action<BallVolumesTypes, float> DropSelected;
 
-    public void FinishLevel()
-    {
-        _canvasGroup.alpha = 0;
-        _canvas.enabled = false;
-    }
+        private void OnEnable()
+        {
+            _firstSlot.Selected += OnSelect;
+            _secondSlot.Selected += OnSelect;
+        }
 
-    private void OnSelect(Drop drop, float count)
-    {
-        Hide();
-        DropSelected?.Invoke(drop.WaveDropType, count);
-    }
+        private void OnDisable()
+        {
+            _firstSlot.Selected -= OnSelect;
+            _secondSlot.Selected -= OnSelect;
+        }
 
-    private void Hide ()
-    {
-        _firstSlot.Show(null);
-        _secondSlot.Show(null);
-        _canvasGroup.DOFade(0, AnimationTime).OnComplete(() => _canvas.enabled = false);
+        public void Show(Drop first, Drop second)
+        {
+            _firstSlot.Show(first);
+            _secondSlot.Show(second);
+            _canvas.enabled = true;
+            _canvasGroup.DOFade(1, AnimationTime);
+        }
+
+        public void FinishLevel()
+        {
+            _canvasGroup.alpha = 0;
+            _canvas.enabled = false;
+        }
+
+        private void OnSelect(Drop drop, float count)
+        {
+            Hide();
+            DropSelected?.Invoke(drop.WaveDropType, count);
+        }
+
+        private void Hide()
+        {
+            _firstSlot.Show(null);
+            _secondSlot.Show(null);
+            _canvasGroup.DOFade(0, AnimationTime).OnComplete(() => _canvas.enabled = false);
+        }
     }
 }

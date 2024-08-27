@@ -17,10 +17,9 @@ public class ExplosionEffect : MonoBehaviour
         _particlesLifetime = new WaitForSeconds(_explosionEffect.main.duration);
     }
 
-    public ExplosionEffect Initialize(Transform parent)
+    public void Initialize(Transform parent)
     {
         _transform.parent = parent;
-        return this;
     }
 
     public void Play(Vector3 position)

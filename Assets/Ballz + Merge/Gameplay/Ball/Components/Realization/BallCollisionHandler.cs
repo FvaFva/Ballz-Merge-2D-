@@ -1,63 +1,62 @@
 using System;
 using UnityEngine;
+using BallzMerge.Gameplay.Level;
 
-[RequireComponent(typeof(Rigidbody2D))]
-public class BallCollisionHandler : BallComponent
+namespace BallzMerge.Gameplay.BallSpace
 {
-    private const float MinDelta = 0.0002f;
-    private const float ExtraFlip = 0.04f;
-
-    private Transform _transform;
-
-    public event Action<Vector2> Hit;
-    public event Action<GridCell, Vector2> HitBlock;
-    public event Action NonBlockHit;
-    public event Action GameZoneLeft;
-
-    private void Awake()
+    [RequireComponent(typeof(Rigidbody2D))]
+    public class BallCollisionHandler : BallComponent
     {
-        _transform = transform;
-    }
+        private const float MinDelta = 0.0002f;
+        private const float ExtraFlip = 0.09f;
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Vector2 contactPoint = collision.contacts[0].point;
-        Hit?.Invoke(contactPoint);
-        Collider2D hitTarget = collision.collider;
+        private Transform _transform;
 
-        CorrectingBounceDirection(contactPoint - (Vector2)_transform.position);
+        public event Action<Vector2> Hit;
+        public event Action<GridCell, Vector2> HitBlock;
+        public event Action NonBlockHit;
+        public event Action GameZoneLeft;
 
-        if (hitTarget.TryGetComponent(out GridCell hitBlock))
-            HitBlock?.Invoke(hitBlock, contactPoint);
-        else
-            NonBlockHit?.Invoke();
-
-        if (hitTarget.TryGetComponent(out PlayZoneEdg _))
-            GameZoneLeft?.Invoke();
-    }
-
-    private void CorrectingBounceDirection(Vector2 direction)
-    {
-        direction.Normalize();
-
-        if (Math.Abs(direction.y) < MinDelta)
+        private void Awake()
         {
-            Vector2 correctVelocity = MyBody.velocity;
-            correctVelocity.y = GetSign() * (Math.Abs(correctVelocity.y) + ExtraFlip);
-            correctVelocity.x = Math.Sign(correctVelocity.x) * (Math.Abs(correctVelocity.x) - ExtraFlip);
-            MyBody.velocity = correctVelocity;
+            _transform = transform;
         }
-        else if (Math.Abs(direction.x) < MinDelta)
-        {
-            Vector2 correctVelocity = MyBody.velocity;
-            correctVelocity.x = GetSign() * (Math.Abs(correctVelocity.x) + ExtraFlip);
-            correctVelocity.y = Math.Sign(correctVelocity.y) * (Math.Abs(correctVelocity.y) - ExtraFlip);
-            MyBody.velocity = correctVelocity;
-        }
-    }
 
-    private int GetSign()
-    {
-        return UnityEngine.Random.Range(0, 2) == 0 ? -1 : 1;
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            Vector2 contactPoint = collision.contacts[0].point;
+            Hit?.Invoke(contactPoint);
+            Collider2D hitTarget = collision.collider;
+
+            CorrectingBounceDirection(contactPoint - (Vector2)_transform.position);
+
+            if (hitTarget.TryGetComponent(out GridCell hitBlock))
+                HitBlock?.Invoke(hitBlock, contactPoint);
+            else
+                NonBlockHit?.Invoke();
+
+            if (hitTarget.TryGetComponent(out PlayZoneEdge _))
+                GameZoneLeft?.Invoke();
+        }
+
+        private void CorrectingBounceDirection(Vector2 direction)
+        {
+            direction.Normalize();
+
+            if (Math.Abs(direction.y) < MinDelta)
+            {
+                Vector2 correctVelocity = MyBody.velocity;
+                correctVelocity.y = (Math.Abs(correctVelocity.y) + ExtraFlip) * -1;
+                correctVelocity.x = Math.Sign(correctVelocity.x) * (Math.Abs(correctVelocity.x) - ExtraFlip);
+                MyBody.velocity = correctVelocity;
+            }
+            else if (Math.Abs(direction.x) < MinDelta)
+            {
+                Vector2 correctVelocity = MyBody.velocity;
+                correctVelocity.x = (Math.Abs(correctVelocity.x) + ExtraFlip) * -1;
+                correctVelocity.y = Math.Sign(correctVelocity.y) * (Math.Abs(correctVelocity.y) - ExtraFlip);
+                MyBody.velocity = correctVelocity;
+            }
+        }
     }
 }

@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
-public class GridVirtualCell : MonoBehaviour
+namespace BallzMerge.Gameplay.Level
 {
-    [SerializeField] private BoxCollider2D _collider2D;
+    public class GridVirtualCell : MonoBehaviour
+    {
+        [SerializeField] private BoxCollider2D _collider2D;
 
-    public BoxCollider2D Collider => _collider2D;
+        public BoxCollider2D Collider => _collider2D;
+    }
 }
