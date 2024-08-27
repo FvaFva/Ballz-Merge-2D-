@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 
-public class BlocksMergeImpact : MonoBehaviour
+namespace BallzMerge.Gameplay.BlockSpace
 {
-    [SerializeField] private AudioSourceHandler _sound;
-
-    public void ShowImpact()
+    public class BlocksMergeImpact : MonoBehaviour
     {
-        _sound.Play();
+        [SerializeField] private AudioSourceHandler _sound;
+
+        public void ShowImpact()
+        {
+            _sound.Play();
+        }
     }
 }

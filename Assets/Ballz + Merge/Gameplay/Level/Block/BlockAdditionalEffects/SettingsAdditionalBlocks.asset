@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: SettingsAdditionalBlocks
   m_EditorClassIdentifier: 
   _properties:
-  - Prefab: {fileID: 0}
+  - Prefab: {fileID: 5710768022605253989, guid: c3effd708bbdd5542a5a7f8db01a2272, type: 3}
     ChanceToPerform: 1

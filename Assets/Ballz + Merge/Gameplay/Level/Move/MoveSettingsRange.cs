@@ -1,13 +1,16 @@
 ﻿using System;
 
-[Serializable]
-public struct MoveSettingsRange
+namespace BallzMerge.Gameplay.Level
 {
-    public int InitialWave;
-    public int TerminalWave;
-
-    public bool IsInRange(int wave)
+    [Serializable]
+    public struct MoveSettingsRange
     {
-        return InitialWave <= wave && wave <= TerminalWave;
+        public int InitialWave;
+        public int TerminalWave;
+
+        public bool IsInRange(int wave)
+        {
+            return InitialWave <= wave && wave <= TerminalWave;
+        }
     }
 }

@@ -15,7 +15,7 @@ public class ExplosionPool : CyclicBehaviour, IInitializable
             _effects.Enqueue(Generate());
     }
 
-    public ExplosionEffect SpawnEffect(Vector3 position)
+    public void SpawnEffect(Vector3 position)
     {
         ExplosionEffect effect = null;
 
@@ -24,8 +24,6 @@ public class ExplosionPool : CyclicBehaviour, IInitializable
 
         effect.Played += Deactivated;
         effect.Play(position);
-
-        return effect;
     }
 
     private void Deactivated(ExplosionEffect effect)
