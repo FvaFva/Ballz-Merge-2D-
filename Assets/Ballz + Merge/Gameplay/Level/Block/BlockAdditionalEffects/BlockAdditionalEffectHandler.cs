@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlockAdditionalEffectHandler : CyclicBehaviour, IInitializable, ILevelFinisher
+    public class BlockAdditionalEffectHandler : CyclicBehavior, IInitializable, ILevelFinisher
     {
         [SerializeField] private BlockAdditionalEffectSettings _settings;
         [SerializeField] private Transform _parent;
