@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockAdditionalEffectSpawner : CyclicBehaviour, IInitializable
+public class BlockAdditionalEffectSpawner : CyclicBehavior, IInitializable
 {
     [SerializeField] private BlocksBus _blockBus;
     [SerializeField] private BlockAdditionalEffectSettings _settings;

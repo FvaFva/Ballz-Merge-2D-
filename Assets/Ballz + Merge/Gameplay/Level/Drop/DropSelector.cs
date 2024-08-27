@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-public class DropSelector : CyclicBehaviour, ILevelFinisher
+public class DropSelector : CyclicBehavior, ILevelFinisher
 {
     private const float AnimationTime = 0.5f;
 

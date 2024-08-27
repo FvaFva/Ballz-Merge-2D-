@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-public class Dropper : CyclicBehaviour, IWaveUpdater, IInitializable, ILevelStarter
+public class Dropper : CyclicBehavior, IWaveUpdater, IInitializable, ILevelStarter
 {
     [SerializeField] private int _wavesToDrop;
     [SerializeField] private DropSelector _selector;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class BlocksBus : CyclicBehaviour, ILevelFinisher, IInitializable
+public class BlocksBus : CyclicBehavior, ILevelFinisher, IInitializable
 {
     [SerializeField] private BlocksSpawner _spawner;
     [SerializeField] private ExplosionPool _explosionPool;

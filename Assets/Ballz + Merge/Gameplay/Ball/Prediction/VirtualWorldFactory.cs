@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class VirtualWorldFactory : CyclicBehaviour, IInitializable
+public class VirtualWorldFactory : CyclicBehavior, IInitializable
 {
     [SerializeField] private PalyZoneBoards _boards;
     [SerializeField] private GridVirtualCell _prefab;

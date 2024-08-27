@@ -289,7 +289,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 61.6
+  m_fontSize: 58.45
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -406,7 +406,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 162.05
+  m_fontSize: 153.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -760,7 +760,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 68.9
+  m_fontSize: 73.5
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1028,6 +1028,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
+  _initWeight: 1
   _factory: {fileID: 1390426417}
 --- !u!4 &276649840
 Transform:
@@ -1356,6 +1357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
+  _initWeight: 1
 --- !u!4 &402827438
 Transform:
   m_ObjectHideFlags: 0
@@ -1462,6 +1464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
+  _initWeight: 1
   _canvasGroup: {fileID: 1964262984}
   _canvas: {fileID: 1964262987}
   _firstSlot: {fileID: 814567761783011798}
@@ -2041,6 +2044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
+  _initWeight: 1
   _prefab: {fileID: 2327073673805491961, guid: ffbe112c7d2513d4b9d5f0140b6dc884, type: 3}
   _effectParent: {fileID: 713737360}
   _countPreload: 10
@@ -6899,6 +6903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
+  _initWeight: 1
   _field: {fileID: 733210648}
   _particlesForLevel: 5
 --- !u!1 &785619881
@@ -6946,6 +6951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
+  _initWeight: 1
   _countPreload: 35
   _blockParent: {fileID: 785619882}
   _numbersProperties: {fileID: 11400000, guid: c816a30a9fe7eb249b716c54cf096edc, type: 2}
@@ -7108,6 +7114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 1
+  _initWeight: 1
   _spawner: {fileID: 785619883}
   _explosionPool: {fileID: 713737361}
   _mergeImpact: {fileID: 1374338388}
@@ -7596,6 +7603,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
+  _initWeight: 1
   _wavesToDrop: 2
   _selector: {fileID: 451053694}
   _drops:
@@ -8021,6 +8029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0fe39f71c84fa84ca2a8617f6cc857d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _loader: {fileID: 1165564535}
   _ball: {fileID: 2090727811}
   _physicsGrid: {fileID: 1866782057}
   _questioner: {fileID: 320352427}
@@ -8169,6 +8178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 99
+  _initWeight: 1
   _dropSelector: {fileID: 451053694}
 --- !u!4 &1359073988
 Transform:
@@ -8521,6 +8531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: -1
+  _initWeight: 1
   _boards: {fileID: 245221739}
   _prefab: {fileID: 8476835912495725215, guid: 4abda6609e5d8fc4183bcf68b5e6f08f, type: 3}
   _boxParentForeMoveToVirtual: {fileID: 1797623783}
@@ -8955,7 +8966,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 61.6
+  m_fontSize: 58.45
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10077,6 +10088,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 1
+  _initWeight: 1
   _prefab: {fileID: 7619593642170739322, guid: 938bd4bcdd3e4de439dcb7c9bb82a4d4, type: 3}
   _cellParent: {fileID: 549203120}
   _factory: {fileID: 1390426417}
@@ -10801,6 +10813,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4405036431720455977, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
+      propertyPath: _camera
+      value: 
+      objectReference: {fileID: 519420031}
     - target: {fileID: 6108565124518385327, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
       propertyPath: _volume
       value: 

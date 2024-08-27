@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BallWaveVolume : CyclicBehaviour, IWaveUpdater, IInitializable, ILevelFinisher
+public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILevelFinisher
 {
     [SerializeField] private DropSelector _dropSelector;
 

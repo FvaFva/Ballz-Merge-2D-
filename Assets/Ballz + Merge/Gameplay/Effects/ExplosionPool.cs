@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExplosionPool : CyclicBehaviour, IInitializable
+public class ExplosionPool : CyclicBehavior, IInitializable
 {
     [SerializeField] private ExplosionEffect _prefab;
     [SerializeField] private Transform _effectParent;

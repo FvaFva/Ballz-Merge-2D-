@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Zenject;
 
-public class BlocksSpawner : CyclicBehaviour, ILevelStarter, IInitializable
+public class BlocksSpawner : CyclicBehavior, ILevelStarter, IInitializable
 {
     [SerializeField] private int _countPreload;
     [SerializeField] private Transform _blockParent;

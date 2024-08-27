@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Field : CyclicBehaviour, IWaveUpdater
+public class Field : CyclicBehavior, IWaveUpdater
 {
     [SerializeField] private ParticleSystem _field;
     [SerializeField] private int _particlesForLevel;

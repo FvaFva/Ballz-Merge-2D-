@@ -3,6 +3,9 @@ using Zenject;
 
 public class MainSceneInjection : MonoInstaller
 {
+    [Header("Project context bind")]
+    [SerializeField] private GameCycler _loader;
+
     [Header("Bind")]
     [SerializeField] private Ball _ball;
     [SerializeField] private PhysicGrid _physicsGrid;
@@ -32,5 +35,8 @@ public class MainSceneInjection : MonoInstaller
 
         Container.InjectGameObject(_blocksSpawner.gameObject);
         Container.InjectGameObject(_score.gameObject);
+
+        ProjectContext.Instance.Container.Unbind<GameCycler>();
+        ProjectContext.Instance.Container.Bind<GameCycler>().FromInstance(_loader).NonLazy();
     }
 }

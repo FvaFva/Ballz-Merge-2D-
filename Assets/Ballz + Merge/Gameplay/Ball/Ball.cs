@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Ball : CyclicBehaviour, ILevelFinisher, ILevelStarter, IInitializable
+public class Ball : CyclicBehavior, ILevelFinisher, ILevelStarter, IInitializable
 {
     [SerializeField] private BallState _simulation;
     [SerializeField] private BallState _aim;

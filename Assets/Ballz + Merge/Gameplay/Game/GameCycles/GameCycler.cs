@@ -8,9 +8,10 @@ public class GameCycler: MonoBehaviour
 {
     private const string RestartQuestName = "Restart";
 
-    [SerializeField] private List<CyclicBehaviour> _components;
+    [SerializeField] private List<CyclicBehavior> _components;
 
     private List<ILevelFinisher> _finishers = new List<ILevelFinisher>();
+    private List<IInitializable> _initializables = new List<IInitializable>();
     private List<ILevelStarter> _starters = new List<ILevelStarter>();
     private List<IWaveUpdater> _wavers = new List<IWaveUpdater>();
 
@@ -19,9 +20,26 @@ public class GameCycler: MonoBehaviour
     [Inject] private UserQuestioner _userQuestioner;
     [Inject] private Ball _ball;
 
+    public IEnumerable<IInitializable> Initializables => _initializables;
+
     private void Start()
     {
-        StartCoroutine(DelayedStart());
+        foreach (var cyclical in _components.OrderBy(item => item.Order))
+        {
+            if (cyclical is IInitializable initializable)
+                _initializables.Add(initializable);
+
+            if (cyclical is ILevelFinisher finisher)
+                _finishers.Add(finisher);
+
+            if (cyclical is ILevelStarter starter)
+                _starters.Add(starter);
+
+            if (cyclical is IWaveUpdater waver)
+                _wavers.Add(waver);
+        }
+
+        _userInput.Enable();
     }
 
     private void OnEnable()
@@ -41,6 +59,12 @@ public class GameCycler: MonoBehaviour
         _userInput.Disable();
     }
 
+    public void RestartLevel()
+    {
+        foreach (ILevelStarter starter in _starters)
+            starter.StartLevel();
+    }
+
     private void OnBallEnterAim()
     {
         foreach(IWaveUpdater waver in _wavers)
@@ -52,29 +76,7 @@ public class GameCycler: MonoBehaviour
         StartCoroutine(DelayedLevelFinish());
     }
 
-    private IEnumerator DelayedStart()
-    {
-        yield return new WaitForFixedUpdate();
-
-        foreach (var cyclical in _components.OrderBy(item => item.Order))
-        {
-            if (cyclical is IInitializable initializable)
-                initializable.Init();
-
-            if (cyclical is ILevelFinisher finisher)
-                _finishers.Add(finisher);
-
-            if (cyclical is ILevelStarter starter)
-                _starters.Add(starter);
-
-            if (cyclical is IWaveUpdater waver)
-                _wavers.Add(waver);
-        }
-
-        _userInput.Enable();
-        RestartLevel();
-    }
-        private IEnumerator DelayedLevelFinish()
+    private IEnumerator DelayedLevelFinish()
     {
         yield return new WaitForFixedUpdate();
 
@@ -96,12 +98,6 @@ public class GameCycler: MonoBehaviour
             else
                 Quit();
         }    
-    }
-
-    private void RestartLevel()
-    {
-        foreach(ILevelStarter starter in _starters)
-            starter.StartLevel();
     }
 
     private void Quit()

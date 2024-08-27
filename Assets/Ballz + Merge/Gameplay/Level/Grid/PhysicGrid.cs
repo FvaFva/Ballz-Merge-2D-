@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Zenject;
 
-public class PhysicGrid : CyclicBehaviour, ILevelFinisher, IInitializable
+public class PhysicGrid : CyclicBehavior, ILevelFinisher, IInitializable
 {
     [SerializeField] private GridCell _prefab;
     [SerializeField] private Transform _cellParent;

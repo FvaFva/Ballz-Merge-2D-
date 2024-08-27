@@ -4,21 +4,20 @@ using Zenject;
 
 public class BallStrikeVectorReader : BallComponent
 {
+    [SerializeField]private Camera _camera;
+
     [Inject] private MainInputMap _userInput;
 
     private Vector3 _vector;
-    private Camera _camera;
     private Transform _transform;
     private float _cameraY;
     private Action<Vector3> _currentProcessor;
 
     public event Action<Vector3> Changed;
     public event Action<Vector3> Dropped;
-    public Vector3 view;
 
     private void Awake()
     {
-        _camera = Camera.main;
         _transform = transform;
         _cameraY = _camera.transform.position.y;
         _currentProcessor = DesktopProcessor;

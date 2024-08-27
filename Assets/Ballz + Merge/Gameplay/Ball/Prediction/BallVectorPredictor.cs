@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class BallVectorPredictor : CyclicBehaviour, IInitializable
+public class BallVectorPredictor : CyclicBehavior, IInitializable
 {
     private const float StepTime = 0.02f;
     private const int MaxStepCount = 400;
