@@ -124,7 +124,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
             if (nextPosition.x < 0 || nextPosition.y >= _gridSettings.GridSize.y || nextPosition.x >= _gridSettings.GridSize.x)
             {
-                block.Shake(direction);
+                block.ShakeDirection(direction);
                 return false;
             }
             else if (_activeBlocks.GetAtPosition(block.GridPosition + direction) == null)
@@ -138,7 +138,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             }
             else
             {
-                block.Shake(direction);
+                block.ShakeDirection(direction);
                 return false;
             }
         }
@@ -212,6 +212,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _activeBlocks.AddBlocks(spawnBlocks);
             WaveLoaded?.Invoke();
             _additionalEffectHandler.HandleWave(spawnBlocks);
+            _additionalEffectHandler.HandleEvent(new BlockAdditionalEffectEventProperty(BlockAdditionalEffectEvents.NumberChanged, _activeBlocks.GetRandomBlock(), 1));
         }
 
         private void OnBlockComeToNewPosition(Block block)

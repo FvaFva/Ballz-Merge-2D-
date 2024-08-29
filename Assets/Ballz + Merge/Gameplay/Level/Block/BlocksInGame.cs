@@ -65,12 +65,22 @@ namespace BallzMerge.Gameplay.BlockSpace
             }
         }
 
-        public Block GetRandomBlock(Block selfExcluding)
+        public Block GetRandomBlock(Block selfExcluding = null)
         {
-            var otherBlocks = _blocks.Where(block => block != selfExcluding && block != null && block.IsWithEffect == false);
+            var otherBlocks = _blocks.Where(block => block != selfExcluding && block.IsWithEffect == false);
 
-            if (otherBlocks.Any())
-                return otherBlocks.ToArray()[UnityEngine.Random.Range(0, otherBlocks.Count())];
+            return ChooseRandomBlock(otherBlocks);
+        }
+
+        public Block GetRandomBlock()
+        {
+            return ChooseRandomBlock(_blocks);
+        }
+
+        private Block ChooseRandomBlock(IEnumerable<Block> blocks)
+        {
+            if (blocks.Any())
+                return blocks.ToArray()[UnityEngine.Random.Range(0, blocks.Count())];
             else
                 return null;
         }

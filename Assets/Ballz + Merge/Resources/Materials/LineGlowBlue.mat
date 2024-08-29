@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LineGlow
+  m_Name: LineGlowBlue
   m_Shader: {fileID: -6465566751694194690, guid: 6c89ce3f0f025b14dbc5b13da9877d29, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0

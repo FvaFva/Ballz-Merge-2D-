@@ -12,7 +12,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         private const float FadeTime = 0.6f;
         private const float MoveScaleCoefficient = 0.85f;
         private const float BounceScaleCoefficient = 0.15f;
-        private const float ShakeTime = 0.15f;
+        private const float ShakeDirectionTime = 0.15f;
+        private const float ShakeScaleTime = 0.25f;
         private const float UpscaleModifier = 1.5f;
         private const float DownscaleModifier = 0.25f;
         private const float ScaleTime = 0.25f;
@@ -118,13 +119,21 @@ namespace BallzMerge.Gameplay.BlockSpace
             }
         }
 
-        public void Shake(Vector2 direction)
+        public void ShakeDirection(Vector2 direction)
         {
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(_transform.DOLocalMove((Vector2)_transform.localPosition + (direction * BounceScaleCoefficient), ShakeTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localPosition = (Vector2)GridPosition * _gridSettings.CellSize));
+            sequence.Append(_transform.DOLocalMove((Vector2)_transform.localPosition + (direction * BounceScaleCoefficient), ShakeDirectionTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localPosition = (Vector2)GridPosition * _gridSettings.CellSize));
             float xScale = _transform.localScale.x * (1 + (direction.y == 0 ? -1 * BounceScaleCoefficient : BounceScaleCoefficient));
             float yScale = _transform.localScale.y * (1 + (direction.x == 0 ? -1 * BounceScaleCoefficient : BounceScaleCoefficient));
-            sequence.Join(_transform.DOScale(new Vector3(xScale, yScale), ShakeTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale));
+            sequence.Join(_transform.DOScale(new Vector3(xScale, yScale), ShakeDirectionTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale));
+            sequence.Play();
+        }
+
+        public void ShakeScale()
+        {
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(_transform.DOScale(_transform.localScale * UpscaleModifier, ShakeScaleTime));
+            sequence.Append(_transform.DOScale(_transform.localScale, ShakeScaleTime));
             sequence.Play();
         }
 
