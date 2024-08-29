@@ -9,10 +9,12 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private float _cellSize;
         [SerializeField] private float _cellSpacing;
         [SerializeField] private Vector2Int _gridSize;
+        [SerializeField] private Vector2 _viewPosition;
         [SerializeField] private float _moveTime = 0.3f;
 
         public float CellSize => _cellSize;
         public Vector2Int GridSize => _gridSize;
+        public Vector2 ViewPosition => _viewPosition;
         public float CellSpacing => _cellSpacing;
         public int FirstRowIndex => _gridSize.y - 1;
         public int LastRowIndex => 0;

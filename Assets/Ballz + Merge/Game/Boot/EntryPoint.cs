@@ -31,6 +31,7 @@ namespace BallzMerge.Root
             Object.DontDestroyOnLoad(_rootView.gameObject);
 
             ProjectContext.Instance.Container.Bind<UIRootView>().FromInstance(_rootView).NonLazy();
+            ProjectContext.Instance.Container.Bind<AudioSettings>().FromNew().AsSingle().NonLazy();
 
             _sceneLoader = new SceneLoader(_rootView.LoadScreen);
         }
