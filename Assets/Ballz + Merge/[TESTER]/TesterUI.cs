@@ -20,7 +20,6 @@ public class TesterUI : MonoBehaviour
         foreach (IInitializable initializable in _loader.Initializables)
             initializable.Init();
         
-
         _loader.RestartLevel();
     }
 }
