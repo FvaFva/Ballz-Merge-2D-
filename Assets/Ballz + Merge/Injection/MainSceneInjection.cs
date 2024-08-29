@@ -26,7 +26,6 @@ public class MainSceneInjection : MonoInstaller
     public override void InstallBindings()
     {
         Container.Bind<MainInputMap>().FromNew().AsSingle().NonLazy();
-        Container.Bind<AudioSettings>().FromNew().AsSingle().NonLazy();
 
         Container.Bind<Ball>().FromInstance(_ball).AsSingle().NonLazy();
         Container.Bind<PhysicGrid>().FromInstance(_physicsGrid).AsSingle().NonLazy();
