@@ -13,7 +13,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private const float MoveScaleCoefficient = 0.85f;
         private const float BounceScaleCoefficient = 0.15f;
         private const float ShakeDirectionTime = 0.15f;
-        private const float ShakeScaleTime = 0.25f;
+        private const float ShakeScaleTime = 0.5f;
         private const float UpscaleModifier = 1.5f;
         private const float DownscaleModifier = 0.25f;
         private const float ScaleTime = 0.25f;

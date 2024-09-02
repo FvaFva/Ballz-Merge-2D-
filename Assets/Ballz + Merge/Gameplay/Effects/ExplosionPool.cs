@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class ExplosionPool : CyclicBehavior, IInitializable
 {
-    [SerializeField] private ExplosionEffect _prefab;
+    [SerializeField] private BaseEffect _prefab;
     [SerializeField] private Transform _effectParent;
     [SerializeField] private int _countPreload;
 
-    private Queue<ExplosionEffect> _effects = new Queue<ExplosionEffect>();
+    private Queue<BaseEffect> _effects = new Queue<BaseEffect>();
 
     public void Init()
     {
@@ -17,7 +17,7 @@ public class ExplosionPool : CyclicBehavior, IInitializable
 
     public void SpawnEffect(Vector3 position)
     {
-        ExplosionEffect effect = null;
+        BaseEffect effect = null;
 
         if (_effects.TryDequeue(out effect) == false)
             effect = Generate();
@@ -26,15 +26,15 @@ public class ExplosionPool : CyclicBehavior, IInitializable
         effect.Play(position);
     }
 
-    private void Deactivated(ExplosionEffect effect)
+    private void Deactivated(BaseEffect effect)
     {
         _effects.Enqueue(effect);
         effect.Played -= Deactivated;
     }
 
-    private ExplosionEffect Generate()
+    private BaseEffect Generate()
     {
-        ExplosionEffect explosion = Instantiate(_prefab);
+        BaseEffect explosion = Instantiate(_prefab);
         explosion.Initialize(_effectParent);
         return explosion;
     }

@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3227f7612ff7d3c4d8989b245c03b6dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _particleFirst: {fileID: 591371962744447081}
+  _particleEffect: {fileID: 591371962744447081}
 --- !u!1001 &4656867388626720639
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -57,6 +57,38 @@ PrefabInstance:
     - target: {fileID: 4619545062051644075, guid: 6784ef193e531d847b49a55fb47fa10f, type: 3}
       propertyPath: m_Name
       value: BlockIncreaserEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229943181498414870, guid: 6784ef193e531d847b49a55fb47fa10f, type: 3}
+      propertyPath: lengthInSec
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229943181498414870, guid: 6784ef193e531d847b49a55fb47fa10f, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229943181498414870, guid: 6784ef193e531d847b49a55fb47fa10f, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229943181498414870, guid: 6784ef193e531d847b49a55fb47fa10f, type: 3}
+      propertyPath: EmissionModule.rateOverDistance.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229943181498414870, guid: 6784ef193e531d847b49a55fb47fa10f, type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[2].time
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229943181498414870, guid: 6784ef193e531d847b49a55fb47fa10f, type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[0].value
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229943181498414870, guid: 6784ef193e531d847b49a55fb47fa10f, type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[2].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229943181498414870, guid: 6784ef193e531d847b49a55fb47fa10f, type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[4].value
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5575282206234387988, guid: 6784ef193e531d847b49a55fb47fa10f, type: 3}
       propertyPath: m_LocalPosition.x

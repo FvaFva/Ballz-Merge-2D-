@@ -3,21 +3,27 @@ using UnityEngine;
 
 public class BlockAdditionalEffectIncreaser : BlockAdditionalEffectBase
 {
-    [SerializeField] private ParticleSystem _particleFirst;
+    [SerializeField] private ParticleSystem _particleEffect;
+
+    private BlocksInGame _activeBlocks;
+
+    private void FixedUpdate()
+    {
+        if (Current != null)
+            _particleEffect.transform.position = Current.WorldPosition;
+    }
 
     public override void HandleEvent(BlockAdditionalEffectEventProperty property)
     {
-        if (property.Current != Current)
-        {
-            InvokeActionNumberChanged(property.Current, property.Count);
-            property.Current.ShakeScale();
-        }
+        if (property.EffectEvents == BlockAdditionalEffectEvents.Destroy && property.Current == Current)
+            Deactivate();
     }
 
     public override void HandleWave()
     {
-        if (Current == null)
-            Deactivate();
+        Block block = _activeBlocks.GetRandomBlock();
+        InvokeActionNumberChanged(block, 1);
+        block.ShakeScale();
     }
 
     protected override bool TryInit(BlocksInGame blocks)
@@ -25,6 +31,7 @@ public class BlockAdditionalEffectIncreaser : BlockAdditionalEffectBase
         if (blocks == null)
             return false;
 
+        _activeBlocks = blocks;
         Current.ConnectEffect();
         return true;
     }

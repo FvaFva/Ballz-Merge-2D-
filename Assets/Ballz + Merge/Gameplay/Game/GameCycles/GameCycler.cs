@@ -6,9 +6,10 @@ using System.Linq;
 using UnityEngine;
 using Zenject;
 
-public class GameCycler: MonoBehaviour 
+public class GameCycler : MonoBehaviour
 {
     private const string RestartQuestName = "Restart";
+    private const int DelayTime = 2;
 
     [SerializeField] private List<CyclicBehavior> _components;
 
@@ -69,7 +70,14 @@ public class GameCycler: MonoBehaviour
 
     private void OnBallEnterAim()
     {
-        foreach(IWaveUpdater waver in _wavers)
+        StartCoroutine(DelayWaveUpdated());
+    }
+
+    private IEnumerator DelayWaveUpdated()
+    {
+        yield return new WaitForSeconds(DelayTime);
+
+        foreach (IWaveUpdater waver in _wavers)
             waver.UpdateWave();
     }
 
@@ -99,7 +107,7 @@ public class GameCycler: MonoBehaviour
                 RestartLevel();
             else
                 Quit();
-        }    
+        }
     }
 
     private void Quit()

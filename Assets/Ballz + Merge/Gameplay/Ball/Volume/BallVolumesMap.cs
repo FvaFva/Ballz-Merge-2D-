@@ -10,15 +10,15 @@ public class BallVolumesMap
     public BallVolumesMap()
     {
 #if UNITY_EDITOR
-        //string[] guids = AssetDatabase.FindAssets("t:BallVolume", new[] { VolumesPath });
+        string[] guids = AssetDatabase.FindAssets("t:BallVolume", new[] { VolumesPath });
 
-        //foreach (string guid in guids)
-        //{
-        //    BallVolume volume = AssetDatabase.LoadAssetAtPath<BallVolume>(AssetDatabase.GUIDToAssetPath(guid));
-        //
-        //    if (volume != null)
-        //        _volumes.Add(volume.Type, volume);
-        //}
+        foreach (string guid in guids)
+        {
+            BallVolume volume = AssetDatabase.LoadAssetAtPath<BallVolume>(AssetDatabase.GUIDToAssetPath(guid));
+        
+            if (volume != null)
+               _volumes.Add(volume.Type, volume);
+        }
 #endif
     }
 
