@@ -1,35 +1,41 @@
 ﻿using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.BlockSpace;
+using BallzMerge.Root;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
 
-public class GameCycler: MonoBehaviour 
+public class GameCycler: MonoBehaviour, ISceneEnterPoint
 {
     private const string RestartQuestName = "Restart";
 
+    [SerializeField] private UIView _mainUI;
     [SerializeField] private List<CyclicBehavior> _components;
 
     private List<ILevelFinisher> _finishers = new List<ILevelFinisher>();
-    private List<IInitializable> _initializables = new List<IInitializable>();
+    private List<IInitializable> _initializedComponents = new List<IInitializable>();
     private List<ILevelStarter> _starters = new List<ILevelStarter>();
     private List<IWaveUpdater> _wavers = new List<IWaveUpdater>();
+    private Action<SceneExitData> _sceneExit;
 
-    [Inject] private MainInputMap _userInput;
     [Inject] private BlocksBus _blocksBus;
     [Inject] private UserQuestioner _userQuestioner;
     [Inject] private Ball _ball;
+    [Inject] private UIRootView _rootUI;
 
-    public IEnumerable<IInitializable> Initializables => _initializables;
+    public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
+
+    public bool IsAvailable {  get; private set; }
 
     private void Start()
     {
         foreach (var cyclical in _components.OrderBy(item => item.Order))
         {
-            if (cyclical is IInitializable initializable)
-                _initializables.Add(initializable);
+            if (cyclical is IInitializable initializeComponent)
+                _initializedComponents.Add(initializeComponent);
 
             if (cyclical is ILevelFinisher finisher)
                 _finishers.Add(finisher);
@@ -41,7 +47,7 @@ public class GameCycler: MonoBehaviour
                 _wavers.Add(waver);
         }
 
-        _userInput.Enable();
+        IsAvailable = true;
     }
 
     private void OnEnable()
@@ -58,10 +64,17 @@ public class GameCycler: MonoBehaviour
 
     private void OnDestroy()
     {
-        _userInput.Disable();
+        IsAvailable = false;
     }
 
-    public void RestartLevel()
+    public void Init(Action<SceneExitData> callback)
+    {
+        _sceneExit = callback;
+        _rootUI.AttachSceneUI(_mainUI);
+        RestartLevel();
+    }
+
+    private void RestartLevel()
     {
         foreach (ILevelStarter starter in _starters)
             starter.StartLevel();
@@ -98,16 +111,7 @@ public class GameCycler: MonoBehaviour
             if (answer.IsPositiveAnswer)
                 RestartLevel();
             else
-                Quit();
+                _sceneExit.Invoke(new SceneExitData(true));
         }    
-    }
-
-    private void Quit()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
     }
 }

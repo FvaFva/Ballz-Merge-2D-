@@ -1,4 +1,5 @@
 using BallzMerge.Gameplay.Level;
+using BallzMerge.Root;
 using UnityEngine;
 using Zenject;
 
@@ -10,5 +11,6 @@ public class ProjectInjection : ScriptableObjectInstaller
     public override void InstallBindings()
     {
         Container.Bind<GridSettings>().FromInstance(_gridSettings).AsSingle().NonLazy();
+        Container.Bind<TargetSceneEntryPointContainer>().FromNew().AsSingle().NonLazy();
     }
 }

@@ -8,7 +8,6 @@ public class UserQuestioner : MonoBehaviour
 {
     private const float TimeScaleForQuestion = 0;
 
-    [SerializeField] private Canvas _questCanvas;
     [SerializeField] private TMP_Text _label;
     [SerializeField] private Button _yes;
     [SerializeField] private Button _no;
@@ -18,6 +17,12 @@ public class UserQuestioner : MonoBehaviour
     private UserQuestion _current;
 
     public event Action<UserQuestion> Answer;
+
+    private void Awake()
+    {
+        _lastTimeScale = Time.timeScale;
+        Hide();
+    }
 
     private void OnEnable()
     {
@@ -34,17 +39,21 @@ public class UserQuestioner : MonoBehaviour
     public void Show(UserQuestion question)
     {
         if (_current.IsEmpty())
+        {
+            _lastTimeScale = Time.timeScale;
+            Time.timeScale = TimeScaleForQuestion;
+            gameObject.SetActive(true);
             Display(question);
+        }
         else
+        {
             _questions.Enqueue(question);
+        }
     }
 
     private void Display(UserQuestion question)
     {
         _current = question;
-        _lastTimeScale = Time.timeScale;
-        Time.timeScale = TimeScaleForQuestion;
-        _questCanvas.enabled = true;
         _label.text = question.Description;
     }
 
@@ -62,8 +71,8 @@ public class UserQuestioner : MonoBehaviour
     {
         _current = default;
         Time.timeScale = _lastTimeScale;
-        _questCanvas.enabled = false;
         _label.text = String.Empty;
+        gameObject.SetActive(false);
     }
 
     private void OnAnswerNo()

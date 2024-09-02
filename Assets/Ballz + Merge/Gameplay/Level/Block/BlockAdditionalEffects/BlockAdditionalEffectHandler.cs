@@ -38,7 +38,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void FinishLevel()
         {
-            foreach (var effect in _activeEffects)
+            foreach (var effect in _activeEffects.ToArray())
                 effect.Deactivate();
         }
 

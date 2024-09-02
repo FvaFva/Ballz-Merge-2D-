@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,27 +11,30 @@ namespace BallzMerge.Root
         private const float SceneGeneratePrecent = 0.3f;
         private const float SecondsCheckTime = 0.05f;
 
+        [Inject] private TargetSceneEntryPointContainer _targetSceneEntryPoint;
+
         private WaitForSeconds _checkTime;
         private LoadScreen _loadView;
+        private Action<SceneExitData> _sceneExit;
 
-        public SceneLoader(LoadScreen loader)
+        public SceneLoader(LoadScreen loader, Action<SceneExitData> sceneExit)
         {
             _checkTime = new WaitForSeconds(SecondsCheckTime);
             _loadView = loader;
+            _sceneExit = sceneExit;
+            ProjectContext.Instance.Container.Inject(this);
         }
 
         public IEnumerator LoadScene(string name)
         {
             _loadView.Show();
+            _targetSceneEntryPoint.Clear();
 
-            foreach(var _ in LoadSceneFromBoot(name))
+            foreach (var _ in LoadSceneFromBoot(name))
                 yield return _checkTime;
 
-            if(name == ScenesNames.GAMEPLAY)
-            {
-                foreach (var _ in LoadGameplay())
-                    yield return _checkTime;
-            }
+            foreach (var _ in InitScene())
+                yield return _checkTime;
         }
 
         private IEnumerable LoadSceneFromBoot(string name)
@@ -53,24 +57,22 @@ namespace BallzMerge.Root
             yield return null;
         }
 
-        private IEnumerable LoadGameplay()
+        private IEnumerable InitScene()
         {
-            while (ProjectContext.Instance.Container.HasBinding<GameCycler>() == false)
+            while (_targetSceneEntryPoint?.IsReady() == false)
             {
                 _loadView.MoveProgress(1, SecondsCheckTime);
                 yield return null;
             }
 
-            GameCycler loader = ProjectContext.Instance.Container.Resolve<GameCycler>();
-
-            foreach (IInitializable initializable in loader.Initializables)
+            foreach (IInitializable initComponent in _targetSceneEntryPoint.Current.InitializedComponents)
             {
                 _loadView.MoveProgress(1, SecondsCheckTime);
-                initializable.Init();
+                initComponent.Init();
                 yield return null;
             }
 
-            loader.RestartLevel();
+            _targetSceneEntryPoint.Current.Init(_sceneExit);
             _loadView.MoveProgress(1, 1);
             yield return null;
             _loadView.Hide();

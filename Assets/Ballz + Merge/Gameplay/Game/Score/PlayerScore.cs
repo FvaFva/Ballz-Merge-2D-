@@ -1,28 +1,16 @@
-﻿using BallzMerge.Gameplay.BlockSpace;
-using System;
+﻿using System;
 using UnityEngine;
 using Zenject;
 
-public class PlayerScore : CyclicBehavior, ILevelStarter, ILevelFinisher, IInitializable
+public class PlayerScore : CyclicBehavior, ILevelStarter, ILevelFinisher, IInitializable, IWaveUpdater
 {
     private const string ScoreName = "Score";
 
-    [Inject] private BlocksBus _blocks;
     [Inject] private UserQuestioner _userQuestioner;
 
     public int Score { get; private set; }
     public int BestScore { get; private set; }
     public event Action ScoreChanged;
-
-    private void OnEnable()
-    {
-        _blocks.WaveLoaded += OnWaveLoaded;
-    }
-
-    private void OnDisable()
-    {
-        _blocks.WaveLoaded -= OnWaveLoaded;
-    }
 
     public void Init()
     {
@@ -44,7 +32,7 @@ public class PlayerScore : CyclicBehavior, ILevelStarter, ILevelFinisher, IIniti
         }
     }
 
-    private void OnWaveLoaded()
+    public void UpdateWave()
     {
         Score++;
         ScoreChanged?.Invoke();
