@@ -3,6 +3,7 @@ using Zenject;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.Level;
+using BallzMerge.Root;
 
 public class MainSceneInjection : MonoInstaller
 {
@@ -12,7 +13,6 @@ public class MainSceneInjection : MonoInstaller
     [Header("Bind")]
     [SerializeField] private Ball _ball;
     [SerializeField] private PhysicGrid _physicsGrid;
-    [SerializeField] private UserQuestioner _questioner;
     [SerializeField] private BlocksBus _blocksBus;
     [SerializeField] private BallWaveVolume _ballLevelVolume;
 
@@ -23,22 +23,21 @@ public class MainSceneInjection : MonoInstaller
     [SerializeField] private BlocksSpawner _blocksSpawner;
     [SerializeField] private PlayerScore _score;
 
+    [Inject] private TargetSceneEntryPointContainer _entryPointBinder;
+
     public override void InstallBindings()
     {
-        Container.Bind<MainInputMap>().FromNew().AsSingle().NonLazy();
-
         Container.Bind<Ball>().FromInstance(_ball).AsSingle().NonLazy();
         Container.Bind<PhysicGrid>().FromInstance(_physicsGrid).AsSingle().NonLazy();
-        Container.Bind<UserQuestioner>().FromInstance(_questioner).AsSingle().NonLazy();
         Container.Bind<BlocksBus>().FromInstance(_blocksBus).AsSingle().NonLazy();
         Container.Bind<BallWaveVolume>().FromInstance(_ballLevelVolume).AsSingle().NonLazy();
 
         Container.Bind<Block>().FromComponentInNewPrefab(_blockPrefab).AsTransient();
+        Container.Bind<ISceneEnterPoint>().To<GameCycler>().FromInstance(_loader).AsSingle().NonLazy();
 
         Container.InjectGameObject(_blocksSpawner.gameObject);
         Container.InjectGameObject(_score.gameObject);
 
-        ProjectContext.Instance.Container.Unbind<GameCycler>();
-        ProjectContext.Instance.Container.Bind<GameCycler>().FromInstance(_loader).NonLazy();
+        _entryPointBinder.Set(_loader);
     }
 }

@@ -17,9 +17,24 @@ public class TesterUI : MonoBehaviour
 
     private void InstantiateScene()
     {
-        foreach (IInitializable initializable in _loader.Initializables)
+        foreach (IInitializable initializable in _loader.InitializedComponents)
             initializable.Init();
         
-        _loader.RestartLevel();
+        _loader.Init(SceneExitCallBack);
+    }
+
+    private void SceneExitCallBack(SceneExitData exitData)
+    {
+        if (exitData.IsGameQuit)
+            QuitGame();
+    }
+
+    private void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
     }
 }
