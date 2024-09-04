@@ -367,7 +367,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 73.4
+  m_fontSize: 65.55
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1539,7 +1539,7 @@ GameObject:
   - component: {fileID: 713737360}
   - component: {fileID: 713737361}
   m_Layer: 0
-  m_Name: ExplosionPool
+  m_Name: EffectsPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1573,8 +1573,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
-  _prefab: {fileID: 2327073673805491961, guid: ffbe112c7d2513d4b9d5f0140b6dc884, type: 3}
-  _effectParent: {fileID: 713737360}
+  _prefabs:
+  - {fileID: 900858455280368239, guid: ffbe112c7d2513d4b9d5f0140b6dc884, type: 3}
+  - {fileID: -7271298243295093197, guid: 830bb1149c946bb4187d04f905a728c4, type: 3}
+  _effectParent: {fileID: 0}
   _countPreload: 5
 --- !u!1 &733210645
 GameObject:
@@ -6690,7 +6692,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initOrder: 1
   _spawner: {fileID: 785619883}
-  _explosionPool: {fileID: 713737361}
+  _effectsPool: {fileID: 713737361}
   _mergeImpact: {fileID: 1374338388}
   _additionalEffectHandler: {fileID: 1244611481}
 --- !u!1 &958183827
@@ -7755,6 +7757,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initOrder: 0
   _settings: {fileID: 11400000, guid: 746bbce98a003ac44a228caaebe7ddae, type: 2}
+  _effectsPool: {fileID: 713737361}
   _parent: {fileID: 1244611482}
   _countOfPreload: 5
 --- !u!4 &1244611482

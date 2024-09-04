@@ -22,7 +22,7 @@ public class BlockAdditionalEffectIncreaser : BlockAdditionalEffectBase
     public override void HandleWave()
     {
         Block block = _activeBlocks.GetRandomBlock();
-        InvokeActionNumberChanged(block, 1);
+        InvokeActionNumberChanged(block, 1, true);
         block.ShakeScale();
     }
 

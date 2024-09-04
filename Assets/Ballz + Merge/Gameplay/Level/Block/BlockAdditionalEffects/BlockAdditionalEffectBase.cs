@@ -9,7 +9,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         protected bool IsActive;
 
         public event Action<Block, Vector2Int> BlockMoved;
-        public event Action<Block, int> NumberChanged;
+        public event Action<Block, int, bool> NumberChanged;
         public event Action<Block> BlockDestroyed;
         public event Action<BlockAdditionalEffectBase> Removed;
 
@@ -44,9 +44,12 @@ namespace BallzMerge.Gameplay.BlockSpace
             BlockMoved?.Invoke(block, direction);
         }
 
-        protected void InvokeActionNumberChanged(Block block, int count)
+        protected void InvokeActionNumberChanged(Block block, int count, bool isEffect)
         {
-            NumberChanged?.Invoke(block, count);
+            if (isEffect)
+                NumberChanged?.Invoke(block, count, true);
+            else
+                NumberChanged?.Invoke(block, count, false);
         }
 
         protected void InvokeActionBlockDestroyed(Block block)

@@ -11,7 +11,7 @@ namespace BallzMerge.Gameplay.BlockSpace
     public class BlocksBus : CyclicBehavior, ILevelFinisher, IInitializable
     {
         [SerializeField] private BlocksSpawner _spawner;
-        [SerializeField] private ExplosionPool _explosionPool;
+        [SerializeField] private EffectsPool _effectsPool;
         [SerializeField] private BlocksMergeImpact _mergeImpact;
         [SerializeField] private BlockMagneticObserver _blockMagneticObserver;
         [SerializeField] private BlockAdditionalEffectHandler _additionalEffectHandler;
@@ -112,14 +112,11 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _activeBlocks.Remove(block);
             block.Destroy();
-            _explosionPool.SpawnEffect(block.WorldPosition);
+            _effectsPool.SpawnEffect(BlockAdditionalEffectEvents.Destroy, block.WorldPosition);
         }
 
         private bool TryMoveBlock(Block block, Vector2Int direction)
         {
-            if (direction == Vector2Int.down)
-                return false;
-
             Vector2Int nextPosition = block.GridPosition + direction;
 
             if (nextPosition.x < 0 || nextPosition.y >= _gridSettings.GridSize.y || nextPosition.x >= _gridSettings.GridSize.x)
@@ -127,7 +124,7 @@ namespace BallzMerge.Gameplay.BlockSpace
                 block.ShakeDirection(direction);
                 return false;
             }
-            else if (_activeBlocks.GetAtPosition(block.GridPosition + direction) == null)
+            else if (_activeBlocks.GetAtPosition(block.GridPosition + direction) == null && direction != Vector2Int.down)
             {
                 _mover.Move(block, direction);
                 return true;

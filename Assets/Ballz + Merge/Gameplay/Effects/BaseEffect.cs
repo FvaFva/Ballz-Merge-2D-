@@ -1,3 +1,4 @@
+using BallzMerge.Gameplay.BlockSpace;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -5,10 +6,13 @@ using UnityEngine;
 public abstract class BaseEffect : MonoBehaviour
 {
     [SerializeField] protected ParticleSystem Effect;
+    [SerializeField] protected BlockAdditionalEffectEvents CurrentEvent;
 
     protected Transform Transform;
 
     private WaitForSeconds _particlesLifetime;
+
+    public BlockAdditionalEffectEvents ResponsibleEvent => CurrentEvent;
 
     public event Action<BaseEffect> Played;
 

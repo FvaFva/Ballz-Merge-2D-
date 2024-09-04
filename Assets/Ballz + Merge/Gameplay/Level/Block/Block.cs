@@ -42,7 +42,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private void Awake()
         {
             _transform = transform;
-            _baseScale = transform.localScale;
+            _baseScale = _transform.localScale;
             _material = _view.material;
         }
 
@@ -103,8 +103,8 @@ namespace BallzMerge.Gameplay.BlockSpace
             StopCurrentMoveTween();
             _numberView.text = "";
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(_transform.DOScale(_transform.localScale * DownscaleModifier, ScaleTime));
-            sequence.Append(_transform.DOScale(_transform.localScale * UpscaleModifier, ScaleTime)).Join(_view.DOFade(0f, FadeDestroy)).OnComplete(Deactivate).SetDelay(0.1f);
+            sequence.Append(_transform.DOScale(_baseScale * DownscaleModifier, ScaleTime));
+            sequence.Append(_transform.DOScale(_baseScale * UpscaleModifier, ScaleTime)).Join(_view.DOFade(0f, FadeDestroy)).OnComplete(Deactivate).SetDelay(0.1f);
             sequence.Play();
         }
 
@@ -132,8 +132,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         public void ShakeScale()
         {
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(_transform.DOScale(_transform.localScale * UpscaleModifier, ShakeScaleTime));
-            sequence.Append(_transform.DOScale(_transform.localScale, ShakeScaleTime));
+            sequence.Append(_transform.DOScale(_baseScale * UpscaleModifier, ShakeScaleTime));
+            sequence.Append(_transform.DOScale(_baseScale, ShakeScaleTime));
             sequence.Play();
         }
 

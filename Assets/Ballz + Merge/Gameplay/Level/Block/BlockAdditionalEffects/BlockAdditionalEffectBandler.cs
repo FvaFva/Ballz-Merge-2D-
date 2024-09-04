@@ -12,7 +12,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void FixedUpdate()
         {
-            if (Current != null && _connectBlock != null && gameObject.activeSelf)
+            if (Current != null && _connectBlock != null)
             {
                 _renderer.SetPosition(0, Current.WorldPosition);
                 _renderer.SetPosition(1, _connectBlock.WorldPosition);
@@ -66,7 +66,7 @@ namespace BallzMerge.Gameplay.BlockSpace
                         InvokeActionBlockMoved(block, property.Direction);
                         break;
                     case BlockAdditionalEffectEvents.NumberChanged:
-                        InvokeActionNumberChanged(block, property.Count);
+                        InvokeActionNumberChanged(block, property.Count, false);
                         break;
                     case BlockAdditionalEffectEvents.Destroy:
                         OnBlockDestroyed(block);

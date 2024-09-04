@@ -5,6 +5,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         Destroy,
         Move,
         NumberChanged,
-        Increased
+        Increase
     }
 }
