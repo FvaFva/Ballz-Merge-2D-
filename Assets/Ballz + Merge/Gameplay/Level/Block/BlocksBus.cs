@@ -115,26 +115,44 @@ namespace BallzMerge.Gameplay.BlockSpace
             _effectsPool.SpawnEffect(BlockAdditionalEffectEvents.Destroy, block.WorldPosition);
         }
 
-        private bool TryMoveBlock(Block block, Vector2Int direction)
+        private bool TryMoveBlock(Block block, Vector2Int direction, int depth = 1)
         {
+            if (depth == 0)
+                return false;
+
             Vector2Int nextPosition = block.GridPosition + direction;
 
-            if (nextPosition.x < 0 || nextPosition.y >= _gridSettings.GridSize.y || nextPosition.x >= _gridSettings.GridSize.x)
+            if (nextPosition.x < 0 || nextPosition.y >= _gridSettings.GridSize.y || nextPosition.x >= _gridSettings.GridSize.x || direction == Vector2Int.down)
             {
                 block.ShakeDirection(direction);
                 return false;
             }
-            else if (_activeBlocks.GetAtPosition(block.GridPosition + direction) == null && direction != Vector2Int.down)
+            else if (_activeBlocks.GetAtPosition(block.GridPosition + direction) == null)
             {
                 _mover.Move(block, direction);
                 return true;
             }
             else if (TryMergeCell(block, direction))
             {
+                if (direction.x > 0)
+                    direction.x += 1;
+                else
+                    direction.y += 1;
+
                 return true;
             }
             else
             {
+                Block nextBlock = _activeBlocks.GetAtPosition(block.GridPosition + direction);
+
+                if (TryMoveBlock(nextBlock, direction, --depth))
+                {
+                    if (TryMoveBlock(block, direction))
+                    {
+                        return true;
+                    }
+                }
+
                 block.ShakeDirection(direction);
                 return false;
             }
@@ -195,7 +213,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private void OnStartLevel()
         {
             _mover.MoveAllDawn(_activeBlocks.Items);
-            
+
             if (_activeBlocks.TryDeactivateUnderLine(_gridSettings.LastRowIndex))
                 BlockFinished?.Invoke();
             else
@@ -206,7 +224,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             yield return new WaitForSeconds(_gridSettings.MoveTime);
             IEnumerable<Block> spawnBlocks = _spawner.SpawnWave();
-            _activeBlocks.AddBlocks(spawnBlocks); 
+            _activeBlocks.AddBlocks(spawnBlocks);
             WaveLoaded?.Invoke();
             _additionalEffectHandler.HandleWave(spawnBlocks);
         }
