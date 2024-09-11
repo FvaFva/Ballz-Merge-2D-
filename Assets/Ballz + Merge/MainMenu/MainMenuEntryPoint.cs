@@ -11,14 +11,14 @@ namespace BallzMerge.MainMenu
     {
         [SerializeField] private UIView _view;
         [SerializeField] private Button _startGame;
-        [SerializeField] private Button _quite;
+        [SerializeField] private List<CyclicBehavior> _behaviors;
 
         [Inject] private UIRootView _rootUI;
 
-        private List<IInitializable> _initializable;
+        private List<IInitializable> _initializedComponents;
         private Action<SceneExitData> _callback;
 
-        public IEnumerable<IInitializable> InitializedComponents => _initializable;
+        public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
 
         public bool IsAvailable {  get; private set; }
 
@@ -29,19 +29,25 @@ namespace BallzMerge.MainMenu
 
         private void Awake()
         {
-            _initializable = new List<IInitializable>();
+            _initializedComponents = new List<IInitializable>();
+
+            foreach (var component in _behaviors)
+            {
+                if(component is IInitializable componentInstance)
+                    _initializedComponents.Add(componentInstance);
+            }
         }
 
         private void OnEnable()
         {
+            _rootUI.SettingsMenu.QuitRequired += LeftScene;
             _startGame.AddListener(OnStartRequire);
-            _quite.AddListener(OnQuiteRequire);
         }
 
         private void OnDisable()
         {
+            _rootUI.SettingsMenu.QuitRequired -= LeftScene;
             _startGame.RemoveListener(OnStartRequire);
-            _quite.RemoveListener(OnQuiteRequire);
         }
 
         private void OnDestroy()
@@ -55,14 +61,14 @@ namespace BallzMerge.MainMenu
             _callback = callback;
         }
 
-        private void OnQuiteRequire()
-        {
-            _callback?.Invoke(new SceneExitData(true));
-        }
-
         private void OnStartRequire()
         {
-            _callback?.Invoke(new SceneExitData(ScenesNames.GAMEPLAY));
+            LeftScene(new SceneExitData(ScenesNames.GAMEPLAY));
+        }
+
+        private void LeftScene(SceneExitData exitData)
+        {
+            _callback?.Invoke(exitData);
         }
     }
 }

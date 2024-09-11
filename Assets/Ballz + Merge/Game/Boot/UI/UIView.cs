@@ -2,8 +2,14 @@
 
 public class UIView : MonoBehaviour
 {
+    [SerializeField] private bool _isUseSettingsQuiteButton;
+    [SerializeField] private bool _isUseSettingsMaineMenuButton;
+
     private Transform _baseParent;
     private Transform _transform;
+
+    public bool IsUseSettingsQuiteButton => _isUseSettingsQuiteButton;
+    public bool IsUseSettingsMaineMenuButton => _isUseSettingsMaineMenuButton;
 
     private void Awake()
     {

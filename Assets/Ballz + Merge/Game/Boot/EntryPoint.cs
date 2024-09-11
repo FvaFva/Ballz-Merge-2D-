@@ -4,6 +4,9 @@ using Zenject;
 
 namespace BallzMerge.Root
 {
+    using BallzMerge.Data;
+    using Settings;
+
     public class EntryPoint
     {
         private static EntryPoint _instance;
@@ -23,11 +26,14 @@ namespace BallzMerge.Root
         private SceneLoader _sceneLoader;
         private MainInputMap _userInput;
         private ResourcesHub _hub;
+        private GameSettings _gameSettings;
+        private DataBaseSource _data;
 
         private EntryPoint()
         {
             InitComponents();
             BindToContainer();
+            Inject();
         }
 
         private void RunGame()
@@ -66,6 +72,7 @@ namespace BallzMerge.Root
 
         private void InitComponents()
         {
+            _data = new DataBaseSource();
             _userInput = new MainInputMap();
             _userInput.Enable();
             _hub = new ResourcesHub();
@@ -76,15 +83,27 @@ namespace BallzMerge.Root
             _rootView = Object.Instantiate(_hub.Get<UIRootView>(_hub.ROOT_UI));
             Object.DontDestroyOnLoad(_rootView.gameObject);
 
+            _gameSettings = new GameSettings(_rootView.SettingsMenu, _data.Settings);
             _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack);
+            UserInputHandler inputHandler = new UserInputHandler(_rootView.SettingsMenu, _userInput);
         }
 
         private void BindToContainer()
         {
-            ProjectContext.Instance.Container.Bind<UIRootView>().FromInstance(_rootView).NonLazy();
-            ProjectContext.Instance.Container.Bind<UserQuestioner>().FromInstance(_rootView.Questioner).AsSingle().NonLazy();
-            ProjectContext.Instance.Container.Bind<AudioSettings>().FromNew().AsSingle().NonLazy();
-            ProjectContext.Instance.Container.Bind<MainInputMap>().FromInstance(_userInput).AsSingle().NonLazy();
+            BindSingleton<IGamePauseController, TimeScaler>(_gameSettings.TimeScaler);
+            BindSingleton(_rootView);
+            BindSingleton(_rootView.Questioner);
+            BindSingleton(_gameSettings.AudioSettings);
+            BindSingleton(_userInput);
+            BindSingleton(_data);
+        }
+
+        private void BindSingleton<TSingleton>(TSingleton singleton) => ProjectContext.Instance.Container.Bind<TSingleton>().FromInstance(singleton).AsSingle().NonLazy();
+        private void BindSingleton<TSingletonInterface, TSingletonRealization>(TSingletonRealization singleton) where TSingletonRealization : TSingletonInterface => ProjectContext.Instance.Container.Bind<TSingletonInterface>().To<TSingletonRealization>().FromInstance(singleton).AsSingle().NonLazy();
+
+        private void Inject()
+        {
+            ProjectContext.Instance.Container.Inject(_rootView.Questioner);
         }
 
         private void SceneExitCallBack(SceneExitData exitData)

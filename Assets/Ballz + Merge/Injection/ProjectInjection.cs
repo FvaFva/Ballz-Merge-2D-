@@ -7,10 +7,13 @@ using Zenject;
 public class ProjectInjection : ScriptableObjectInstaller
 {
     [SerializeField] private GridSettings _gridSettings;
+    [SerializeField] private BallVolumesMap _ballVolumesMap;
 
     public override void InstallBindings()
     {
         Container.Bind<GridSettings>().FromInstance(_gridSettings).AsSingle().NonLazy();
+        Container.Bind<BallVolumesMap>().FromInstance(_ballVolumesMap).AsSingle().NonLazy();
         Container.Bind<TargetSceneEntryPointContainer>().FromNew().AsSingle().NonLazy();
+        _ballVolumesMap.ReBuild();
     }
 }
