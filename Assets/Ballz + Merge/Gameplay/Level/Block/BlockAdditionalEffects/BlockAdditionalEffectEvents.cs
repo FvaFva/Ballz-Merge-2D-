@@ -4,6 +4,7 @@ namespace BallzMerge.Gameplay.BlockSpace
     {
         Destroy,
         Move,
-        NumberChanged
+        NumberChanged,
+        Increase
     }
 }

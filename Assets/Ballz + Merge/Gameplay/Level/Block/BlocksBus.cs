@@ -11,7 +11,7 @@ namespace BallzMerge.Gameplay.BlockSpace
     public class BlocksBus : CyclicBehavior, ILevelFinisher, IInitializable
     {
         [SerializeField] private BlocksSpawner _spawner;
-        [SerializeField] private ExplosionPool _explosionPool;
+        [SerializeField] private EffectsPool _effectsPool;
         [SerializeField] private BlocksMergeImpact _mergeImpact;
         [SerializeField] private BlockMagneticObserver _blockMagneticObserver;
         [SerializeField] private BlockAdditionalEffectHandler _additionalEffectHandler;
@@ -112,19 +112,19 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _activeBlocks.Remove(block);
             block.Destroy();
-            _explosionPool.SpawnEffect(block.WorldPosition);
+            _effectsPool.SpawnEffect(BlockAdditionalEffectEvents.Destroy, block.WorldPosition);
         }
 
-        private bool TryMoveBlock(Block block, Vector2Int direction)
+        private bool TryMoveBlock(Block block, Vector2Int direction, int depth = 1)
         {
-            if (direction == Vector2Int.down)
+            if (depth == 0)
                 return false;
 
             Vector2Int nextPosition = block.GridPosition + direction;
 
-            if (nextPosition.x < 0 || nextPosition.y >= _gridSettings.GridSize.y || nextPosition.x >= _gridSettings.GridSize.x)
+            if (nextPosition.x < 0 || nextPosition.y >= _gridSettings.GridSize.y || nextPosition.x >= _gridSettings.GridSize.x || direction == Vector2Int.down)
             {
-                block.Shake(direction);
+                block.ShakeDirection(direction);
                 return false;
             }
             else if (_activeBlocks.GetAtPosition(block.GridPosition + direction) == null)
@@ -134,11 +134,26 @@ namespace BallzMerge.Gameplay.BlockSpace
             }
             else if (TryMergeCell(block, direction))
             {
+                if (direction.x > 0)
+                    direction.x += 1;
+                else
+                    direction.y += 1;
+
                 return true;
             }
             else
             {
-                block.Shake(direction);
+                Block nextBlock = _activeBlocks.GetAtPosition(block.GridPosition + direction);
+
+                if (TryMoveBlock(nextBlock, direction, --depth))
+                {
+                    if (TryMoveBlock(block, direction))
+                    {
+                        return true;
+                    }
+                }
+
+                block.ShakeDirection(direction);
                 return false;
             }
         }

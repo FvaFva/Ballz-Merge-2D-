@@ -12,6 +12,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 {
     private const string QuitQuestName = "Quit";
     private const string RestartQuestName = "Restart";
+    private const int DelayTime = 2;
 
     [SerializeField] private UIView _mainUI;
     [SerializeField] private List<CyclicBehavior> _components;
@@ -86,7 +87,14 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 
     private void OnBallEnterAim()
     {
-        foreach(IWaveUpdater waver in _wavers)
+        StartCoroutine(DelayWaveUpdated());
+    }
+
+    private IEnumerator DelayWaveUpdated()
+    {
+        yield return new WaitForSeconds(DelayTime);
+
+        foreach (IWaveUpdater waver in _wavers)
             waver.UpdateWave();
     }
 

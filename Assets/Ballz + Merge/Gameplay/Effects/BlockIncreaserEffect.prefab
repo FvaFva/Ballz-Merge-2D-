@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8661181110376955944}
   - component: {fileID: 5229943181498414870}
   m_Layer: 0
-  m_Name: BlockBandlerEffect
+  m_Name: BlockIncreaserEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 48f91320b6e595342abbc41656206441, type: 2}
+  - {fileID: 2100000, guid: ebc336d602ba82a47bdd800d9e0832b1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -698,7 +698,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 0
-    maxNumParticles: 2
+    maxNumParticles: 4
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0

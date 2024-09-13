@@ -8,11 +8,12 @@ namespace BallzMerge.Gameplay.BlockSpace
     public class BlockAdditionalEffectHandler : CyclicBehavior, IInitializable, ILevelFinisher
     {
         [SerializeField] private BlockAdditionalEffectSettings _settings;
+        [SerializeField] private EffectsPool _effectsPool;
         [SerializeField] private Transform _parent;
         [SerializeField] private int _countOfPreload;
 
         private BlocksInGame _activeBlocks;
-        private Queue<BlockAdditionalEffectBase> _effectsPool;
+        private Queue<BlockAdditionalEffectBase> _effects;
         private List<BlockAdditionalEffectBase> _activeEffects;
 
         public event Action<Block, Vector2Int> BlockMoveRequired;
@@ -21,14 +22,14 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void Awake()
         {
-            _effectsPool = new Queue<BlockAdditionalEffectBase>();
+            _effects = new Queue<BlockAdditionalEffectBase>();
             _activeEffects = new List<BlockAdditionalEffectBase>();
         }
 
         public void Init()
         {
             for (int i = 0; i < _countOfPreload; i++)
-                _effectsPool.Enqueue(Instantiate(_settings.GetPrefab(), transform));
+                _effects.Enqueue(Instantiate(_settings.GetPrefab(), transform));
         }
 
         public void ConnectActiveBlocks(BlocksInGame activeBlocks)
@@ -56,7 +57,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             if (wave.Count() == 0)
                 return;
 
-            if (_effectsPool.TryDequeue(out BlockAdditionalEffectBase effect) == false)
+            if (_effects.TryDequeue(out BlockAdditionalEffectBase effect) == false)
                 effect = Instantiate(_settings.GetPrefab(), transform);
 
             _activeEffects.Add(effect);
@@ -88,13 +89,16 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void OnAdditionalEffectDeactivate(BlockAdditionalEffectBase blockAdditionalEffect)
         {
-            _effectsPool.Enqueue(blockAdditionalEffect);
+            _effects.Enqueue(blockAdditionalEffect);
             _activeEffects.Remove(blockAdditionalEffect);
             UpdateEffectSubscription(blockAdditionalEffect, false);
         }
 
-        private void OnRequiredBlockNumberChanged(Block block, int count)
+        private void OnRequiredBlockNumberChanged(Block block, int count, bool isSpawnEffect)
         {
+            if (isSpawnEffect)
+                _effectsPool.SpawnEffect(BlockAdditionalEffectEvents.Increase, block.WorldPosition);
+
             BlockNumberChangedRequired?.Invoke(block, count);
         }
 

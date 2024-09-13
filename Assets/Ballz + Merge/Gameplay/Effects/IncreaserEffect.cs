@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ExplosionEffect : BaseEffect
+public class IncreaserEffect : BaseEffect
 {
     public override void Play(Vector3 position)
     {
