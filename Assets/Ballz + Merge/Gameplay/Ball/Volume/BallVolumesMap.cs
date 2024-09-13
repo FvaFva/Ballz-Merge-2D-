@@ -1,26 +1,55 @@
 using System.Collections.Generic;
-using UnityEditor;
+using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.Rendering;
 
-public class BallVolumesMap
+[CreateAssetMenu(fileName = "BallVolumesMap", menuName = "Bellz+Merge/Drop/BallVolumeMap", order = 51)]
+public class BallVolumesMap :ScriptableObject
 {
-    private const string VolumesPath = "Assets/Ballz + Merge/Gameplay/Ball/Volume/Volumes";
+    [SerializeField] private List<BallVolume> _ballVolumes = new List<BallVolume>();
 
-    private Dictionary<BallVolumesTypes, BallVolume> _volumes = new Dictionary<BallVolumesTypes, BallVolume>();
+    private Dictionary<BallVolumesTypes, BallVolume> _volumesByType;
+    private Dictionary<string, BallVolume> _volumesByString;
 
-    public BallVolumesMap()
+    public void ReBuild()
     {
-#if UNITY_EDITOR
-        string[] guids = AssetDatabase.FindAssets("t:BallVolume", new[] { VolumesPath });
+        _volumesByType = new Dictionary<BallVolumesTypes, BallVolume>();
+        _volumesByString = new Dictionary<string, BallVolume>();
 
-        foreach (string guid in guids)
+        foreach (BallVolume volume in _ballVolumes)
         {
-            BallVolume volume = AssetDatabase.LoadAssetAtPath<BallVolume>(AssetDatabase.GUIDToAssetPath(guid));
-        
             if (volume != null)
-                _volumes.Add(volume.Type, volume);
+            {
+                _volumesByType.Add(volume.Type, volume);
+                _volumesByString.Add(volume.Type.ToString(), volume);
+            }
         }
-#endif
     }
 
-    public BallVolume GetVolume(BallVolumesTypes type) => _volumes[type];
+    public string GetTypifiedChance(BallVolumesTypes type, float value)
+    {
+        return GetTypifiedChance(GetVolume(type), value);
+    }
+
+    public string GetTypifiedChance(BallVolume volume, float value)
+    {
+        if (volume == null || volume.Counting == BallVolumeCountingTypes.Chance)
+            return $"{(int)(value * 100)}%";
+        else
+            return $"{(int)value}";
+    }
+
+    public BallVolume GetVolume(BallVolumesTypes type)
+    {
+        if (_volumesByType.ContainsKey(type))
+            return _volumesByType[type];
+        return null;
+    }
+
+    public BallVolume GetVolume(string typeName)
+    {
+        if (_volumesByString.ContainsKey(typeName))
+            return _volumesByString[typeName];
+        return null;
+    }
 }

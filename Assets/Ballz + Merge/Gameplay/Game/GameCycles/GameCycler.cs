@@ -10,6 +10,7 @@ using Zenject;
 
 public class GameCycler: MonoBehaviour, ISceneEnterPoint
 {
+    private const string QuitQuestName = "Quit";
     private const string RestartQuestName = "Restart";
     private const int DelayTime = 2;
 
@@ -20,7 +21,8 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     private List<IInitializable> _initializedComponents = new List<IInitializable>();
     private List<ILevelStarter> _starters = new List<ILevelStarter>();
     private List<IWaveUpdater> _wavers = new List<IWaveUpdater>();
-    private Action<SceneExitData> _sceneExit;
+    private Action<SceneExitData> _sceneCallBack;
+    SceneExitData _quiteRequireData;
 
     [Inject] private BlocksBus _blocksBus;
     [Inject] private UserQuestioner _userQuestioner;
@@ -55,12 +57,14 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     {
         _blocksBus.BlockFinished += OnBlockFinished;
         _ball.EnterAim += OnBallEnterAim;
+        _rootUI.SettingsMenu.QuitRequired += OnMenuQuitRequire;
     }
 
     private void OnDisable()
     {
         _blocksBus.BlockFinished -= OnBlockFinished;
         _ball.EnterAim -= OnBallEnterAim;
+        _rootUI.SettingsMenu.QuitRequired -= OnMenuQuitRequire;
     }
 
     private void OnDestroy()
@@ -70,7 +74,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 
     public void Init(Action<SceneExitData> callback)
     {
-        _sceneExit = callback;
+        _sceneCallBack = callback;
         _rootUI.AttachSceneUI(_mainUI);
         RestartLevel();
     }
@@ -99,6 +103,12 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         StartCoroutine(DelayedLevelFinish());
     }
 
+    private void OnMenuQuitRequire(SceneExitData exitData)
+    {
+        _quiteRequireData = exitData;
+        StartQuest(QuitQuestName, "Really left dat the best run?");
+    }
+
     private IEnumerator DelayedLevelFinish()
     {
         yield return new WaitForFixedUpdate();
@@ -106,7 +116,12 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         foreach (ILevelFinisher finisher in _finishers)
             finisher.FinishLevel();
 
-        _userQuestioner.Show(new UserQuestion(RestartQuestName, $"Want one more game?"));
+        StartQuest(RestartQuestName, "Want one more game?");
+    }
+
+    private void StartQuest(string id, string header)
+    {
+        _userQuestioner.Show(new UserQuestion(id, header));
         _userQuestioner.Answer += OnUserAnswer;
     }
 
@@ -119,7 +134,11 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
             if (answer.IsPositiveAnswer)
                 RestartLevel();
             else
-                _sceneExit.Invoke(new SceneExitData(true));
+                _sceneCallBack.Invoke(new SceneExitData(ScenesNames.MAINMENU));
+        }
+        else if (answer is {Name: QuitQuestName, IsPositiveAnswer: true})
+        {
+            _sceneCallBack.Invoke(_quiteRequireData);
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using BallzMerge.Data;
+using System;
 using Zenject;
 
 public class PlayerScore : CyclicBehavior, ILevelStarter, ILevelFinisher, IInitializable, IWaveUpdater
 {
-    private const string ScoreName = "Score";
-
-    [Inject] private UserQuestioner _userQuestioner;
+    [Inject] private DataBaseSource _data;
+    [Inject] private BallWaveVolume _waveVolume;
 
     public int Score { get; private set; }
     public int BestScore { get; private set; }
@@ -14,7 +13,7 @@ public class PlayerScore : CyclicBehavior, ILevelStarter, ILevelFinisher, IIniti
 
     public void Init()
     {
-        BestScore = PlayerPrefs.GetInt(ScoreName, 0);
+        BestScore = _data.History.GetBestScore();
         ScoreChanged?.Invoke();
     }
 
@@ -25,31 +24,20 @@ public class PlayerScore : CyclicBehavior, ILevelStarter, ILevelFinisher, IIniti
 
     public void FinishLevel()
     {
+        if (Score == 0)
+            return;
+
+        _data.History.SaveResult(Score, _waveVolume.GlobalVolumes);
+
         if (Score > BestScore)
-        {
-            _userQuestioner.Answer += OnUserAnswer;
-            _userQuestioner.Show(new UserQuestion(ScoreName, $"{Score} - the best score! Do you want to save?"));
-        }
+            BestScore = Score;
+
+        ScoreChanged?.Invoke();
     }
 
     public void UpdateWave()
     {
         Score++;
         ScoreChanged?.Invoke();
-    }
-
-    private void OnUserAnswer(UserQuestion answer)
-    {
-        if(answer.Name == ScoreName)
-        {
-            _userQuestioner.Answer -= OnUserAnswer;
-
-            if(answer.IsPositiveAnswer)
-            {
-                BestScore = Score;
-                PlayerPrefs.SetInt(ScoreName, BestScore);
-                ScoreChanged?.Invoke();
-            }
-        }
     }
 }

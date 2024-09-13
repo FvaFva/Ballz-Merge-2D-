@@ -6,7 +6,7 @@ public class AudioSourceHandler : MonoBehaviour
 {
     private AudioSource _audio;
 
-    [Inject] private AudioSettings _settings;
+    [Inject] private BallzMerge.Root.Settings.GameSettingsDataProxyAudio _settings;
 
     private void Awake()
     {
@@ -17,7 +17,7 @@ public class AudioSourceHandler : MonoBehaviour
         }
 
         _audio = GetComponent<AudioSource>();
-        _audio.enabled = _settings.IsActive;
+        _audio.volume = _settings.Value;
     }
 
     private void OnEnable()
@@ -31,14 +31,11 @@ public class AudioSourceHandler : MonoBehaviour
             _settings.Changed -= OnSettingsChanged;
     }
 
-    public void Play()
-    {
-        if (_settings.IsActive)
-            _audio.Play();
-    }
+    public void Play() => _audio.Play();
 
     private void OnSettingsChanged()
     {
-        _audio.enabled = _settings.IsActive;
+
+        _audio.volume = _settings.Value;
     }
 }

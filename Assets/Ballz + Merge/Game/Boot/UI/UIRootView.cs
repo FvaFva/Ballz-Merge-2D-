@@ -1,35 +1,41 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BallzMerge.Root
 {
+    using Settings;
+
     public class UIRootView : MonoBehaviour
     {
         [SerializeField] private LoadScreen _loadingScreen;
         [SerializeField] private RectTransform _sceneContainer;
         [SerializeField] private UserQuestioner _questioner;
+        [SerializeField] private SettingsMenuView _settingsMenu;
 
-        private List<UIView> _sceneUi;
+        private UIView _sceneUI;
 
         public LoadScreen LoadScreen => _loadingScreen;
         public UserQuestioner Questioner => _questioner;
+        public SettingsMenuView SettingsMenu => _settingsMenu;
 
         private void Awake()
         {
             _loadingScreen.Hide();
-            _sceneUi = new List<UIView>();
         }
 
-        public void AttachSceneUI(UIView ui)
+        public void AttachSceneUI(UIView sceneUI)
         {
-            ui.MoveToContainer(_sceneContainer);
-            _sceneUi.Add(ui);
+            _sceneUI = sceneUI;
+            _sceneUI.MoveToContainer(_sceneContainer);
+            _settingsMenu.UpdateButtonView(_sceneUI.IsUseSettingsQuiteButton, _sceneUI.IsUseSettingsMaineMenuButton);
         }
 
         public void ClearSceneUI()
         {
-            foreach (var ui in _sceneUi)
-                ui.LeftRoot();
+            if (_sceneUI is not null)
+            {
+                _sceneUI.LeftRoot();
+                _sceneUI = null;
+            }
         }
     }
 }

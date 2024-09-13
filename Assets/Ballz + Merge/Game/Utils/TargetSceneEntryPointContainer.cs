@@ -15,7 +15,7 @@ namespace BallzMerge.Root
 
         public void Set(ISceneEnterPoint newValue)
         {
-            if (_isReady)
+            if (IsReady())
                 Debug.LogError("WARNING! Error! DEEP WRONG PENETRATION IN SCENE");
 
             _isReady = true;

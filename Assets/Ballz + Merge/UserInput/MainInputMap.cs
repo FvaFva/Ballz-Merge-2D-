@@ -44,6 +44,15 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MenuRequier"",
+                    ""type"": ""Button"",
+                    ""id"": ""9447dfd9-c755-430b-8585-d6a771e8dc33"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -77,6 +86,28 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Shot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""80945a28-405e-4acb-822f-33ded3c94a7a"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""MenuRequier"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6f610b64-c362-4286-b639-463bcb80c606"",
+                    ""path"": ""<Gamepad>/{Menu}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepade"",
+                    ""action"": ""MenuRequier"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -117,6 +148,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         m_MainInput = asset.FindActionMap("MainInput", throwIfNotFound: true);
         m_MainInput_StrikeVector = m_MainInput.FindAction("StrikeVector", throwIfNotFound: true);
         m_MainInput_Shot = m_MainInput.FindAction("Shot", throwIfNotFound: true);
+        m_MainInput_MenuRequier = m_MainInput.FindAction("MenuRequier", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -180,12 +212,14 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
     private List<IMainInputActions> m_MainInputActionsCallbackInterfaces = new List<IMainInputActions>();
     private readonly InputAction m_MainInput_StrikeVector;
     private readonly InputAction m_MainInput_Shot;
+    private readonly InputAction m_MainInput_MenuRequier;
     public struct MainInputActions
     {
         private @MainInputMap m_Wrapper;
         public MainInputActions(@MainInputMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @StrikeVector => m_Wrapper.m_MainInput_StrikeVector;
         public InputAction @Shot => m_Wrapper.m_MainInput_Shot;
+        public InputAction @MenuRequier => m_Wrapper.m_MainInput_MenuRequier;
         public InputActionMap Get() { return m_Wrapper.m_MainInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -201,6 +235,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @Shot.started += instance.OnShot;
             @Shot.performed += instance.OnShot;
             @Shot.canceled += instance.OnShot;
+            @MenuRequier.started += instance.OnMenuRequier;
+            @MenuRequier.performed += instance.OnMenuRequier;
+            @MenuRequier.canceled += instance.OnMenuRequier;
         }
 
         private void UnregisterCallbacks(IMainInputActions instance)
@@ -211,6 +248,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @Shot.started -= instance.OnShot;
             @Shot.performed -= instance.OnShot;
             @Shot.canceled -= instance.OnShot;
+            @MenuRequier.started -= instance.OnMenuRequier;
+            @MenuRequier.performed -= instance.OnMenuRequier;
+            @MenuRequier.canceled -= instance.OnMenuRequier;
         }
 
         public void RemoveCallbacks(IMainInputActions instance)
@@ -250,5 +290,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
     {
         void OnStrikeVector(InputAction.CallbackContext context);
         void OnShot(InputAction.CallbackContext context);
+        void OnMenuRequier(InputAction.CallbackContext context);
     }
 }

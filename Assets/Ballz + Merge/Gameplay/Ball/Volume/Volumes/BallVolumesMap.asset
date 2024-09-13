@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0c8b213569235a4a85dfd2f83c3d772, type: 3}
+  m_Name: BallVolumesMap
+  m_EditorClassIdentifier: 
+  _ballVolumes:
+  - {fileID: 11400000, guid: 633131de00ef3bb44a8a18b2acf5d1e1, type: 2}
+  - {fileID: 11400000, guid: f1fb058d57eab7842be4166ded94430e, type: 2}
+  - {fileID: 11400000, guid: 476b26b56fdac45449b8767e352f51aa, type: 2}
+  - {fileID: 11400000, guid: 912ba8b549bc0cd4aa089d39f842c595, type: 2}
+  - {fileID: 11400000, guid: 8eaa075cc9c38ce45b9609f930942331, type: 2}

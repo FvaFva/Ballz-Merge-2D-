@@ -7,19 +7,19 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
 {
     [SerializeField] private DropSelector _dropSelector;
 
-    private BallGlobalVolume _globalVolumes;
     private Dictionary<BallVolumesTypes, float> _volumes;
 
+    public BallGlobalVolume GlobalVolumes {  get; private set; }
     public event Action<IDictionary<BallVolumesTypes, float>> Updated;
     public event Action<BallVolumesTypes, float> Changed;
 
     public void Init()
     {
-        _globalVolumes = new BallGlobalVolume(_dropSelector);
-        _globalVolumes.Changed += UpdateWave;
+        GlobalVolumes = new BallGlobalVolume(_dropSelector);
+        GlobalVolumes.Changed += UpdateWave;
         _volumes = new Dictionary<BallVolumesTypes, float>();
 
-        foreach (var volume in _globalVolumes.Volumes)
+        foreach (var volume in GlobalVolumes.Volumes)
             _volumes.Add(volume.Key, volume.Value);
 
         Updated?.Invoke(_volumes);
@@ -27,13 +27,13 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
 
     public void UpdateWave()
     {
-        foreach (var volume in _globalVolumes.Volumes)
+        foreach (var volume in GlobalVolumes.Volumes)
             _volumes[volume.Key] = volume.Value;
 
         Updated?.Invoke(_volumes);
     }
 
-    public float GetMaxVolume(BallVolumesTypes ballVolume) => _globalVolumes.Volumes[ballVolume];
+    public float GetMaxVolume(BallVolumesTypes ballVolume) => GlobalVolumes.Volumes[ballVolume];
 
     public bool CheckVolume(BallVolumesTypes ballVolume)
     {
@@ -63,7 +63,7 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
 
     public void FinishLevel()
     {
-        _globalVolumes.Changed -= UpdateWave;
+        GlobalVolumes.Changed -= UpdateWave;
         Init();
     }
 }
