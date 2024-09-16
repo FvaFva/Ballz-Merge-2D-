@@ -140,8 +140,13 @@ namespace BallzMerge.Gameplay.BlockSpace
                     return;
             }
 
+            if (_ballLevelVolume.CheckVolume(BallVolumesTypes.MoveIncreaser))
+                TryMoveBlock(block, direction, _ballLevelVolume.GetMaxVolume(BallVolumesTypes.MoveIncreaser));
+            else
+                TryMoveBlock(block, direction);
+
             _additionalEffectHandler.HandleEvent(new(BlockAdditionalEffectEvents.Move, block, direction));
-            TryMoveBlock(block, direction);
+
         }
 
         private void DestroyBlock(Block block)
@@ -152,7 +157,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _effectsPool.SpawnEffect(BlockAdditionalEffectEvents.Destroy, block.WorldPosition);
         }
 
-        private bool TryMoveBlock(Block block, Vector2Int direction, int depth = 1)
+        private bool TryMoveBlock(Block block, Vector2Int direction, float depth = 1)
         {
             if (depth == 0)
                 return false;

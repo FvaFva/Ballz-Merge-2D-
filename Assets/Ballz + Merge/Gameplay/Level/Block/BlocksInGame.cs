@@ -65,9 +65,9 @@ namespace BallzMerge.Gameplay.BlockSpace
             }
         }
 
-        public Block GetRandomBlock(Block selfExcluding = null)
+        public Block GetRandomBlock(Block selfExcluding = null, bool isWithoutEffectSelection = false)
         {
-            var otherBlocks = _blocks.Where(block => block != selfExcluding && block.IsWithEffect == false);
+            var otherBlocks = _blocks.Where(block => block != selfExcluding && (isWithoutEffectSelection || block.IsWithEffect == false));
 
             return ChooseRandomBlock(otherBlocks);
         }

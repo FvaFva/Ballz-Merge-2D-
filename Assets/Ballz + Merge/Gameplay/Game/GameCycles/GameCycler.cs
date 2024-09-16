@@ -28,6 +28,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     [Inject] private UserQuestioner _userQuestioner;
     [Inject] private Ball _ball;
     [Inject] private UIRootView _rootUI;
+    [Inject] private GridSettings _gridSettings;
 
     public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
 
@@ -98,6 +99,8 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 
     private void RestartLevel()
     {
+        _gridSettings.ReloadGridSize();
+
         foreach (ILevelStarter starter in _starters)
             starter.StartLevel();
 

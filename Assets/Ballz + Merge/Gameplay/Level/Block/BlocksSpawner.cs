@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
+using System;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
@@ -37,6 +38,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _currentWave++;
             int count = GetBlockCount();
+            Block[] blocks = new Block[GetBlockCount()];
             List<int> positions = _gridSettings.GetPositionsInRow();
             Block temp;
 
@@ -69,7 +71,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             if (property.IsEmpty())
                 Debug.Log("No property");
 
-            int point = Random.Range(1, 101);
+            int point = UnityEngine.Random.Range(1, 101);
             int previous = 0;
 
             foreach (var chancesToCount in property.CountBlocks)
@@ -93,7 +95,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             if (property.IsEmpty())
                 return 0;
 
-            return property.NumbersToSpawn[Random.Range(0, property.NumbersToSpawn.Length)];
+            return property.NumbersToSpawn[UnityEngine.Random.Range(0, property.NumbersToSpawn.Length)];
         }
 
         private Block Generate()

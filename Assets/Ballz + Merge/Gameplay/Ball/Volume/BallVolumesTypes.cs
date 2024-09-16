@@ -4,5 +4,6 @@
     BotBounce,
     NumberReductor,
     ExtraAimPoints,
-    Magnet
+    Magnet,
+    MoveIncreaser
 }

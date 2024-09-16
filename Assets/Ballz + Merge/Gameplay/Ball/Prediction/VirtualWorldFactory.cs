@@ -1,5 +1,6 @@
 ﻿using BallzMerge.Gameplay.Level;
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 namespace BallzMerge.Gameplay.BallSpace
@@ -11,16 +12,20 @@ namespace BallzMerge.Gameplay.BallSpace
         [SerializeField] private Transform _boxParentForeMoveToVirtual;
 
         private Scene _scene;
+        private Queue<BoxCollider2D> _colliders = new Queue<BoxCollider2D>();
 
         public PhysicsScene2D GetPhysicScene() => _scene.GetPhysicsScene2D();
 
-        public BoxCollider2D[,] CreateBoxes(GridSettings settings)
+        public BoxCollider2D[,] CreateBoxes(GridSettings settings, int GridSizeX = 1)
         {
             BoxCollider2D[,] boxes = new BoxCollider2D[settings.GridSize.x, settings.GridSize.y];
 
-            for (int i = 0; i < settings.GridSize.x; i++)
+            for (int i = GridSizeX - 1; i < settings.GridSize.x; i++)
                 for (int j = 0; j < settings.GridSize.y; j++)
-                    boxes[i, j] = Instantiate(_prefab, _boxParentForeMoveToVirtual).Collider;
+                    if (_colliders.Count >= settings.GridSize.x * settings.GridSize.y)
+                        boxes[i, j] = _colliders.Dequeue();
+                    else
+                        boxes[i, j] = GenerateBox();
 
             SceneManager.MoveGameObjectToScene(_boxParentForeMoveToVirtual.gameObject, _scene);
 
@@ -41,6 +46,13 @@ namespace BallzMerge.Gameplay.BallSpace
             simulatingBall.EnterSimulation();
             SceneManager.MoveGameObjectToScene(simulatingBall.gameObject, _scene);
             return simulatingBall.GetBallComponent<BallSimulation>();
+        }
+
+        private BoxCollider2D GenerateBox()
+        {
+            BoxCollider2D collider = Instantiate(_prefab, _boxParentForeMoveToVirtual).Collider;
+            _colliders.Enqueue(collider);
+            return collider;
         }
     }
 }
