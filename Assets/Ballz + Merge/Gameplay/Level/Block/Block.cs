@@ -35,6 +35,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         public Vector2 WorldPosition => _transform.position;
         public int Number { get; private set; }
         public bool IsWithEffect { get; private set; }
+        public bool IsInMove {  get; private set; }
 
         public event Action<Block> Deactivated;
         public event Action<Block> CameToNewCell;
@@ -74,8 +75,9 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Move(Vector2Int step)
         {
-            GridPosition += step;
             StopCurrentMoveTween();
+            IsInMove = true;
+            GridPosition += step;
             _moveTween = _transform.DOLocalMove((Vector2)GridPosition * _gridSettings.CellSize, _gridSettings.MoveTime).OnComplete(() => CameToNewCell?.Invoke(this));
             Vector3 scale = _baseScale;
 
@@ -101,7 +103,9 @@ namespace BallzMerge.Gameplay.BlockSpace
         public void Destroy()
         {
             StopCurrentMoveTween();
+            Number = 0;
             _numberView.text = "";
+            _view.color = _colorMap.Base;
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_transform.DOScale(_baseScale * DownscaleModifier, ScaleTime));
             sequence.Append(_transform.DOScale(_baseScale * UpscaleModifier, ScaleTime)).Join(_view.DOFade(0f, FadeDestroy)).OnComplete(Deactivate).SetDelay(0.1f);
@@ -112,7 +116,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             Number += count;
 
-            if (Number != 0)
+            if (Number > 0)
             {
                 _numberView.text = Number.ToString();
                 _view.color = _colorMap.GetColor(Number);
@@ -144,6 +148,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _numberView.enabled = false;
             _transform.localPosition = Vector2.zero;
             _transform.rotation = Quaternion.identity;
+            StopCurrentMoveTween();
             Deactivated?.Invoke(this);
         }
 
@@ -151,6 +156,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             if (_moveTween != null && _moveTween.IsActive())
                 _moveTween.Kill();
+
+            IsInMove = false;
         }
     }
 }

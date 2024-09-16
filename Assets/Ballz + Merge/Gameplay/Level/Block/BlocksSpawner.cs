@@ -36,21 +36,21 @@ namespace BallzMerge.Gameplay.BlockSpace
         public IEnumerable<Block> SpawnWave()
         {
             _currentWave++;
-            Block[] blocks = new Block[GetBlockCount()];
+            int count = GetBlockCount();
             List<int> positions = _gridSettings.GetPositionsInRow();
+            Block temp;
 
-            for (int i = 0; i < blocks.Length; i++)
+            for (int i = 0; i < count; i++)
             {
-                if (_blocks.TryDequeue(out blocks[i]) == false)
-                    blocks[i] = Generate();
+                if (_blocks.TryDequeue(out temp) == false)
+                    temp = Generate();
 
-                blocks[i].Deactivated += Deactivated;
+                temp.Deactivated += Deactivated;
                 int number = GetBlockNumber();
                 Vector2Int gridPosition = new Vector2Int(positions.TakeRandom(), _gridSettings.FirstRowIndex);
-                blocks[i].Activate(number, gridPosition, _colorMap.GetColor(number));
+                temp.Activate(number, gridPosition, _colorMap.GetColor(number));
+                yield return temp;
             }
-
-            return blocks;
         }
 
         private void Deactivated(Block block)

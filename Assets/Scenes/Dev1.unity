@@ -1300,8 +1300,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
-  _prefab: {fileID: 2327073673805491961, guid: ffbe112c7d2513d4b9d5f0140b6dc884, type: 3}
-  _effectParent: {fileID: 713737360}
+  _prefabs:
+  - {fileID: -7271298243295093197, guid: 830bb1149c946bb4187d04f905a728c4, type: 3}
+  - {fileID: 900858455280368239, guid: ffbe112c7d2513d4b9d5f0140b6dc884, type: 3}
+  _effectParent: {fileID: 0}
   _countPreload: 5
 --- !u!1 &733210645
 GameObject:
@@ -6417,7 +6419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initOrder: 1
   _spawner: {fileID: 785619883}
-  _explosionPool: {fileID: 713737361}
+  _effectsPool: {fileID: 713737361}
   _mergeImpact: {fileID: 1374338388}
   _additionalEffectHandler: {fileID: 1244611481}
 --- !u!1 &958183827
@@ -7073,6 +7075,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initOrder: 0
   _settings: {fileID: 11400000, guid: 746bbce98a003ac44a228caaebe7ddae, type: 2}
+  _effectsPool: {fileID: 713737361}
   _parent: {fileID: 1244611482}
   _countOfPreload: 5
 --- !u!4 &1244611482
@@ -8939,6 +8942,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c666d510bb01d147adb654884a9e87c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2090727823 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1909362768883852227, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
+  m_PrefabInstance: {fileID: 1297618651827815719}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fc0cefdc8bccec43bb5e259e7f380fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &814567761783011796
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9088,6 +9102,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1703776084}
     m_Modifications:
+    - target: {fileID: 1909362768883852227, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1909362768883852227, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
+      propertyPath: _maxHitsPerShoot
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3420952979989523706, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
+      propertyPath: _inGame._activeComponents.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3420952979989523706, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
+      propertyPath: '_inGame._activeComponents.Array.data[6]'
+      value: 
+      objectReference: {fileID: 2090727823}
     - target: {fileID: 4397546227461154052, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

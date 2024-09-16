@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class Dropper : CyclicBehavior, IWaveUpdater, IInitializable, ILevelStarter
+    public class Dropper : CyclicBehavior, IInitializable, ILevelStarter
     {
         [SerializeField] private int _wavesToDrop;
         [SerializeField] private DropSelector _selector;
@@ -13,6 +14,8 @@ namespace BallzMerge.Gameplay.Level
 
         private List<Drop> _pool;
         private int _waveCount;
+
+        public bool IsReadyToDrop { get; private set; }
 
         public void Init()
         {
@@ -30,15 +33,20 @@ namespace BallzMerge.Gameplay.Level
             _waveCount = _wavesToDrop;
         }
 
+        public void ShowDrop(Action callback)
+        {
+            if (IsReadyToDrop == false)
+                return;
+
+            IsReadyToDrop = false;
+            List<Drop> temp = _pool.ToList();
+            _waveCount = _wavesToDrop;
+            _selector.Show(temp.TakeRandom(), temp.TakeRandom(), callback);
+        }
+
         public void UpdateWave()
         {
-            if (--_waveCount == 0)
-            {
-                List<Drop> temp = _pool.ToList();
-                _selector.Show(temp.TakeRandom(), temp.TakeRandom());
-                _waveCount = _wavesToDrop;
-            }
-
+            IsReadyToDrop = --_waveCount <= 0;
             _view.Show(_waveCount);
         }
     }

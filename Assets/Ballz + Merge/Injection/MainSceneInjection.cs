@@ -28,7 +28,7 @@ public class MainSceneInjection : MonoInstaller
 
     public override void InstallBindings()
     {
-        Container.Bind<Ball>().FromInstance(_ball).AsSingle().NonLazy();
+        Container.Bind<Ball>().FromInstance(_ball.PreLoad()).AsSingle().NonLazy();
         Container.Bind<PhysicGrid>().FromInstance(_physicsGrid).AsSingle().NonLazy();
         Container.Bind<BlocksBus>().FromInstance(_blocksBus).AsSingle().NonLazy();
         Container.Bind<BallWaveVolume>().FromInstance(_ballLevelVolume).AsSingle().NonLazy();
