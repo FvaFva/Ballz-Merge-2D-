@@ -1,8 +1,8 @@
 ﻿using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.BlockSpace;
+using BallzMerge.Gameplay.Level;
 using BallzMerge.Root;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,7 +12,6 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 {
     private const string QuitQuestName = "Quit";
     private const string RestartQuestName = "Restart";
-    private const int DelayTime = 2;
 
     [SerializeField] private UIView _mainUI;
     [SerializeField] private List<CyclicBehavior> _components;
@@ -22,7 +21,8 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     private List<ILevelStarter> _starters = new List<ILevelStarter>();
     private List<IWaveUpdater> _wavers = new List<IWaveUpdater>();
     private Action<SceneExitData> _sceneCallBack;
-    SceneExitData _quiteRequireData;
+    private SceneExitData _quiteRequireData;
+    private ConductorBetweenWaves _conductor;
 
     [Inject] private BlocksBus _blocksBus;
     [Inject] private UserQuestioner _userQuestioner;
@@ -33,7 +33,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 
     public bool IsAvailable {  get; private set; }
 
-    private void Start()
+    private void Awake()
     {
         foreach (var cyclical in _components.OrderBy(item => item.Order))
         {
@@ -48,6 +48,9 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 
             if (cyclical is IWaveUpdater waver)
                 _wavers.Add(waver);
+
+            if(cyclical is Dropper dropper)
+                _conductor = new ConductorBetweenWaves(_ball.GetBallComponent<BallAwaitBreaker>(), dropper, _blocksBus);
         }
 
         IsAvailable = true;
@@ -55,15 +58,17 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 
     private void OnEnable()
     {
-        _blocksBus.BlockFinished += OnBlockFinished;
-        _ball.EnterAim += OnBallEnterAim;
+        _ball.LeftGame += OnBallLeftGame;
+        _conductor.GameFinished += OnGameFinished;
+        _conductor.WaveLoaded += OnWaveLoaded;
         _rootUI.SettingsMenu.QuitRequired += OnMenuQuitRequire;
     }
 
     private void OnDisable()
     {
-        _blocksBus.BlockFinished -= OnBlockFinished;
-        _ball.EnterAim -= OnBallEnterAim;
+        _ball.LeftGame -= OnBallLeftGame;
+        _conductor.GameFinished -= OnGameFinished;
+        _conductor.WaveLoaded -= OnWaveLoaded;
         _rootUI.SettingsMenu.QuitRequired -= OnMenuQuitRequire;
     }
 
@@ -74,49 +79,49 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 
     public void Init(Action<SceneExitData> callback)
     {
+        if (_conductor == null)
+        {
+            Debug.LogError("WARNING!! CONDUCTOR WAS FIRED!");
+            callback.Invoke(new SceneExitData(ScenesNames.MAINMENU));
+            return;
+        }
+
         _sceneCallBack = callback;
         _rootUI.AttachSceneUI(_mainUI);
         RestartLevel();
+    }
+
+    private void OnBallLeftGame()
+    {
+        _conductor.Start();
     }
 
     private void RestartLevel()
     {
         foreach (ILevelStarter starter in _starters)
             starter.StartLevel();
+
+        _conductor.Start();
     }
 
-    private void OnBallEnterAim()
+    private void OnWaveLoaded()
     {
-        StartCoroutine(DelayWaveUpdated());
-    }
-
-    private IEnumerator DelayWaveUpdated()
-    {
-        yield return new WaitForSeconds(DelayTime);
-
         foreach (IWaveUpdater waver in _wavers)
             waver.UpdateWave();
     }
 
-    private void OnBlockFinished()
+    private void OnGameFinished()
     {
-        StartCoroutine(DelayedLevelFinish());
+        foreach (ILevelFinisher finisher in _finishers)
+            finisher.FinishLevel();
+
+        StartQuest(RestartQuestName, "Want one more game?");
     }
 
     private void OnMenuQuitRequire(SceneExitData exitData)
     {
         _quiteRequireData = exitData;
         StartQuest(QuitQuestName, "Really left dat the best run?");
-    }
-
-    private IEnumerator DelayedLevelFinish()
-    {
-        yield return new WaitForFixedUpdate();
-
-        foreach (ILevelFinisher finisher in _finishers)
-            finisher.FinishLevel();
-
-        StartQuest(RestartQuestName, "Want one more game?");
     }
 
     private void StartQuest(string id, string header)
@@ -138,6 +143,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         }
         else if (answer is {Name: QuitQuestName, IsPositiveAnswer: true})
         {
+            _userQuestioner.Answer -= OnUserAnswer;
             _sceneCallBack.Invoke(_quiteRequireData);
         }
     }

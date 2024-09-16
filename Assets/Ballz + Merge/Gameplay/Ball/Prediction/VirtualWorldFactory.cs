@@ -37,7 +37,7 @@ namespace BallzMerge.Gameplay.BallSpace
 
         public BallSimulation CreateBall(Ball original)
         {
-            Ball simulatingBall = Instantiate(original);
+            Ball simulatingBall = Instantiate(original).PreLoad();
             simulatingBall.EnterSimulation();
             SceneManager.MoveGameObjectToScene(simulatingBall.gameObject, _scene);
             return simulatingBall.GetBallComponent<BallSimulation>();

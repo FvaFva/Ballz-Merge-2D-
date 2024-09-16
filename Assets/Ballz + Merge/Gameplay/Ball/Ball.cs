@@ -10,29 +10,31 @@ namespace BallzMerge.Gameplay.BallSpace
         [SerializeField] private BallState _simulation;
         [SerializeField] private BallState _aim;
         [SerializeField] private BallState _inGame;
+        [SerializeField] private BallState _inAwait;
         [SerializeField] private Rigidbody2D _myBody;
 
         private List<BallComponent> _components;
         private Transform _transform;
         private BallState _current;
         private Vector3 _start;
+        private bool loaded;
 
-        public bool IsInAim { get; private set; }
         public Vector2 Position => _transform.position;
-        public event Action EnterAim;
+        public event Action LeftGame;
         public event Action EnterGame;
 
-        private void Awake()
+        public Ball PreLoad()
         {
-            _transform = transform;
-            _aim.SetTarget(_inGame);
-            _inGame.SetTarget(_aim);
-            _start = _transform.position;
-            var partOfComponents = _aim.GetActiveComponents().Union(_inGame.GetActiveComponents());
-            _components = partOfComponents.Union(_simulation.GetActiveComponents()).ToList();
+            if (loaded == false)
+            {
+                loaded = true;
+                _transform = transform;
+                _start = _transform.position;
+                BuildStates();
+                BuildComponents();
+            }
 
-            foreach (BallComponent component in _components)
-                component.SetBody(_myBody);
+            return this;
         }
 
         public void Init()
@@ -40,6 +42,7 @@ namespace BallzMerge.Gameplay.BallSpace
             _aim.Exit();
             _simulation.Exit();
             _inGame.Exit();
+            _inAwait.Exit();
             ChangeState(null);
         }
 
@@ -51,7 +54,7 @@ namespace BallzMerge.Gameplay.BallSpace
 
         public void FinishLevel()
         {
-            ChangeState(null);
+            ChangeState(_inAwait);
         }
 
         public void EnterSimulation()
@@ -74,6 +77,23 @@ namespace BallzMerge.Gameplay.BallSpace
             return null;
         }
 
+        private void BuildStates()
+        {
+            _inAwait.SetTarget(_aim);
+            _aim.SetTarget(_inGame);
+            _inGame.SetTarget(_inAwait);
+        }
+
+        private void BuildComponents()
+        {
+            var partOfComponents = _aim.GetActiveComponents().Union(_inGame.GetActiveComponents());
+            partOfComponents = partOfComponents.Union(_inAwait.GetActiveComponents());
+            _components = partOfComponents.Union(_simulation.GetActiveComponents()).ToList();
+
+            foreach (BallComponent component in _components)
+                component.SetBody(_myBody);
+        }
+
         private void OnTargetStateReached(BallState newState)
         {
             ChangeState(newState);
@@ -87,12 +107,12 @@ namespace BallzMerge.Gameplay.BallSpace
                 _current.Exit();
             }
 
-            _current = newState;
-            IsInAim = _current == _aim;
+            if (_current == _inGame)
+                LeftGame?.Invoke();
 
-            if (IsInAim)
-                EnterAim?.Invoke();
-            else if (_current == _inGame)
+            _current = newState;
+
+            if (_current == _inGame)
                 EnterGame?.Invoke();
 
             if (_current != null)

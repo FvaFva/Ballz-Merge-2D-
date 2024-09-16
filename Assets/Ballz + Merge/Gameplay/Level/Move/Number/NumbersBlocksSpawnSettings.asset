@@ -15,13 +15,17 @@ MonoBehaviour:
   _properties:
   - Range:
       InitialWave: 1
-      TerminalWave: 5
+      TerminalWave: 3
     NumbersToSpawn: 0100000002000000
   - Range:
-      InitialWave: 6
+      InitialWave: 4
       TerminalWave: 7
-    NumbersToSpawn: 010000000200000003000000
+    NumbersToSpawn: 06000000020000000300000004000000
   - Range:
-      InitialWave: 8
-      TerminalWave: 12
-    NumbersToSpawn: 0600000002000000030000000400000005000000
+      InitialWave: 7
+      TerminalWave: 9
+    NumbersToSpawn: 090000000a000000
+  - Range:
+      InitialWave: 9
+      TerminalWave: 15
+    NumbersToSpawn: 0c0000000a0000000f000000
