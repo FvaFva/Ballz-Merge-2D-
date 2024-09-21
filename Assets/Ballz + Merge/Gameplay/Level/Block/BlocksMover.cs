@@ -51,10 +51,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             return _inMove.Count == 0;
         }
 
-        public void MoveAllDawn(IEnumerable<Block> movedBlocks)
+        public void MoveAllDirection(IEnumerable<Block> movedBlocks, Vector2Int direction)
         {
             foreach (Block block in movedBlocks)
-                Move(block, Vector2Int.down);
+                Move(block, direction);
         }
 
         public void Clear()

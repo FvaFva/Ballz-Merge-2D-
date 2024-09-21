@@ -66,7 +66,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public bool TryFinish()
         {
-            _mover.MoveAllDawn(_activeBlocks.Items);
+            MoveAllBlocks(Vector2Int.down);
 
             if(_activeBlocks.TryDeactivateUnderLine(_gridSettings.LastRowIndex))
             {
@@ -76,6 +76,11 @@ namespace BallzMerge.Gameplay.BlockSpace
             }
 
             return false;
+        }
+
+        public void MoveAllBlocks(Vector2Int direction)
+        {
+            _mover.MoveAllDirection(_activeBlocks.Items, direction);
         }
 
         public void StartSpawnWave(Action callBAck)

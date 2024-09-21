@@ -18,7 +18,7 @@ namespace BallzMerge.Gameplay.Level
         public Vector2Int GridSize => _gridSize + _additionalGridSize;
         public Vector2 ViewPosition => _viewPosition;
         public float CellSpacing => _cellSpacing;
-        public int FirstRowIndex => _gridSize.y - 1;
+        public int FirstRowIndex => GridSize.y - 1;
         public int LastRowIndex => 0;
         public float MoveTime => _moveTime;
 
