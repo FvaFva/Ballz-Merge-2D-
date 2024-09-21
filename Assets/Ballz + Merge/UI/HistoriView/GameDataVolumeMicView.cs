@@ -17,15 +17,19 @@ public class GameDataVolumeMicView : MonoBehaviour
         return this;
     }
 
-    public void Hide()
+    public GameDataVolumeMicView Hide()
     {
         gameObject.SetActive(false);
+        return this;
     }
 
-    public void Show(string volumeName, float chance)
+    public void Show(string volumeName, float chance)=> ShowData(_map.GetVolume(volumeName), chance);
+
+    public void Show(BallVolumesTypes volumeName, float chance) => ShowData(_map.GetVolume(volumeName), chance);
+
+    private void ShowData(BallVolume data, float chance)
     {
         gameObject.SetActive(true);
-        BallVolume data = _map.GetVolume(volumeName);
         _chance.text = _map.GetTypifiedChance(data, chance);
         _header.text = data.Name;
         _icon.sprite = data.Icon;

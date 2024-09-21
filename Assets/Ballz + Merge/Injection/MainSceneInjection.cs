@@ -22,7 +22,6 @@ public class MainSceneInjection : MonoInstaller
     [Header("Inject")]
     [SerializeField] private BlocksSpawner _blocksSpawner;
     [SerializeField] private PlayerScore _score;
-    [SerializeField] private BallWaveVolumeView _waveVolumeView;
 
     [Inject] private TargetSceneEntryPointContainer _entryPointBinder;
 
@@ -38,7 +37,6 @@ public class MainSceneInjection : MonoInstaller
 
         Container.Inject(_blocksSpawner);
         Container.Inject(_score);
-        Container.Inject(_waveVolumeView);
 
         _entryPointBinder.Set(_loader);
     }
