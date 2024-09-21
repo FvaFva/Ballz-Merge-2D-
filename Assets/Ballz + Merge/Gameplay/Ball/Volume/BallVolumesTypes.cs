@@ -5,5 +5,6 @@
     NumberReductor,
     ExtraAimPoints,
     Magnet,
-    MoveIncreaser
+    MoveIncreaser,
+    FieldExpander
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
-using System;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
@@ -40,11 +39,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             int count = GetBlockCount();
             Block[] blocks = new Block[GetBlockCount()];
             List<int> positions = _gridSettings.GetPositionsInRow();
-            Block temp;
 
             for (int i = 0; i < count; i++)
             {
-                if (_blocks.TryDequeue(out temp) == false)
+                if (_blocks.TryDequeue(out Block temp) == false)
                     temp = Generate();
 
                 temp.Deactivated += Deactivated;

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace BallzMerge.Gameplay.BallSpace
 {
-    public class VirtualWorldFactory : CyclicBehavior, IInitializable
+    public class VirtualWorldFactory : CyclicBehavior, IInitializable, ILevelStarter
     {
         [SerializeField] private PlayZoneBoards _boards;
         [SerializeField] private GridVirtualCell _prefab;
@@ -16,14 +16,14 @@ namespace BallzMerge.Gameplay.BallSpace
 
         public PhysicsScene2D GetPhysicScene() => _scene.GetPhysicsScene2D();
 
-        public BoxCollider2D[,] CreateBoxes(GridSettings settings, int GridSizeX = 1)
+        public BoxCollider2D[,] CreateBoxes(GridSettings settings, int GridSizeX = 1, int GridSizeY = 1)
         {
             BoxCollider2D[,] boxes = new BoxCollider2D[settings.GridSize.x, settings.GridSize.y];
 
             for (int i = GridSizeX - 1; i < settings.GridSize.x; i++)
-                for (int j = 0; j < settings.GridSize.y; j++)
+                for (int j = GridSizeY - 1; j < settings.GridSize.y; j++)
                     if (_colliders.Count >= settings.GridSize.x * settings.GridSize.y)
-                        boxes[i, j] = _colliders.Dequeue();
+                        boxes[i, j] = ActivateCollider();
                     else
                         boxes[i, j] = GenerateBox();
 
@@ -46,6 +46,19 @@ namespace BallzMerge.Gameplay.BallSpace
             simulatingBall.EnterSimulation();
             SceneManager.MoveGameObjectToScene(simulatingBall.gameObject, _scene);
             return simulatingBall.GetBallComponent<BallSimulation>();
+        }
+
+        public void StartLevel()
+        {
+            foreach (BoxCollider2D collider in _colliders)
+                collider.gameObject.SetActive(false);
+        }
+
+        private BoxCollider2D ActivateCollider()
+        {
+            BoxCollider2D collider = _colliders.Dequeue();
+            collider.gameObject.SetActive(true);
+            return collider;
         }
 
         private BoxCollider2D GenerateBox()

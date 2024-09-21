@@ -13,16 +13,27 @@ namespace BallzMerge.Gameplay.Level
         public Vector2Int GridPosition { get; private set; }
         public bool IsActive { get; private set; }
 
-        public void Init(Vector2Int gridPosition, float cellSize, BoxCollider2D virtualCollider)
+        public void Activate(Vector2Int gridPosition, float cellSize, BoxCollider2D virtualCollider)
         {
             if (_inited)
                 return;
 
             _inited = true;
+            gameObject.SetActive(true);
             GridPosition = gridPosition;
             transform.localPosition = (Vector2)gridPosition * cellSize;
             _collider.size = new Vector2(cellSize, cellSize);
             ConnectVirtualCollider(virtualCollider);
+            ChangeActivity(false);
+        }
+
+        public void Deactivate()
+        {
+            if (_inited == false)
+                return;
+
+            _inited = false;
+            gameObject.SetActive(false);
             ChangeActivity(false);
         }
 
