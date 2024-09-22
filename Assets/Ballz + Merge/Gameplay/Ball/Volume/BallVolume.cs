@@ -8,10 +8,12 @@ public class BallVolume : ScriptableObject
     [SerializeField] private Sprite _icon;
     [SerializeField] private string _name;
     [SerializeField] private string _description;
+    [SerializeField] private bool _isReducible;
 
     public BallVolumesTypes Type => _type;
     public BallVolumeCountingTypes Counting => _counting;
     public Sprite Icon => _icon;
     public string Name => _name;
     public string Description => _description;
+    public bool IsReducible => _isReducible;
 }

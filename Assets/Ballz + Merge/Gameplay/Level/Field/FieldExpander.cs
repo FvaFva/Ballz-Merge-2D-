@@ -7,7 +7,6 @@ using Zenject;
 public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevelFinisher
 {
     [SerializeField] private FieldExpanderSettings _fieldExpanderSettings;
-    [SerializeField] private DropSelector _dropSelector;
     [SerializeField] private BoxCollider2D _leftBorder;
     [SerializeField] private BoxCollider2D _rightBorder;
     [SerializeField] private BoxCollider2D _topBorder;
@@ -18,6 +17,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     [Inject] private PhysicGrid _physicGrid;
     [Inject] private GridSettings _gridSettings;
     [Inject] private BlocksBus _blocksBus;
+    [Inject] private BallWaveVolume _ballWaveVolume;
 
     private Dictionary<BoxCollider2D, StartProperty> _collidersProperty;
     private int _count;
@@ -55,7 +55,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     public void StartLevel()
     {
-        _dropSelector.DropSelected += AddRow;
+        _ballWaveVolume.GlobalVolumes.ChangedVolume += AddRow;
 
         foreach (var border in _collidersProperty)
         {
@@ -75,7 +75,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     public void FinishLevel()
     {
-        _dropSelector.DropSelected -= AddRow;
+        _ballWaveVolume.GlobalVolumes.ChangedVolume -= AddRow;
     }
 
     private void AddColumn(int currentWave)

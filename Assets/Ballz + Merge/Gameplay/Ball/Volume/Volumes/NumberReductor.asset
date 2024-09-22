@@ -18,3 +18,4 @@ MonoBehaviour:
   _name: Number reductor
   _description: When ball is contacts with block there is a chance to reduce his
     number
+  _isReducible: 1

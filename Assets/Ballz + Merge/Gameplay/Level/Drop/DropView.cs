@@ -13,6 +13,7 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private Image _icon;
         [SerializeField] private Image _colorView;
         [SerializeField] private Button _activator;
+        [SerializeField] private RectTransform _additionalInfo;
 
         private Drop _current;
         private float _count;
@@ -48,6 +49,7 @@ namespace BallzMerge.Gameplay.Level
         private void Activate()
         {
             _count = _current.GetRandomCount();
+            _additionalInfo.gameObject.SetActive(_current.IsReducible);
             _name.text = _current.Name;
             _description.text = _current.Description;
             _value.text = (_count * 100).ToString("F0");
@@ -63,6 +65,7 @@ namespace BallzMerge.Gameplay.Level
             _value.text = string.Empty;
             _colorView.color = Color.gray;
             _icon.sprite = _default;
+            _additionalInfo.gameObject.SetActive(false);
         }
 
         private void OnSelect()

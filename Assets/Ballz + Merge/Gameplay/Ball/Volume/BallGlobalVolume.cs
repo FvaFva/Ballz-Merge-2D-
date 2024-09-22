@@ -20,10 +20,12 @@ public class BallGlobalVolume
 
     public IDictionary<BallVolumesTypes, float> Volumes => _volumes;
     public event Action Changed;
+    public event Action<BallVolumesTypes, float> ChangedVolume;
 
     private void ApplyVolume(BallVolumesTypes volume, float count)
     {
         _volumes[volume] += count;
         Changed?.Invoke();
+        ChangedVolume?.Invoke(volume, count);
     }
 }

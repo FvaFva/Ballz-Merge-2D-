@@ -20,6 +20,7 @@ namespace BallzMerge.Gameplay.Level
         public string Description => _volume.Description;
         public Color Color => _rarity.Color;
         public int CountInPool => _rarity.CountInPool;
+        public bool IsReducible => _volume.IsReducible;
 
         private void OnValidate()
         {

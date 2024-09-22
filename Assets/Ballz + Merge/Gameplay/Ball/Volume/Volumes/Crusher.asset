@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
   m_Name: Crusher
   m_EditorClassIdentifier: 
-  _waveDropType: 0
+  _type: 0
+  _counting: 0
   _icon: {fileID: 21300000, guid: 4fea7209b87bf684698342b7de78e2d0, type: 3}
   _name: Crusher
   _description: When you contact block have chance to destroy it
+  _isReducible: 1

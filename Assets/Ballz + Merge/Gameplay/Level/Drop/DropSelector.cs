@@ -9,7 +9,6 @@ namespace BallzMerge.Gameplay.Level
         private const float AnimationTime = 0.8f;
 
         [SerializeField] private CanvasGroup _canvasGroup;
-        [SerializeField] private Canvas _canvas;
         [SerializeField] private DropView _firstSlot;
         [SerializeField] private DropView _secondSlot;
 
@@ -33,7 +32,7 @@ namespace BallzMerge.Gameplay.Level
         {
             _firstSlot.Show(first);
             _secondSlot.Show(second);
-            _canvas.enabled = true;
+            gameObject.SetActive(true);
             _canvasGroup.DOFade(1, AnimationTime);
             _callback = callback;
         }
@@ -41,7 +40,7 @@ namespace BallzMerge.Gameplay.Level
         public void FinishLevel()
         {
             _canvasGroup.alpha = 0;
-            _canvas.enabled = false;
+            gameObject.SetActive(false);
         }
 
         private void OnSelect(Drop drop, float count)
@@ -50,17 +49,14 @@ namespace BallzMerge.Gameplay.Level
             DropSelected?.Invoke(drop.WaveDropType, count);
         }
 
-        private void Hide()
-        {
-            _firstSlot.Show(null);
-            _secondSlot.Show(null);
-            _canvasGroup.DOFade(0, AnimationTime).OnComplete(OnHideAnimationFinished);
-        }
+        private void Hide() => _canvasGroup.DOFade(0, AnimationTime).OnComplete(OnHideAnimationFinished);
 
         private void OnHideAnimationFinished()
         {
-            _canvas.enabled = false;
             _callback();
+            _firstSlot.Show(null);
+            _secondSlot.Show(null);
+            gameObject.SetActive(false);
         }
     }
 }

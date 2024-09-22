@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BallWaveVolumeView : MonoBehaviour
 {
+    [SerializeField] private bool _isLoadGlobalVolumesOnEnable;
     [SerializeField] private BallWaveVolume _source;
     [SerializeField] private RectTransform _viewPort;
     [SerializeField] private GameDataVolumeMicView _viewPrefab;
@@ -22,6 +23,11 @@ public class BallWaveVolumeView : MonoBehaviour
     {
         _source.Updated += OnSourceUpdate;
         _source.Changed += UpdateValue;
+
+        if(_isLoadGlobalVolumesOnEnable)
+            OnSourceUpdate(_source.GlobalVolumes.Volumes);
+        else
+            OnSourceUpdate(_source.Volumes);
     }
 
     private void OnDisable()
@@ -32,6 +38,9 @@ public class BallWaveVolumeView : MonoBehaviour
 
     private void OnSourceUpdate(IDictionary<BallVolumesTypes, float> valuePairs)
     {
+        if (valuePairs == null) 
+            return;
+
         foreach (var newValue in valuePairs)
             UpdateValue(newValue.Key, newValue.Value);
     }

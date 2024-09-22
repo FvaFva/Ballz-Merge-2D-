@@ -41,6 +41,7 @@ namespace BallzMerge.Gameplay.Level
             IsReadyToDrop = false;
             List<Drop> temp = _pool.ToList();
             _waveCount = _wavesToDrop;
+            _view.Show(_waveCount);
             _selector.Show(temp.TakeRandom(), temp.TakeRandom(), callback);
         }
 

@@ -10,6 +10,7 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
     private Dictionary<BallVolumesTypes, float> _volumes;
 
     public BallGlobalVolume GlobalVolumes {  get; private set; }
+    public IDictionary<BallVolumesTypes, float> Volumes => _volumes;
     public event Action<IDictionary<BallVolumesTypes, float>> Updated;
     public event Action<BallVolumesTypes, float> Changed;
 
