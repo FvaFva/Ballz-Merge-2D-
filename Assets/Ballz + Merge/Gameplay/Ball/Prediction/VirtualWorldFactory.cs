@@ -36,8 +36,7 @@ namespace BallzMerge.Gameplay.BallSpace
         {
             _boxParentForeMoveToVirtual.parent = null;
             _scene = SceneManager.CreateScene("Physics simulation", new CreateSceneParameters(LocalPhysicsMode.Physics2D));
-            GameObject boards = Instantiate(_boards.GameObject);
-            SceneManager.MoveGameObjectToScene(boards, _scene);
+            SceneManager.MoveGameObjectToScene(_boards.GetSimulationClone(), _scene);
         }
 
         public BallSimulation CreateBall(Ball original)

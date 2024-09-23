@@ -1,16 +1,12 @@
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
 public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevelFinisher
 {
+    [SerializeField] private PlayZoneBoards _boards;
     [SerializeField] private FieldExpanderSettings _fieldExpanderSettings;
-    [SerializeField] private BoxCollider2D _leftBorder;
-    [SerializeField] private BoxCollider2D _rightBorder;
-    [SerializeField] private BoxCollider2D _topBorder;
-    [SerializeField] private BoxCollider2D _bottomBorder;
     [SerializeField] private ParticleSystem _fieldEffect;
     [SerializeField] private Camera _camera;
 
@@ -19,33 +15,28 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     [Inject] private BlocksBus _blocksBus;
     [Inject] private BallWaveVolume _ballWaveVolume;
 
-    private Dictionary<BoxCollider2D, StartProperty> _collidersProperty;
     private int _count;
     private int _extraColumns;
     private int _extraRows;
     private int _currentWave;
 
     private ParticleSystem.ShapeModule _fieldShape;
-    private Vector3 _fieldPosition;
-    private Vector3 _fieldScale;
+    private Vector2 _fieldPosition;
+    private Vector2 _fieldScale;
     private float _cameraOrthographicSize;
-    private Vector3 _cameraPosition;
+    private Vector2 _cameraPosition;
+    private PositionScaleProperty _propertyColumn;
+    private PositionScaleProperty _propertyRow;
 
     private void Awake()
     {
-        _collidersProperty = new()
-        {
-            { _leftBorder, new StartProperty(_leftBorder.offset, _leftBorder.size) },
-            { _rightBorder, new StartProperty(_rightBorder.offset, _rightBorder.size) },
-            { _topBorder, new StartProperty(_topBorder.offset, _topBorder.size) },
-            { _bottomBorder, new StartProperty(_bottomBorder.offset, _bottomBorder.size) }
-        };
-
         _fieldShape = _fieldEffect.shape;
         _fieldPosition = _fieldEffect.transform.position;
         _fieldScale = _fieldEffect.shape.scale;
         _cameraOrthographicSize = _camera.orthographicSize;
         _cameraPosition = _camera.transform.position;
+        _propertyRow = new PositionScaleProperty(new Vector2(0, _gridSettings.CellSize / 2), new Vector2(0, _gridSettings.CellSize));
+        _propertyColumn = new PositionScaleProperty(new Vector2(_gridSettings.CellSize / 2, 0), new Vector2(_gridSettings.CellSize, 0));
     }
 
     public void UpdateWave()
@@ -56,13 +47,6 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     public void StartLevel()
     {
         _ballWaveVolume.GlobalVolumes.ChangedVolume += AddRow;
-
-        foreach (var border in _collidersProperty)
-        {
-            border.Key.offset = border.Value.ColliderOffset;
-            border.Key.size = border.Value.ColliderSize;
-        }
-
         _fieldEffect.transform.position = _fieldPosition;
         _fieldShape.scale = _fieldScale;
         _camera.orthographicSize = _cameraOrthographicSize;
@@ -85,27 +69,9 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
             _count--;
             _gridSettings.AddGridSize(Vector2Int.right);
             _physicGrid.SpawnColumn(false, ++_extraColumns);
-            SetComponentsPosition(_rightBorder, _topBorder, _bottomBorder, new Vector3(_gridSettings.CellSize / 2, 0, 0), new Vector3(_gridSettings.CellSize, 0, 0));
+            SetComponentsPosition(_propertyColumn.Position, _propertyColumn.Scale);
+            _boards.ChangePositionScale(true, _propertyColumn);
         }
-    }
-
-    private void SetComponentsPosition(BoxCollider2D offsetBorder, BoxCollider2D firstSizeOffsetBorder, BoxCollider2D secondSizeOffsetBorder, Vector3 newPosition, Vector3 newScale)
-    {
-        offsetBorder.offset += (Vector2)newScale;
-
-        ChangeSizeOffsetBorder(firstSizeOffsetBorder, newPosition, newScale);
-        ChangeSizeOffsetBorder(secondSizeOffsetBorder, newPosition, newScale);
-
-        _fieldEffect.transform.position += newPosition;
-        _fieldShape.scale += newScale;
-        _camera.orthographicSize += _gridSettings.CellSize / 2;
-        _camera.transform.position += newPosition;
-    }
-
-    private void ChangeSizeOffsetBorder(BoxCollider2D border, Vector2 newPosition, Vector2 newScale)
-    {
-        border.offset += newPosition;
-        border.size += newScale;
     }
 
     private void AddRow(BallVolumesTypes type, float count)
@@ -115,7 +81,16 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
             _gridSettings.AddGridSize(Vector2Int.up);
             _physicGrid.SpawnRow(++_extraRows);
             _blocksBus.MoveAllBlocks(Vector2Int.up);
-            SetComponentsPosition(_topBorder, _leftBorder, _rightBorder, new Vector3(0, _gridSettings.CellSize / 2, 0), new Vector3(0, _gridSettings.CellSize, 0));
+            SetComponentsPosition(_propertyRow.Position, _propertyRow.Scale);
+            _boards.ChangePositionScale(false, _propertyRow);
         }
+    }
+
+    private void SetComponentsPosition(Vector3 newPosition, Vector3 newScale)
+    {
+        _fieldEffect.transform.position += newPosition;
+        _fieldShape.scale += newScale;
+        _camera.orthographicSize += _gridSettings.CellSize / 2;
+        _camera.transform.position += newPosition;
     }
 }
