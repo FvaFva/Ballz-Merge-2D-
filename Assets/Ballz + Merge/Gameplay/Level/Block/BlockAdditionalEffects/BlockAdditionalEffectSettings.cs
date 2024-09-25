@@ -67,7 +67,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             float chanceToSpawn = Random.Range(0, TargetChance * NormalizationFactor);
 
-            if (chanceToSpawn < _spawnChance)
+            if (chanceToSpawn < _spawnChance * NormalizationFactor)
                 return true;
 
             return false;
