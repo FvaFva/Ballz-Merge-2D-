@@ -69,7 +69,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
             _count--;
             _gridSettings.AddGridSize(Vector2Int.right);
             _physicGrid.SpawnColumn(false, ++_extraColumns);
-            SetComponentsPosition(_propertyColumn.Position, _propertyColumn.Scale);
+            SetComponentsPosition(_propertyColumn);
             _boards.ChangePositionScale(true, _propertyColumn);
         }
     }
@@ -81,16 +81,16 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
             _gridSettings.AddGridSize(Vector2Int.up);
             _physicGrid.SpawnRow(++_extraRows);
             _blocksBus.MoveAllBlocks(Vector2Int.up);
-            SetComponentsPosition(_propertyRow.Position, _propertyRow.Scale);
+            SetComponentsPosition(_propertyRow);
             _boards.ChangePositionScale(false, _propertyRow);
         }
     }
 
-    private void SetComponentsPosition(Vector3 newPosition, Vector3 newScale)
+    private void SetComponentsPosition(PositionScaleProperty property)
     {
-        _fieldEffect.transform.position += newPosition;
-        _fieldShape.scale += newScale;
+        _fieldEffect.transform.position += (Vector3)property.Position;
+        _fieldShape.scale += (Vector3)property.Scale;
         _camera.orthographicSize += _gridSettings.CellSize / 2;
-        _camera.transform.position += newPosition;
+        _camera.transform.position += (Vector3)property.Position;
     }
 }

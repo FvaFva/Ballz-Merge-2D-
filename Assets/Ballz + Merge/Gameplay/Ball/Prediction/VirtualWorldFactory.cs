@@ -5,14 +5,15 @@ using UnityEngine.SceneManagement;
 
 namespace BallzMerge.Gameplay.BallSpace
 {
-    public class VirtualWorldFactory : CyclicBehavior, IInitializable, ILevelStarter
+    public class VirtualWorldFactory : CyclicBehavior, IInitializable, ILevelFinisher
     {
         [SerializeField] private PlayZoneBoards _boards;
         [SerializeField] private GridVirtualCell _prefab;
         [SerializeField] private Transform _boxParentForeMoveToVirtual;
 
         private Scene _scene;
-        private Queue<BoxCollider2D> _colliders = new Queue<BoxCollider2D>();
+        private Queue<BoxCollider2D> _collidersPool = new Queue<BoxCollider2D>();
+        private List<BoxCollider2D> _colliders = new List<BoxCollider2D>();
 
         public PhysicsScene2D GetPhysicScene() => _scene.GetPhysicsScene2D();
 
@@ -22,10 +23,7 @@ namespace BallzMerge.Gameplay.BallSpace
 
             for (int i = GridSizeX - 1; i < settings.GridSize.x; i++)
                 for (int j = GridSizeY - 1; j < settings.GridSize.y; j++)
-                    if (_colliders.Count >= settings.GridSize.x * settings.GridSize.y)
-                        boxes[i, j] = ActivateCollider();
-                    else
-                        boxes[i, j] = GenerateBox();
+                    boxes[i, j] = GetCollider();
 
             SceneManager.MoveGameObjectToScene(_boxParentForeMoveToVirtual.gameObject, _scene);
 
@@ -39,6 +37,15 @@ namespace BallzMerge.Gameplay.BallSpace
             SceneManager.MoveGameObjectToScene(_boards.GetSimulationClone(), _scene);
         }
 
+        public void FinishLevel()
+        {
+            foreach (BoxCollider2D collider in _colliders)
+            {
+                _collidersPool.Enqueue(collider);
+                collider.gameObject.SetActive(false);
+            }
+        }
+
         public BallSimulation CreateBall(Ball original)
         {
             Ball simulatingBall = Instantiate(original).PreLoad();
@@ -47,23 +54,20 @@ namespace BallzMerge.Gameplay.BallSpace
             return simulatingBall.GetBallComponent<BallSimulation>();
         }
 
-        public void StartLevel()
+        private BoxCollider2D GetCollider()
         {
-            foreach (BoxCollider2D collider in _colliders)
-                collider.gameObject.SetActive(false);
-        }
+            if (_collidersPool.TryDequeue(out BoxCollider2D collider))
+                collider.gameObject.SetActive(true);
+            else
+                collider = GenerateBox();
 
-        private BoxCollider2D ActivateCollider()
-        {
-            BoxCollider2D collider = _colliders.Dequeue();
-            collider.gameObject.SetActive(true);
             return collider;
         }
 
         private BoxCollider2D GenerateBox()
         {
             BoxCollider2D collider = Instantiate(_prefab, _boxParentForeMoveToVirtual).Collider;
-            _colliders.Enqueue(collider);
+            _colliders.Add(collider);
             return collider;
         }
     }
