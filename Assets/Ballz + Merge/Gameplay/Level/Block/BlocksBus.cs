@@ -17,6 +17,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         [SerializeField] private BlocksSpawner _spawner;
         [SerializeField] private EffectsPool _effectsPool;
         [SerializeField] private BlocksMergeImpact _mergeImpact;
+        [SerializeField] private BlocksDestroyImpact _destroyImpact;
         [SerializeField] private BlockMagneticObserver _blockMagneticObserver;
         [SerializeField] private BlockAdditionalEffectHandler _additionalEffectHandler;
 
@@ -160,6 +161,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _mover.ProcessDeleteBlock(block);
             block.Destroy();
             _effectsPool.SpawnEffect(BlockAdditionalEffectEvents.Destroy, block.WorldPosition);
+            _destroyImpact.ShowImpact();
         }
 
         private bool TryMoveBlock(Block block, Vector2Int direction, float depth = 1)

@@ -9,17 +9,18 @@ namespace BallzMerge.Root.Settings
         private const float PauseScale = 0f;
         private const float MinScale = 1;
         private const float MaxScale = 10;
+        private const float SpeedUpScale = 100f;
 
         public float Value { get; private set; }
 
         public string Name { get { return "Time"; } }
 
-        public void Pause()
+        public void Stop()
         {
             Time.timeScale = PauseScale;
         }
 
-        public void Play()
+        public void SetRegular()
         {
             Time.timeScale = Value;
         }
@@ -29,6 +30,11 @@ namespace BallzMerge.Root.Settings
             value = Mathf.Clamp(value, MinScale, MaxScale);
             Value = value;
             Time.timeScale = value;
+        }
+
+        public void SpeedUp()
+        {
+            Time.timeScale = SpeedUpScale;
         }
     }
 }

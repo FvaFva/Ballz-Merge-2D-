@@ -116,6 +116,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &7104765068768312032
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,6 +338,7 @@ MonoBehaviour:
   _blockPrefab: {fileID: 7282855710844971790, guid: 990de75b06802ea40b9a0ad3d1909cef, type: 3}
   _blocksSpawner: {fileID: 0}
   _score: {fileID: 7744337803995700564}
+  _animationSkipper: {fileID: 0}
 --- !u!1 &8483927091706866025
 GameObject:
   m_ObjectHideFlags: 0
