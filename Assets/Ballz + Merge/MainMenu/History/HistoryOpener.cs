@@ -9,19 +9,21 @@ public class HistoryOpener : MonoBehaviour
     [SerializeField] private GameHistoryView _historyView;
 
     [Inject] private DataBaseSource _source;
+    [Inject] private InfoPanelShowcase _infoPanelShowcase;
 
     private void OnEnable()
     {
-        _openButton.AddListener(OnClick);
+        _openButton.AddListener(OpenView);
     }
 
     private void OnDisable()
     {
-        _openButton.RemoveListener(OnClick);
+        _openButton.RemoveListener(OpenView);
     }
 
-    private void OnClick()
+    private void OpenView()
     {
-        _historyView.Show(_source.History.GetData());
+        if (_historyView.SetData(_source.History.GetData()))
+            _infoPanelShowcase.Show(_historyView);
     }
 }

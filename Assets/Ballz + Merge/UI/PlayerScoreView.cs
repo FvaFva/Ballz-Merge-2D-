@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerScoreView : MonoBehaviour
 {
-    [SerializeField] private InfoPanel _score;
+    [SerializeField] private ValueView _score;
     [SerializeField] private PlayerScore _playerScore;
 
     private void Awake()

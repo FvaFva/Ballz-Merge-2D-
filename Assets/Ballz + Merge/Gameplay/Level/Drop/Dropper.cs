@@ -10,7 +10,7 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private int _wavesToDrop;
         [SerializeField] private DropSelector _selector;
         [SerializeField] private List<Drop> _drops;
-        [SerializeField] private InfoPanel _view;
+        [SerializeField] private ValueView _view;
 
         private List<Drop> _pool;
         private int _waveCount;

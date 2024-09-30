@@ -40,13 +40,13 @@ namespace BallzMerge.MainMenu
 
         private void OnEnable()
         {
-            _rootUI.SettingsMenu.QuitRequired += LeftScene;
+            _rootUI.EscapeMenu.QuitRequired += LeftScene;
             _startGame.AddListener(OnStartRequire);
         }
 
         private void OnDisable()
         {
-            _rootUI.SettingsMenu.QuitRequired -= LeftScene;
+            _rootUI.EscapeMenu.QuitRequired -= LeftScene;
             _startGame.RemoveListener(OnStartRequire);
         }
 

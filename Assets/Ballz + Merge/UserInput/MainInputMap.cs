@@ -46,7 +46,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""MenuRequier"",
+                    ""name"": ""Escape"",
                     ""type"": ""Button"",
                     ""id"": ""9447dfd9-c755-430b-8585-d6a771e8dc33"",
                     ""expectedControlType"": ""Button"",
@@ -96,7 +96,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
-                    ""action"": ""MenuRequier"",
+                    ""action"": ""Escape"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -107,7 +107,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepade"",
-                    ""action"": ""MenuRequier"",
+                    ""action"": ""Escape"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -148,7 +148,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         m_MainInput = asset.FindActionMap("MainInput", throwIfNotFound: true);
         m_MainInput_StrikeVector = m_MainInput.FindAction("StrikeVector", throwIfNotFound: true);
         m_MainInput_Shot = m_MainInput.FindAction("Shot", throwIfNotFound: true);
-        m_MainInput_MenuRequier = m_MainInput.FindAction("MenuRequier", throwIfNotFound: true);
+        m_MainInput_Escape = m_MainInput.FindAction("Escape", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -212,14 +212,14 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
     private List<IMainInputActions> m_MainInputActionsCallbackInterfaces = new List<IMainInputActions>();
     private readonly InputAction m_MainInput_StrikeVector;
     private readonly InputAction m_MainInput_Shot;
-    private readonly InputAction m_MainInput_MenuRequier;
+    private readonly InputAction m_MainInput_Escape;
     public struct MainInputActions
     {
         private @MainInputMap m_Wrapper;
         public MainInputActions(@MainInputMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @StrikeVector => m_Wrapper.m_MainInput_StrikeVector;
         public InputAction @Shot => m_Wrapper.m_MainInput_Shot;
-        public InputAction @MenuRequier => m_Wrapper.m_MainInput_MenuRequier;
+        public InputAction @Escape => m_Wrapper.m_MainInput_Escape;
         public InputActionMap Get() { return m_Wrapper.m_MainInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -235,9 +235,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @Shot.started += instance.OnShot;
             @Shot.performed += instance.OnShot;
             @Shot.canceled += instance.OnShot;
-            @MenuRequier.started += instance.OnMenuRequier;
-            @MenuRequier.performed += instance.OnMenuRequier;
-            @MenuRequier.canceled += instance.OnMenuRequier;
+            @Escape.started += instance.OnEscape;
+            @Escape.performed += instance.OnEscape;
+            @Escape.canceled += instance.OnEscape;
         }
 
         private void UnregisterCallbacks(IMainInputActions instance)
@@ -248,9 +248,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @Shot.started -= instance.OnShot;
             @Shot.performed -= instance.OnShot;
             @Shot.canceled -= instance.OnShot;
-            @MenuRequier.started -= instance.OnMenuRequier;
-            @MenuRequier.performed -= instance.OnMenuRequier;
-            @MenuRequier.canceled -= instance.OnMenuRequier;
+            @Escape.started -= instance.OnEscape;
+            @Escape.performed -= instance.OnEscape;
+            @Escape.canceled -= instance.OnEscape;
         }
 
         public void RemoveCallbacks(IMainInputActions instance)
@@ -290,6 +290,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
     {
         void OnStrikeVector(InputAction.CallbackContext context);
         void OnShot(InputAction.CallbackContext context);
-        void OnMenuRequier(InputAction.CallbackContext context);
+        void OnEscape(InputAction.CallbackContext context);
     }
 }
