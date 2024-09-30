@@ -1,37 +1,29 @@
 ﻿using BallzMerge.Data;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class GameHistoryView : CyclicBehavior, IInitializable
+public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
 {
     private const int CountPreload = 20;
 
-    [SerializeField] private Button _close;
     [SerializeField] private GameDataView _gameDataPrefab;
     [SerializeField] private RectTransform _dataParent;
 
     private List<GameDataView> _allViews = new List<GameDataView>();
+    private RectTransform _rootParent;
+    private RectTransform _transform;
 
-    private void OnEnable()
+    public void Show(RectTransform showcase)
     {
-        _close.AddListener(Hide);
+        gameObject.SetActive(true);
+        _transform.SetParent(showcase, false);
     }
 
-    private void OnDisable()
-    {
-        _close.RemoveListener(Hide);
-    }
-
-    public void Show(List<GameHistoryData> data)
+    public bool SetData(List<GameHistoryData> data)
     {
         if (data == null || data.Count == 0)
-        {
-            Hide();
-            return;
-        }
+            return false;
 
-        gameObject.SetActive(true);
         int dataCount = data.Count;
 
         if (dataCount > _allViews.Count)
@@ -39,6 +31,8 @@ public class GameHistoryView : CyclicBehavior, IInitializable
 
         for (int i = 0; i < dataCount; i++)
             _allViews[i].Show(data[i]);
+
+        return true;
     }
 
     public void Hide()
@@ -46,11 +40,14 @@ public class GameHistoryView : CyclicBehavior, IInitializable
         foreach(var view in _allViews)
             view.Hide();
 
+        _transform.SetParent(_rootParent, false);
         gameObject.SetActive(false);
     }
 
     public void Init()
     {
+        _transform = (RectTransform)transform;
+        _rootParent = (RectTransform)_transform.parent;
         GenerateViews(CountPreload);
         Hide();
     }

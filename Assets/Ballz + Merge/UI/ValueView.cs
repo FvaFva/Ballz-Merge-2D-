@@ -1,12 +1,12 @@
 using TMPro;
 using UnityEngine;
 
-public class InfoPanel : MonoBehaviour
+public class ValueView : MonoBehaviour
 {
     [SerializeField] private TMP_Text _value;
     [SerializeField] private TMP_Text _label;
 
-    public InfoPanel Init(float value, string label)
+    public ValueView Init(float value, string label)
     {
         Show(value);
         Hide();

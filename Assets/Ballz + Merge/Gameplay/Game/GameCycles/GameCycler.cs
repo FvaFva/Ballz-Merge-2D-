@@ -62,7 +62,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         _ball.LeftGame += OnBallLeftGame;
         _conductor.GameFinished += OnGameFinished;
         _conductor.WaveLoaded += OnWaveLoaded;
-        _rootUI.SettingsMenu.QuitRequired += OnMenuQuitRequire;
+        _rootUI.EscapeMenu.QuitRequired += OnMenuQuitRequire;
     }
 
     private void OnDisable()
@@ -70,7 +70,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         _ball.LeftGame -= OnBallLeftGame;
         _conductor.GameFinished -= OnGameFinished;
         _conductor.WaveLoaded -= OnWaveLoaded;
-        _rootUI.SettingsMenu.QuitRequired -= OnMenuQuitRequire;
+        _rootUI.EscapeMenu.QuitRequired -= OnMenuQuitRequire;
     }
 
     private void OnDestroy()

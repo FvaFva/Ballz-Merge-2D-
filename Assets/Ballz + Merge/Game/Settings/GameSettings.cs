@@ -6,13 +6,14 @@ namespace BallzMerge.Root.Settings
 
     public class GameSettings : IDisposable
     {
-        private SettingsMenuView _settingsMenu;
+        private EscapeMenu _settingsMenu;
         private GameSettingsStorage _db;
+        private readonly TimeScaler _timeScaler;
 
-        public GameSettings(SettingsMenuView settingsMenu, GameSettingsStorage db)
+        public GameSettings(EscapeMenu settingsMenu, GameSettingsStorage db, TimeScaler timeScaler)
         {
             AudioSettings = new GameSettingsDataProxyAudio();
-            TimeScaler = new TimeScaler();
+            _timeScaler = timeScaler;
             _settingsMenu = settingsMenu;
             _settingsMenu.SettingsChanged += OnSettingsChanged;
             _db = db;
@@ -20,7 +21,6 @@ namespace BallzMerge.Root.Settings
         }
 
         public readonly GameSettingsDataProxyAudio AudioSettings;
-        public readonly TimeScaler TimeScaler;
 
         public void Dispose()
         {
@@ -30,8 +30,8 @@ namespace BallzMerge.Root.Settings
         private void ReadData()
         {
             AudioSettings.Change(_db.Get(AudioSettings));
-            TimeScaler.Change(_db.Get(TimeScaler));
-            _settingsMenu.UpdateFromData(AudioSettings.Value, TimeScaler.Value);
+            _timeScaler.Change(_db.Get(_timeScaler));
+            _settingsMenu.UpdateFromData(AudioSettings.Value, _timeScaler.Value);
         }
 
         private void OnSettingsChanged(float audio, float timescale)
@@ -42,10 +42,10 @@ namespace BallzMerge.Root.Settings
                 _db.Set(AudioSettings);
             }
 
-            if (timescale.Equals(TimeScaler.Value) == false)
+            if (timescale.Equals(_timeScaler.Value) == false)
             {
-                TimeScaler.Change(timescale);
-                _db.Set(TimeScaler);
+                _timeScaler.Change(timescale);
+                _db.Set(_timeScaler);
             }
         }
     }

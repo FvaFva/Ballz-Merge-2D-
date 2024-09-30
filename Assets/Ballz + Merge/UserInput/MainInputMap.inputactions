@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "MenuRequier",
+                    "name": "Escape",
                     "type": "Button",
                     "id": "9447dfd9-c755-430b-8585-d6a771e8dc33",
                     "expectedControlType": "Button",
@@ -74,7 +74,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "MenuRequier",
+                    "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -85,7 +85,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepade",
-                    "action": "MenuRequier",
+                    "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

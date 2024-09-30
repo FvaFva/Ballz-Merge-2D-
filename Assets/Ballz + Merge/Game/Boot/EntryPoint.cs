@@ -75,26 +75,28 @@ namespace BallzMerge.Root
             _data = new DataBaseSource();
             _userInput = new MainInputMap();
             _userInput.Enable();
+            BindSingleton(_userInput);
+            TimeScaler timeScaler = new TimeScaler();
+            BindSingleton<IGamePauseController, TimeScaler>(timeScaler);
             _hub = new ResourcesHub();
 
             _coroutines = new GameObject("[COROUTINES]").AddComponent<Coroutines>();
             Object.DontDestroyOnLoad(_coroutines.gameObject);
 
-            _rootView = Object.Instantiate(_hub.Get<UIRootView>(_hub.ROOT_UI));
+            _rootView = ProjectContext.Instance.Container.InstantiatePrefabResourceForComponent<UIRootView>(_hub.ROOT_UI);
             Object.DontDestroyOnLoad(_rootView.gameObject);
 
-            _gameSettings = new GameSettings(_rootView.SettingsMenu, _data.Settings);
+            _gameSettings = new GameSettings(_rootView.EscapeMenu, _data.Settings, timeScaler);
             _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack);
-            UserInputHandler inputHandler = new UserInputHandler(_rootView.SettingsMenu, _userInput);
         }
 
         private void BindToContainer()
         {
-            BindSingleton<IGamePauseController, TimeScaler>(_gameSettings.TimeScaler);
-            BindSingleton(_rootView);
             BindSingleton(_rootView.Questioner);
+            BindSingleton(_rootView);
+            BindSingleton(_rootView.InfoPanelShowcase);
+            BindSingleton(_rootView.EscapeMenu);
             BindSingleton(_gameSettings.AudioSettings);
-            BindSingleton(_userInput);
             BindSingleton(_data);
         }
 
@@ -103,7 +105,9 @@ namespace BallzMerge.Root
 
         private void Inject()
         {
-            ProjectContext.Instance.Container.Inject(_rootView.Questioner);
+            /*ProjectContext.Instance.Container.Inject(_rootView.Questioner);
+            ProjectContext.Instance.Container.Inject(_rootView.EscapeMenu);
+            ProjectContext.Instance.Container.Inject(_rootView.InfoPanelShowcase);*/
         }
 
         private void SceneExitCallBack(SceneExitData exitData)
