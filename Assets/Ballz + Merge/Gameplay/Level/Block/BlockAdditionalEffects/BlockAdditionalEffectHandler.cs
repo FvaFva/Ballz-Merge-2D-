@@ -28,8 +28,9 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Init()
         {
-            for (int i = 0; i < _countOfPreload; i++)
-                _effects.Enqueue(Instantiate(_settings.GetPrefab(), transform));
+            for (int i = 0; i < _settings.Properties.Length; i++)
+                for (int j = 0; j < _countOfPreload; j++)
+                    _effects.Enqueue(Instantiate(_settings.Properties[i].Prefab, transform));
         }
 
         public void ConnectActiveBlocks(BlocksInGame activeBlocks)
@@ -54,7 +55,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             foreach (var activeEffect in _activeEffects.ToArray())
                 activeEffect.HandleWave();
 
-            if (wave.Count() == 0)
+            if (wave.Count() == 0 || _settings.ChanceToGetPrefab() == false)
                 return;
 
             if (_effects.TryDequeue(out BlockAdditionalEffectBase effect) == false)

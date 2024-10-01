@@ -5,10 +5,12 @@ namespace BallzMerge.Root.Settings
 {
     using Data;
 
-    public class GameSettingsDataProxyAudio: IGameSettingData
+    public class GameSettingsDataProxyAudio : IGameSettingData
     {
         private const float MinValue = 0f;
         private const float MaxValue = 1f;
+
+        private float _lastValue;
 
         public float Value { get; private set; }
 
@@ -20,6 +22,17 @@ namespace BallzMerge.Root.Settings
         {
             Value = Mathf.Clamp(value, MinValue, MaxValue);
             Changed?.Invoke();
+        }
+
+        public void Disable()
+        {
+            _lastValue = Value;
+            Change(0);
+        }
+
+        public void Enable()
+        {
+            Change(_lastValue);
         }
     }
 }

@@ -22,6 +22,7 @@ public class MainSceneInjection : MonoInstaller
     [Header("Inject")]
     [SerializeField] private BlocksSpawner _blocksSpawner;
     [SerializeField] private PlayerScore _score;
+    [SerializeField] private GameAnimationSkipper _animationSkipper;
 
     [Inject] private TargetSceneEntryPointContainer _entryPointBinder;
 
@@ -37,6 +38,7 @@ public class MainSceneInjection : MonoInstaller
 
         Container.Inject(_blocksSpawner);
         Container.Inject(_score);
+        Container.Inject(_animationSkipper);
 
         _entryPointBinder.Set(_loader);
     }

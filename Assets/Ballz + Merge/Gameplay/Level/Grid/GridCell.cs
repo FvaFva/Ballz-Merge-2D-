@@ -23,6 +23,7 @@ namespace BallzMerge.Gameplay.Level
             GridPosition = gridPosition;
             transform.localPosition = (Vector2)gridPosition * cellSize;
             _collider.size = new Vector2(cellSize, cellSize);
+            name = $"[{GridPosition.x}] - [{GridPosition.y}]";
             ConnectVirtualCollider(virtualCollider);
             ChangeActivity(false);
         }
@@ -46,7 +47,7 @@ namespace BallzMerge.Gameplay.Level
 
         private void ConnectVirtualCollider(BoxCollider2D collider)
         {
-            if (_virtualCollider != null)
+            if (_virtualCollider != null && transform.position == collider.transform.position)
                 return;
 
             _virtualCollider = collider;
@@ -54,6 +55,7 @@ namespace BallzMerge.Gameplay.Level
             _virtualCollider.transform.position = transform.position;
             _virtualCollider.transform.localScale = transform.localScale;
             _virtualCollider.size = _collider.size;
+            _virtualCollider.name = $"[{GridPosition.x}] - [{GridPosition.y}]";
         }
     }
 }

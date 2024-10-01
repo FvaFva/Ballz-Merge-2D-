@@ -2,7 +2,8 @@
 {
     public interface IGamePauseController
     {
-        public void Play();
-        public void Pause();
+        public void SetRegular();
+        public void Stop();
+        public void SpeedUp();
     }
 }

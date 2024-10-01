@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Field expander settings
   m_EditorClassIdentifier: 
   _waveCount: 5
-  _count: 3
-  _isLoop: 0
+  _count: 0
+  _isLoop: 1

@@ -24,8 +24,8 @@ MonoBehaviour:
   - Range:
       InitialWave: 7
       TerminalWave: 9
-    NumbersToSpawn: 090000000a000000
+    NumbersToSpawn: 0100000002000000030000000400000005000000
   - Range:
       InitialWave: 9
       TerminalWave: 15
-    NumbersToSpawn: 0c0000000a0000000f000000
+    NumbersToSpawn: 0100000002000000030000000400000005000000060000000700000008000000090000000a000000

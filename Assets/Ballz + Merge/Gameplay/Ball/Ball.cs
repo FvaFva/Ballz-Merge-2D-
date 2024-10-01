@@ -17,7 +17,7 @@ namespace BallzMerge.Gameplay.BallSpace
         private Transform _transform;
         private BallState _current;
         private Vector3 _start;
-        private bool loaded;
+        private bool _loaded;
 
         public Vector2 Position => _transform.position;
         public event Action LeftGame;
@@ -25,9 +25,9 @@ namespace BallzMerge.Gameplay.BallSpace
 
         public Ball PreLoad()
         {
-            if (loaded == false)
+            if (_loaded == false)
             {
-                loaded = true;
+                _loaded = true;
                 _transform = transform;
                 _start = _transform.position;
                 BuildStates();

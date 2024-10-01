@@ -6,7 +6,7 @@ using Zenject;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class PhysicGrid : CyclicBehavior, ILevelStarter
+    public class PhysicGrid : CyclicBehavior, ILevelStarter, ILevelFinisher
     {
         [SerializeField] private GridCell _prefab;
         [SerializeField] private Transform _cellParent;
@@ -15,20 +15,26 @@ namespace BallzMerge.Gameplay.Level
         [Inject] private GridSettings _settings;
 
         private Dictionary<Vector2Int, GridCell> _grid = new Dictionary<Vector2Int, GridCell>();
-        private Queue<GridCell> _cells = new Queue<GridCell>();
+        private Queue<GridCell> _cellsPool = new Queue<GridCell>();
         private BoxCollider2D[,] _boxes;
 
         public void StartLevel()
         {
+            SpawnColumn(true);
+        }
+
+        public void FinishLevel()
+        {
             foreach (GridCell cell in _grid.Values)
+            {
                 cell.Deactivate();
+                _cellsPool.Enqueue(cell);
+            }
 
             foreach (GridCell activeCells in GetActiveCells())
                 ChangeCellActivity(activeCells, false);
 
             _grid.Clear();
-
-            SpawnColumn(true);
         }
 
         public void SpawnColumn(bool isStart, int column = 1)
@@ -67,14 +73,8 @@ namespace BallzMerge.Gameplay.Level
 
         private void InitCell(int x, int y, BoxCollider2D virtualCollider)
         {
-            GridCell cell;
             Vector2Int gridPosition = new Vector2Int(x, y);
-
-            if (_cells.Count >= _settings.GridSize.x * _settings.GridSize.y)
-                cell = ActivateCell();
-            else
-                cell = GenerateCell(x, y);
-
+            GridCell cell = GetCell();
             _grid.Add(gridPosition, cell);
             cell.Activate(gridPosition, _settings.CellSize, virtualCollider);
         }
@@ -84,17 +84,17 @@ namespace BallzMerge.Gameplay.Level
             return _grid.Values.Where(cell => cell.IsActive);
         }
 
-        private GridCell ActivateCell()
+        private GridCell GetCell()
         {
-            GridCell cell = _cells.Dequeue();
+            if (_cellsPool.TryDequeue(out GridCell cell) == false)
+                cell = GenerateCell();
+
             return cell;
         }
 
-        private GridCell GenerateCell(int x, int y)
+        private GridCell GenerateCell()
         {
             GridCell cell = Instantiate(_prefab, _cellParent);
-            cell.name = $"[{x}] - [{y}]";
-            _cells.Enqueue(cell);
             return cell;
         }
     }

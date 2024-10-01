@@ -2,10 +2,10 @@ using UnityEngine;
 
 public struct StartProperty
 {
-    public Vector3 ColliderOffset;
-    public Vector3 ColliderSize;
+    public Vector2 ColliderOffset;
+    public Vector2 ColliderSize;
 
-    public StartProperty(Vector3 offset, Vector3 size)
+    public StartProperty(Vector2 offset, Vector2 size)
     {
         ColliderOffset = offset;
         ColliderSize = size;

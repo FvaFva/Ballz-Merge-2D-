@@ -35,7 +35,7 @@ public class UserQuestioner : MonoBehaviour
     {
         if (_current.IsEmpty())
         {
-            _pauseController.Pause();
+            _pauseController.Stop();
             gameObject.SetActive(true);
             Display(question);
         }
@@ -64,7 +64,7 @@ public class UserQuestioner : MonoBehaviour
     private void Hide()
     {
         _current = default;
-        _pauseController.Play();
+        _pauseController.SetRegular();
         _label.text = String.Empty;
         gameObject.SetActive(false);
     }
