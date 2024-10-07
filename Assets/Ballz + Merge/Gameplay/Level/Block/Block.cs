@@ -41,6 +41,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public event Action<Block> Deactivated;
         public event Action<Block> CameToNewCell;
+        public event Action Destroyed;
 
         private void Awake()
         {

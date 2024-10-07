@@ -10,7 +10,9 @@ namespace BallzMerge.Gameplay.BlockSpace
         private List<Block> _blocks = new List<Block>();
 
         public IList<Block> Items => _blocks;
+
         public event Action<Vector2Int, bool> ChangedCellActivity;
+        public event Action BlocksDestroyed;
 
         public Block GetAtPosition(Vector2Int position)
         {
@@ -43,6 +45,7 @@ namespace BallzMerge.Gameplay.BlockSpace
                     return;
 
                 _blocks.Add(block);
+                block.Destroyed += OnBlockDestroyed;
                 ChangedCellActivity?.Invoke(block.GridPosition, true);
             }
         }
@@ -53,6 +56,7 @@ namespace BallzMerge.Gameplay.BlockSpace
                 return;
 
             _blocks.Remove(block);
+            block.Destroyed -= OnBlockDestroyed;
             ChangedCellActivity?.Invoke(block.GridPosition, false);
         }
 
@@ -61,6 +65,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             for (int i = _blocks.Count - 1; i >= 0; i--)
             {
                 _blocks[i].Deactivate();
+                _blocks[i].Destroyed -= OnBlockDestroyed;
                 _blocks.Remove(_blocks[i]);
             }
         }
@@ -83,6 +88,11 @@ namespace BallzMerge.Gameplay.BlockSpace
                 return blocks.ToArray()[UnityEngine.Random.Range(0, blocks.Count())];
             else
                 return null;
+        }
+
+        private void OnBlockDestroyed()
+        {
+            BlocksDestroyed?.Invoke();
         }
     }
 }

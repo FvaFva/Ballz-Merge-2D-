@@ -25,8 +25,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         [Inject] private PhysicGrid _physicsGrid;
         [Inject] private GridSettings _gridSettings;
         [Inject] private BallWaveVolume _ballLevelVolume;
+        [Inject] private BlocksInGame _activeBlocks;
 
-        private BlocksInGame _activeBlocks = new BlocksInGame();
         private BallCollisionHandler _collisionHandler;
         private BlocksMover _mover = new BlocksMover();
 

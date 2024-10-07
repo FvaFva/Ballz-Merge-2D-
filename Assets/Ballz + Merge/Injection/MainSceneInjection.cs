@@ -33,6 +33,7 @@ public class MainSceneInjection : MonoInstaller
         Container.Bind<BlocksBus>().FromInstance(_blocksBus).AsSingle().NonLazy();
         Container.Bind<BallWaveVolume>().FromInstance(_ballLevelVolume).AsSingle().NonLazy();
 
+        Container.Bind<BlocksInGame>().FromNew().AsSingle().NonLazy();
         Container.Bind<Block>().FromComponentInNewPrefab(_blockPrefab).AsTransient();
         Container.Bind<ISceneEnterPoint>().To<GameCycler>().FromInstance(_loader).AsSingle().NonLazy();
 
