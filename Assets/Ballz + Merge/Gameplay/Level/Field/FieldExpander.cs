@@ -19,6 +19,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     private int _extraColumns;
     private int _extraRows;
     private int _currentWave;
+    private float _halfSize;
 
     private ParticleSystem.ShapeModule _fieldShape;
     private Vector2 _fieldPosition;
@@ -35,18 +36,23 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _fieldScale = _fieldEffect.shape.scale;
         _cameraOrthographicSize = _camera.orthographicSize;
         _cameraPosition = _camera.transform.position;
-        _propertyRow = new PositionScaleProperty(new Vector2(0, _gridSettings.CellSize / 2), new Vector2(0, _gridSettings.CellSize));
-        _propertyColumn = new PositionScaleProperty(new Vector2(_gridSettings.CellSize / 2, 0), new Vector2(_gridSettings.CellSize, 0));
+        _halfSize = _gridSettings.CellSize / 2;
+        _propertyRow = new PositionScaleProperty(new Vector2(0, _halfSize), new Vector2(0, _gridSettings.CellSize));
+        _propertyColumn = new PositionScaleProperty(new Vector2(_halfSize, 0), new Vector2(_gridSettings.CellSize, 0));
     }
 
     public void UpdateWave()
     {
-        AddColumn(++_currentWave);
+        if (++_currentWave == _fieldExpanderSettings.WaveCount && (_count > 0 || _fieldExpanderSettings.IsLoop))
+        {
+            _currentWave = 0;
+            AddColumn();
+        }
     }
 
     public void StartLevel()
     {
-        _ballWaveVolume.GlobalVolumes.ChangedVolume += AddRow;
+        _ballWaveVolume.GlobalVolumes.ChangedVolume += OnAbilityAdd;
         _fieldEffect.transform.position = _fieldPosition;
         _fieldShape.scale = _fieldScale;
         _camera.orthographicSize = _cameraOrthographicSize;
@@ -59,38 +65,38 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     public void FinishLevel()
     {
-        _ballWaveVolume.GlobalVolumes.ChangedVolume -= AddRow;
+        _ballWaveVolume.GlobalVolumes.ChangedVolume -= OnAbilityAdd;
     }
 
-    private void AddColumn(int currentWave)
-    {
-        if (currentWave % _fieldExpanderSettings.WaveCount == 0 && (_count > 0 || _fieldExpanderSettings.IsLoop))
-        {
-            _count--;
-            _gridSettings.AddGridSize(Vector2Int.right);
-            _physicGrid.SpawnColumn(false, ++_extraColumns);
-            SetComponentsPosition(_propertyColumn);
-            _boards.ChangePositionScale(true, _propertyColumn);
-        }
-    }
-
-    private void AddRow(BallVolumesTypes type, float count)
+    private void OnAbilityAdd(BallVolumesTypes type, float count)
     {
         if (type == BallVolumesTypes.FieldExpander)
-        {
-            _gridSettings.AddGridSize(Vector2Int.up);
-            _physicGrid.SpawnRow(++_extraRows);
-            _blocksBus.MoveAllBlocks(Vector2Int.up);
-            SetComponentsPosition(_propertyRow);
-            _boards.ChangePositionScale(false, _propertyRow);
-        }
+            AddRow();
+    }
+    
+    private void AddColumn()
+    {
+        _count--;
+        _gridSettings.AddGridSize(Vector2Int.right);
+        _physicGrid.SpawnColumn(false, ++_extraColumns);
+        SetComponentsPosition(_propertyColumn);
+        _boards.ChangePositionScale(true, _propertyColumn);
+    }
+
+    private void AddRow()
+    {
+        _gridSettings.AddGridSize(Vector2Int.up);
+        _physicGrid.SpawnRow(++_extraRows);
+        _blocksBus.MoveAllBlocks(Vector2Int.up);
+        SetComponentsPosition(_propertyRow);
+        _boards.ChangePositionScale(false, _propertyRow);
     }
 
     private void SetComponentsPosition(PositionScaleProperty property)
     {
-        _fieldEffect.transform.position += (Vector3)property.Position;
-        _fieldShape.scale += (Vector3)property.Scale;
-        _camera.orthographicSize += _gridSettings.CellSize / 2;
-        _camera.transform.position += (Vector3)property.Position;
+        _fieldEffect.transform.position += property.Position;
+        _fieldShape.scale += property.Scale;
+        _camera.orthographicSize += _halfSize;
+        _camera.transform.position += property.Position;
     }
 }
