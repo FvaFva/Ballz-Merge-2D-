@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +9,8 @@ namespace BallzMerge.Gameplay.Level
 {
     public class DropView : MonoBehaviour
     {
+        private const string ShineColorProperty = "_ShinyColor";
+
         [SerializeField] private TMP_Text _name;
         [SerializeField] private TMP_Text _description;
         [SerializeField] private TMP_Text _value;
@@ -14,10 +18,12 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private Image _colorView;
         [SerializeField] private Button _activator;
         [SerializeField] private RectTransform _additionalInfo;
+        [SerializeField] private List<Image> _shineMasks;
 
         private Drop _current;
         private float _count;
         private Sprite _default;
+        private List<Material> _shineMaterials;
 
         public event Action<Drop, float> Selected;
 
@@ -34,6 +40,18 @@ namespace BallzMerge.Gameplay.Level
         private void OnDisable()
         {
             _activator.RemoveListener(OnSelect);
+        }
+
+        public void CashMaterials()
+        {
+            _shineMaterials = new List<Material>();
+
+            foreach (Image shineMask in _shineMasks)
+            {
+                Material material = new Material(shineMask.material);
+                shineMask.material = material;
+                _shineMaterials.Add(material);
+            }
         }
 
         public void Show(Drop drop)
@@ -55,6 +73,9 @@ namespace BallzMerge.Gameplay.Level
             _value.text = (_count * 100).ToString("F0");
             _icon.sprite = _current.Icon;
             _colorView.color = _current.Color;
+
+            foreach (Material shineMaterial in _shineMaterials)
+                shineMaterial.SetColor(ShineColorProperty, _current.Color);
         }
 
         private void Hide()

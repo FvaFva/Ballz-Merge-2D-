@@ -59,9 +59,9 @@ Material:
     - _IsMask: 1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _ShinyCycleTime: 7
+    - _ShinyCycleTime: 3.5
     - _ShinyRotate: -3.18
-    - _ShinyWaveSpeed: 3.42
+    - _ShinyWaveSpeed: 5.3
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -72,6 +72,6 @@ Material:
     m_Colors:
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ShinyColor: {r: 0.41768983, g: 1.471698, b: 0, a: 1}
+    - _ShinyColor: {r: 0.31626022, g: 0.6278463, b: 0.9716981, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
