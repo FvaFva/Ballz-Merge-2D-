@@ -56,6 +56,51 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3c625a91e7c0eae44b1939c76c0c56a8, type: 2}
   - {fileID: 11400000, guid: 386b6e21f9dd2934a8438fdc022e78c7, type: 2}
   _view: {fileID: 0}
+--- !u!1 &1836125578464020323
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 40369915829041263}
+  - component: {fileID: 4391648840110534136}
+  m_Layer: 0
+  m_Name: AchievementSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &40369915829041263
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836125578464020323}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 390.76685, y: 278.78625, z: -5.7791996}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2093911286054969042}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4391648840110534136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836125578464020323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2124ad897031cb0448b30a55951dc373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _initOrder: 0
 --- !u!1 &4883004509405864141
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,6 +162,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 4391648840110534136}
 --- !u!1 &7104765068768312032
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,6 +284,7 @@ Transform:
   - {fileID: 9168800826296955266}
   - {fileID: 1982679342511190700}
   - {fileID: 6735942990509876976}
+  - {fileID: 40369915829041263}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &294944430223947065
@@ -339,6 +386,7 @@ MonoBehaviour:
   _blocksSpawner: {fileID: 0}
   _score: {fileID: 7744337803995700564}
   _animationSkipper: {fileID: 0}
+  _achievementSettings: {fileID: 11400000, guid: 633f37b3f430ba04e8db339ac07735bc, type: 2}
 --- !u!1 &8483927091706866025
 GameObject:
   m_ObjectHideFlags: 0

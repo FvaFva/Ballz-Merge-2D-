@@ -608,10 +608,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2090727811}
     - target: {fileID: 7896248417396373338, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
-      propertyPath: _audio
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7896248417396373338, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
       propertyPath: _blocksBus
       value: 
       objectReference: {fileID: 932672680}

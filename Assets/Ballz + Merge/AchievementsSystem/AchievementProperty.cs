@@ -1,18 +1,18 @@
 using System;
 
-public struct AchievementProperty
+public class AchievementProperty
 {
     public AchievementSettings Settings;
     public int Current;
 
-    public event Action<int> Reached;
+    public event Action<int, int, int> Reached;
 
     public void Apply(int count)
     {
         Current += count;
-        int result = Settings.CheckReachedTarget(Current);
+        int target = Settings.CheckReachedTarget(Current);
 
-        if (result != 0)
-            Reached?.Invoke(result);
+        if (target != 0)
+            Reached?.Invoke(target, Current, Settings.MaxTargets);
     }
 }

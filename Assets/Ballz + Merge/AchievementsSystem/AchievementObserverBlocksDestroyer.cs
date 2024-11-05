@@ -1,4 +1,5 @@
 using BallzMerge.Gameplay.BlockSpace;
+using UnityEngine;
 using Zenject;
 
 public class AchievementObserverBlocksDestroyer : AchievementObserverBase
@@ -12,6 +13,7 @@ public class AchievementObserverBlocksDestroyer : AchievementObserverBase
     {
         _blocks.BlocksDestroyed += OnBlockDestroyed;
         _property.Settings = settings;
+        _property.Reached += OnAchievementTargetReached;
         _count = count;
     }
 
@@ -23,5 +25,10 @@ public class AchievementObserverBlocksDestroyer : AchievementObserverBase
     private void OnBlockDestroyed()
     {
         _property.Apply(_count);
+    }
+
+    private void OnAchievementTargetReached(int target, int count, int maxTarget)
+    {
+        Debug.Log($"Вы уничтожили {count} блоков и достигли {target} этапа из {maxTarget}");
     }
 }
