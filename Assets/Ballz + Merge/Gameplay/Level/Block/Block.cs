@@ -115,6 +115,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             Number = 0;
             _numberView.text = "";
             _view.color = _colorMap.Base;
+            Destroyed?.Invoke();
             Sequence sequence = DOTween.Sequence();
             sequence.Append(AddAnimation(_transform.DOScale(_baseScale * DownscaleModifier, ScaleTime)));
             sequence.Append(AddAnimation(_transform.DOScale(_baseScale * UpscaleModifier, ScaleTime))).Join(AddAnimation(_view.DOFade(0f, FadeDestroy))).OnComplete(Deactivate).SetDelay(0.1f);

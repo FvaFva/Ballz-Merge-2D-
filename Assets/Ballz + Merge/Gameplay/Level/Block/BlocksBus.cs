@@ -30,6 +30,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         private BallCollisionHandler _collisionHandler;
         private BlocksMover _mover = new BlocksMover();
 
+        public event Action WaveSpawned;
+
         private void Awake()
         {
             _collisionHandler = _ball.GetBallComponent<BallCollisionHandler>();
@@ -87,6 +89,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         public void StartSpawnWave(Action callBAck)
         {
             StartCoroutine(WaveGeneration(callBAck));
+            WaveSpawned?.Invoke();
         }
 
         private IEnumerator WaveGeneration(Action callBack)
@@ -157,9 +160,9 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void DestroyBlock(Block block)
         {
+            block.Destroy();
             _activeBlocks.Remove(block);
             _mover.ProcessDeleteBlock(block);
-            block.Destroy();
             _effectsPool.SpawnEffect(BlockAdditionalEffectEvents.Destroy, block.WorldPosition);
             _destroyImpact.ShowImpact();
         }

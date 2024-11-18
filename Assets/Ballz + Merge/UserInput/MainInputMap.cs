@@ -53,6 +53,15 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""StrikePosition"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""05f68337-e817-4df3-a643-4c9c14508ee7"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -80,11 +89,33 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""a894bb7d-7bd9-490f-8960-64bba8f11b5e"",
+                    ""path"": ""<Touchscreen>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Sensor"",
+                    ""action"": ""StrikeVector"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""5e01dff0-c1f2-4d6f-ab44-dde2a8a91b9a"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Shot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8feb1e58-e1a9-4547-ae2b-e7d88efa96e3"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Sensor"",
                     ""action"": ""Shot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -108,6 +139,28 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepade"",
                     ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b9cbb4e-d7c7-4b7c-9628-967bf5ae2b6e"",
+                    ""path"": ""<Touchscreen>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Sensor"",
+                    ""action"": ""StrikePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6d8b7c5a-8d0b-4aef-bf5b-0f17892aa1f4"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StrikePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -141,6 +194,11 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""isOR"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Sensor"",
+            ""bindingGroup"": ""Sensor"",
+            ""devices"": []
         }
     ]
 }");
@@ -149,6 +207,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         m_MainInput_StrikeVector = m_MainInput.FindAction("StrikeVector", throwIfNotFound: true);
         m_MainInput_Shot = m_MainInput.FindAction("Shot", throwIfNotFound: true);
         m_MainInput_Escape = m_MainInput.FindAction("Escape", throwIfNotFound: true);
+        m_MainInput_StrikePosition = m_MainInput.FindAction("StrikePosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -213,6 +272,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_MainInput_StrikeVector;
     private readonly InputAction m_MainInput_Shot;
     private readonly InputAction m_MainInput_Escape;
+    private readonly InputAction m_MainInput_StrikePosition;
     public struct MainInputActions
     {
         private @MainInputMap m_Wrapper;
@@ -220,6 +280,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         public InputAction @StrikeVector => m_Wrapper.m_MainInput_StrikeVector;
         public InputAction @Shot => m_Wrapper.m_MainInput_Shot;
         public InputAction @Escape => m_Wrapper.m_MainInput_Escape;
+        public InputAction @StrikePosition => m_Wrapper.m_MainInput_StrikePosition;
         public InputActionMap Get() { return m_Wrapper.m_MainInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -238,6 +299,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @Escape.started += instance.OnEscape;
             @Escape.performed += instance.OnEscape;
             @Escape.canceled += instance.OnEscape;
+            @StrikePosition.started += instance.OnStrikePosition;
+            @StrikePosition.performed += instance.OnStrikePosition;
+            @StrikePosition.canceled += instance.OnStrikePosition;
         }
 
         private void UnregisterCallbacks(IMainInputActions instance)
@@ -251,6 +315,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @Escape.started -= instance.OnEscape;
             @Escape.performed -= instance.OnEscape;
             @Escape.canceled -= instance.OnEscape;
+            @StrikePosition.started -= instance.OnStrikePosition;
+            @StrikePosition.performed -= instance.OnStrikePosition;
+            @StrikePosition.canceled -= instance.OnStrikePosition;
         }
 
         public void RemoveCallbacks(IMainInputActions instance)
@@ -286,10 +353,20 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             return asset.controlSchemes[m_GamepadeSchemeIndex];
         }
     }
+    private int m_SensorSchemeIndex = -1;
+    public InputControlScheme SensorScheme
+    {
+        get
+        {
+            if (m_SensorSchemeIndex == -1) m_SensorSchemeIndex = asset.FindControlSchemeIndex("Sensor");
+            return asset.controlSchemes[m_SensorSchemeIndex];
+        }
+    }
     public interface IMainInputActions
     {
         void OnStrikeVector(InputAction.CallbackContext context);
         void OnShot(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
+        void OnStrikePosition(InputAction.CallbackContext context);
     }
 }

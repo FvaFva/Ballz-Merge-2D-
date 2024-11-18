@@ -23,7 +23,7 @@ public class MainSceneInjection : MonoInstaller
     [SerializeField] private BlocksSpawner _blocksSpawner;
     [SerializeField] private PlayerScore _score;
     [SerializeField] private GameAnimationSkipper _animationSkipper;
-    [SerializeField] private AchievementSettings _achievementSettings;
+    [SerializeField] private AchievementSettingsBinder _achievementSource;
 
     [Inject] private TargetSceneEntryPointContainer _entryPointBinder;
 
@@ -33,7 +33,7 @@ public class MainSceneInjection : MonoInstaller
         Container.Bind<PhysicGrid>().FromInstance(_physicsGrid).AsSingle().NonLazy();
         Container.Bind<BlocksBus>().FromInstance(_blocksBus).AsSingle().NonLazy();
         Container.Bind<BallWaveVolume>().FromInstance(_ballLevelVolume).AsSingle().NonLazy();
-        Container.Bind<AchievementSettings>().FromInstance(_achievementSettings).AsSingle().NonLazy();
+        Container.Bind<AchievementSettingsBinder>().FromInstance(_achievementSource).AsSingle().NonLazy();
  
         Container.Bind<BlocksInGame>().FromNew().AsSingle().NonLazy();
         Container.Bind<Block>().FromComponentInNewPrefab(_blockPrefab).AsTransient();
@@ -42,7 +42,6 @@ public class MainSceneInjection : MonoInstaller
         Container.Inject(_blocksSpawner);
         Container.Inject(_score);
         Container.Inject(_animationSkipper);
-        //Container.Inject(_achievementSettings);
 
         _entryPointBinder.Set(_loader);
     }

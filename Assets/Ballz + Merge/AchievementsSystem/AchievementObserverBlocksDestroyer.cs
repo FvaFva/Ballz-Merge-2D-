@@ -6,28 +6,27 @@ public class AchievementObserverBlocksDestroyer : AchievementObserverBase
 {
     [Inject] private BlocksInGame _blocks;
 
-    private int _count;
-    private AchievementProperty _property = new AchievementProperty();
-
-    public AchievementObserverBlocksDestroyer(AchievementSettings settings, int count) : base(settings)
+    public AchievementObserverBlocksDestroyer(AchievementSettings settings) : base(settings)
     {
-        _blocks.BlocksDestroyed += OnBlockDestroyed;
-        _property.Settings = settings;
-        _property.Reached += OnAchievementTargetReached;
-        _count = count;
+        
+    }
+
+    public override void Construct()
+    {
+        _blocks.BlockDestroyed += OnBlockDestroyed;
     }
 
     protected override void Destruct()
     {
-        _blocks.BlocksDestroyed -= OnBlockDestroyed;
+        _blocks.BlockDestroyed -= OnBlockDestroyed;
     }
 
     private void OnBlockDestroyed()
     {
-        _property.Apply(_count);
+        Property.Apply(Count);
     }
 
-    private void OnAchievementTargetReached(int target, int count, int maxTarget)
+    protected override void OnAchievementTargetReached(int target, int count, int maxTarget)
     {
         Debug.Log($"Вы уничтожили {count} блоков и достигли {target} этапа из {maxTarget}");
     }

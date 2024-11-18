@@ -5,12 +5,18 @@ public abstract class AchievementObserverBase : IDisposable
 {
     public AchievementSettings Settings;
 
+    protected int Count;
+    protected AchievementProperty Property = new AchievementProperty();
+
     public event Action Reached;
 
     public AchievementObserverBase(AchievementSettings settings)
     {
         Settings = settings;
-        Settings.Completed += TriggerReached;
+        Settings.Completed += AchievementReached;
+        Property.Settings = settings;
+        Property.Reached += OnAchievementTargetReached;
+        Count = 1;
     }
 
     public void Dispose()
@@ -18,12 +24,16 @@ public abstract class AchievementObserverBase : IDisposable
         Destruct();
     }
 
-    protected void TriggerReached()
+    protected virtual void AchievementReached()
     {
         Reached?.Invoke();
-        Debug.Log("Достижение получено!");
-        Settings.Completed -= TriggerReached;
+        Debug.Log($"Достижение {Settings.Name} получено!");
+        Settings.Completed -= AchievementReached;
     }
 
+    protected abstract void OnAchievementTargetReached(int target, int count, int maxTarget);
+
     protected abstract void Destruct();
+
+    public abstract void Construct();
 }

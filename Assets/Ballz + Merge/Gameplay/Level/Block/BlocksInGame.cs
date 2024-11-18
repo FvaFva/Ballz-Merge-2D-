@@ -12,7 +12,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         public IList<Block> Items => _blocks;
 
         public event Action<Vector2Int, bool> ChangedCellActivity;
-        public event Action BlocksDestroyed;
+        public event Action BlockDestroyed;
 
         public Block GetAtPosition(Vector2Int position)
         {
@@ -92,7 +92,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void OnBlockDestroyed()
         {
-            BlocksDestroyed?.Invoke();
+            BlockDestroyed?.Invoke();
         }
     }
 }

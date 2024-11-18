@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "StrikePosition",
+                    "type": "PassThrough",
+                    "id": "05f68337-e817-4df3-a643-4c9c14508ee7",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -58,11 +67,33 @@
                 },
                 {
                     "name": "",
+                    "id": "a894bb7d-7bd9-490f-8960-64bba8f11b5e",
+                    "path": "<Touchscreen>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Sensor",
+                    "action": "StrikeVector",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "5e01dff0-c1f2-4d6f-ab44-dde2a8a91b9a",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "PC",
+                    "action": "Shot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8feb1e58-e1a9-4547-ae2b-e7d88efa96e3",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Sensor",
                     "action": "Shot",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -86,6 +117,28 @@
                     "processors": "",
                     "groups": "Gamepade",
                     "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2b9cbb4e-d7c7-4b7c-9628-967bf5ae2b6e",
+                    "path": "<Touchscreen>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Sensor",
+                    "action": "StrikePosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6d8b7c5a-8d0b-4aef-bf5b-0f17892aa1f4",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StrikePosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -119,6 +172,11 @@
                     "isOR": false
                 }
             ]
+        },
+        {
+            "name": "Sensor",
+            "bindingGroup": "Sensor",
+            "devices": []
         }
     ]
 }

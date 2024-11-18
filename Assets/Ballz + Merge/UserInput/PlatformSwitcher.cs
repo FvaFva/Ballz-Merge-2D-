@@ -6,7 +6,7 @@ public class PlatformSwitcher : MonoBehaviour
 
     private void Start()
     {
-        if (Application.platform == RuntimePlatform.Android)
-            _ballStrikeVectorReader.ChangeToAndroid();
+        //if (Application.platform == RuntimePlatform.Android)
+            //_ballStrikeVectorReader.ChangeToAndroid();
     }
 }
