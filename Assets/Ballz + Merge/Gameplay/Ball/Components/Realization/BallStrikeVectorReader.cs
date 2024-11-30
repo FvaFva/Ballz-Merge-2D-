@@ -1,5 +1,4 @@
 using System;
-using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
@@ -34,11 +33,11 @@ public class BallStrikeVectorReader : BallComponent
         _userInput.MainInput.Shot.started -= OnShotStarted;
     }
 
-    private void Update()
+    /*private void Update()
     {
         Vector3 old = _vector;
-        //DesktopProcessor(old);
-    }
+        DesktopProcessor(old);
+    }*/
 
     public Vector3 GetVector()
     {

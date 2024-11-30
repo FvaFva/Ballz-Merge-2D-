@@ -247,6 +247,7 @@ RectTransform:
   m_Children:
   - {fileID: 4774242119581312346}
   - {fileID: 4530899595004864960}
+  - {fileID: 1742111587934330688}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1248,6 +1249,51 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &6129208333354721040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1742111587934330688}
+  - component: {fileID: 4170936575968322963}
+  m_Layer: 0
+  m_Name: ScreenInteractionEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1742111587934330688
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6129208333354721040}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 654301789957894251}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4170936575968322963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6129208333354721040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35819f36dda6284c9a2f7bc9f53f72d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _effectsPool: {fileID: 0}
 --- !u!1 &6236961641740436987
 GameObject:
   m_ObjectHideFlags: 0
@@ -1747,11 +1793,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3386213453613198392, guid: ec292a24ce91bb241be2ff3f32da17b2, type: 3}
       propertyPath: m_fontSize
-      value: 47.8
+      value: 48.55
       objectReference: {fileID: 0}
     - target: {fileID: 4354459103568104986, guid: ec292a24ce91bb241be2ff3f32da17b2, type: 3}
       propertyPath: m_fontSize
-      value: 47.8
+      value: 47.75
       objectReference: {fileID: 0}
     - target: {fileID: 5261285424745093810, guid: ec292a24ce91bb241be2ff3f32da17b2, type: 3}
       propertyPath: m_Name
@@ -2544,11 +2590,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3386213453613198392, guid: ec292a24ce91bb241be2ff3f32da17b2, type: 3}
       propertyPath: m_fontSize
-      value: 47.8
+      value: 48.55
       objectReference: {fileID: 0}
     - target: {fileID: 4354459103568104986, guid: ec292a24ce91bb241be2ff3f32da17b2, type: 3}
       propertyPath: m_fontSize
-      value: 47.8
+      value: 47.75
       objectReference: {fileID: 0}
     - target: {fileID: 5261285424745093810, guid: ec292a24ce91bb241be2ff3f32da17b2, type: 3}
       propertyPath: m_Name

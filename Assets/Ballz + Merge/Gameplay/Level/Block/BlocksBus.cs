@@ -15,7 +15,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private readonly Vector2Int[] AllSides = new Vector2Int[4] { Vector2Int.right, Vector2Int.left, Vector2Int.down, Vector2Int.up };
 
         [SerializeField] private BlocksSpawner _spawner;
-        [SerializeField] private EffectsPool _effectsPool;
+        [SerializeField] private AdditionalEffectsPool _effectsPool;
         [SerializeField] private BlocksMergeImpact _mergeImpact;
         [SerializeField] private BlocksDestroyImpact _destroyImpact;
         [SerializeField] private BlockMagneticObserver _blockMagneticObserver;

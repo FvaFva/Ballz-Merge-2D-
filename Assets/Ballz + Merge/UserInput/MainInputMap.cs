@@ -62,6 +62,15 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ScreenInteract"",
+                    ""type"": ""Button"",
+                    ""id"": ""cb0e04f8-c094-43a5-98de-95f309dedefc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -163,6 +172,28 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""action"": ""StrikePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""340262e3-cacf-409e-b99e-8b0b1401fd32"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""ScreenInteract"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc569197-e1a7-4b4b-afed-ba7a2f532306"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Sensor"",
+                    ""action"": ""ScreenInteract"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -208,6 +239,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         m_MainInput_Shot = m_MainInput.FindAction("Shot", throwIfNotFound: true);
         m_MainInput_Escape = m_MainInput.FindAction("Escape", throwIfNotFound: true);
         m_MainInput_StrikePosition = m_MainInput.FindAction("StrikePosition", throwIfNotFound: true);
+        m_MainInput_ScreenInteract = m_MainInput.FindAction("ScreenInteract", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -273,6 +305,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_MainInput_Shot;
     private readonly InputAction m_MainInput_Escape;
     private readonly InputAction m_MainInput_StrikePosition;
+    private readonly InputAction m_MainInput_ScreenInteract;
     public struct MainInputActions
     {
         private @MainInputMap m_Wrapper;
@@ -281,6 +314,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         public InputAction @Shot => m_Wrapper.m_MainInput_Shot;
         public InputAction @Escape => m_Wrapper.m_MainInput_Escape;
         public InputAction @StrikePosition => m_Wrapper.m_MainInput_StrikePosition;
+        public InputAction @ScreenInteract => m_Wrapper.m_MainInput_ScreenInteract;
         public InputActionMap Get() { return m_Wrapper.m_MainInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -302,6 +336,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @StrikePosition.started += instance.OnStrikePosition;
             @StrikePosition.performed += instance.OnStrikePosition;
             @StrikePosition.canceled += instance.OnStrikePosition;
+            @ScreenInteract.started += instance.OnScreenInteract;
+            @ScreenInteract.performed += instance.OnScreenInteract;
+            @ScreenInteract.canceled += instance.OnScreenInteract;
         }
 
         private void UnregisterCallbacks(IMainInputActions instance)
@@ -318,6 +355,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @StrikePosition.started -= instance.OnStrikePosition;
             @StrikePosition.performed -= instance.OnStrikePosition;
             @StrikePosition.canceled -= instance.OnStrikePosition;
+            @ScreenInteract.started -= instance.OnScreenInteract;
+            @ScreenInteract.performed -= instance.OnScreenInteract;
+            @ScreenInteract.canceled -= instance.OnScreenInteract;
         }
 
         public void RemoveCallbacks(IMainInputActions instance)
@@ -368,5 +408,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         void OnShot(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
         void OnStrikePosition(InputAction.CallbackContext context);
+        void OnScreenInteract(InputAction.CallbackContext context);
     }
 }

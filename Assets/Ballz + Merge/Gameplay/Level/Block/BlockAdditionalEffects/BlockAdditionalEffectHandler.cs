@@ -8,7 +8,7 @@ namespace BallzMerge.Gameplay.BlockSpace
     public class BlockAdditionalEffectHandler : CyclicBehavior, IInitializable, ILevelFinisher
     {
         [SerializeField] private BlockAdditionalEffectSettings _settings;
-        [SerializeField] private EffectsPool _effectsPool;
+        [SerializeField] private AdditionalEffectsPool _effectsPool;
         [SerializeField] private Transform _parent;
         [SerializeField] private int _countOfPreload;
 
