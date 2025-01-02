@@ -4,6 +4,7 @@ using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.Level;
 using BallzMerge.Root;
+using R3;
 
 public class MainSceneInjection : MonoInstaller
 {
@@ -44,5 +45,7 @@ public class MainSceneInjection : MonoInstaller
         Container.Inject(_animationSkipper);
 
         _entryPointBinder.Set(_loader);
+        Container.Bind<Subject<Unit>>().FromInstance(new Subject<Unit>()); // AppConstants.EXIT_SCENE_REQUEST_TAG
+
     }
 }

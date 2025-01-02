@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ScreenRotation",
+                    "type": "Value",
+                    "id": "99458c0d-e2fa-449a-b4c9-597109226ae5",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -65,22 +74,22 @@
                 },
                 {
                     "name": "",
-                    "id": "57083000-9dfb-489f-b364-a59846432a08",
-                    "path": "<Mouse>/position",
+                    "id": "a894bb7d-7bd9-490f-8960-64bba8f11b5e",
+                    "path": "<Touchscreen>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PC",
+                    "groups": "Sensor",
                     "action": "StrikeVector",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "a894bb7d-7bd9-490f-8960-64bba8f11b5e",
-                    "path": "<Touchscreen>/delta",
+                    "id": "704629d2-a7dd-48c9-9f95-4f5423e103ed",
+                    "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Sensor",
+                    "groups": "PC",
                     "action": "StrikeVector",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -170,6 +179,28 @@
                     "processors": "",
                     "groups": "Sensor",
                     "action": "ScreenInteract",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fe238753-81bf-49c6-b0d7-710a6e30cc25",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "ScreenRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d5a3e9bd-27fc-4a7d-a795-13e81554e9d2",
+                    "path": "<Touchscreen>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ScreenRotation",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

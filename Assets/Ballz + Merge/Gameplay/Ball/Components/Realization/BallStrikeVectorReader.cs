@@ -33,12 +33,6 @@ public class BallStrikeVectorReader : BallComponent
         _userInput.MainInput.Shot.started -= OnShotStarted;
     }
 
-    /*private void Update()
-    {
-        Vector3 old = _vector;
-        DesktopProcessor(old);
-    }*/
-
     public Vector3 GetVector()
     {
         Vector3 final = _vector;

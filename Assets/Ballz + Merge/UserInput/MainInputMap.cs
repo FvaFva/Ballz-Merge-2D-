@@ -71,6 +71,15 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ScreenRotation"",
+                    ""type"": ""Value"",
+                    ""id"": ""99458c0d-e2fa-449a-b4c9-597109226ae5"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -87,22 +96,22 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""57083000-9dfb-489f-b364-a59846432a08"",
-                    ""path"": ""<Mouse>/position"",
+                    ""id"": ""a894bb7d-7bd9-490f-8960-64bba8f11b5e"",
+                    ""path"": ""<Touchscreen>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""PC"",
+                    ""groups"": ""Sensor"",
                     ""action"": ""StrikeVector"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a894bb7d-7bd9-490f-8960-64bba8f11b5e"",
-                    ""path"": ""<Touchscreen>/delta"",
+                    ""id"": ""704629d2-a7dd-48c9-9f95-4f5423e103ed"",
+                    ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Sensor"",
+                    ""groups"": ""PC"",
                     ""action"": ""StrikeVector"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -194,6 +203,28 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""action"": ""ScreenInteract"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe238753-81bf-49c6-b0d7-710a6e30cc25"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""ScreenRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d5a3e9bd-27fc-4a7d-a795-13e81554e9d2"",
+                    ""path"": ""<Touchscreen>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ScreenRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -240,6 +271,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         m_MainInput_Escape = m_MainInput.FindAction("Escape", throwIfNotFound: true);
         m_MainInput_StrikePosition = m_MainInput.FindAction("StrikePosition", throwIfNotFound: true);
         m_MainInput_ScreenInteract = m_MainInput.FindAction("ScreenInteract", throwIfNotFound: true);
+        m_MainInput_ScreenRotation = m_MainInput.FindAction("ScreenRotation", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -306,6 +338,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_MainInput_Escape;
     private readonly InputAction m_MainInput_StrikePosition;
     private readonly InputAction m_MainInput_ScreenInteract;
+    private readonly InputAction m_MainInput_ScreenRotation;
     public struct MainInputActions
     {
         private @MainInputMap m_Wrapper;
@@ -315,6 +348,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         public InputAction @Escape => m_Wrapper.m_MainInput_Escape;
         public InputAction @StrikePosition => m_Wrapper.m_MainInput_StrikePosition;
         public InputAction @ScreenInteract => m_Wrapper.m_MainInput_ScreenInteract;
+        public InputAction @ScreenRotation => m_Wrapper.m_MainInput_ScreenRotation;
         public InputActionMap Get() { return m_Wrapper.m_MainInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -339,6 +373,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @ScreenInteract.started += instance.OnScreenInteract;
             @ScreenInteract.performed += instance.OnScreenInteract;
             @ScreenInteract.canceled += instance.OnScreenInteract;
+            @ScreenRotation.started += instance.OnScreenRotation;
+            @ScreenRotation.performed += instance.OnScreenRotation;
+            @ScreenRotation.canceled += instance.OnScreenRotation;
         }
 
         private void UnregisterCallbacks(IMainInputActions instance)
@@ -358,6 +395,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @ScreenInteract.started -= instance.OnScreenInteract;
             @ScreenInteract.performed -= instance.OnScreenInteract;
             @ScreenInteract.canceled -= instance.OnScreenInteract;
+            @ScreenRotation.started -= instance.OnScreenRotation;
+            @ScreenRotation.performed -= instance.OnScreenRotation;
+            @ScreenRotation.canceled -= instance.OnScreenRotation;
         }
 
         public void RemoveCallbacks(IMainInputActions instance)
@@ -409,5 +449,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         void OnEscape(InputAction.CallbackContext context);
         void OnStrikePosition(InputAction.CallbackContext context);
         void OnScreenInteract(InputAction.CallbackContext context);
+        void OnScreenRotation(InputAction.CallbackContext context);
     }
 }

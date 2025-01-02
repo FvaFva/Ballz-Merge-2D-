@@ -1,52 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1066210519498321244
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7183892811810658237}
-  - component: {fileID: 137614990703355126}
-  m_Layer: 0
-  m_Name: EffectPool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7183892811810658237
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1066210519498321244}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2093911286054969042}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &137614990703355126
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1066210519498321244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c744a711c7b4ce4885a68c95ad8d5fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _initOrder: 0
-  _effectPrefab: {fileID: 7475633181702919026, guid: 5e6f1ed10efc0a64f8de7de07240200a, type: 3}
-  _poolSize: 5
 --- !u!1 &1688658867320399129
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,7 +166,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 4391648840110534136}
-  - {fileID: 137614990703355126}
 --- !u!1 &7104765068768312032
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,7 +288,6 @@ Transform:
   - {fileID: 1982679342511190700}
   - {fileID: 6735942990509876976}
   - {fileID: 40369915829041263}
-  - {fileID: 7183892811810658237}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &294944430223947065

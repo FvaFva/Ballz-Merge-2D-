@@ -4,31 +4,19 @@ using Zenject;
 
 public class ScreenInteraction : MonoBehaviour
 {
-    [SerializeField] private EffectsPool _effectsPool;
+    [SerializeField] private InteractionEffect _effectPrefab;
 
     [Inject] private MainInputMap _userInput;
+    [Inject] private EffectPool _effectPool;
 
-    private Camera _mainCamera;
+    private void OnEnable() => _userInput.MainInput.ScreenInteract.performed += OnScreenInteract;
 
-    private void Awake()
-    {
-        _mainCamera = Camera.main;
-    }
-
-    private void OnEnable()
-    {
-        _userInput.MainInput.ScreenInteract.performed += OnScreenInteract;
-    }
-
-    private void OnDisable()
-    {
-        _userInput.MainInput.ScreenInteract.performed -= OnScreenInteract;
-    }
+    private void OnDisable() => _userInput.MainInput.ScreenInteract.performed -= OnScreenInteract;
 
     private void OnScreenInteract(InputAction.CallbackContext context)
     {
         Vector2 screenPosition = _userInput.MainInput.StrikePosition.ReadValue<Vector2>();
-        Vector3 worldPosition = _mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, -10f));
-        _effectsPool.GetEffect(worldPosition, Quaternion.identity);
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, 0));
+        _effectPool.GetEffect(worldPosition, Quaternion.identity, _effectPrefab, gameObject.transform);
     }
 }

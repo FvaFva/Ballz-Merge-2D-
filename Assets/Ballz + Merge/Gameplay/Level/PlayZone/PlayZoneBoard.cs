@@ -2,15 +2,16 @@
 
 public class PlayZoneBoard : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer _view;
-
     private Transform _transform;
     private Vector2 _basePosition;
     private Vector2 _baseScale;
 
     public void MarkAsVirtual()
     {
-        _view.enabled = false;
+        SpriteRenderer renderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+
+        if (renderer != null)
+            renderer.enabled = false;
     }
 
     public void Init()

@@ -28,6 +28,8 @@ namespace BallzMerge.Root
         private ResourcesHub _hub;
         private GameSettings _gameSettings;
         private DataBaseSource _data;
+        private GlobalEffects _globalEffects;
+        private EffectPool _effectPool;
 
         private EntryPoint()
         {
@@ -74,8 +76,10 @@ namespace BallzMerge.Root
         {
             _data = new DataBaseSource();
             _userInput = new MainInputMap();
+            _effectPool = new EffectPool();
             _userInput.Enable();
             BindSingleton(_userInput);
+            BindSingleton(_effectPool);
             TimeScaler timeScaler = new TimeScaler();
             BindSingleton<IGamePauseController, TimeScaler>(timeScaler);
             _hub = new ResourcesHub();
@@ -85,6 +89,9 @@ namespace BallzMerge.Root
 
             _rootView = ProjectContext.Instance.Container.InstantiatePrefabResourceForComponent<UIRootView>(_hub.ROOT_UI);
             Object.DontDestroyOnLoad(_rootView.gameObject);
+
+            _globalEffects = ProjectContext.Instance.Container.InstantiatePrefabResourceForComponent<GlobalEffects>(_hub.GLOBAL_EFFECTS);
+            Object.DontDestroyOnLoad(_globalEffects.gameObject);
 
             _gameSettings = new GameSettings(_rootView.EscapeMenu, _data.Settings, timeScaler);
             _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack);
