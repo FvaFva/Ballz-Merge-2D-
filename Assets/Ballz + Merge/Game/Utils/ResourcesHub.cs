@@ -15,6 +15,7 @@ namespace BallzMerge.Root
 
         public readonly string ROOT_UI = "UIRoot";
         public readonly string DEVELOPERS_SCENES = "DevelopersScenes";
+        public readonly string GLOBAL_EFFECTS = "[Effects]";
 
         public T Get<T>(string name) where T : UnityEngine.Object
         {

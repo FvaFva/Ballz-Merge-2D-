@@ -1,0 +1,11 @@
+# ninja log v5
+106	3168	7531274573828961	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	e35916ce0b75d104
+78	7776	7531274614943212	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	1047349f5554492c
+22	7933	7531274619568349	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	8f80e55dfbff81e5
+64	8331	7531274616893862	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	ba2f91e3bbfe3a3f
+3174	8380	7531274599423026	C:/Users/Administrator/Documents/GitHub/Ballz-Merge-2D-/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1l4u6ac5/obj/arm64-v8a/libswappywrapper.so	a9881df6747ef7a5
+1	8512	7531274623924706	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	1ab72637533c90e4
+54	9512	7531274637675082	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	e4bfcb7a2e9a519a
+92	9672	7531274640855787	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	2f9e05d256dfa641
+33	9719	7531274641352505	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	5ebce3d643b91060
+9720	10231	7531274645568906	C:/Users/Administrator/Documents/GitHub/Ballz-Merge-2D-/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1l4u6ac5/obj/arm64-v8a/libgame.so	1866b39c060ff022

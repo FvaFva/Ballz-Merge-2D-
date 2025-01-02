@@ -15,7 +15,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private readonly Vector2Int[] AllSides = new Vector2Int[4] { Vector2Int.right, Vector2Int.left, Vector2Int.down, Vector2Int.up };
 
         [SerializeField] private BlocksSpawner _spawner;
-        [SerializeField] private EffectsPool _effectsPool;
+        [SerializeField] private AdditionalEffectsPool _effectsPool;
         [SerializeField] private BlocksMergeImpact _mergeImpact;
         [SerializeField] private BlocksDestroyImpact _destroyImpact;
         [SerializeField] private BlockMagneticObserver _blockMagneticObserver;
@@ -25,10 +25,12 @@ namespace BallzMerge.Gameplay.BlockSpace
         [Inject] private PhysicGrid _physicsGrid;
         [Inject] private GridSettings _gridSettings;
         [Inject] private BallWaveVolume _ballLevelVolume;
+        [Inject] private BlocksInGame _activeBlocks;
 
-        private BlocksInGame _activeBlocks = new BlocksInGame();
         private BallCollisionHandler _collisionHandler;
         private BlocksMover _mover = new BlocksMover();
+
+        public event Action WaveSpawned;
 
         private void Awake()
         {
@@ -87,6 +89,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         public void StartSpawnWave(Action callBAck)
         {
             StartCoroutine(WaveGeneration(callBAck));
+            WaveSpawned?.Invoke();
         }
 
         private IEnumerator WaveGeneration(Action callBack)
@@ -157,9 +160,9 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void DestroyBlock(Block block)
         {
+            block.Destroy();
             _activeBlocks.Remove(block);
             _mover.ProcessDeleteBlock(block);
-            block.Destroy();
             _effectsPool.SpawnEffect(BlockAdditionalEffectEvents.Destroy, block.WorldPosition);
             _destroyImpact.ShowImpact();
         }

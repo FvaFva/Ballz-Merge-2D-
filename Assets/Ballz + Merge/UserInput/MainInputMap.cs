@@ -53,6 +53,33 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""StrikePosition"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""05f68337-e817-4df3-a643-4c9c14508ee7"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ScreenInteract"",
+                    ""type"": ""Button"",
+                    ""id"": ""cb0e04f8-c094-43a5-98de-95f309dedefc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ScreenRotation"",
+                    ""type"": ""Value"",
+                    ""id"": ""99458c0d-e2fa-449a-b4c9-597109226ae5"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -69,7 +96,18 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""57083000-9dfb-489f-b364-a59846432a08"",
+                    ""id"": ""a894bb7d-7bd9-490f-8960-64bba8f11b5e"",
+                    ""path"": ""<Touchscreen>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Sensor"",
+                    ""action"": ""StrikeVector"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""704629d2-a7dd-48c9-9f95-4f5423e103ed"",
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -84,7 +122,18 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Shot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8feb1e58-e1a9-4547-ae2b-e7d88efa96e3"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Sensor"",
                     ""action"": ""Shot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -108,6 +157,72 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepade"",
                     ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b9cbb4e-d7c7-4b7c-9628-967bf5ae2b6e"",
+                    ""path"": ""<Touchscreen>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Sensor"",
+                    ""action"": ""StrikePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6d8b7c5a-8d0b-4aef-bf5b-0f17892aa1f4"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StrikePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""340262e3-cacf-409e-b99e-8b0b1401fd32"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""ScreenInteract"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc569197-e1a7-4b4b-afed-ba7a2f532306"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Sensor"",
+                    ""action"": ""ScreenInteract"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe238753-81bf-49c6-b0d7-710a6e30cc25"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""ScreenRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d5a3e9bd-27fc-4a7d-a795-13e81554e9d2"",
+                    ""path"": ""<Touchscreen>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ScreenRotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -141,6 +256,11 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""isOR"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Sensor"",
+            ""bindingGroup"": ""Sensor"",
+            ""devices"": []
         }
     ]
 }");
@@ -149,6 +269,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         m_MainInput_StrikeVector = m_MainInput.FindAction("StrikeVector", throwIfNotFound: true);
         m_MainInput_Shot = m_MainInput.FindAction("Shot", throwIfNotFound: true);
         m_MainInput_Escape = m_MainInput.FindAction("Escape", throwIfNotFound: true);
+        m_MainInput_StrikePosition = m_MainInput.FindAction("StrikePosition", throwIfNotFound: true);
+        m_MainInput_ScreenInteract = m_MainInput.FindAction("ScreenInteract", throwIfNotFound: true);
+        m_MainInput_ScreenRotation = m_MainInput.FindAction("ScreenRotation", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -213,6 +336,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_MainInput_StrikeVector;
     private readonly InputAction m_MainInput_Shot;
     private readonly InputAction m_MainInput_Escape;
+    private readonly InputAction m_MainInput_StrikePosition;
+    private readonly InputAction m_MainInput_ScreenInteract;
+    private readonly InputAction m_MainInput_ScreenRotation;
     public struct MainInputActions
     {
         private @MainInputMap m_Wrapper;
@@ -220,6 +346,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         public InputAction @StrikeVector => m_Wrapper.m_MainInput_StrikeVector;
         public InputAction @Shot => m_Wrapper.m_MainInput_Shot;
         public InputAction @Escape => m_Wrapper.m_MainInput_Escape;
+        public InputAction @StrikePosition => m_Wrapper.m_MainInput_StrikePosition;
+        public InputAction @ScreenInteract => m_Wrapper.m_MainInput_ScreenInteract;
+        public InputAction @ScreenRotation => m_Wrapper.m_MainInput_ScreenRotation;
         public InputActionMap Get() { return m_Wrapper.m_MainInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -238,6 +367,15 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @Escape.started += instance.OnEscape;
             @Escape.performed += instance.OnEscape;
             @Escape.canceled += instance.OnEscape;
+            @StrikePosition.started += instance.OnStrikePosition;
+            @StrikePosition.performed += instance.OnStrikePosition;
+            @StrikePosition.canceled += instance.OnStrikePosition;
+            @ScreenInteract.started += instance.OnScreenInteract;
+            @ScreenInteract.performed += instance.OnScreenInteract;
+            @ScreenInteract.canceled += instance.OnScreenInteract;
+            @ScreenRotation.started += instance.OnScreenRotation;
+            @ScreenRotation.performed += instance.OnScreenRotation;
+            @ScreenRotation.canceled += instance.OnScreenRotation;
         }
 
         private void UnregisterCallbacks(IMainInputActions instance)
@@ -251,6 +389,15 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @Escape.started -= instance.OnEscape;
             @Escape.performed -= instance.OnEscape;
             @Escape.canceled -= instance.OnEscape;
+            @StrikePosition.started -= instance.OnStrikePosition;
+            @StrikePosition.performed -= instance.OnStrikePosition;
+            @StrikePosition.canceled -= instance.OnStrikePosition;
+            @ScreenInteract.started -= instance.OnScreenInteract;
+            @ScreenInteract.performed -= instance.OnScreenInteract;
+            @ScreenInteract.canceled -= instance.OnScreenInteract;
+            @ScreenRotation.started -= instance.OnScreenRotation;
+            @ScreenRotation.performed -= instance.OnScreenRotation;
+            @ScreenRotation.canceled -= instance.OnScreenRotation;
         }
 
         public void RemoveCallbacks(IMainInputActions instance)
@@ -286,10 +433,22 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             return asset.controlSchemes[m_GamepadeSchemeIndex];
         }
     }
+    private int m_SensorSchemeIndex = -1;
+    public InputControlScheme SensorScheme
+    {
+        get
+        {
+            if (m_SensorSchemeIndex == -1) m_SensorSchemeIndex = asset.FindControlSchemeIndex("Sensor");
+            return asset.controlSchemes[m_SensorSchemeIndex];
+        }
+    }
     public interface IMainInputActions
     {
         void OnStrikeVector(InputAction.CallbackContext context);
         void OnShot(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
+        void OnStrikePosition(InputAction.CallbackContext context);
+        void OnScreenInteract(InputAction.CallbackContext context);
+        void OnScreenRotation(InputAction.CallbackContext context);
     }
 }

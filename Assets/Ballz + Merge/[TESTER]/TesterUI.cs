@@ -11,7 +11,7 @@ public class TesterUI : MonoBehaviour
 #if UNITY_EDITOR
         _resolve.AddListener(InstantiateScene);
 #else
-        Destroy(gameObject)
+        Destroy(gameObject);
 #endif
     }
 

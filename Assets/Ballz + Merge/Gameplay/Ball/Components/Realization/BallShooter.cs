@@ -17,13 +17,15 @@ public class BallShooter : BallComponent
 
     private void OnEnable()
     {
-        _userInput.MainInput.Shot.performed += OnPlayerShootOrder;
+        if (Application.platform == RuntimePlatform.Android)
+            _userInput.MainInput.Shot.performed += ctx => OnPlayerShootOrder();
+
         _vectorReader.Dropped += OnInputVectorDrop;
     }
 
     private void OnDisable()
     {
-        _userInput.MainInput.Shot.performed -= OnPlayerShootOrder;
+        _userInput.MainInput.Shot.performed -= ctx => OnPlayerShootOrder();
         _vectorReader.Dropped -= OnInputVectorDrop;
     }
 
@@ -32,7 +34,7 @@ public class BallShooter : BallComponent
         _isOverUI = EventSystem.current.IsPointerOverGameObject();
     }
 
-    private void OnPlayerShootOrder(InputAction.CallbackContext ctx)
+    private void OnPlayerShootOrder()
     {
         if (_isOverUI)
             return;

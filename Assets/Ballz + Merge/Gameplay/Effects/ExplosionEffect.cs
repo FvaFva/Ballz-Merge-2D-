@@ -1,11 +1,5 @@
 using UnityEngine;
 
-public class ExplosionEffect : BaseEffect
+public class ExplosionEffect : AdditionalEffectBase
 {
-    public override void Play(Vector3 position)
-    {
-        Transform.position = position;
-        Effect.Play();
-        base.Play(position);
-    }
 }
