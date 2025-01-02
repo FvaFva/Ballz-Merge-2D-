@@ -7,8 +7,10 @@ namespace BallzMerge.Gameplay.Level
     {
         [SerializeField] private Color _color;
         [SerializeField] private int _countInPool;
+        [SerializeField] private int _weight;
 
         public Color Color => _color;
         public int CountInPool => _countInPool;
+        public int Weight => _weight;
     }
 }

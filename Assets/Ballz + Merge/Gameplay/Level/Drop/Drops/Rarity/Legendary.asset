@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _color: {r: 1, g: 0.54942966, b: 0.10849059, a: 1}
   _countInPool: 1
+  _weight: 3

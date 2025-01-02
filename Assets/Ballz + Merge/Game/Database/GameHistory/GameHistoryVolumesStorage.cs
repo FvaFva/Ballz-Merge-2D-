@@ -16,7 +16,7 @@ namespace BallzMerge.Data
         public readonly string VolumeColumName = "Volume";
         public readonly string ValueColumName = "Value";
 
-        public void Set(SqliteConnection connection, string gameID, BallGlobalVolume volumes)
+        public void Set(SqliteConnection connection, string gameID, BallVolumesBag volumes)
         {
             using (var command = connection.CreateCommand())
             {
@@ -27,13 +27,13 @@ namespace BallzMerge.Data
 
                 command.Parameters.AddWithValue($"@{IDColumName}", gameID);
 
-                foreach (var volume in volumes.Volumes)
+                foreach (BallVolumesBagCell cell in volumes.All)
                 {
-                    if (volume.Value.Equals(0))
+                    if (cell.Value.Equals(0))
                         continue;
 
-                    command.Parameters.AddWithValue($"@{VolumeColumName}", volume.Key.ToString());
-                    command.Parameters.AddWithValue($"@{ValueColumName}", volume.Value);
+                    command.Parameters.AddWithValue($"@{VolumeColumName}", cell.Name);
+                    command.Parameters.AddWithValue($"@{ValueColumName}", cell.Value);
                     command.ExecuteNonQuery();
                 }
             }
@@ -46,7 +46,7 @@ namespace BallzMerge.Data
                 command.CommandText = $@"   CREATE TABLE IF NOT EXISTS {TableName}
                                             (ID INTEGER PRIMARY KEY,
                                             {VolumeColumName} TEXT,
-                                            {ValueColumName} REAL,
+                                            {ValueColumName} INTEGER,
                                             {IDColumName} TEXT)";
 
                 command.ExecuteNonQuery();

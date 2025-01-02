@@ -127,27 +127,27 @@ namespace BallzMerge.Gameplay.BlockSpace
 
             Vector2Int direction = hitPosition.CalculateDirection(block.WorldPosition);
 
-            if (_ballLevelVolume.CheckVolume(BallVolumesTypes.Crush))
+            if (_ballLevelVolume.GetCageValue(BallVolumesTypes.Crush) != 0)
             {
                 DestroyBlock(block);
                 _additionalEffectHandler.HandleEvent(new(BlockAdditionalEffectEvents.Destroy, block));
                 return;
             }
 
-            if (_blockMagneticObserver.CheckBlock(block, out Block secondBlock) && _ballLevelVolume.CheckVolume(BallVolumesTypes.Magnet))
+            if (_blockMagneticObserver.CheckBlock(block, out Block secondBlock) && _ballLevelVolume.GetCageValue(BallVolumesTypes.Magnet) != 0)
             {
                 MergeBlocks(block, secondBlock);
                 return;
             }
 
-            if (_ballLevelVolume.CheckVolume(BallVolumesTypes.NumberReductor))
+            if (_ballLevelVolume.GetCageValue(BallVolumesTypes.NumberReductor) != 0)
             {
                 if (CheckChangeNumber(block, -1))
                     return;
             }
 
-            if (_ballLevelVolume.CheckVolume(BallVolumesTypes.MoveIncreaser))
-                TryMoveBlock(block, direction, _ballLevelVolume.GetMaxVolume(BallVolumesTypes.MoveIncreaser));
+            if (_ballLevelVolume.GetCageValue(BallVolumesTypes.MoveIncreaser) != 0)
+                TryMoveBlock(block, direction, _ballLevelVolume.GetPassiveValue(BallVolumesTypes.MoveIncreaser));
             else
                 TryMoveBlock(block, direction);
 

@@ -31,7 +31,7 @@ public class BallVolumesMap :ScriptableObject
 
     public string GetTypifiedChance(BallVolume volume, float value)
     {
-        if (volume == null || volume.Counting == BallVolumeCountingTypes.Chance)
+        if (volume == null || volume.Species == BallVolumesSpecies.Hit)
             return $"{(int)(value * 100)}%";
         else
             return $"{(int)value}";

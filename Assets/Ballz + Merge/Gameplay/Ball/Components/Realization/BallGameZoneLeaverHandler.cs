@@ -27,7 +27,7 @@ public class BallGameZoneLeaverHandler : BallComponent
 
     private void HandlePlayZoneLeaving()
     {
-        if (_ballVolume.CheckVolume(BallVolumesTypes.BotBounce))
+        if (_ballVolume.GetCageValue(BallVolumesTypes.BotBounce) != 0)
             return;
 
         MyBody.velocity = Vector2.zero;

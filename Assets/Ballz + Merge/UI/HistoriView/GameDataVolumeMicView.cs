@@ -23,15 +23,15 @@ public class GameDataVolumeMicView : MonoBehaviour
         return this;
     }
 
-    public void Show(string volumeName, float chance)=> ShowData(_map.GetVolume(volumeName), chance);
+    public void Show(string volumeName, int value)=> Show(_map.GetVolume(volumeName), value);
 
-    public void Show(BallVolumesTypes volumeName, float chance) => ShowData(_map.GetVolume(volumeName), chance);
+    public void Show(BallVolumesTypes volumeType, int value) => Show(_map.GetVolume(volumeType), value);
 
-    private void ShowData(BallVolume data, float chance)
+    public void Show(BallVolume volume, int value)
     {
         gameObject.SetActive(true);
-        _chance.text = _map.GetTypifiedChance(data, chance);
-        _header.text = data.Name;
-        _icon.sprite = data.Icon;
+        _chance.text = value.ToString();
+        _header.text = volume.Name;
+        _icon.sprite = volume.Icon;
     }
 }

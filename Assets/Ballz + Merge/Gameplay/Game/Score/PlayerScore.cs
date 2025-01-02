@@ -27,7 +27,7 @@ public class PlayerScore : CyclicBehavior, ILevelStarter, ILevelFinisher, IIniti
         if (Score == 0)
             return;
 
-        _data.History.SaveResult(Score, _waveVolume.GlobalVolumes);
+        _data.History.SaveResult(Score, _waveVolume.Bag);
 
         if (Score > BestScore)
             BestScore = Score;

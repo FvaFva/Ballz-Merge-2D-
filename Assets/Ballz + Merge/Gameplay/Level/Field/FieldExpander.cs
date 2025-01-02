@@ -52,7 +52,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     public void StartLevel()
     {
-        _ballWaveVolume.GlobalVolumes.ChangedVolume += OnAbilityAdd;
+        _ballWaveVolume.Bag.Added += OnAbilityAdd;
         _fieldEffect.transform.position = _fieldPosition;
         _fieldShape.scale = _fieldScale;
         _camera.orthographicSize = _cameraOrthographicSize;
@@ -65,12 +65,12 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     public void FinishLevel()
     {
-        _ballWaveVolume.GlobalVolumes.ChangedVolume -= OnAbilityAdd;
+        _ballWaveVolume.Bag.Added -= OnAbilityAdd;
     }
 
-    private void OnAbilityAdd(BallVolumesTypes type, float count)
+    private void OnAbilityAdd(BallVolumesBagCell volume)
     {
-        if (type == BallVolumesTypes.FieldExpander)
+        if (volume.IsEqual(BallVolumesTypes.FieldExpander))
             AddRow();
     }
     

@@ -14,7 +14,7 @@ namespace BallzMerge.Gameplay.Level
 
         private Action _callback;
 
-        public event Action<BallVolumesTypes, float> DropSelected;
+        public event Action<BallVolume, DropRarity> DropSelected;
 
         private void OnEnable()
         {
@@ -49,10 +49,10 @@ namespace BallzMerge.Gameplay.Level
             gameObject.SetActive(false);
         }
 
-        private void OnSelect(Drop drop, float count)
+        private void OnSelect(Drop drop)
         {
             Hide();
-            DropSelected?.Invoke(drop.WaveDropType, count);
+            DropSelected?.Invoke(drop.Volume, drop.Rarity);
         }
 
         private void Hide() => _canvasGroup.DOFade(0, AnimationTime).OnComplete(OnHideAnimationFinished);

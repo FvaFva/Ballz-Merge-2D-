@@ -13,12 +13,12 @@ public class BallLevelView : BallComponent
 
     private void OnEnable()
     {
-        _volume.Changed += OnValueChanged;
+        //_volume.Changed += OnValueChanged;
     }
 
     private void OnDisable()
     {
-        _volume.Changed -= OnValueChanged;
+        //_volume.Changed -= OnValueChanged;
     }
 
     public override void ChangeActivity(bool isActive)
@@ -26,7 +26,7 @@ public class BallLevelView : BallComponent
         if(isActive)
         {
             foreach (var effect in _effects)
-                effect.HandleVolumeChanges(_volume.GetMaxVolume(effect.Type));
+                effect.HandleVolumeChanges(_volume.GetPassiveValue(effect.Type));
         }
         else
         {

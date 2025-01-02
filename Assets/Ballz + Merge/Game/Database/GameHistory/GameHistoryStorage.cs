@@ -76,7 +76,7 @@ namespace BallzMerge.Data
             return bestScore;
         }
 
-        public void SaveResult(int score, BallGlobalVolume volumes)
+        public void SaveResult(int score, BallVolumesBag volumes)
         {
             string gameUUID = Guid.NewGuid().ToString();
 
@@ -142,7 +142,7 @@ namespace BallzMerge.Data
                 }
 
                 string volume = reader[_volumeStorage.VolumeColumName].ToString();
-                float value = Convert.ToSingle(reader[_volumeStorage.ValueColumName]);
+                int value = Convert.ToInt32(reader[_volumeStorage.ValueColumName]);
                 data[currentDataId].Add(volume, value);
             }
         }

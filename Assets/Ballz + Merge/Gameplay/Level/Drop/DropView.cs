@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,11 +20,10 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private List<Image> _shineMasks;
 
         private Drop _current;
-        private float _count;
         private Sprite _default;
         private List<Material> _shineMaterials;
 
-        public event Action<Drop, float> Selected;
+        public event Action<Drop> Selected;
 
         private void Awake()
         {
@@ -66,11 +64,10 @@ namespace BallzMerge.Gameplay.Level
 
         private void Activate()
         {
-            _count = _current.GetRandomCount();
             _additionalInfo.gameObject.SetActive(_current.IsReducible);
             _name.text = _current.Name;
             _description.text = _current.Description;
-            _value.text = (_count * 100).ToString("F0");
+            _value.text = _current.Rarity.Weight.ToString();
             _icon.sprite = _current.Icon;
             _colorView.color = _current.Color;
 
@@ -80,7 +77,6 @@ namespace BallzMerge.Gameplay.Level
 
         private void Hide()
         {
-            _count = 0;
             _name.text = string.Empty;
             _description.text = string.Empty;
             _value.text = string.Empty;
@@ -92,7 +88,7 @@ namespace BallzMerge.Gameplay.Level
         private void OnSelect()
         {
             if (_current != null)
-                Selected?.Invoke(_current, _count);
+                Selected?.Invoke(_current);
         }
     }
 }
