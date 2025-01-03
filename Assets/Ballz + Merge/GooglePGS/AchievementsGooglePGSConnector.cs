@@ -1,6 +1,5 @@
 ﻿using GooglePlayGames;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,16 +7,14 @@ namespace BallzMerge.GooglePGS
 {
     using Achievement;
 
-    public class AchievementsConnector : AchievementsProcessorBase
+    public class AchievementsGooglePGSConnector
     {
         [SerializeField] private Authenticator _authenticator;
 
         private bool _isReadyToWork;
-        private Dictionary<string, AchievementData> _achievementDescriptions;
 
         private void Awake()
         {
-            _achievementDescriptions = new Dictionary<string, AchievementData>();
             _isReadyToWork = _authenticator.IsAuthenticated;
         }
 
@@ -31,22 +28,22 @@ namespace BallzMerge.GooglePGS
             _authenticator.Authenticated -= InitializeAchievementsDescriptions;
         }
 
-        public override void IssueAchievement(Achievement achievement, Action<bool> callback)
+        public void IssueAchievement(AchievementIDs achievement, Action<bool> callback)
         {
             if (_isReadyToWork == false)
                 return;
 
-            PlayGamesPlatform.Instance.ReportProgress(achievement.GoogleId, 100, callback);
+            PlayGamesPlatform.Instance.ReportProgress(achievement.Google, 100, callback);
         }
 
-        public override void RequirePlayerAchievementsData(Action<AchievementData[]> callback)
+        public void RequirePlayerAchievementsData(Action<(string, bool)[]> callback)
         {
             if (_isReadyToWork == false)
                 return;
 
             PlayGamesPlatform.Instance.LoadAchievements(achievements =>
             {
-                callback?.Invoke(_achievementDescriptions.Join(achievements, achievementDescript => achievementDescript.Key, playerAchievement => playerAchievement.id, (achievementDescript, playerAchievement) => achievementDescript.Value).ToArray());
+                callback?.Invoke(achievements.Select(achievement => (achievement.id, achievement.completed)).ToArray());
             });
         }
 
@@ -60,7 +57,7 @@ namespace BallzMerge.GooglePGS
             PlayGamesPlatform.Instance.LoadAchievementDescriptions(achievements =>
             {
                 foreach (var achievement in achievements)
-                    _achievementDescriptions.Add(achievement.id, new AchievementData(achievement));
+                    Debug.Log($"{achievement.id} {achievement.points}");
             });
         }
     }

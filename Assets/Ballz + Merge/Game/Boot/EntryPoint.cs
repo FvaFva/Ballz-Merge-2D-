@@ -35,7 +35,6 @@ namespace BallzMerge.Root
         {
             InitComponents();
             BindToContainer();
-            Inject();
         }
 
         private void RunGame()
@@ -109,13 +108,6 @@ namespace BallzMerge.Root
 
         private void BindSingleton<TSingleton>(TSingleton singleton) => ProjectContext.Instance.Container.Bind<TSingleton>().FromInstance(singleton).AsSingle().NonLazy();
         private void BindSingleton<TSingletonInterface, TSingletonRealization>(TSingletonRealization singleton) where TSingletonRealization : TSingletonInterface => ProjectContext.Instance.Container.Bind<TSingletonInterface>().To<TSingletonRealization>().FromInstance(singleton).AsSingle().NonLazy();
-
-        private void Inject()
-        {
-            /*ProjectContext.Instance.Container.Inject(_rootView.Questioner);
-            ProjectContext.Instance.Container.Inject(_rootView.EscapeMenu);
-            ProjectContext.Instance.Container.Inject(_rootView.InfoPanelShowcase);*/
-        }
 
         private void SceneExitCallBack(SceneExitData exitData)
         {

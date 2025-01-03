@@ -977,7 +977,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 58.2
+  m_fontSize: 56.65
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1030,7 +1030,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7789599786225626813}
-  - component: {fileID: 4617451433329515788}
+  - component: {fileID: 6004378032446376404}
   m_Layer: 0
   m_Name: UIRoot
   m_TagString: Untagged
@@ -1055,7 +1055,7 @@ Transform:
   - {fileID: 2609118556200710065}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4617451433329515788
+--- !u!114 &6004378032446376404
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1064,7 +1064,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1372321400457431043}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17abf1255ad4d2742ac6fff29bfa9ad4, type: 3}
+  m_Script: {fileID: 11500000, guid: 8a94a9a296577084eb640dc7fe43c73f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _loadingScreen: {fileID: 6879610977133764385}
@@ -4120,7 +4120,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 65
+  m_fontSize: 63.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

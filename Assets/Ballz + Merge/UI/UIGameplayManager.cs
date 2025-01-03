@@ -1,13 +1,12 @@
 ﻿using R3;
-using Zenject;
 
 public class UIGameplayManager : UIRootManager
 {
     private readonly Subject<Unit> _exitSceneRequest;
 
-    public UIGameplayManager(DiContainer container) : base(container)
+    public UIGameplayManager(Subject<Unit> exitSceneRequest)
     {
-        _exitSceneRequest = container.Resolve<Subject<Unit>>();
+        _exitSceneRequest = exitSceneRequest;
     }
 
     public ScreenGameplayViewModel OpenScreenGameplay()

@@ -2,10 +2,5 @@
 
 public abstract class UIRootManager
 {
-    protected readonly DiContainer Container;
-
-    protected UIRootManager(DiContainer container)
-    {
-        Container = container;
-    }
+    [Inject] protected readonly DiContainer Container;
 }

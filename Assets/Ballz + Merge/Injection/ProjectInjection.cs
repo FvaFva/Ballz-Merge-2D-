@@ -14,6 +14,7 @@ public class ProjectInjection : ScriptableObjectInstaller
         Container.Bind<GridSettings>().FromInstance(_gridSettings).AsSingle().NonLazy();
         Container.Bind<BallVolumesMap>().FromInstance(_ballVolumesMap).AsSingle().NonLazy();
         Container.Bind<TargetSceneEntryPointContainer>().FromNew().AsSingle().NonLazy();
+        Container.Bind<UIGameplayViewModel>().FromNew().AsSingle().NonLazy();
         _ballVolumesMap.ReBuild();
     }
 }
