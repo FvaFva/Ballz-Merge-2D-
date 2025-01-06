@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class RollupPanel : MonoBehaviour
 {
     [SerializeField] private Button _close;
+    [SerializeField] private Button _closeArea;
     [SerializeField] private Button _open;
     [SerializeField] private RectTransform _content;
 
@@ -15,19 +16,20 @@ public class RollupPanel : MonoBehaviour
     private void OnEnable()
     {
         _close.AddListener(OnClose);
+        _closeArea.AddListener(OnClose);
         _open.AddListener(OnOpen);
     }
 
     private void OnDisable()
     {
         _close.RemoveListener(OnClose);
+        _closeArea.RemoveListener(OnClose);
         _open.RemoveListener(OnOpen);
     }
 
     private void OnOpen()
     {
         ChangeActivity(true);
-
     }
 
     private void OnClose()
@@ -38,6 +40,7 @@ public class RollupPanel : MonoBehaviour
     private void ChangeActivity(bool isActive)
     {
         _open.gameObject.SetActive(!isActive);
+        _closeArea.gameObject.SetActive(isActive);
         _close.gameObject.SetActive(isActive);
         _content.gameObject.SetActive(isActive);
     }

@@ -62,6 +62,7 @@ public class InfoPanelShowcase : MonoBehaviour
     private void OpenDefault()
     {
         TryActivate(_default);
+        _openDefaultButton.gameObject.SetActive(false);
     }
 
     private void Deactivate()
@@ -69,6 +70,7 @@ public class InfoPanelShowcase : MonoBehaviour
         _current = null;
         _panels.Clear();
         _content.SetActive(false);
+        _openDefaultButton.gameObject.SetActive(true);
     }
 
     private bool TryActivate(IInfoPanelView panelView)

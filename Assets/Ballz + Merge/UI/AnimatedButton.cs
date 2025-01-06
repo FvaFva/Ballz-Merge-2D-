@@ -1,5 +1,4 @@
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -30,6 +29,11 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         _isPointerEnter = false;
     }
 
+    private void OnDisable()
+    {
+        SetDefaultState();
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         _isPointerDown = true;
@@ -57,6 +61,11 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     }
 
     public void OnPointerExit(PointerEventData eventData)
+    {
+        SetDefaultState();
+    }
+
+    private void SetDefaultState()
     {
         _isPointerEnter = false;
 
