@@ -10,10 +10,10 @@ namespace BallzMerge.Achievement
         [Inject] private Ball _ball;
 
         private BallCollisionHandler _ballCollisionHandler;
+        private int _hitsInShot;
 
-        public AchievementObserverChainHitBlocks(AchievementSettings settings) : base(settings)
+        public AchievementObserverChainHitBlocks(AchievementSettings settings, AchievementPointsStep pointsStep) : base(settings, pointsStep)
         {
-
         }
 
         public override void Construct()
@@ -26,21 +26,20 @@ namespace BallzMerge.Achievement
         protected override void Destruct()
         {
             _ballCollisionHandler.GameZoneLeft -= OnGameZoneLeft;
-        }
-
-        protected override void OnAchievementTargetReached(int target, int count, int maxTarget)
-        {
-            Debug.Log($"Вы уничтожили {count} блоков за раз и достигли {target} этапа из {maxTarget}");
+            _ballCollisionHandler.HitBlock -= OnBlockHit;
         }
 
         private void OnBlockHit(GridCell cell, Vector2 contactPoint)
         {
-            Property.Apply(Count);
+            _hitsInShot += Count;
+
+            if (_hitsInShot > Property.PointsStep.Points)
+                Property.Apply(Count);
         }
 
         private void OnGameZoneLeft()
         {
-            Property.Reset();
+            _hitsInShot = 0;
         }
     }
 }

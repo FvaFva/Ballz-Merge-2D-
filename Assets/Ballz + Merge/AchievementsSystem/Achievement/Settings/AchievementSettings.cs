@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,33 +7,27 @@ namespace BallzMerge.Achievement
     [CreateAssetMenu(fileName = "New Achievement settings", menuName = "Bellz+Merge/Achievements/AchievementSettings", order = 51)]
     public class AchievementSettings : ScriptableObject
     {
-        [SerializeField] private List<int> _targets;
+        [SerializeField] private List<int> _steps;
         [SerializeField] private string _name;
         [SerializeField] private string _description;
         [SerializeField] private Sprite _image;
-        [SerializeField] private AchievementIDs _iD;
+        [SerializeField] private AchievementKyes _iD;
 
-        public int MaxTargets => _targets.Count;
+        public int MaxTargets => _steps.Count;
         public string Name => _name;
-        public AchievementIDs ID => _iD;
+        public AchievementKyes ID => _iD;
 
-        public event Action Completed;
-
-        public int CheckReachedTarget(int target, int current)
+        public int CheckReachedNewSteps(AchievementPointsStep pointsStep)
         {
-            for (int i = current; i < _targets.Count; i++)
+            int stepsReached = 0;
+
+            for (int i = pointsStep.Step; i < _steps.Count; i++)
             {
-                if (_targets[i] == target)
-                    return i + 1;
+                if (_steps[i] >= pointsStep.Points)
+                    stepsReached ++;
             }
 
-            return 0;
-        }
-
-        public void CheckDestinationTarget(int current)
-        {
-            if (current == _targets.Count)
-                Completed?.Invoke();
+            return stepsReached;
         }
     }
 }

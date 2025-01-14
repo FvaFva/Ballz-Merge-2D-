@@ -11,11 +11,11 @@ namespace BallzMerge.Data
             _dbPath = "URI=file:" + Application.persistentDataPath + "/game_data.db";
             Settings = new GameSettingsStorage(_dbPath);
             History = new GameHistoryStorage(_dbPath);
-            Achievement = new GameAchievementStorage(_dbPath);
+            Achievement = new GameAchievementsStorage(_dbPath);
         }
 
         public readonly GameSettingsStorage Settings;
         public readonly GameHistoryStorage History;
-        public readonly GameAchievementStorage Achievement;
+        public readonly GameAchievementsStorage Achievement;
     }
 }

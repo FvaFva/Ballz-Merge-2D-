@@ -1,5 +1,4 @@
 using BallzMerge.Gameplay.BlockSpace;
-using UnityEngine;
 using Zenject;
 
 namespace BallzMerge.Achievement
@@ -8,9 +7,10 @@ namespace BallzMerge.Achievement
     {
         [Inject] private BlocksBus _blocksBus;
 
-        public AchievementObserverWaveSpawned(AchievementSettings settings) : base(settings)
-        {
+        private int _wavesLeft;
 
+        public AchievementObserverWaveSpawned(AchievementSettings settings, AchievementPointsStep pointsStep) : base(settings, pointsStep)
+        {
         }
 
         public override void Construct()
@@ -23,14 +23,12 @@ namespace BallzMerge.Achievement
             _blocksBus.WaveSpawned -= OnWaveSpawned;
         }
 
-        protected override void OnAchievementTargetReached(int target, int count, int maxTarget)
-        {
-            Debug.Log($"Появилось {count} волн. Вы достигли {target} этапа из {maxTarget}");
-        }
-
         private void OnWaveSpawned()
         {
-            Property.Apply(Count);
+            _wavesLeft += Count;
+
+            if (_wavesLeft > Property.PointsStep.Points)
+                Property.Apply(Count);
         }
     }
 }

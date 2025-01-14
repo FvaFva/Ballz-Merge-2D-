@@ -4,6 +4,7 @@ using Zenject;
 
 namespace BallzMerge.Root
 {
+    using BallzMerge.Achievement;
     using BallzMerge.Data;
     using Settings;
 
@@ -28,7 +29,6 @@ namespace BallzMerge.Root
         private ResourcesHub _hub;
         private GameSettings _gameSettings;
         private DataBaseSource _data;
-        private GlobalEffects _globalEffects;
         private EffectPool _effectPool;
 
         private EntryPoint()
@@ -44,12 +44,12 @@ namespace BallzMerge.Root
 #if UNITY_EDITOR
             string sceneName = SceneManager.GetActiveScene().name;
 
-            if (_hub.Get<DevelopersScenes>(_hub.DEVELOPERS_SCENES).Scenes.Contains(sceneName) == false
+            if (_hub.Get<DevelopersScenes>().Scenes.Contains(sceneName) == false
                 && sceneName != ScenesNames.BOOT
                 && sceneName != ScenesNames.GAMEPLAY)
                 return;
 
-            if (_hub.Get<DevelopersScenes>(_hub.DEVELOPERS_SCENES).Scenes.Contains(sceneName) || sceneName == ScenesNames.GAMEPLAY)
+            if (_hub.Get<DevelopersScenes>().Scenes.Contains(sceneName) || sceneName == ScenesNames.GAMEPLAY)
                 targetScene = sceneName;
 #endif
             LoadScene(targetScene);
@@ -74,6 +74,7 @@ namespace BallzMerge.Root
         private void InitComponents()
         {
             _data = new DataBaseSource();
+            BindSingleton(_data);
             _userInput = new MainInputMap();
             _effectPool = new EffectPool();
             _userInput.Enable();
@@ -86,14 +87,20 @@ namespace BallzMerge.Root
             _coroutines = new GameObject("[COROUTINES]").AddComponent<Coroutines>();
             Object.DontDestroyOnLoad(_coroutines.gameObject);
 
-            _rootView = ProjectContext.Instance.Container.InstantiatePrefabResourceForComponent<UIRootView>(_hub.ROOT_UI);
-            Object.DontDestroyOnLoad(_rootView.gameObject);
-
-            _globalEffects = ProjectContext.Instance.Container.InstantiatePrefabResourceForComponent<GlobalEffects>(_hub.GLOBAL_EFFECTS);
-            Object.DontDestroyOnLoad(_globalEffects.gameObject);
+            _rootView = GenerateDontDestroyFromHub<UIRootView>();
+            GenerateDontDestroyFromHub<GlobalEffects>();
+            BindSingleton(GenerateDontDestroyFromHub<AchievementsBus>());
 
             _gameSettings = new GameSettings(_rootView.EscapeMenu, _data.Settings, timeScaler);
             _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack);
+        }
+
+        private T GenerateDontDestroyFromHub<T>() where T : Component
+        {
+            T prefab = _hub.Get<T>();
+            T instance = ProjectContext.Instance.Container.InstantiatePrefabForComponent<T>(prefab);
+            Object.DontDestroyOnLoad(instance.gameObject);
+            return instance;
         }
 
         private void BindToContainer()
@@ -103,7 +110,6 @@ namespace BallzMerge.Root
             BindSingleton(_rootView.InfoPanelShowcase);
             BindSingleton(_rootView.EscapeMenu);
             BindSingleton(_gameSettings.AudioSettings);
-            BindSingleton(_data);
         }
 
         private void BindSingleton<TSingleton>(TSingleton singleton) => ProjectContext.Instance.Container.Bind<TSingleton>().FromInstance(singleton).AsSingle().NonLazy();
