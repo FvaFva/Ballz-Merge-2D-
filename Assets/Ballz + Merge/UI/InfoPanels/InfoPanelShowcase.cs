@@ -7,6 +7,7 @@ using Zenject;
 public class InfoPanelShowcase : MonoBehaviour
 {
     [SerializeField] private Button _closeButton;
+    [SerializeField] private Button _closeArea;
     [SerializeField] private Button _openDefaultButton;
     [SerializeField] private RectTransform _box;
     [SerializeField] private InfoPanelView _default;
@@ -20,6 +21,7 @@ public class InfoPanelShowcase : MonoBehaviour
     private void OnEnable()
     {
         _closeButton.AddListener(OnCloseClick);
+        _closeArea.AddListener(OnCloseClick);
         _openDefaultButton.AddListener(OpenDefault);
         _userInput.MainInput.Escape.performed += OnEscape;
     }
@@ -27,6 +29,7 @@ public class InfoPanelShowcase : MonoBehaviour
     private void OnDisable()
     {
         _closeButton.RemoveListener(OnCloseClick);
+        _closeArea.RemoveListener(OnCloseClick);
         _openDefaultButton.RemoveListener(OpenDefault);
         _userInput.MainInput.Escape.performed += OnEscape;
     }
