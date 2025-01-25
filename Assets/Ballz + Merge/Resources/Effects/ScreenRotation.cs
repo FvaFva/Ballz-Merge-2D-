@@ -10,7 +10,6 @@ public class ScreenRotation : MonoBehaviour
     [Inject] private MainInputMap _userInput;
 
     private Vector2 _currentRotation;
-    private Vector2 _lastMousePosition;
     private Quaternion _startRotation;
     private float _idleTimer;
     private bool _isGyroAvailable;

@@ -1,9 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-[RequireComponent(typeof(Shadow))]
 public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private const float Duration = 0.125f;
@@ -11,20 +9,13 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private const float HighlightedStateScale = 1.05f;
     private const float StartScale = 1f;
 
-    private RectTransform _transform;
-    private Shadow _shadow;
-    private Color _startColor;
-    private Color _targetColor;
+    [SerializeField] private ButtonView _buttonView;
+
     private bool _isPointerDown;
     private bool _isPointerEnter;
 
     private void Start()
     {
-        _transform = (RectTransform)transform;
-        _shadow = GetComponent<Shadow>();
-        _startColor = _shadow.effectColor;
-        _targetColor = _startColor;
-        _targetColor.a = 1f;
         _isPointerDown = false;
         _isPointerEnter = false;
     }
@@ -39,7 +30,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public void OnPointerDown(PointerEventData eventData)
     {
         _isPointerDown = true;
-        ChangeParameters(PressedStateScale, _startColor);
+        _buttonView.ChangeParameters(PressedStateScale, ColorType.StartColor, Duration);
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -47,9 +38,11 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         _isPointerDown = false;
 
         if (_isPointerEnter)
-            ChangeParameters(HighlightedStateScale, _targetColor);
+            transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
         else
-            ChangeParameters(StartScale, _startColor);
+            transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
+
+        _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -59,21 +52,16 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (_isPointerDown)
             return;
 
-        ChangeParameters(HighlightedStateScale, _targetColor);
+        transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
+        _buttonView.ChangeParameters(StartScale, ColorType.TargetColor, Duration);
     }
 
     public void OnPointerExit(PointerEventData eventData)
-    {
-        SetDefaultState();
-    }
-
-    private void SetDefaultState()
     {
         _isPointerEnter = false;
 
         if (_isPointerDown)
             return;
-
         ChangeParameters(StartScale, _startColor);
     }
 
@@ -90,5 +78,8 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             newColor,
             Duration
         ).SetEase(Ease.InOutQuad);
+
+        transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
+        _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
     }
 }
