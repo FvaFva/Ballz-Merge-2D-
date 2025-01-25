@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_ShaderMix
+  m_Name: Shader Graphs_ShaderMix_purple(1779x402)
   m_Shader: {fileID: -6465566751694194690, guid: 83e20de7467a50342bb542d30900374f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -24,12 +24,16 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Textrure1:
-        m_Texture: {fileID: 2800000, guid: 7028a30df9275db4bafdc84cdac338b6, type: 3}
+        m_Texture: {fileID: 2800000, guid: 365e09c17d971924e8b40c090ceabeb6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2:
-        m_Texture: {fileID: 2800000, guid: 620dbc7f6e3fe3a4cb6476459d429792, type: 3}
+        m_Texture: {fileID: 2800000, guid: 48588f9159fb4c042a2fbec6f1c67d36, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -46,11 +50,23 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BlendAmount: 1
+    - _AlphaClip: 0.5
+    - _BlendAmount: 0
+    - _ColorMask: 15
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UIMaskSoftnessX: 1
+    - _UIMaskSoftnessY: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0.17254922, g: 0, b: 1, a: 1}
+    - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
+    - _Texture1Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Texture2Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &4817245042140992443

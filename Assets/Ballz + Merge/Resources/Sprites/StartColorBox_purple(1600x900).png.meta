@@ -1,23 +1,23 @@
 fileFormatVersion: 2
-guid: 620dbc7f6e3fe3a4cb6476459d429792
+guid: 7aa956100c1be4b4ebdc0fa328136ffe
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1635426027987481979
-    second: HighlightedBox_0
+      213: 5619262681207789528
+    second: StartColorBox_450_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
     borderMipMap: 0
     mipMapsPreserveCoverage: 0
-    alphaTestReferenceValue: 253.83
-    mipMapFadeDistanceStart: 0
-    mipMapFadeDistanceEnd: 2
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
@@ -26,9 +26,9 @@ TextureImporter:
     flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
-  streamingMipmapsPriority: 127
+  streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMipmapLimit: 1
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -126,22 +126,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HighlightedBox_0
+      name: StartColorBox_450_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2048
-        height: 2048
+        width: 1600
+        height: 900
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 58ac06141bccd49e0800000000000000
-      internalID: -1635426027987481979
+      spriteID: 8d7dffce2a1abfd40800000000000000
+      internalID: 5619262681207789528
       vertices: []
       indices: 
       edges: []
@@ -150,14 +150,14 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      HighlightedBox_0: -1635426027987481979
+      StartColorBox_450_0: 5619262681207789528
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

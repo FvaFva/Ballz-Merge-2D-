@@ -28,6 +28,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public void OnPointerDown(PointerEventData eventData)
     {
         _isPointerDown = true;
+        _buttonView.ChangeMaterial(0f, Duration);
         _buttonView.ChangeParameters(PressedStateScale, ColorType.StartColor, Duration);
     }
 
@@ -51,6 +52,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             return;
 
         transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
+        _buttonView.ChangeMaterial(1f, Duration);
         _buttonView.ChangeParameters(StartScale, ColorType.TargetColor, Duration);
     }
 
@@ -62,6 +64,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             return;
 
         transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
+        _buttonView.ChangeMaterial(0f, Duration);
         _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
     }
 }

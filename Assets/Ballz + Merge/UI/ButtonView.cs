@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class ButtonView : MonoBehaviour
 {
     private RectTransform _transform;
+    private Image _image;
+    private Material _imageMaterial;
     private Shadow _shadow;
     private Color _startColor;
     private Color _targetColor;
@@ -14,6 +16,9 @@ public class ButtonView : MonoBehaviour
     {
         _transform = (RectTransform)transform;
         _shadow = GetComponent<Shadow>();
+        _image = GetComponent<Image>();
+        _imageMaterial = new Material(_image.material);
+        _image.material = _imageMaterial;
         _startColor = _shadow.effectColor;
         _targetColor = _startColor;
         _targetColor.a = 1f;
@@ -27,6 +32,11 @@ public class ButtonView : MonoBehaviour
             ChangeColor(_startColor, duration);
         else if (colorType == ColorType.TargetColor)
             ChangeColor(_targetColor, duration);
+    }
+
+    public void ChangeMaterial(float newValue, float duration)
+    {
+        _imageMaterial.DOFloat(newValue, "_BlendAmount", duration).SetEase(Ease.InOutQuad);
     }
 
     private void ChangeColor(Color newColor, float duration)
