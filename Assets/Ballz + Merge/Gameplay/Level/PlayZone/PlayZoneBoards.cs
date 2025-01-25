@@ -51,12 +51,8 @@ namespace BallzMerge.Gameplay.Level
                 _rightBorder.Move(property.Scale);
                 _topBorder.AddProperty(property);
                 _bottomBorder.AddProperty(property);
-
-                if (_bottomVisual != null && _strikeField != null)
-                {
-                    _bottomVisual.AddProperty(property);
-                    _strikeField.AddProperty(property);
-                }
+                _bottomVisual.AddProperty(property);
+                _strikeField.AddProperty(property);
             }
             else
             {
@@ -73,8 +69,8 @@ namespace BallzMerge.Gameplay.Level
             _bottomBorder.MarkAsVirtual();
             _leftBorder.MarkAsVirtual();
             _rightBorder.MarkAsVirtual();
-            _bottomVisual = null;
-            _strikeField = null;
+            _bottomVisual.Deactivate();
+            _strikeField.Deactivate();
         }
 
         private void ResetPositionScaleBorder()
@@ -82,7 +78,9 @@ namespace BallzMerge.Gameplay.Level
             _topBorder.SetBase();
             _bottomBorder.SetBase();
             _leftBorder.SetBase();
-            _rightBorder.SetBase();
+            _rightBorder.SetBase(); 
+            _bottomVisual.SetBase();
+            _strikeField.SetBase();
 
             if (_isWithSimulation)
                 _simulation.ResetPositionScaleBorder();

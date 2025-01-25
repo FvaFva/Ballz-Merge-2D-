@@ -27,7 +27,7 @@ namespace BallzMerge.Achievement
         {
             _wavesLeft += Count;
 
-            if (_wavesLeft > Property.PointsStep.Points)
+            if (_wavesLeft > Property.Values.Points)
                 Property.Apply(Count);
         }
     }

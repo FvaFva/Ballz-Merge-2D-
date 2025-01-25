@@ -1,24 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EffectPool : MonoBehaviour
+public class EffectPool
 {
     private Queue<InteractionEffect> _pool = new Queue<InteractionEffect>();
 
-    public InteractionEffect GetEffect(Vector3 position, Quaternion rotation, InteractionEffect effect, Transform parent)
+    public void SpawnEffect(Vector3 position, Quaternion rotation, InteractionEffect prefab, Transform parent)
     {
-        InteractionEffect returnEffect;
+        InteractionEffect effect;
 
-        if (_pool.Count > 0)
-            returnEffect = _pool.Dequeue();
+        if (_pool.TryDequeue(out effect))
+            effect.SetPosition(position, rotation);
         else
-            returnEffect = Instantiate(effect, parent);
+            effect = Object.Instantiate(prefab, position, rotation, parent);
 
-        returnEffect.transform.position = position;
-        returnEffect.transform.rotation = rotation;
-        returnEffect.Play(position);
-        returnEffect.Played += OnPlayedEffect;
-        return returnEffect;
+        effect.Played += OnPlayedEffect;
+        effect.Play(position);
     }
 
     private void OnPlayedEffect(EffectBase baseEffect)

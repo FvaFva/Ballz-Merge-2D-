@@ -269,17 +269,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b04513c8f7d68a44093abe4ae5a36403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &353757822 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1659273025286821266, guid: ec052aca0755f1d449cec9001e2bc18d, type: 3}
-  m_PrefabInstance: {fileID: 353757814}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c417e4fca9ad0a04c96da37b07f0775d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &353757823 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7306844784170241488, guid: ec052aca0755f1d449cec9001e2bc18d, type: 3}
@@ -406,7 +395,7 @@ PrefabInstance:
     - target: {fileID: 3922216773665705815, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
       propertyPath: '_components.Array.data[2]'
       value: 
-      objectReference: {fileID: 353757822}
+      objectReference: {fileID: 0}
     - target: {fileID: 3922216773665705815, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
       propertyPath: '_components.Array.data[3]'
       value: 

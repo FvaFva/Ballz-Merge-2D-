@@ -6,12 +6,19 @@ namespace BallzMerge.Gameplay.Level
     public class GridCell : MonoBehaviour
     {
         [SerializeField] private BoxCollider2D _collider;
+        [SerializeField] private MeshRenderer _view;
 
         private BoxCollider2D _virtualCollider;
         private bool _inited;
 
         public Vector2Int GridPosition { get; private set; }
         public bool IsActive { get; private set; }
+
+        private void Start()
+        {
+            _view.material.SetFloat("_randomizerScale", Random.Range(40, 70));
+            _view.material.SetFloat("_randomizerTime", Random.Range(0.05f, 0.3f));
+        }
 
         public void Activate(Vector2Int gridPosition, float cellSize, BoxCollider2D virtualCollider)
         {

@@ -99,6 +99,7 @@ namespace BallzMerge.Root
         {
             T prefab = _hub.Get<T>();
             T instance = ProjectContext.Instance.Container.InstantiatePrefabForComponent<T>(prefab);
+            instance.transform.SetParent(null);
             Object.DontDestroyOnLoad(instance.gameObject);
             return instance;
         }

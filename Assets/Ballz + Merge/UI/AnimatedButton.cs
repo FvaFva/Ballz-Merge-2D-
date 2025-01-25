@@ -32,6 +32,8 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private void OnDisable()
     {
         SetDefaultState();
+        DOTween.Kill(_transform);
+        DOTween.Kill(_shadow);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -77,13 +79,16 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void ChangeParameters(float newScale, Color newColor)
     {
+        if (isActiveAndEnabled == false)
+            return;
+
         _transform.DOScale(newScale, Duration).SetEase(Ease.InOutQuad);
 
         DOTween.To(
-            () => _shadow.effectColor,           // Текущее значение цвета
-            x => _shadow.effectColor = x,       // Применяем новое значение
-            newColor,                       // Целевой цвет
-            Duration                           // Длительность
+            () => _shadow.effectColor,
+            x => _shadow.effectColor = x,  
+            newColor,
+            Duration
         ).SetEase(Ease.InOutQuad);
     }
 }

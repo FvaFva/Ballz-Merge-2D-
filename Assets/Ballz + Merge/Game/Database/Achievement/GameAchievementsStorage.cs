@@ -81,7 +81,7 @@ namespace BallzMerge.Data
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = $"SELECT {PointsColumName}, {StepColumName} FROM {TableName};";
+                    command.CommandText = $"SELECT {PointsColumName}, {StepColumName}, {KeyColumName} FROM {TableName};";
                     command.ExecuteNonQuery();
 
                     using (var reader = command.ExecuteReader())

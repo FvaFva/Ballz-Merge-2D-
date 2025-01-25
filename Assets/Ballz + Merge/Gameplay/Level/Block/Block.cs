@@ -50,12 +50,6 @@ namespace BallzMerge.Gameplay.BlockSpace
             _material = _view.material;
         }
 
-        private void OnDisable()
-        {
-            foreach (var tweener in _myAnimations)
-                KillAnimation(tweener);
-        }
-
         public Block Initialize(Transform parent)
         {
             _transform.parent = parent;
@@ -67,7 +61,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             IsWithEffect = false;
             Number = number;
-            AddAnimation(_material.DOFloat(1, FadeProperty, FadeTime));
+            _material.DOFloat(1, FadeProperty, FadeTime);
             _view.enabled = true;
             _view.color = color;
             _numberView.enabled = true;
@@ -87,7 +81,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             StopCurrentMoveTween();
             IsInMove = true;
             GridPosition += step;
-            _moveTween = AddAnimation(_transform.DOLocalMove((Vector2)GridPosition * _gridSettings.CellSize, _gridSettings.MoveTime).OnComplete(() => CameToNewCell?.Invoke(this)));
+            _moveTween = (_transform.DOLocalMove((Vector2)GridPosition * _gridSettings.CellSize, _gridSettings.MoveTime).OnComplete(() => CameToNewCell?.Invoke(this)));
             Vector3 scale = _baseScale;
 
             if (step.y != 0)
@@ -95,7 +89,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             else
                 scale.y *= MoveScaleCoefficient;
 
-            AddAnimation(_transform.DOScale(scale, _gridSettings.MoveTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale));
+            _transform.DOScale(scale, _gridSettings.MoveTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale);
         }
 
         public void Merge(Vector3 worldPositionMergedBlock)
@@ -103,10 +97,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             GridPosition = Vector2Int.zero;
             StopCurrentMoveTween();
             Vector3 midpoint = Vector3.Lerp(WorldPosition, worldPositionMergedBlock, 0.5f);
-            AddAnimation(_transform.DOMove(midpoint, _gridSettings.MoveTime).OnComplete(Deactivate));
-            AddAnimation(_transform.DOShakeScale(_gridSettings.MoveTime, 0.3f, 50, 200));
-            AddAnimation(_transform.DOScale(_baseScale * 0.5f, _gridSettings.MoveTime));
-            AddAnimation(_material.DOFloat(0, FadeProperty, FadeTime));
+            _transform.DOMove(midpoint, _gridSettings.MoveTime).OnComplete(Deactivate);
+            _transform.DOShakeScale(_gridSettings.MoveTime, 0.3f, 50, 200);
+            _transform.DOScale(_baseScale * 0.5f, _gridSettings.MoveTime);
+            _material.DOFloat(0, FadeProperty, FadeTime);
         }
 
         public void Destroy()
@@ -117,8 +111,8 @@ namespace BallzMerge.Gameplay.BlockSpace
             _view.color = _colorMap.Base;
             Destroyed?.Invoke();
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(AddAnimation(_transform.DOScale(_baseScale * DownscaleModifier, ScaleTime)));
-            sequence.Append(AddAnimation(_transform.DOScale(_baseScale * UpscaleModifier, ScaleTime))).Join(AddAnimation(_view.DOFade(0f, FadeDestroy))).OnComplete(Deactivate).SetDelay(0.1f);
+            sequence.Append(_transform.DOScale(_baseScale * DownscaleModifier, ScaleTime));
+            sequence.Append(_transform.DOScale(_baseScale * UpscaleModifier, ScaleTime)).Join(_view.DOFade(0f, FadeDestroy)).OnComplete(Deactivate).SetDelay(0.1f);
             sequence.Play();
         }
 
@@ -136,23 +130,26 @@ namespace BallzMerge.Gameplay.BlockSpace
         public void ShakeDirection(Vector2 direction)
         {
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(AddAnimation(_transform.DOLocalMove((Vector2)_transform.localPosition + (direction * BounceScaleCoefficient), ShakeDirectionTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localPosition = (Vector2)GridPosition * _gridSettings.CellSize)));
+            sequence.Append(_transform.DOLocalMove((Vector2)_transform.localPosition + (direction * BounceScaleCoefficient), ShakeDirectionTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localPosition = (Vector2)GridPosition * _gridSettings.CellSize));
             float xScale = _transform.localScale.x * (1 + (direction.y == 0 ? -1 * BounceScaleCoefficient : BounceScaleCoefficient));
             float yScale = _transform.localScale.y * (1 + (direction.x == 0 ? -1 * BounceScaleCoefficient : BounceScaleCoefficient));
-            sequence.Join(AddAnimation(_transform.DOScale(new Vector3(xScale, yScale), ShakeDirectionTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale)));
+            sequence.Join(_transform.DOScale(new Vector3(xScale, yScale), ShakeDirectionTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale));
             sequence.Play();
         }
 
         public void ShakeScale()
         {
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(AddAnimation(_transform.DOScale(_baseScale * UpscaleModifier, ShakeScaleTime)));
-            sequence.Append(AddAnimation(_transform.DOScale(_baseScale, ShakeScaleTime)));
+            sequence.Append(_transform.DOScale(_baseScale * UpscaleModifier, ShakeScaleTime));
+            sequence.Append(_transform.DOScale(_baseScale, ShakeScaleTime));
             sequence.Play();
         }
 
         public void Deactivate()
         {
+            DOTween.Kill(_transform);
+            DOTween.Kill(_view);
+            DOTween.Kill(_material);
             Number = 0;
             _view.enabled = false;
             _numberView.enabled = false;
@@ -162,22 +159,11 @@ namespace BallzMerge.Gameplay.BlockSpace
             Deactivated?.Invoke(this);
         }
 
-        private Tweener AddAnimation(Tweener tweener)
-        {
-            _myAnimations.Add(tweener);
-            return tweener;
-        }
-
         private void StopCurrentMoveTween()
         {
-            KillAnimation(_moveTween);
+            if (_moveTween != null && _moveTween.IsActive())
+                _moveTween.Kill();
             IsInMove = false;
-        }
-
-        private void KillAnimation(Tweener tweener)
-        {
-            if (tweener != null && tweener.IsActive())
-                tweener.Kill();
         }
     }
 }

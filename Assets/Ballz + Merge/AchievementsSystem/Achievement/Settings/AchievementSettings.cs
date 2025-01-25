@@ -23,7 +23,7 @@ namespace BallzMerge.Achievement
 
             for (int i = pointsStep.Step; i < _steps.Count; i++)
             {
-                if (_steps[i] >= pointsStep.Points)
+                if (pointsStep.Points >= _steps[i])
                     stepsReached ++;
             }
 
