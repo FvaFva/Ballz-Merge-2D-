@@ -17,6 +17,6 @@ public class ScreenInteraction : MonoBehaviour
     {
         Vector2 screenPosition = _userInput.MainInput.StrikePosition.ReadValue<Vector2>();
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, 0));
-        _effectPool.GetEffect(worldPosition, Quaternion.identity, _effectPrefab, gameObject.transform);
+        _effectPool.SpawnEffect(worldPosition, Quaternion.identity, _effectPrefab, gameObject.transform);
     }
 }

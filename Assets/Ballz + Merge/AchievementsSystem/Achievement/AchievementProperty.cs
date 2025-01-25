@@ -5,27 +5,28 @@ namespace BallzMerge.Achievement
     public class AchievementProperty
     {
         private AchievementSettings _settings;
-        private AchievementPointsStep _pointsStep;
+        private AchievementPointsStep _values;
 
         public AchievementProperty(AchievementSettings settings, AchievementPointsStep pointsStep)
         {
             _settings = settings;
-            _pointsStep = pointsStep;
+            _values = pointsStep;
+            Type = settings.ID.Internal;
         }
 
         public readonly AchievementsTypes Type;
-        public AchievementPointsStep PointsStep => _pointsStep;
+        public AchievementPointsStep Values => _values;
         public event Action ChangedStep;
         public event Action<int> ChangedPoints;
 
         public void Apply(int points)
         {
-            _pointsStep.Points += points;
-            int stepsReached = _settings.CheckReachedNewSteps(_pointsStep);
+            _values.Points += points;
+            int stepsReached = _settings.CheckReachedNewSteps(_values);
 
             for (int i = 0; i < stepsReached; i++)
             {
-                _pointsStep.Step++;
+                _values.Step++;
                 ChangedStep?.Invoke();
             }
 

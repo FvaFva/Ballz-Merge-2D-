@@ -31,7 +31,7 @@ namespace BallzMerge.Achievement
 
         private void OnStepChanged()
         {
-            ReachedStep?.Invoke(Property.Type, Property.PointsStep);
+            ReachedStep?.Invoke(Property.Type, Property.Values);
         }
 
         private void OnPointsChanged(int count)

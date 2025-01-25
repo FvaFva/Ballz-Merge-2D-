@@ -36,13 +36,17 @@ namespace BallzMerge.Achievement
                 if (_isUsingGoogle)
                     Debug.Log("Google got achievement");
 
-                Debug.Log("A new achievement was just written!");
+                Debug.Log($"A new achievement was just written! {internalKey} - {data.Points} of {data.Step}");
+            }
+            else
+            {
+                Debug.Log($"A new achievement cant written! {internalKey} - {data.Points} of {data.Step}");
             }
         }
 
         public IDictionary<AchievementSettings, AchievementPointsStep> GetSettings() =>
             _settings
-            .Join(_db.Achievement.GetAll(), d1 => d1.ID.Internal, d2 => d2.Key, (d1, d2) => new { settings = d1, pointStep = d2.Value})
+            .GroupJoin(_db.Achievement.GetAll(), d1 => d1.ID.Internal, d2 => d2.Key, (d1, d2) => new { settings = d1, pointStep = d2.FirstOrDefault().Value })
             .ToDictionary(x=> x.settings, x=>x.pointStep);
         
     }
