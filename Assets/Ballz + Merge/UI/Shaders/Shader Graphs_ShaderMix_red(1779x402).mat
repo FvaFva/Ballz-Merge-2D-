@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_ShaderMix_450_red(2048x2048)
+  m_Name: Shader Graphs_ShaderMix_red(1779x402)
   m_Shader: {fileID: -6465566751694194690, guid: 83e20de7467a50342bb542d30900374f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -28,12 +28,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_5268cfe891a74e8fbc88ff01f25ad102_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: a1aa383ebd4506f4185940b6beb21954, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_79aaf8712c244f77be1f4dc34531655b_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 2f06c14d68ffeed4ca2d1f9d0b41dffb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Textrure1:
-        m_Texture: {fileID: 2800000, guid: 6dda6b9a018f36848a649c0e05bf1804, type: 3}
+        m_Texture: {fileID: 2800000, guid: a452ce78dc71793409de42292541981a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2:
-        m_Texture: {fileID: 2800000, guid: 07a102980bf7b7345865d31ba1ee6ffc, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8663e3dda63d7524eb0ea7174e8c77b7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -50,11 +58,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Alpha: 0.11
+    - _Alpha1: 1
+    - _Alpha2: 1
     - _AlphaClip: 0.5
     - _BlendAmount: 0
     - _ColorMask: 15
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Speed: 0.25
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -65,8 +77,8 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0.17254922, g: 0, b: 1, a: 1}
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
-    - _Texture1Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Texture2Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Texture1Color: {r: 0.91764706, g: 0.34509805, b: 0.34509805, a: 1}
+    - _Texture2Color: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &4817245042140992443

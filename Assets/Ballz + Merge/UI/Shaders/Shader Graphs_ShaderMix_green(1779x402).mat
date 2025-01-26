@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_ShaderMix_purple(1779x402)
+  m_Name: Shader Graphs_ShaderMix_green(1779x402)
   m_Shader: {fileID: -6465566751694194690, guid: 83e20de7467a50342bb542d30900374f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -26,6 +26,14 @@ Material:
     m_TexEnvs:
     - _MainTex:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_5268cfe891a74e8fbc88ff01f25ad102_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: a1aa383ebd4506f4185940b6beb21954, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_79aaf8712c244f77be1f4dc34531655b_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 2f06c14d68ffeed4ca2d1f9d0b41dffb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Textrure1:
@@ -50,6 +58,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Alpha: 0.11
+    - _Alpha1: 1
+    - _Alpha2: 1
     - _AlphaClip: 0.5
     - _BlendAmount: 0
     - _ColorMask: 15
@@ -66,8 +77,8 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0.17254922, g: 0, b: 1, a: 1}
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
-    - _Texture1Color: {r: 0.4470588, g: 0.2980392, b: 1, a: 1}
-    - _Texture2Color: {r: 0.7490197, g: 0.7490197, b: 0.7490197, a: 1}
+    - _Texture1Color: {r: 0.56078434, g: 0.9843137, b: 0.36862746, a: 1}
+    - _Texture2Color: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &4817245042140992443
