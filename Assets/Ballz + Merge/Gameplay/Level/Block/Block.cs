@@ -47,7 +47,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _transform = transform;
             _baseScale = _transform.localScale;
-            _material = _view.material;
+            _material = new Material(_view.material);
+            _view.material = _material;
         }
 
         public Block Initialize(Transform parent)
