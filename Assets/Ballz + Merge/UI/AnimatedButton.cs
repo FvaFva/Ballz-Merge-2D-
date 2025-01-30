@@ -11,26 +11,26 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     [SerializeField] private ButtonView _buttonView;
 
-    private Transform _transform;
     private bool _isPointerDown;
     private bool _isPointerEnter;
 
-    private void Awake()
+    private void Start()
     {
-        _transform = transform;
         _isPointerDown = false;
         _isPointerEnter = false;
     }
 
     private void OnDisable()
     {
-        _transform.localScale = Vector3.one * StartScale;
+        SetDefaultState();
         DOTween.Kill(_transform);
+        DOTween.Kill(_shadow);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
         _isPointerDown = true;
+        _buttonView.ChangeMaterial(0f, Duration);
         _buttonView.ChangeParameters(PressedStateScale, ColorType.StartColor, Duration);
     }
 
@@ -39,9 +39,9 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         _isPointerDown = false;
 
         if (_isPointerEnter)
-            _transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
+            transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
         else
-            _transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
+            transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
 
         _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
     }
@@ -50,10 +50,11 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         _isPointerEnter = true;
 
-        if (_isPointerDown || isActiveAndEnabled == false)
+        if (_isPointerDown)
             return;
 
-        _transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
+        transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
+        _buttonView.ChangeMaterial(1f, Duration);
         _buttonView.ChangeParameters(StartScale, ColorType.TargetColor, Duration);
     }
 
@@ -61,10 +62,27 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         _isPointerEnter = false;
 
-        if (_isPointerDown || isActiveAndEnabled == false)
+        if (_isPointerDown)
+            return;
+        ChangeParameters(StartScale, _startColor);
+    }
+
+    private void ChangeParameters(float newScale, Color newColor)
+    {
+        if (isActiveAndEnabled == false)
             return;
 
-        _transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
+        _transform.DOScale(newScale, Duration).SetEase(Ease.InOutQuad);
+
+        DOTween.To(
+            () => _shadow.effectColor,
+            x => _shadow.effectColor = x,  
+            newColor,
+            Duration
+        ).SetEase(Ease.InOutQuad);
+
+        transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
+        _buttonView.ChangeMaterial(0f, Duration);
         _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
     }
 }
