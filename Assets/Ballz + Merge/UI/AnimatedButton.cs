@@ -13,6 +13,12 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private bool _isPointerDown;
     private bool _isPointerEnter;
+    private Transform _transform;
+
+    private void Awake()
+    {
+        _transform = transform;
+    }
 
     private void Start()
     {
@@ -22,9 +28,9 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void OnDisable()
     {
-        SetDefaultState();
+        //SetDefaultState();
         DOTween.Kill(_transform);
-        DOTween.Kill(_shadow);
+        //DOTween.Kill(_shadow);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -64,7 +70,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         if (_isPointerDown)
             return;
-        ChangeParameters(StartScale, _startColor);
+        //ChangeParameters(StartScale, _startColor);
     }
 
     private void ChangeParameters(float newScale, Color newColor)
@@ -73,13 +79,14 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             return;
 
         _transform.DOScale(newScale, Duration).SetEase(Ease.InOutQuad);
-
+        /*
         DOTween.To(
             () => _shadow.effectColor,
             x => _shadow.effectColor = x,  
             newColor,
             Duration
         ).SetEase(Ease.InOutQuad);
+        */
 
         transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
         _buttonView.ChangeMaterial(0f, Duration);
