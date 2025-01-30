@@ -7,9 +7,13 @@ public class InfoPanelView : MonoBehaviour, IInfoPanelView
 
     public void Start()
     {
+        gameObject.SetActive(false);
+    }
+
+    private void Awake()
+    {
         _transform = (RectTransform)transform;
         _baseParent = (RectTransform)_transform.parent;
-        gameObject.SetActive(false);
     }
 
     public void Show(RectTransform showcase)

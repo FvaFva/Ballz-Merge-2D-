@@ -2,6 +2,7 @@
 
 namespace BallzMerge.Root
 {
+    using Data;
     using Settings;
 
     public class UIRootView : MonoBehaviour
@@ -11,12 +12,14 @@ namespace BallzMerge.Root
         [SerializeField] private UserQuestioner _questioner;
         [SerializeField] private EscapeMenu _escapeMenu;
         [SerializeField] private InfoPanelShowcase _infoPanelShowcase;
+        [SerializeField] private GameSettingsMenu _settingsMenu;
 
         private UIView _sceneUI;
 
         public LoadScreen LoadScreen => _loadingScreen;
         public UserQuestioner Questioner => _questioner;
         public EscapeMenu EscapeMenu => _escapeMenu;
+        public GameSettingsMenu SettingsMenu => _settingsMenu;
         public InfoPanelShowcase InfoPanelShowcase => _infoPanelShowcase;
 
         private void Awake()

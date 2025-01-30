@@ -1,4 +1,5 @@
 using BallzMerge.Gameplay.BallSpace;
+using BallzMerge.Root.Audio;
 using UnityEngine;
 
 public class BallFlyImpact : BallComponent
@@ -18,6 +19,6 @@ public class BallFlyImpact : BallComponent
 
     private void ShowImpact()
     {
-        _audio.Play();
+        _audio.Play(AudioEffectsTypes.Move);
     }
 }

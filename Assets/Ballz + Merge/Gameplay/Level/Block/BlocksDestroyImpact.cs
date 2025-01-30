@@ -1,3 +1,4 @@
+using BallzMerge.Root.Audio;
 using System.Collections;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private IEnumerator DelaySound()
         {
             yield return new WaitForSeconds(_particle.main.startDelay.constant);
-            _sound.Play();
+            _sound.Play(AudioEffectsTypes.Hit);
         }
     }
 }

@@ -7,6 +7,7 @@ namespace BallzMerge.Root
     using BallzMerge.Achievement;
     using BallzMerge.Data;
     using Settings;
+    using UnityEngine.Audio;
 
     public class EntryPoint
     {
@@ -74,14 +75,14 @@ namespace BallzMerge.Root
         private void InitComponents()
         {
             _data = new DataBaseSource();
+            TimeScaler timeScaler = new TimeScaler();
+            BindSingleton<IGamePauseController, TimeScaler>(timeScaler);
             BindSingleton(_data);
             _userInput = new MainInputMap();
             _effectPool = new EffectPool();
             _userInput.Enable();
             BindSingleton(_userInput);
             BindSingleton(_effectPool);
-            TimeScaler timeScaler = new TimeScaler();
-            BindSingleton<IGamePauseController, TimeScaler>(timeScaler);
             _hub = new ResourcesHub();
 
             _coroutines = new GameObject("[COROUTINES]").AddComponent<Coroutines>();
@@ -91,7 +92,7 @@ namespace BallzMerge.Root
             GenerateDontDestroyFromHub<GlobalEffects>();
             BindSingleton(GenerateDontDestroyFromHub<AchievementsBus>());
 
-            _gameSettings = new GameSettings(_rootView.EscapeMenu, _data.Settings, timeScaler);
+            _gameSettings = new GameSettings(_rootView.SettingsMenu, _data.Settings, _hub.Get<AudioMixer>(), timeScaler);
             _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack);
         }
 
@@ -106,11 +107,12 @@ namespace BallzMerge.Root
 
         private void BindToContainer()
         {
+
             BindSingleton(_rootView.Questioner);
             BindSingleton(_rootView);
             BindSingleton(_rootView.InfoPanelShowcase);
             BindSingleton(_rootView.EscapeMenu);
-            BindSingleton(_gameSettings.AudioSettings);
+            BindSingleton(_gameSettings.SoundVolumeGlobal);
         }
 
         private void BindSingleton<TSingleton>(TSingleton singleton) => ProjectContext.Instance.Container.Bind<TSingleton>().FromInstance(singleton).AsSingle().NonLazy();

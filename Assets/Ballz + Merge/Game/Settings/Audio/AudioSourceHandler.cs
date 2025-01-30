@@ -1,41 +1,33 @@
-﻿using UnityEngine;
-using Zenject;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-[RequireComponent (typeof(AudioSource))]
-public class AudioSourceHandler : MonoBehaviour
+namespace BallzMerge.Root.Audio
 {
-    private AudioSource _audio;
-
-    [Inject] private BallzMerge.Root.Settings.GameSettingsDataProxyAudio _settings;
-
-    private void Awake()
+    [RequireComponent(typeof(AudioSource))]
+    public class AudioSourceHandler : MonoBehaviour
     {
-        if(_settings == null)
+        private const float PitchDice = 0.2f;
+
+        [SerializeField] private List<AudioEffectBind> _effects;
+
+        private AudioSource _audio;
+        private Dictionary<AudioEffectsTypes, AudioClip> _effectsDictionary;
+
+        private void Awake()
         {
-            gameObject.SetActive(false);
-            return;
+            _audio = GetComponent<AudioSource>();
+            _effectsDictionary = new Dictionary<AudioEffectsTypes, AudioClip>();
+
+            foreach (var effect in _effects)
+                _effectsDictionary.Add(effect.Type, effect.Effect);
+
+            _effects.Clear();
         }
 
-        _audio = GetComponent<AudioSource>();
-        _audio.volume = _settings.Value;
-    }
-
-    private void OnEnable()
-    {
-        _settings.Changed += OnSettingsChanged;
-    }
-
-    private void OnDisable()
-    {
-        if (_settings != null)
-            _settings.Changed -= OnSettingsChanged;
-    }
-
-    public void Play() => _audio.Play();
-
-    private void OnSettingsChanged()
-    {
-
-        _audio.volume = _settings.Value;
+        public void Play(AudioEffectsTypes type)
+        {
+            _audio.pitch = Random.Range(1 - PitchDice, 1 + PitchDice);
+            _audio.PlayOneShot(_effectsDictionary[type]);
+        }
     }
 }

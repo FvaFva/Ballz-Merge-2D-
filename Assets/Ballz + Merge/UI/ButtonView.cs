@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ButtonView : MonoBehaviour
 {
     private RectTransform _transform;
+    private Tween _shadowTween;
     private Shadow _shadow;
     private Color _startColor;
     private Color _targetColor;
@@ -19,8 +20,22 @@ public class ButtonView : MonoBehaviour
         _targetColor.a = 1f;
     }
 
+    private void OnDisable()
+    {
+        DOTween.Kill(_transform);
+
+        if (_shadowTween != null && _shadowTween.IsActive())
+        {
+            _shadowTween.Kill();
+            _shadowTween = null;
+        }
+    }
+
     public void ChangeParameters(float newScale, ColorType colorType, float duration)
     {
+        if (isActiveAndEnabled == false)
+            return;
+
         _transform.DOScale(newScale, duration);
 
         if (colorType == ColorType.StartColor)
@@ -31,7 +46,7 @@ public class ButtonView : MonoBehaviour
 
     private void ChangeColor(Color newColor, float duration)
     {
-        DOTween.To(
+        _shadowTween = DOTween.To(
                 () => _shadow.effectColor,
                 x => _shadow.effectColor = x,
                 newColor,

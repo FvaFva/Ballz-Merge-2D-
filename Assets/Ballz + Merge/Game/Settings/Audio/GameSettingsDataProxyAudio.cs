@@ -1,5 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Audio;
 
 namespace BallzMerge.Root.Settings
 {
@@ -11,17 +11,22 @@ namespace BallzMerge.Root.Settings
         private const float MaxValue = 1f;
 
         private float _lastValue;
+        private readonly AudioMixer _mixer;
+
+        public GameSettingsDataProxyAudio(AudioMixer mixer, string name)
+        {
+            _mixer = mixer;
+            Name = name;
+        }
 
         public float Value { get; private set; }
 
-        public string Name { get { return "Audio"; } }
-
-        public event Action Changed;
+        public string Name { get; private set; }
 
         public void Change(float value)
         {
             Value = Mathf.Clamp(value, MinValue, MaxValue);
-            Changed?.Invoke();
+            _mixer.SetFloat(Name, Value);
         }
 
         public void Disable()

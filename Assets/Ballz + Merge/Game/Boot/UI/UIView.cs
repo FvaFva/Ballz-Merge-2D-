@@ -11,11 +11,15 @@ public class UIView : MonoBehaviour
     public bool IsUseSettingsQuiteButton => _isUseSettingsQuiteButton;
     public bool IsUseSettingsMaineMenuButton => _isUseSettingsMaineMenuButton;
 
+    private void Start()
+    {
+        gameObject.SetActive(false);
+    }
+
     private void Awake()
     {
         _baseParent = transform.parent;
         _transform = transform;
-        gameObject.SetActive(false);
     }
 
     public void MoveToContainer(RectTransform container)

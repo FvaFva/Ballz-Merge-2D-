@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using BallzMerge.Root.Audio;
+using UnityEngine;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
@@ -8,7 +9,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void ShowImpact()
         {
-            _sound.Play();
+            _sound.Play(AudioEffectsTypes.Move);
         }
     }
 }

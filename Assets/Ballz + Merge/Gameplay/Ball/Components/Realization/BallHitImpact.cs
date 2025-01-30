@@ -1,4 +1,5 @@
 using BallzMerge.Gameplay.BallSpace;
+using BallzMerge.Root.Audio;
 using UnityEngine;
 
 public class BallHitImpact : BallComponent
@@ -21,7 +22,7 @@ public class BallHitImpact : BallComponent
     private void OnHit(Vector2 hitPosition)
     {
         _explosion.Play();
-        _audio.Play();
+        _audio.Play(AudioEffectsTypes.Hit);
         _view.ShowHit(hitPosition);
     }
 }
