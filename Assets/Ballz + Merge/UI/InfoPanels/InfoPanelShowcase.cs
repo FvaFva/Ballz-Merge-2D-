@@ -21,7 +21,7 @@ public class InfoPanelShowcase : MonoBehaviour
     private void OnEnable()
     {
         _closeButton.AddListener(OnCloseClick);
-        _closeArea.AddListener(OnCloseClick);
+        _closeArea.AddListener(Deactivate);
         _openDefaultButton.AddListener(OpenDefault);
         _userInput.MainInput.Escape.performed += OnEscape;
     }
@@ -29,7 +29,7 @@ public class InfoPanelShowcase : MonoBehaviour
     private void OnDisable()
     {
         _closeButton.RemoveListener(OnCloseClick);
-        _closeArea.RemoveListener(OnCloseClick);
+        _closeArea.RemoveListener(Deactivate);
         _openDefaultButton.RemoveListener(OpenDefault);
         _userInput.MainInput.Escape.performed += OnEscape;
     }
@@ -66,6 +66,7 @@ public class InfoPanelShowcase : MonoBehaviour
     {
         TryActivate(_default);
         _openDefaultButton.gameObject.SetActive(false);
+        _closeArea.gameObject.SetActive(true);
     }
 
     private void Deactivate()
@@ -74,6 +75,7 @@ public class InfoPanelShowcase : MonoBehaviour
         _panels.Clear();
         _content.SetActive(false);
         _openDefaultButton.gameObject.SetActive(true);
+        _closeArea.gameObject.SetActive(false);
     }
 
     private bool TryActivate(IInfoPanelView panelView)

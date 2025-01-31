@@ -26,11 +26,16 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         _isPointerEnter = false;
     }
 
+    private void OnEnable()
+    {
+        _buttonView.ChangeParameters(StartScale, ColorType.StartColor, 0);
+        _buttonView.ChangeMaterial(0f, 0);
+        _transform.DOScale(StartScale, 0).SetEase(Ease.InOutQuad);
+    }
+
     private void OnDisable()
     {
-        //SetDefaultState();
         DOTween.Kill(_transform);
-        //DOTween.Kill(_shadow);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -45,9 +50,14 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         _isPointerDown = false;
 
         if (_isPointerEnter)
-            transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
+        {
+            _transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
+            _buttonView.ChangeMaterial(1f, Duration);
+        }
         else
-            transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
+        {
+            _transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
+        }
 
         _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
     }
@@ -59,7 +69,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (_isPointerDown)
             return;
 
-        transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
+        _transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
         _buttonView.ChangeMaterial(1f, Duration);
         _buttonView.ChangeParameters(StartScale, ColorType.TargetColor, Duration);
     }
@@ -70,25 +80,8 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         if (_isPointerDown)
             return;
-        //ChangeParameters(StartScale, _startColor);
-    }
 
-    private void ChangeParameters(float newScale, Color newColor)
-    {
-        if (isActiveAndEnabled == false)
-            return;
-
-        _transform.DOScale(newScale, Duration).SetEase(Ease.InOutQuad);
-        /*
-        DOTween.To(
-            () => _shadow.effectColor,
-            x => _shadow.effectColor = x,  
-            newColor,
-            Duration
-        ).SetEase(Ease.InOutQuad);
-        */
-
-        transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
+        _transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
         _buttonView.ChangeMaterial(0f, Duration);
         _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
     }
