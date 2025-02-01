@@ -38,9 +38,6 @@ public class ButtonView : MonoBehaviour
 
     public void ChangeParameters(float newScale, ColorType colorType, float duration)
     {
-        if (isActiveAndEnabled == false)
-            return;
-
         _transform.DOScale(newScale, duration);
 
         if (colorType == ColorType.StartColor)
