@@ -30,30 +30,36 @@ namespace BallzMerge.Root
         private ResourcesHub _hub;
         private GameSettings _gameSettings;
         private DataBaseSource _data;
-        private EffectPool _effectPool;
+        private TimeScaler _timeScaler;
 
         private EntryPoint()
         {
-            InitComponents();
-            BindToContainer();
+            InitPrimaryComponents();
+            BindToContainerPrimaryComponents();
+            InitMinorComponents();
+            BindToContainerMinorComponents();
         }
 
         private void RunGame()
         {
-            string targetScene = ScenesNames.MAINMENU;
-
+            string sceneName = ScenesNames.MAINMENU;
 #if UNITY_EDITOR
-            string sceneName = SceneManager.GetActiveScene().name;
+            if (CheckDebugScene(out sceneName) == false)
+                return;
+#endif
+            LoadScene(sceneName);
+        }
 
+        private bool CheckDebugScene(out string sceneName)
+        {
+            sceneName = SceneManager.GetActiveScene().name;
+            
             if (_hub.Get<DevelopersScenes>().Scenes.Contains(sceneName) == false
                 && sceneName != ScenesNames.BOOT
                 && sceneName != ScenesNames.GAMEPLAY)
-                return;
+                return false;
 
-            if (_hub.Get<DevelopersScenes>().Scenes.Contains(sceneName) || sceneName == ScenesNames.GAMEPLAY)
-                targetScene = sceneName;
-#endif
-            LoadScene(targetScene);
+            return _hub.Get<DevelopersScenes>().Scenes.Contains(sceneName) || sceneName == ScenesNames.GAMEPLAY;
         }
 
         private void LoadScene(string targetScene)
@@ -72,28 +78,41 @@ namespace BallzMerge.Root
 #endif
         }
 
-        private void InitComponents()
+        private void InitPrimaryComponents()
         {
             _data = new DataBaseSource();
-            TimeScaler timeScaler = new TimeScaler();
-            BindSingleton<IGamePauseController, TimeScaler>(timeScaler);
-            BindSingleton(_data);
+            _timeScaler = new TimeScaler();
             _userInput = new MainInputMap();
-            _effectPool = new EffectPool();
             _userInput.Enable();
-            BindSingleton(_userInput);
-            BindSingleton(_effectPool);
             _hub = new ResourcesHub();
-
             _coroutines = new GameObject("[COROUTINES]").AddComponent<Coroutines>();
             Object.DontDestroyOnLoad(_coroutines.gameObject);
+        }
 
+        private void InitMinorComponents()
+        {
             _rootView = GenerateDontDestroyFromHub<UIRootView>();
             GenerateDontDestroyFromHub<GlobalEffects>();
-            BindSingleton(GenerateDontDestroyFromHub<AchievementsBus>());
+            _gameSettings = new GameSettings(_rootView.SettingsMenu, _data.Settings, _hub.Get<AudioMixer>(), _timeScaler);
+            _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack, _gameSettings);
+        }
 
-            _gameSettings = new GameSettings(_rootView.SettingsMenu, _data.Settings, _hub.Get<AudioMixer>(), timeScaler);
-            _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack);
+        private void BindToContainerPrimaryComponents()
+        {
+            BindSingleton<IGamePauseController, TimeScaler>(_timeScaler);
+            BindSingleton(_data);
+            BindSingleton(_userInput);
+            BindSingleton(new EffectPool());
+            BindSingleton(GenerateDontDestroyFromHub<AchievementsBus>());
+        }
+
+        private void BindToContainerMinorComponents()
+        {
+            BindSingleton(_rootView.Questioner);
+            BindSingleton(_rootView);
+            BindSingleton(_rootView.InfoPanelShowcase);
+            BindSingleton(_rootView.EscapeMenu);
+            BindSingleton(_gameSettings.SoundVolumeGlobal);
         }
 
         private T GenerateDontDestroyFromHub<T>() where T : Component
@@ -103,16 +122,6 @@ namespace BallzMerge.Root
             instance.transform.SetParent(null);
             Object.DontDestroyOnLoad(instance.gameObject);
             return instance;
-        }
-
-        private void BindToContainer()
-        {
-
-            BindSingleton(_rootView.Questioner);
-            BindSingleton(_rootView);
-            BindSingleton(_rootView.InfoPanelShowcase);
-            BindSingleton(_rootView.EscapeMenu);
-            BindSingleton(_gameSettings.SoundVolumeGlobal);
         }
 
         private void BindSingleton<TSingleton>(TSingleton singleton) => ProjectContext.Instance.Container.Bind<TSingleton>().FromInstance(singleton).AsSingle().NonLazy();

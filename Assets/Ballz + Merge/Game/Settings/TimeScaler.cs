@@ -27,7 +27,7 @@ namespace BallzMerge.Root.Settings
 
         public void Change(float value)
         {
-            value = Mathf.Clamp(value, MinScale, MaxScale);
+            value = Mathf.Lerp(MinScale, MaxScale, value);
             Value = value;
             Time.timeScale = value;
         }

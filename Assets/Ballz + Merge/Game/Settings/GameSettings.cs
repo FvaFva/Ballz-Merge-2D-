@@ -23,7 +23,7 @@ namespace BallzMerge.Root.Settings
             _settingsMenu.ValueChanged += OnSettingsChanged;
             _db = db;
             CashSettings();
-            ReadData();
+            GenerateMenu();
         }
 
         public readonly GameSettingsDataProxyAudio SoundVolumeGlobal;
@@ -33,6 +33,15 @@ namespace BallzMerge.Root.Settings
         public void Dispose()
         {
             _settingsMenu.ValueChanged -= OnSettingsChanged;
+        }
+
+        public void ReadData()
+        {
+            foreach (var setting in _settings.Values)
+            {
+                setting.Change(_db.Get(setting));
+                _settingsMenu.UpdateValue(setting);
+            }
         }
 
         private void CashSettings()
@@ -46,13 +55,12 @@ namespace BallzMerge.Root.Settings
             };
         }
 
-        private void ReadData()
+        private void GenerateMenu()
         {
-            foreach (var setting in _settings.Values)
-            {
-                setting.Change(_db.Get(setting));
-                _settingsMenu.Add(setting);
-            }
+            _settingsMenu.Add(SoundVolumeGlobal, additionalZero: 2);
+            _settingsMenu.Add(SoundVolumeEffects, additionalZero: 2);
+            _settingsMenu.Add(SoundVolumeMusic, additionalZero: 2);
+            _settingsMenu.Add(_timeScaler, "X", 1, 0);
         }
 
         private void OnSettingsChanged(string key, float value)

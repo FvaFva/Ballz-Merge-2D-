@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 5761989206710163666}
   - component: {fileID: 4386530472750133412}
   - component: {fileID: 4198498107382772452}
+  - component: {fileID: 3982754001058787278}
   m_Layer: 0
   m_Name: Setting
   m_TagString: Untagged
@@ -232,7 +233,27 @@ MonoBehaviour:
   _suffix: '%'
   _key: 
   _additionalZero: 2
-  _pointsAfterDot: 1
+  _pointsAfterDot: 3
+--- !u!114 &3982754001058787278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3332160488641637299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: 120
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: 180
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &4153902008492919374
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,9 +458,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6529452224165445652}
   - component: {fileID: 6638078900934305472}
-  - component: {fileID: 8933764458570420890}
   m_Layer: 0
-  m_Name: Settings
+  m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -519,25 +539,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8933764458570420890
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5488845299333393117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e673d3aee82bd0429138340bad7470a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _slider: {fileID: 6638078900934305472}
-  _label: {fileID: 5571629843018048621}
-  _header: {fileID: 700330632416908599}
-  _suffix: '%'
-  _key: 
-  _additionalZero: 2
-  _pointsAfterDot: 1
 --- !u!1 &5593313603703751096
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,7 +742,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 51
+  m_fontSize: 46
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

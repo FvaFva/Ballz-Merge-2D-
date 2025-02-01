@@ -1,3 +1,4 @@
+using BallzMerge.Root.Settings;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -13,15 +14,17 @@ namespace BallzMerge.Root
 
         [Inject] private TargetSceneEntryPointContainer _targetSceneEntryPoint;
 
-        private WaitForSeconds _checkTime;
-        private LoadScreen _loadView;
-        private Action<SceneExitData> _sceneExit;
+        private readonly GameSettings _settings;
+        private readonly WaitForSeconds _checkTime;
+        private readonly LoadScreen _loadView;
+        private readonly Action<SceneExitData> _sceneExit;
 
-        public SceneLoader(LoadScreen loader, Action<SceneExitData> sceneExit)
+        public SceneLoader(LoadScreen loadView, Action<SceneExitData> sceneExit, GameSettings settings)
         {
             _checkTime = new WaitForSeconds(SecondsCheckTime);
-            _loadView = loader;
+            _loadView = loadView;
             _sceneExit = sceneExit;
+            _settings = settings;
             ProjectContext.Instance.Container.Inject(this);
         }
 
@@ -35,6 +38,8 @@ namespace BallzMerge.Root
 
             foreach (var _ in InitScene())
                 yield return _checkTime;
+
+            _settings.ReadData();
         }
 
         private IEnumerable LoadSceneFromBoot(string name)

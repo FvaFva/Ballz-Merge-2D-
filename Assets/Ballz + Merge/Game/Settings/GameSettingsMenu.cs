@@ -10,28 +10,29 @@ namespace BallzMerge.Data
         [SerializeField] private SliderValueView _prefab;
         [SerializeField] private VerticalLayoutGroup _settingsContainer;
 
-        private List<SliderValueView> _sliders = new List<SliderValueView>();
+        private Dictionary<IGameSettingData, SliderValueView> _sliders = new Dictionary<IGameSettingData, SliderValueView>();
         public event Action<string, float> ValueChanged;
 
         private void OnEnable()
         {
-            foreach (var slider in _sliders)
+            foreach (var slider in _sliders.Values)
                 slider.ValueChanged += OnSliderChanged;
         }
 
         private void OnDisable()
         {
-            foreach (var slider in _sliders)
+            foreach (var slider in _sliders.Values)
                 slider.ValueChanged -= OnSliderChanged;
         }
 
-        public void Add(IGameSettingData settingData)
+        public void Add(IGameSettingData settingData, string suffix = "", int additionalZero = int.MinValue, int pointsAfterDot = int.MinValue)
         {
             SliderValueView newSlider = Instantiate(_prefab, _settingsContainer.transform);
-            newSlider.SetValue(settingData.Value);
-            newSlider.SetProperty(key: settingData.Name, label: settingData.Name);
-            _sliders.Add(newSlider);
+            newSlider.SetProperty(key: settingData.Name, header: settingData.Name, suffix: suffix, additionalZero: additionalZero, pointsAfterDot: pointsAfterDot);
+            _sliders.Add(settingData, newSlider);
         }
+
+        public void UpdateValue(IGameSettingData settingData) => _sliders[settingData].SetValue(settingData.Value);
 
         private void OnSliderChanged(string key, float value) => ValueChanged?.Invoke(key, value);
     }

@@ -13,6 +13,8 @@ public class GameAnimationSkipper : MonoBehaviour
     [Inject] private UIRootView _rootView;
     [Inject] private Ball _ball;
 
+    private bool _inSkip;
+
     private void OnEnable()
     {
         _ball.EnterGame += OnBallEnterGame;
@@ -23,17 +25,23 @@ public class GameAnimationSkipper : MonoBehaviour
         _ball.EnterGame -= OnBallEnterGame;
     }
 
-    public void OnBallLeftGame()
+    private void OnBallLeftGame()
     {
         _ball.LeftGame -= OnBallLeftGame;
-        _rootView.LoadScreen.Hide();
-        _scaler.SetRegular();
-        _audio.Enable();
         DeactivateButton();
+
+        if (_inSkip)
+        {
+            _rootView.LoadScreen.Hide();
+            _scaler.SetRegular();
+            _audio.Enable();
+            _inSkip = false;
+        }
     }
 
     private void OnSkipRequired()
     {
+        _inSkip = true;
         _rootView.LoadScreen.Show();
         _scaler.SpeedUp();
         _audio.Disable();
@@ -48,13 +56,13 @@ public class GameAnimationSkipper : MonoBehaviour
 
     private void ActivateButton()
     {
-        _skipButton.onClick.AddListener(OnSkipRequired);
+        _skipButton.AddListener(OnSkipRequired);
         _skipButton.gameObject.SetActive(true);
     }
 
     private void DeactivateButton()
     {
-        _skipButton.onClick.RemoveListener(OnSkipRequired);
+        _skipButton.RemoveListener(OnSkipRequired);
         _skipButton.gameObject.SetActive(false);
     }
 }
