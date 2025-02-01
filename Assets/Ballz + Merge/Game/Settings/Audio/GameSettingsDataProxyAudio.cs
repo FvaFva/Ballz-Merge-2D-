@@ -9,6 +9,8 @@ namespace BallzMerge.Root.Settings
     {
         private const float MinValue = 0f;
         private const float MaxValue = 1f;
+        private const float MixerMultiplayer = 20f;
+        private const float MuteValueDB = -80f;
 
         private float _lastValue;
         private readonly AudioMixer _mixer;
@@ -26,7 +28,11 @@ namespace BallzMerge.Root.Settings
         public void Change(float value)
         {
             Value = Mathf.Clamp(value, MinValue, MaxValue);
-            _mixer.SetFloat(Name, Value);
+
+            if(Mathf.Approximately(Value, 0f))
+                _mixer.SetFloat(Name, MuteValueDB);
+            else
+                _mixer.SetFloat(Name, Mathf.Log10(Value) * MixerMultiplayer);
         }
 
         public void Disable()
