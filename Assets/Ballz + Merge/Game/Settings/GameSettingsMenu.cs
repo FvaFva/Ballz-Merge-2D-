@@ -10,13 +10,8 @@ namespace BallzMerge.Data
         [SerializeField] private SliderValueView _prefab;
         [SerializeField] private VerticalLayoutGroup _settingsContainer;
 
-        private List<SliderValueView> _sliders;
+        private List<SliderValueView> _sliders = new List<SliderValueView>();
         public event Action<string, float> ValueChanged;
-
-        private void Awake()
-        {
-            _sliders = new List<SliderValueView>();
-        }
 
         private void OnEnable()
         {

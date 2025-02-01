@@ -28,9 +28,8 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void OnEnable()
     {
-        _buttonView.ChangeParameters(StartScale, ColorType.StartColor, 0);
-        _buttonView.ChangeMaterial(0f, 0);
-        _transform.DOScale(StartScale, 0).SetEase(Ease.InOutQuad);
+        _buttonView.SetDefault();
+        _transform.localScale = Vector3.one * StartScale;
     }
 
     private void OnDisable()
@@ -41,7 +40,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public void OnPointerDown(PointerEventData eventData)
     {
         _isPointerDown = true;
-        _buttonView.ChangeMaterial(0f, Duration);
+        _buttonView.ChangeMaterialBlend(0f, Duration);
         _buttonView.ChangeParameters(PressedStateScale, ColorType.StartColor, Duration);
     }
 
@@ -52,7 +51,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (_isPointerEnter)
         {
             _transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
-            _buttonView.ChangeMaterial(1f, Duration);
+            _buttonView.ChangeMaterialBlend(1f, Duration);
         }
         else
         {
@@ -70,7 +69,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             return;
 
         _transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
-        _buttonView.ChangeMaterial(1f, Duration);
+        _buttonView.ChangeMaterialBlend(1f, Duration);
         _buttonView.ChangeParameters(StartScale, ColorType.TargetColor, Duration);
     }
 
@@ -82,7 +81,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             return;
 
         _transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
-        _buttonView.ChangeMaterial(0f, Duration);
+        _buttonView.ChangeMaterialBlend(0f, Duration);
         _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
     }
 }
