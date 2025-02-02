@@ -8,12 +8,14 @@ namespace BallzMerge.Root.Settings
     {
         [SerializeField] private Slider _audioSettings;
         [SerializeField] private Slider _timeSettings;
-        [SerializeField] private Button _saveSettings;
+        [SerializeField] private Button _continueButton;
+        [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _leftToMainMenu;
         [SerializeField] private Button _leftGame;
 
         public event Action<SceneExitData> QuitRequired;
-        public event Action<float, float> SettingsChanged;
+        public event Action SettingsRequired;
+        public event Action CloseRequired;
 
         private void OnEnable()
         {
@@ -39,13 +41,16 @@ namespace BallzMerge.Root.Settings
 
         private void LeftToMainMenu() => RequireQuite(new SceneExitData(ScenesNames.MAINMENU));
 
+        private void OpenSettings() => SettingsRequired?.Invoke();
+
         private void LeftGame() => RequireQuite(new SceneExitData(true));
 
-        private void SaveSettings() => SettingsChanged?.Invoke(_audioSettings.value, _timeSettings.value);
+        private void CloseMenu() => CloseRequired?.Invoke();
 
         private void ChangeButtonSubscribe(bool isActive)
         {
-            _saveSettings.ChangeListeningState(SaveSettings, isActive);
+            _continueButton.ChangeListeningState(CloseMenu, isActive);
+            _settingsButton.ChangeListeningState(OpenSettings, isActive);
             _leftToMainMenu.ChangeListeningState(LeftToMainMenu, isActive);
             _leftGame.ChangeListeningState(LeftGame, isActive);
         }

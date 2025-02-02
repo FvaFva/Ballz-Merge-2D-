@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,8 @@ public class ButtonView : MonoBehaviour
     private Shadow _shadow;
     private Dictionary<ColorType, Color> _colors;
 
+    public event Action Initialized;
+
     private void Awake()
     {
         _colors = new Dictionary<ColorType, Color>();
@@ -24,9 +27,14 @@ public class ButtonView : MonoBehaviour
         _imageMaterial = new Material(_image.material);
         _image.material = _imageMaterial;
         _colors.Add(ColorType.StartColor, _shadow.effectColor);
-        var targetColor = _shadow.effectColor;
+        Color targetColor = _shadow.effectColor;
         targetColor.a = 1f;
         _colors.Add(ColorType.TargetColor, targetColor);
+    }
+
+    private void OnEnable()
+    {
+        Initialized?.Invoke();
     }
 
     private void OnDisable()
@@ -36,11 +44,8 @@ public class ButtonView : MonoBehaviour
 
     public void SetDefault()
     {
-        if(isActiveAndEnabled == false) 
-            return;
-
         StopAllAnimations();
-        _imageMaterial?.SetFloat(BLEND_PROPERTY, 0);
+        _imageMaterial.SetFloat(BLEND_PROPERTY, 0);
         _transform.localScale = Vector3.one;
         _shadow.effectColor = _colors[ColorType.StartColor];
     }
@@ -51,7 +56,7 @@ public class ButtonView : MonoBehaviour
         ChangeColor(_colors[colorType], duration);
     }
 
-    public void ChangeMaterialBlend(float newValue, float duration)
+    public void ChangeBlendMaterial(float newValue, float duration)
     {
         _imageMaterial.DOFloat(newValue, BLEND_PROPERTY, duration).SetEase(Ease.InOutQuad);
     }
