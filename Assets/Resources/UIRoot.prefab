@@ -300,7 +300,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 645772133376614012}
-  - {fileID: 6966944937614922889}
   - {fileID: 4675931211386054801}
   - {fileID: 7449239555243375239}
   m_Father: {fileID: 7666653069693521189}
@@ -328,6 +327,8 @@ MonoBehaviour:
   _box: {fileID: 3087548421512649178}
   _default: {fileID: 4145384868112220470}
   _content: {fileID: 6831989487265293457}
+  _escapeMenu: {fileID: 2772632440533154457}
+  _settingsPanel: {fileID: 2814658365248518064}
 --- !u!1 &875669477163751517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1737,7 +1738,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &645772133376614012
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2776,7 +2777,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioSettings: {fileID: 0}
   _timeSettings: {fileID: 0}
-  _saveSettings: {fileID: 3068345909930310323}
+  _continueButton: {fileID: 3068345909930310323}
+  _settingsButton: {fileID: 3174520916964142641}
   _leftToMainMenu: {fileID: 1422360131778791811}
   _leftGame: {fileID: 2053269270830252114}
 --- !u!1 &4667892407566457793
@@ -3644,7 +3646,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6625147331428614224}
-  m_Father: {fileID: 6618307270981799245}
+  m_Father: {fileID: 7449239555243375239}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.85, y: 0.75}
   m_AnchorMax: {x: 0.95, y: 0.95}
@@ -3974,7 +3976,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 65.9
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4287,6 +4289,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6966944937614922889}
   - {fileID: 3087548421512649178}
   m_Father: {fileID: 6618307270981799245}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

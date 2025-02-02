@@ -1,3 +1,5 @@
+using BallzMerge.Root.Settings;
+using ModestTree;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,16 +14,25 @@ public class InfoPanelShowcase : MonoBehaviour
     [SerializeField] private RectTransform _box;
     [SerializeField] private InfoPanelView _default;
     [SerializeField] private GameObject _content;
+    [SerializeField] private EscapeMenu _escapeMenu;
+    [SerializeField] private InfoPanelView _settingsPanel;
 
     [Inject] private MainInputMap _userInput;
 
     private Queue<IInfoPanelView> _panels = new Queue<IInfoPanelView>();
     private IInfoPanelView _current;
 
+    private void Start()
+    {
+        _closeArea.gameObject.SetActive(false);
+    }
+
     private void OnEnable()
     {
         _closeButton.AddListener(OnCloseClick);
         _closeArea.AddListener(Deactivate);
+        _escapeMenu.CloseRequired += Deactivate;
+        _escapeMenu.SettingsRequired += OpenSettings;
         _openDefaultButton.AddListener(OpenDefault);
         _userInput.MainInput.Escape.performed += OnEscape;
     }
@@ -30,6 +41,8 @@ public class InfoPanelShowcase : MonoBehaviour
     {
         _closeButton.RemoveListener(OnCloseClick);
         _closeArea.RemoveListener(Deactivate);
+        _escapeMenu.CloseRequired -= Deactivate;
+        _escapeMenu.SettingsRequired -= OpenSettings;
         _openDefaultButton.RemoveListener(OpenDefault);
         _userInput.MainInput.Escape.performed += OnEscape;
     }
@@ -39,9 +52,14 @@ public class InfoPanelShowcase : MonoBehaviour
         OnCloseClick();
     }
 
+    private void OpenSettings()
+    {
+        Show(_settingsPanel);
+    }
+
     public void Show(IInfoPanelView panelView)
     {
-        if(TryActivate(panelView) == false)
+        if (TryActivate(panelView) == false)
         {
             _panels.Enqueue(_current);
             _current.Hide();
@@ -71,6 +89,7 @@ public class InfoPanelShowcase : MonoBehaviour
 
     private void Deactivate()
     {
+        HideAllPanels();
         _current = null;
         _panels.Clear();
         _content.SetActive(false);
@@ -94,5 +113,18 @@ public class InfoPanelShowcase : MonoBehaviour
     {
         _current = panelView;
         _current.Show(_box);
+    }
+
+    private void HideAllPanels()
+    {
+        _current.Hide();
+
+        if (_panels.IsEmpty() == false)
+        {
+            int panelsCount = _panels.Count;
+
+            for (int i = 0; i < panelsCount; i++)
+                _panels.Dequeue().Hide();
+        }
     }
 }
