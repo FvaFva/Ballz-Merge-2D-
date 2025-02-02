@@ -4,6 +4,7 @@ namespace BallzMerge.Root.Settings
 {
     using Data;
     using System.Collections.Generic;
+    using UnityEngine;
     using UnityEngine.Audio;
 
     public class GameSettings : IDisposable
@@ -57,15 +58,19 @@ namespace BallzMerge.Root.Settings
 
         private void GenerateMenu()
         {
-            _settingsMenu.Add(SoundVolumeGlobal, additionalZero: 2);
-            _settingsMenu.Add(SoundVolumeEffects, additionalZero: 2);
-            _settingsMenu.Add(SoundVolumeMusic, additionalZero: 2);
-            _settingsMenu.Add(_timeScaler, "X", 1, 0);
+            _settingsMenu.Add(SoundVolumeGlobal, additionalZero: 2, pointsAfterDot: 2);
+            _settingsMenu.Add(SoundVolumeEffects, additionalZero: 2, pointsAfterDot: 2);
+            _settingsMenu.Add(SoundVolumeMusic, additionalZero: 2, pointsAfterDot: 2);
+            _settingsMenu.Add(_timeScaler, "X", 1, 0, 1);
         }
 
         private void OnSettingsChanged(string key, float value)
         {
             IGameSettingData changed = _settings[key];
+
+            if (Mathf.Approximately(changed.Value, value))
+                return;
+
             changed.Change(value);
             _db.Set(changed);
         }

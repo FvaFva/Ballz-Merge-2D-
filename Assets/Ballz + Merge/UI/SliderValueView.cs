@@ -18,6 +18,7 @@ public class SliderValueView : MonoBehaviour
     [SerializeField, Range(Min, Max)] private int _pointsAfterDot;
 
     private int _multiplier;
+    private float _shift;
 
     public event Action<string, float> ValueChanged;
 
@@ -43,7 +44,7 @@ public class SliderValueView : MonoBehaviour
         SetLabel(value);
     }
 
-    public void SetProperty(string header = "", string suffix = "", string key = "", int additionalZero = int.MinValue, int pointsAfterDot = int.MinValue)
+    public void SetProperty(string header = "", string suffix = "", string key = "", int additionalZero = int.MinValue, int pointsAfterDot = int.MinValue, int shift = int.MinValue)
     {
         bool isNewKey = string.IsNullOrEmpty(key) == false;
         _key = isNewKey ? key : _key;
@@ -55,7 +56,9 @@ public class SliderValueView : MonoBehaviour
 
         _suffix = string.IsNullOrEmpty(suffix) ? _suffix : suffix;
         _additionalZero = additionalZero.Equals(int.MinValue) ? _additionalZero : Mathf.Clamp(additionalZero, Min, Max);
-        _pointsAfterDot = pointsAfterDot.Equals(int.MinValue) ? _pointsAfterDot : Mathf.Clamp(pointsAfterDot, Min, Max); ;
+        _pointsAfterDot = pointsAfterDot.Equals(int.MinValue) ? _pointsAfterDot : Mathf.Clamp(pointsAfterDot, Min, Max);
+        _shift = shift.Equals(int.MinValue) ? _shift : shift;
+        _multiplier = (int)Math.Pow(Ten, _additionalZero);
     }
 
     private string ConvertKeyToLabel()
@@ -65,7 +68,7 @@ public class SliderValueView : MonoBehaviour
 
     private void SetLabel(float value)
     {
-        _label.text = (_multiplier * value).ToString($"F{_pointsAfterDot}") + _suffix;
+        _label.text = (_multiplier * value + _shift).ToString($"F{_pointsAfterDot}") + _suffix;
         ValueChanged?.Invoke(_key, value);
     }
 }

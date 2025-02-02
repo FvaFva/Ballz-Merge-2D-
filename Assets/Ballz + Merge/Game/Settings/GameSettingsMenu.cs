@@ -25,10 +25,10 @@ namespace BallzMerge.Data
                 slider.ValueChanged -= OnSliderChanged;
         }
 
-        public void Add(IGameSettingData settingData, string suffix = "", int additionalZero = int.MinValue, int pointsAfterDot = int.MinValue)
+        public void Add(IGameSettingData settingData, string suffix = "", int additionalZero = int.MinValue, int pointsAfterDot = int.MinValue, int shift = int.MinValue)
         {
             SliderValueView newSlider = Instantiate(_prefab, _settingsContainer.transform);
-            newSlider.SetProperty(key: settingData.Name, header: settingData.Name, suffix: suffix, additionalZero: additionalZero, pointsAfterDot: pointsAfterDot);
+            newSlider.SetProperty(key: settingData.Name, header: settingData.Name, suffix: suffix, additionalZero: additionalZero, pointsAfterDot: pointsAfterDot, shift: shift);
             _sliders.Add(settingData, newSlider);
         }
 
