@@ -13,9 +13,9 @@ namespace BallzMerge.Gameplay.BlockSpace
         [SerializeField] private MoveSettingsNumbers _numbersProperties;
         [SerializeField] private MoveSettingsCountBlocks _countProperties;
         [SerializeField] private MoveColorMap _colorMap;
+        [SerializeField] private Block _prefab;
 
         [Inject] private DiContainer _container;
-        [Inject] private Block _prefab;
         [Inject] private GridSettings _gridSettings;
 
         private Queue<Block> _blocks = new Queue<Block>();

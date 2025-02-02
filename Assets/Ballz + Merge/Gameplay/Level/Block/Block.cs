@@ -1,7 +1,6 @@
 using BallzMerge.Gameplay.Level;
 using DG.Tweening;
 using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -21,9 +20,10 @@ namespace BallzMerge.Gameplay.BlockSpace
         private const float FadeDestroy = 0.15f;
         private const string FadeProperty = "_fade";
 
-        [SerializeField] private SpriteRenderer _view;
+        [SerializeField] private SpriteRenderer _viewDEL;
         [SerializeField] private TMP_Text _numberView;
         [SerializeField] private MoveColorMap _colorMap;
+        [SerializeField] private BlockViewModel _view;
 
         [Inject] private GridSettings _gridSettings;
 
@@ -31,7 +31,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         private Tweener _moveTween;
         private Vector3 _baseScale;
         private Material _material;
-        private List<Tweener> _myAnimations = new List<Tweener>();
 
         public Vector2Int GridPosition { get; private set; }
         public Vector2 WorldPosition => _transform.position;
@@ -47,13 +46,14 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _transform = transform;
             _baseScale = _transform.localScale;
-            _material = new Material(_view.material);
-            _view.material = _material;
+            _material = new Material(_viewDEL.material);
+            _viewDEL.material = _material;
         }
 
         public Block Initialize(Transform parent)
         {
             _transform.parent = parent;
+            _view.Init(_gridSettings.MoveTime, _gridSettings.CellSize);
             Deactivate();
             return this;
         }
@@ -62,11 +62,12 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             IsWithEffect = false;
             Number = number;
-            _material.DOFloat(1, FadeProperty, FadeTime);
-            _view.enabled = true;
-            _view.color = color;
-            _numberView.enabled = true;
-            _numberView.text = number.ToString();
+            _view.Activate(number, color);
+            //_material.DOFloat(1, FadeProperty, FadeTime);
+            //_viewDEL.enabled = true;
+            //_viewDEL.color = color;
+            //_numberView.enabled = true;
+            //_numberView.text = number.ToString();
             _transform.localPosition = (Vector2)gridPosition * _gridSettings.CellSize;
             _transform.localScale = _baseScale;
             GridPosition = gridPosition;
@@ -82,7 +83,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             StopCurrentMoveTween();
             IsInMove = true;
             GridPosition += step;
-            _moveTween = (_transform.DOLocalMove((Vector2)GridPosition * _gridSettings.CellSize, _gridSettings.MoveTime).OnComplete(() => CameToNewCell?.Invoke(this)));
+            _moveTween = (_transform.DOLocalMove((Vector2)GridPosition * _gridSettings.CellSize, _gridSettings.MoveTime)
+                .OnComplete(() => CameToNewCell?.Invoke(this)));
+
+            /*
             Vector3 scale = _baseScale;
 
             if (step.y != 0)
@@ -91,6 +95,9 @@ namespace BallzMerge.Gameplay.BlockSpace
                 scale.y *= MoveScaleCoefficient;
 
             _transform.DOScale(scale, _gridSettings.MoveTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale);
+            */
+
+            _view.AnimationMove(step);
         }
 
         public void Merge(Vector3 worldPositionMergedBlock)
@@ -99,61 +106,61 @@ namespace BallzMerge.Gameplay.BlockSpace
             StopCurrentMoveTween();
             Vector3 midpoint = Vector3.Lerp(WorldPosition, worldPositionMergedBlock, 0.5f);
             _transform.DOMove(midpoint, _gridSettings.MoveTime).OnComplete(Deactivate);
-            _transform.DOShakeScale(_gridSettings.MoveTime, 0.3f, 50, 200);
+            /*_transform.DOShakeScale(_gridSettings.MoveTime, 0.3f, 50, 200);
             _transform.DOScale(_baseScale * 0.5f, _gridSettings.MoveTime);
-            _material.DOFloat(0, FadeProperty, FadeTime);
+            _material.DOFloat(0, FadeProperty, FadeTime);*/
+            _view.AnimationMerge();
         }
 
         public void Destroy()
         {
             StopCurrentMoveTween();
             Number = 0;
-            _numberView.text = "";
-            _view.color = _colorMap.Base;
+            /*_numberView.text = "";
+            _viewDEL.color = _colorMap.Base;*/
+            _view.AnimationDestroy(Deactivate);
             Destroyed?.Invoke();
-            Sequence sequence = DOTween.Sequence();
+            /*Sequence sequence = DOTween.Sequence();
             sequence.Append(_transform.DOScale(_baseScale * DownscaleModifier, ScaleTime));
-            sequence.Append(_transform.DOScale(_baseScale * UpscaleModifier, ScaleTime)).Join(_view.DOFade(0f, FadeDestroy)).OnComplete(Deactivate).SetDelay(0.1f);
-            sequence.Play();
+            sequence.Append(_transform.DOScale(_baseScale * UpscaleModifier, ScaleTime)).Join(_viewDEL.DOFade(0f, FadeDestroy)).OnComplete(Deactivate).SetDelay(0.1f);
+            sequence.Play();*/
         }
 
         public void ChangeNumber(int count)
         {
             Number += count;
-
-            if (Number > 0)
-            {
-                _numberView.text = Number.ToString();
-                _view.color = _colorMap.GetColor(Number);
-            }
+            _view.ChangeNumber(Number);
         }
 
         public void ShakeDirection(Vector2 direction)
         {
-            Sequence sequence = DOTween.Sequence();
+            /*Sequence sequence = DOTween.Sequence();
             sequence.Append(_transform.DOLocalMove((Vector2)_transform.localPosition + (direction * BounceScaleCoefficient), ShakeDirectionTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localPosition = (Vector2)GridPosition * _gridSettings.CellSize));
             float xScale = _transform.localScale.x * (1 + (direction.y == 0 ? -1 * BounceScaleCoefficient : BounceScaleCoefficient));
             float yScale = _transform.localScale.y * (1 + (direction.x == 0 ? -1 * BounceScaleCoefficient : BounceScaleCoefficient));
             sequence.Join(_transform.DOScale(new Vector3(xScale, yScale), ShakeDirectionTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale));
-            sequence.Play();
+            sequence.Play();*/
+            _view.AnimationBounce(direction, GridPosition);
         }
 
         public void ShakeScale()
         {
-            Sequence sequence = DOTween.Sequence();
+            /*Sequence sequence = DOTween.Sequence();
             sequence.Append(_transform.DOScale(_baseScale * UpscaleModifier, ShakeScaleTime));
             sequence.Append(_transform.DOScale(_baseScale, ShakeScaleTime));
-            sequence.Play();
+            sequence.Play();*/
+            _view.AnimationShake();
         }
 
         public void Deactivate()
         {
             DOTween.Kill(_transform);
-            DOTween.Kill(_view);
-            DOTween.Kill(_material);
+            /*DOTween.Kill(_viewDEL);
+            DOTween.Kill(_material);*/
+            _view.Deactivate();
             Number = 0;
-            _view.enabled = false;
-            _numberView.enabled = false;
+            /*_viewDEL.enabled = false;
+            _numberView.enabled = false;*/
             _transform.localPosition = Vector2.zero;
             _transform.rotation = Quaternion.identity;
             StopCurrentMoveTween();

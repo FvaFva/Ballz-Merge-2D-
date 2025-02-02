@@ -18,9 +18,6 @@ public class MainSceneInjection : MonoInstaller
     [SerializeField] private BlocksBus _blocksBus;
     [SerializeField] private BallWaveVolume _ballLevelVolume;
 
-    [Header("Factory")]
-    [SerializeField] private Block _blockPrefab;
-
     [Header("Inject")]
     [SerializeField] private BlocksSpawner _blocksSpawner;
     [SerializeField] private PlayerScore _score;
@@ -38,7 +35,6 @@ public class MainSceneInjection : MonoInstaller
         Container.Bind<AchievementSettingsGameBinder>().FromInstance(_achievementSource).AsSingle().NonLazy();
  
         Container.Bind<BlocksInGame>().FromNew().AsSingle().NonLazy();
-        Container.Bind<Block>().FromComponentInNewPrefab(_blockPrefab).AsTransient();
         Container.Bind<ISceneEnterPoint>().To<GameCycler>().FromInstance(_loader).AsSingle().NonLazy();
 
         Container.Inject(_blocksSpawner);
