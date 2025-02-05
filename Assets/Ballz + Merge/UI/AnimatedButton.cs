@@ -51,14 +51,15 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (_isPointerEnter)
         {
             _transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
+            _buttonView.ChangeParameters(StartScale, ColorType.TargetColor, Duration);
             _buttonView.ChangeBlendMaterial(1f, Duration);
         }
         else
         {
             _transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
+            _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
         }
 
-        _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

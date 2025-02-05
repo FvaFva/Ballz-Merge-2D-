@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BallzMerge.Data
 {
     public class GameSettingsMenu : MonoBehaviour
     {
         [SerializeField] private SliderValueView _prefab;
-        [SerializeField] private VerticalLayoutGroup _settingsContainer;
+        [SerializeField] private PanelSwitch _settingsPanelController;
 
         private Dictionary<IGameSettingData, SliderValueView> _sliders = new Dictionary<IGameSettingData, SliderValueView>();
         public event Action<string, float> ValueChanged;
@@ -25,9 +24,9 @@ namespace BallzMerge.Data
                 slider.ValueChanged -= OnSliderChanged;
         }
 
-        public void Add(IGameSettingData settingData, string suffix = "", int additionalZero = int.MinValue, int pointsAfterDot = int.MinValue, int shift = int.MinValue)
+        public void Add(IGameSettingData settingData, PanelToggleType panelType, string suffix = "", int additionalZero = int.MinValue, int pointsAfterDot = int.MinValue, int shift = int.MinValue)
         {
-            SliderValueView newSlider = Instantiate(_prefab, _settingsContainer.transform);
+            SliderValueView newSlider = Instantiate(_prefab, _settingsPanelController.GetContent(panelType));
             newSlider.SetProperty(key: settingData.Name, header: settingData.Name, suffix: suffix, additionalZero: additionalZero, pointsAfterDot: pointsAfterDot, shift: shift);
             _sliders.Add(settingData, newSlider);
         }
