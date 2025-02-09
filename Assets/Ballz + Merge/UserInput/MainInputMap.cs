@@ -80,6 +80,15 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""911a5211-830e-4966-8d65-485e84e14b6c"",
+                    ""expectedControlType"": ""Delta"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -225,6 +234,17 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""action"": ""ScreenRotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a47c92fd-6d46-4758-89cf-aab1e1a756de"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -272,6 +292,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         m_MainInput_StrikePosition = m_MainInput.FindAction("StrikePosition", throwIfNotFound: true);
         m_MainInput_ScreenInteract = m_MainInput.FindAction("ScreenInteract", throwIfNotFound: true);
         m_MainInput_ScreenRotation = m_MainInput.FindAction("ScreenRotation", throwIfNotFound: true);
+        m_MainInput_Scroll = m_MainInput.FindAction("Scroll", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -339,6 +360,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_MainInput_StrikePosition;
     private readonly InputAction m_MainInput_ScreenInteract;
     private readonly InputAction m_MainInput_ScreenRotation;
+    private readonly InputAction m_MainInput_Scroll;
     public struct MainInputActions
     {
         private @MainInputMap m_Wrapper;
@@ -349,6 +371,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         public InputAction @StrikePosition => m_Wrapper.m_MainInput_StrikePosition;
         public InputAction @ScreenInteract => m_Wrapper.m_MainInput_ScreenInteract;
         public InputAction @ScreenRotation => m_Wrapper.m_MainInput_ScreenRotation;
+        public InputAction @Scroll => m_Wrapper.m_MainInput_Scroll;
         public InputActionMap Get() { return m_Wrapper.m_MainInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -376,6 +399,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @ScreenRotation.started += instance.OnScreenRotation;
             @ScreenRotation.performed += instance.OnScreenRotation;
             @ScreenRotation.canceled += instance.OnScreenRotation;
+            @Scroll.started += instance.OnScroll;
+            @Scroll.performed += instance.OnScroll;
+            @Scroll.canceled += instance.OnScroll;
         }
 
         private void UnregisterCallbacks(IMainInputActions instance)
@@ -398,6 +424,9 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             @ScreenRotation.started -= instance.OnScreenRotation;
             @ScreenRotation.performed -= instance.OnScreenRotation;
             @ScreenRotation.canceled -= instance.OnScreenRotation;
+            @Scroll.started -= instance.OnScroll;
+            @Scroll.performed -= instance.OnScroll;
+            @Scroll.canceled -= instance.OnScroll;
         }
 
         public void RemoveCallbacks(IMainInputActions instance)
@@ -450,5 +479,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         void OnStrikePosition(InputAction.CallbackContext context);
         void OnScreenInteract(InputAction.CallbackContext context);
         void OnScreenRotation(InputAction.CallbackContext context);
+        void OnScroll(InputAction.CallbackContext context);
     }
 }

@@ -19,6 +19,7 @@ namespace BallzMerge.Root.Settings
             SoundVolumeGlobal = new GameSettingsDataProxyAudio(mixer, "SoundVolumeGlobal");
             SoundVolumeEffects = new GameSettingsDataProxyAudio(mixer, "SoundVolumeEffects");
             SoundVolumeMusic = new GameSettingsDataProxyAudio(mixer, "SoundVolumeMusic");
+            DisplayQualityPreset = new QualityPreset("DisplayQualityPreset");
             _timeScaler = timeScaler;
             _settingsMenu = settingsMenu;
             _settingsMenu.ValueChanged += OnSettingsChanged;
@@ -30,6 +31,7 @@ namespace BallzMerge.Root.Settings
         public readonly GameSettingsDataProxyAudio SoundVolumeGlobal;
         public readonly GameSettingsDataProxyAudio SoundVolumeEffects;
         public readonly GameSettingsDataProxyAudio SoundVolumeMusic;
+        public readonly QualityPreset DisplayQualityPreset;
 
         public void Dispose()
         {
@@ -52,16 +54,18 @@ namespace BallzMerge.Root.Settings
                 { SoundVolumeGlobal.Name, SoundVolumeGlobal },
                 { SoundVolumeEffects.Name, SoundVolumeEffects },
                 { SoundVolumeMusic.Name, SoundVolumeMusic },
-                { _timeScaler.Name, _timeScaler }
+                { _timeScaler.Name, _timeScaler },
+                { DisplayQualityPreset.Name, DisplayQualityPreset}
             };
         }
 
         private void GenerateMenu()
         {
-            _settingsMenu.Add(SoundVolumeGlobal, additionalZero: 2, pointsAfterDot: 2);
-            _settingsMenu.Add(SoundVolumeEffects, additionalZero: 2, pointsAfterDot: 2);
-            _settingsMenu.Add(SoundVolumeMusic, additionalZero: 2, pointsAfterDot: 2);
-            _settingsMenu.Add(_timeScaler, "X", 1, 0, 1);
+            _settingsMenu.Add(SoundVolumeGlobal, PanelToggleType.AudioToggle, additionalZero: 2, pointsAfterDot: 2);
+            _settingsMenu.Add(SoundVolumeEffects, PanelToggleType.AudioToggle, additionalZero: 2, pointsAfterDot: 2);
+            _settingsMenu.Add(SoundVolumeMusic, PanelToggleType.AudioToggle, additionalZero: 2, pointsAfterDot: 2);
+            _settingsMenu.Add(DisplayQualityPreset, PanelToggleType.DisplayToggle, "X");
+            _settingsMenu.Add(_timeScaler, PanelToggleType.AudioToggle,"X", 1, 0, 1);
         }
 
         private void OnSettingsChanged(string key, float value)

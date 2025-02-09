@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Shadow))]
+[RequireComponent(typeof(Shadow), typeof(Image))]
 public class ButtonView : MonoBehaviour
 {
     private const string BLEND_PROPERTY = "_BlendAmount";
+
+    [SerializeField] private bool _isShadowChanged = true;
 
     private RectTransform _transform;
     private Tween _shadowTween;
@@ -47,13 +49,17 @@ public class ButtonView : MonoBehaviour
         StopAllAnimations();
         _imageMaterial.SetFloat(BLEND_PROPERTY, 0);
         _transform.localScale = Vector3.one;
-        _shadow.effectColor = _colors[ColorType.StartColor];
+
+        if (_isShadowChanged)
+            _shadow.effectColor = _colors[ColorType.StartColor];
     }
 
     public void ChangeParameters(float newScale, ColorType colorType, float duration)
     {
         _transform.DOScale(newScale, duration);
-        ChangeColor(_colors[colorType], duration);
+
+        if (_isShadowChanged)
+            ChangeShadowColor(_colors[colorType], duration);
     }
 
     public void ChangeBlendMaterial(float newValue, float duration)
@@ -61,7 +67,7 @@ public class ButtonView : MonoBehaviour
         _imageMaterial.DOFloat(newValue, BLEND_PROPERTY, duration).SetEase(Ease.InOutQuad);
     }
 
-    private void ChangeColor(Color newColor, float duration)
+    private void ChangeShadowColor(Color newColor, float duration)
     {
         _shadowTween = DOTween.To(
                 () => _shadow.effectColor,
