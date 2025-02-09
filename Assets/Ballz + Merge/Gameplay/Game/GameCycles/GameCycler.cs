@@ -99,8 +99,6 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 
     private void RestartLevel()
     {
-        _gridSettings.ReloadGridSize();
-
         foreach (ILevelStarter starter in _starters)
             starter.StartLevel();
 

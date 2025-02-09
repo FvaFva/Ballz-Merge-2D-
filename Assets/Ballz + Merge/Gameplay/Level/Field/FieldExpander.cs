@@ -65,6 +65,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     public void FinishLevel()
     {
+        _gridSettings.ReloadGridSize();
         _ballWaveVolume.Bag.Added -= OnAbilityAdd;
     }
 

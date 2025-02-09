@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using BallzMerge.Gameplay.Level;
+using BallzMerge.Gameplay.BlockSpace;
 
 namespace BallzMerge.Gameplay.BallSpace
 {
@@ -30,8 +31,8 @@ namespace BallzMerge.Gameplay.BallSpace
 
             CorrectingBounceDirection(contactPoint - (Vector2)_transform.position);
 
-            if (hitTarget.TryGetComponent(out GridCell hitBlock))
-                HitBlock?.Invoke(hitBlock, contactPoint);
+            if (hitTarget.TryGetComponent(out BlockPhysicModel hitBlock))
+                hitBlock.Kick(contactPoint.CalculateDirection(hitBlock.WorldPosition));
             else
                 NonBlockHit?.Invoke();
 

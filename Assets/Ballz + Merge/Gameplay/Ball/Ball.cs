@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BallzMerge.Gameplay.BallSpace
 {
-    public class Ball : CyclicBehavior, ILevelFinisher, ILevelStarter, IInitializable
+    public class Ball : CyclicBehavior, ILevelStarter, IInitializable
     {
         [SerializeField] private BallState _simulation;
         [SerializeField] private BallState _aim;
@@ -50,11 +50,6 @@ namespace BallzMerge.Gameplay.BallSpace
         {
             ChangeState(_aim);
             _transform.position = _start;
-        }
-
-        public void FinishLevel()
-        {
-            ChangeState(_inAwait);
         }
 
         public void EnterSimulation()

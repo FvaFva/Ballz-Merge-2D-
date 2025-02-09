@@ -1,4 +1,5 @@
 using BallzMerge.Gameplay.BlockSpace;
+using Zenject;
 
 namespace BallzMerge.Gameplay.BallSpace
 {
@@ -7,9 +8,10 @@ namespace BallzMerge.Gameplay.BallSpace
         private Block _lastBlock;
         private BallCollisionHandler _collisionHandler;
 
-        public BlockMagneticObserver(BallCollisionHandler collisionHandler)
+        [Inject]
+        public BlockMagneticObserver(Ball ball)
         {
-            _collisionHandler = collisionHandler;
+            _collisionHandler = ball.GetBallComponent<BallCollisionHandler>();
             _collisionHandler.NonBlockHit += Clear;
         }
 
