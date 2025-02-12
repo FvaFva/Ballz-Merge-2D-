@@ -65,7 +65,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _number.text = number.ToString();
         }
 
-        public void AnimationDestroy(TweenCallback onDestroyed)
+        public void PlayDestroy(TweenCallback onDestroyed)
         {
             _number.text = "";
             _skin.color = _colorMap.Base;
@@ -80,7 +80,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             sequence.Play();
         }
 
-        public void AnimationBounce(Vector2 direction, Vector2 position)
+        public void PlayBounce(Vector2 direction, Vector2 position)
         {
             Sequence sequence = DOTween.Sequence();
             var newPosition = (Vector2)_transform.localPosition + (direction * BounceScaleCoefficient);
@@ -90,17 +90,17 @@ namespace BallzMerge.Gameplay.BlockSpace
             sequence.Append(_transform
                 .DOLocalMove(newPosition, BounceTime)
                 .SetLoops(2, LoopType.Yoyo)
-                .OnComplete(() => _transform.localPosition = position * _cellSize));
+                .OnComplete(() => _transform.localPosition = Vector3.zero));
 
             sequence.Join(_transform
                 .DOScale(new Vector3(xScale, yScale), BounceTime)
                 .SetLoops(2, LoopType.Yoyo)
-                .OnComplete(() => _transform.localScale = _baseScale));
+                .OnComplete(() => _transform.localScale = Vector3.one));
 
             sequence.Play();
         }
 
-        public void AnimationShake()
+        public void PlayShake()
         {
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_transform.DOScale(_baseScale * UpscaleModifier, ShakeScaleTime));
@@ -122,7 +122,7 @@ namespace BallzMerge.Gameplay.BlockSpace
                 .OnComplete(() => _transform.localScale = _baseScale);
         }
 
-        public void AnimationMerge()
+        public void PlayMerge()
         {
             _transform.DOShakeScale(_moveTime, 0.3f, 50, 200);
             _transform.DOScale(_baseScale * 0.5f, _moveTime);

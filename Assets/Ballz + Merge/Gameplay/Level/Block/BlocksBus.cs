@@ -10,10 +10,6 @@ namespace BallzMerge.Gameplay.BlockSpace
 {
     public class BlocksBus : CyclicBehavior, IInitializable
     {
-        private const int CountTriesToCheckMovableBlocks = 2000;
-
-        private readonly Vector2Int[] AllSides = new Vector2Int[4] { Vector2Int.right, Vector2Int.left, Vector2Int.down, Vector2Int.up };
-
         [SerializeField] private BlocksSpawner _spawner;
         [SerializeField] private AdditionalEffectsPool _effectsPool;
         [SerializeField] private BlocksMergeImpact _mergeImpact;
@@ -21,45 +17,36 @@ namespace BallzMerge.Gameplay.BlockSpace
         [SerializeField] private BlockMagneticObserver _blockMagneticObserver;
         [SerializeField] private BlockAdditionalEffectHandler _additionalEffectHandler;
 
-        [Inject] private Ball _ball;
-        [Inject] private PhysicGrid _physicsGrid;
         [Inject] private GridSettings _gridSettings;
         [Inject] private BallWaveVolume _ballLevelVolume;
         [Inject] private BlocksInGame _activeBlocks;
-
-        private BallCollisionHandler _collisionHandler;
-        private BlocksMover _mover = new BlocksMover();
+        [Inject] private DiContainer _diContainer;
 
         public event Action WaveSpawned;
 
         private void Awake()
         {
-            _collisionHandler = _ball.GetBallComponent<BallCollisionHandler>();
-            _blockMagneticObserver = new BlockMagneticObserver(_collisionHandler);
+            _blockMagneticObserver = _diContainer.Instantiate<BlockMagneticObserver>();
         }
 
         private void OnEnable()
         {
             _blockMagneticObserver?.UpdateSubscribe(true);
-            _collisionHandler.HitBlock += OnBlockHit;
-            _mover.BlockMoved += OnBlockComeToNewPosition;
-            _mover.ChangedCellActivity += OnChangedCellActivity;
-            _activeBlocks.ChangedCellActivity += OnChangedCellActivity;
             _additionalEffectHandler.BlockDestroyRequired += DestroyBlock;
             _additionalEffectHandler.BlockMoveRequired += MoveBlock;
             _additionalEffectHandler.BlockNumberChangedRequired += ChangeNumber;
+            _activeBlocks.BlockHit += OnBlockHit;
+            _activeBlocks.BlocksMerged += OnMergeBlocks;
         }
 
         private void OnDisable()
         {
             _blockMagneticObserver.UpdateSubscribe(false);
-            _collisionHandler.HitBlock -= OnBlockHit;
-            _mover.BlockMoved -= OnBlockComeToNewPosition;
-            _mover.ChangedCellActivity -= OnChangedCellActivity;
-            _activeBlocks.ChangedCellActivity -= OnChangedCellActivity;
             _additionalEffectHandler.BlockDestroyRequired -= DestroyBlock;
             _additionalEffectHandler.BlockMoveRequired -= MoveBlock;
             _additionalEffectHandler.BlockNumberChangedRequired -= ChangeNumber;
+            _activeBlocks.BlockHit -= OnBlockHit;
+            _activeBlocks.BlocksMerged -= OnMergeBlocks;
         }
 
         public void Init()
@@ -69,38 +56,32 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public bool TryFinish()
         {
-            MoveAllBlocks(Vector2Int.down);
-
             if(_activeBlocks.TryDeactivateUnderLine(_gridSettings.LastRowIndex))
             {
-                _mover.Clear();
                 _activeBlocks.Clear();
                 return true;
             }
-
-            return false;
+            else
+            {
+                MoveAllBlocks(Vector2Int.down);
+                return false;
+            }
         }
 
         public void MoveAllBlocks(Vector2Int direction)
         {
-            _mover.MoveAllDirection(_activeBlocks.Items, direction);
+            foreach(var block in _activeBlocks.Blocks)
+                block.Move(direction);
         }
 
         public void StartSpawnWave(Action callBAck)
         {
             StartCoroutine(WaveGeneration(callBAck));
-            WaveSpawned?.Invoke();
         }
 
         private IEnumerator WaveGeneration(Action callBack)
         {
-            int tries = CountTriesToCheckMovableBlocks;
             var delay = new WaitForSeconds(0.05f);
-
-            while (_mover.CheckCorrectRestPosition() == false && --tries > 0)
-                yield return delay;
-
-            _mover.Clear();
             var spawnBlocks = new List<Block>();
 
             foreach (var block in _spawner.SpawnWave())
@@ -109,27 +90,15 @@ namespace BallzMerge.Gameplay.BlockSpace
                 yield return delay;
             }
 
-            _activeBlocks.AddBlocks(spawnBlocks);
             yield return delay;
             _additionalEffectHandler.HandleWave(spawnBlocks);
-
-            yield return new WaitForSeconds(_gridSettings.MoveTime);
+            yield return delay;
+            WaveSpawned?.Invoke();
             callBack();
         }
 
-        private void OnBlockHit(GridCell cell, Vector2 hitPosition)
+        private void OnBlockHit(Block block, Vector2Int direction)
         {
-            Block block = _activeBlocks.GetAtPosition(cell.GridPosition);
-
-            if (block == null)
-            {
-                _physicsGrid.ChangeCellActivity(cell, false);
-                Debug.Log($"hit-invalid block - {cell.GridPosition}");
-                return;
-            }
-
-            Vector2Int direction = hitPosition.CalculateDirection(block.WorldPosition);
-
             if (_ballLevelVolume.GetCageValue(BallVolumesTypes.Crush) != 0)
             {
                 DestroyBlock(block);
@@ -139,7 +108,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
             if (_blockMagneticObserver.CheckBlock(block, out Block secondBlock) && _ballLevelVolume.GetCageValue(BallVolumesTypes.Magnet) != 0)
             {
-                MergeBlocks(block, secondBlock);
+                //MergeBlocks(block, secondBlock);
                 return;
             }
 
@@ -155,14 +124,11 @@ namespace BallzMerge.Gameplay.BlockSpace
                 TryMoveBlock(block, direction);
 
             _additionalEffectHandler.HandleEvent(new(BlockAdditionalEffectEvents.Move, block, direction));
-
         }
 
         private void DestroyBlock(Block block)
         {
             block.Destroy();
-            _activeBlocks.Remove(block);
-            _mover.ProcessDeleteBlock(block);
             _effectsPool.SpawnEffect(BlockAdditionalEffectEvents.Destroy, block.WorldPosition);
             _destroyImpact.ShowImpact();
         }
@@ -176,16 +142,12 @@ namespace BallzMerge.Gameplay.BlockSpace
 
             if (nextPosition.x < 0 || nextPosition.y >= _gridSettings.GridSize.y || nextPosition.x >= _gridSettings.GridSize.x || direction == Vector2Int.down)
             {
-                block.ShakeDirection(direction);
+                block.PlayBounceAnimation(direction);
                 return false;
             }
             else if (_activeBlocks.GetAtPosition(block.GridPosition + direction) == null)
             {
-                _mover.Move(block, direction);
-                return true;
-            }
-            else if (TryMergeCell(block, direction))
-            {
+                block.Move(direction);
                 return true;
             }
             else
@@ -200,20 +162,14 @@ namespace BallzMerge.Gameplay.BlockSpace
                     }
                 }
 
-                block.ShakeDirection(direction);
+                block.PlayBounceAnimation(direction);
                 return false;
             }
         }
 
-        private void MoveBlock(Block block, Vector2Int direction)
-        {
-            TryMoveBlock(block, direction);
-        }
+        private void MoveBlock(Block block, Vector2Int direction) => TryMoveBlock(block, direction);
 
-        private void ChangeNumber(Block block, int count)
-        {
-            CheckChangeNumber(block, count, false);
-        }
+        private void ChangeNumber(Block block, int count) => CheckChangeNumber(block, count, false);
 
         private bool CheckChangeNumber(Block block, int count, bool isHandleEvent = true)
         {
@@ -232,43 +188,11 @@ namespace BallzMerge.Gameplay.BlockSpace
             return false;
         }
 
-        private bool TryMergeCell(Block block, Vector2Int direction)
+        private void OnMergeBlocks(Block firstBlock, Block secondBlock)
         {
-            Block blockInNextCell = _activeBlocks.GetAtPosition(block.GridPosition + direction);
-
-            if (blockInNextCell != null && blockInNextCell.Number == block.Number)
-            {
-                MergeBlocks(block, blockInNextCell);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private void MergeBlocks(Block firstBlock, Block secondBlock)
-        {
-            _mover.Merge(secondBlock, firstBlock);
             _additionalEffectHandler.HandleEvent(new(BlockAdditionalEffectEvents.Destroy, firstBlock));
             _additionalEffectHandler.HandleEvent(new(BlockAdditionalEffectEvents.Destroy, secondBlock));
-            _activeBlocks.Remove(secondBlock);
-            _activeBlocks.Remove(firstBlock);
             _mergeImpact.ShowImpact();
-        }
-
-        private void OnBlockComeToNewPosition(Block block)
-        {
-            foreach (Vector2Int direction in AllSides)
-            {
-                if (TryMergeCell(block, direction))
-                    return;
-            }
-        }
-
-        private void OnChangedCellActivity(Vector2Int cell, bool isActive)
-        {
-            _physicsGrid.ChangeCellActivity(cell, isActive);
         }
     }
 }

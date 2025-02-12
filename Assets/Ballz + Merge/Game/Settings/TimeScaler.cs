@@ -23,7 +23,7 @@ namespace BallzMerge.Root.Settings
 
         public void SetRegular()
         {
-            Time.timeScale = Value;
+            Change(Value);
         }
 
         public void Change(float value)

@@ -13,15 +13,15 @@ namespace BallzMerge.Achievement
 
         public override void Construct()
         {
-            _blocks.BlockDestroyed += OnBlockDestroyed;
+            _blocks.BlockRemoved += OnBlockDestroyed;
         }
 
         protected override void Destruct()
         {
-            _blocks.BlockDestroyed -= OnBlockDestroyed;
+            _blocks.BlockRemoved -= OnBlockDestroyed;
         }
 
-        private void OnBlockDestroyed()
+        private void OnBlockDestroyed(Block block)
         {
             Property.Apply(Count);
         }

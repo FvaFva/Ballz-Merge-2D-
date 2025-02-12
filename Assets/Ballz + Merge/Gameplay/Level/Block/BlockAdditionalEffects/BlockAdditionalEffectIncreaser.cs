@@ -48,6 +48,6 @@ public class BlockAdditionalEffectIncreaser : BlockAdditionalEffectBase
     {
         yield return new WaitForSeconds(_hitImpact.main.duration);
         InvokeActionNumberChanged(block, 1, true);
-        block.ShakeScale();
+        block.PlayShakeAnimation();
     }
 }
