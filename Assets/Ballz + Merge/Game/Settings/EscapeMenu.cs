@@ -6,9 +6,8 @@ namespace BallzMerge.Root.Settings
 {
     public class EscapeMenu: MonoBehaviour
     {
-        [SerializeField] private Slider _audioSettings;
-        [SerializeField] private Slider _timeSettings;
         [SerializeField] private Button _continueButton;
+        [SerializeField] private Button _restartButton;
         [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _leftToMainMenu;
         [SerializeField] private Button _leftGame;
@@ -30,13 +29,9 @@ namespace BallzMerge.Root.Settings
         public void UpdateButtonView(bool isActiveQuite, bool isActiveMainMenu)
         {
             _leftToMainMenu.gameObject.SetActive(isActiveMainMenu);
+            _continueButton.gameObject.SetActive(isActiveMainMenu);
+            _restartButton.gameObject.SetActive(isActiveMainMenu);
             _leftGame.gameObject.SetActive(isActiveQuite);
-        }
-
-        public void UpdateFromData(float audio, float time)
-        {
-            _audioSettings.value = audio;
-            _timeSettings.value = time;
         }
 
         private void LeftToMainMenu() => RequireQuite(new SceneExitData(ScenesNames.MAINMENU));
@@ -45,11 +40,14 @@ namespace BallzMerge.Root.Settings
 
         private void LeftGame() => RequireQuite(new SceneExitData(true));
 
+        private void Restart() => RequireQuite(new SceneExitData(ScenesNames.GAMEPLAY));
+
         private void CloseMenu() => CloseRequired?.Invoke();
 
         private void ChangeButtonSubscribe(bool isActive)
         {
             _continueButton.ChangeListeningState(CloseMenu, isActive);
+            _restartButton.ChangeListeningState(Restart, isActive);
             _settingsButton.ChangeListeningState(OpenSettings, isActive);
             _leftToMainMenu.ChangeListeningState(LeftToMainMenu, isActive);
             _leftGame.ChangeListeningState(LeftGame, isActive);
