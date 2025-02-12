@@ -38,10 +38,10 @@ public class SliderValueView : MonoBehaviour
         _slider.onValueChanged.RemoveListener(SetLabel);
     }
 
-    public void SetValue(float value)
+    public void SetValue(float value, string label = null)
     {
         _slider.value = value;
-        SetLabel(value);
+        SetLabel(value, label);
     }
 
     public void SetProperty(string header = "", string suffix = "", string key = "", int additionalZero = int.MinValue, int pointsAfterDot = int.MinValue, int shift = int.MinValue)
@@ -68,7 +68,14 @@ public class SliderValueView : MonoBehaviour
 
     private void SetLabel(float value)
     {
-        _label.text = (_multiplier * value + _shift).ToString($"F{_pointsAfterDot}") + _suffix;
         ValueChanged?.Invoke(_key, value);
+    }
+
+    private void SetLabel(float value, string label)
+    {
+        if (label is null)
+            _label.text = (_multiplier * value + _shift).ToString($"F{_pointsAfterDot}") + _suffix;
+        else
+            _label.text = label;
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine.Audio;
 namespace BallzMerge.Root.Settings
 {
     using Data;
+    using System;
 
     public class GameSettingsDataProxyAudio : IGameSettingData
     {
@@ -22,14 +23,14 @@ namespace BallzMerge.Root.Settings
         }
 
         public float Value { get; private set; }
-
         public string Name { get; private set; }
+        public string Label { get; private set; }
 
         public void Change(float value)
         {
             Value = Mathf.Clamp(value, MinValue, MaxValue);
 
-            if(Mathf.Approximately(Value, 0f))
+            if (Mathf.Approximately(Value, 0f))
                 _mixer.SetFloat(Name, MuteValueDB);
             else
                 _mixer.SetFloat(Name, Mathf.Log10(Value) * MixerMultiplayer);
