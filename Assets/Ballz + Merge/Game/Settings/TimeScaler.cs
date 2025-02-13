@@ -3,6 +3,7 @@
 namespace BallzMerge.Root.Settings
 {
     using Data;
+    using System;
 
     public class TimeScaler : IGameSettingData, IGamePauseController
     {
@@ -12,8 +13,8 @@ namespace BallzMerge.Root.Settings
         private const float SpeedUpScale = 100f;
 
         public float Value { get; private set; }
-
         public string Name { get { return "Time"; } }
+        public string Label { get; private set; }
 
         public void Stop()
         {

@@ -32,6 +32,7 @@ public class InfoPanelShowcase : MonoBehaviour
         _closeButton.AddListener(OnCloseClick);
         _closeArea.AddListener(Deactivate);
         _escapeMenu.CloseRequired += Deactivate;
+        _escapeMenu.QuitRequired += OnQuitRequired;
         _escapeMenu.SettingsRequired += OpenSettings;
         _openDefaultButton.AddListener(OpenDefault);
         _userInput.MainInput.Escape.performed += OnEscape;
@@ -42,6 +43,7 @@ public class InfoPanelShowcase : MonoBehaviour
         _closeButton.RemoveListener(OnCloseClick);
         _closeArea.RemoveListener(Deactivate);
         _escapeMenu.CloseRequired -= Deactivate;
+        _escapeMenu.QuitRequired -= OnQuitRequired;
         _escapeMenu.SettingsRequired -= OpenSettings;
         _openDefaultButton.RemoveListener(OpenDefault);
         _userInput.MainInput.Escape.performed += OnEscape;
@@ -50,6 +52,11 @@ public class InfoPanelShowcase : MonoBehaviour
     private void OnEscape(InputAction.CallbackContext context)
     {
         OnCloseClick();
+    }
+
+    private void OnQuitRequired(SceneExitData sceneExitData)
+    {
+        Deactivate();
     }
 
     private void OpenSettings()

@@ -1,4 +1,5 @@
 using BallzMerge.Data;
+using System;
 using UnityEngine;
 
 public class QualityPreset : IGameSettingData
@@ -11,12 +12,15 @@ public class QualityPreset : IGameSettingData
 
     public string Name { get; private set; }
     public float Value { get; private set; }
+    public string Label { get; private set; }
+
+    public event Action<IGameSettingData> ValueChanged;
 
     public QualityPreset(string name)
     {
         Name = name;
 
-        if (QualitySettings.count != 1)
+        if (QualitySettings.count > 1)
             _step = (float)MaxValue / (QualitySettings.count - 1);
         else
             _step = 0;
@@ -29,33 +33,24 @@ public class QualityPreset : IGameSettingData
         else
             SetPreset(value);
 
-        Debug.Log(Value);
         QualitySettings.SetQualityLevel(_preset, true);
+        Value = _currentValue;
+        ValueChanged?.Invoke(this);
+        Label = QualitySettings.names[_preset];
     }
 
     private void SetPreset(float value)
     {
-        decimal stepDecimal = (decimal)_step;
-        decimal currentDecimal = (decimal)_currentValue;
+        decimal stepDec = (decimal)_step;
+        decimal valueDec = (decimal)value;
+        decimal snappedValueDec = Math.Round(valueDec / stepDec) * stepDec;
 
-        decimal nextStepDecimal = currentDecimal + stepDecimal;
-        decimal prevStepDecimal = currentDecimal - stepDecimal;
+        float snappedValue = (float)snappedValueDec;
 
-        float nextStep = (float)nextStepDecimal;
-        float prevStep = (float)prevStepDecimal;
-        float threshold = _step / 2;
-
-        if (value > _currentValue && value >= nextStep - threshold)
+        if (_currentValue != snappedValue)
         {
-            _currentValue = nextStep;
-            _preset++;
+            _currentValue = snappedValue;
+            _preset = Mathf.RoundToInt(_currentValue / _step);
         }
-        else if (value < _currentValue && value <= prevStep + threshold)
-        {
-            _currentValue = prevStep;
-            _preset--;
-        }
-
-        Value = _currentValue;
     }
 }

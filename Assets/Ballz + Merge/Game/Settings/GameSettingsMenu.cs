@@ -31,7 +31,7 @@ namespace BallzMerge.Data
             _sliders.Add(settingData, newSlider);
         }
 
-        public void UpdateValue(IGameSettingData settingData) => _sliders[settingData].SetValue(settingData.Value);
+        public void UpdateValue(IGameSettingData settingData) => _sliders[settingData].SetValue(settingData.Value, settingData.Label);
 
         private void OnSliderChanged(string key, float value) => ValueChanged?.Invoke(key, value);
     }
