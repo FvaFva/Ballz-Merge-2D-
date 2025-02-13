@@ -1,21 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BallVolumesCageView : MonoBehaviour, IInitializable
 {
     [SerializeField] private BallVolumeCageElement _prefab;
+    [SerializeField] private BallVolumeCageContainer _container;
+    [SerializeField] private int _countPreload;
 
     private List<BallVolumeCageElement> _elements;
-    private Queue<BallVolumesBagCell> _cage;
+    private Queue<BallVolumeCageElement> _cage;
 
-    public IEnumerable<BallVolumesBagCell> ActiveVolumes => _cage;
+    public IEnumerable<BallVolumesBagCell> ActiveVolumes => _cage.Select(x=>x.Current);
 
     public void Clear()
     {
         _cage.Clear();
 
         foreach (BallVolumeCageElement cageElement in _elements)
-            cageElement.Hide(true);
+            cageElement.Clear();
     }
 
     public void AddVolume(BallVolumesBagCell ballVolume)
@@ -29,15 +32,18 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
             }
         }
 
-        _elements.Add(Instantiate(_prefab, transform).Apply(ballVolume));
+        _elements.Add(Instantiate(_prefab, transform).Apply(ballVolume).ConnectContainer(_container));
     }
 
     public void RebuildCage()
     {
         _cage.Clear();
 
-        foreach (BallVolumeCageElement cageElement in _elements)
-            _cage.Enqueue(cageElement.Current);
+        foreach (BallVolumeCageElement cageElement in _elements.Where(element => !element.IsFree))
+        {
+            cageElement.Show();
+            _cage.Enqueue(cageElement);
+        }
     }
 
     public int CheckNext(BallVolumesTypes type)
@@ -45,8 +51,12 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         if(_cage.Count == 0)
             return 0;
 
-        if(_cage.Peek().IsEqual(type))
-            return _cage.Dequeue().Value;
+        if(_cage.Peek().Current.IsEqual(type))
+        {
+            var cell = _cage.Dequeue();
+            cell.Hide();
+            return cell.Current.Value;
+        }
 
         return 0;
     }
@@ -54,6 +64,9 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
     public void Init()
     {
         _elements = new List<BallVolumeCageElement>();
-        _cage = new Queue<BallVolumesBagCell>();
+        _cage = new Queue<BallVolumeCageElement>();
+
+        for (int i = 0; i < _countPreload; i++)
+            _elements.Add(Instantiate(_prefab, transform).Clear().ConnectContainer(_container));
     }
 }

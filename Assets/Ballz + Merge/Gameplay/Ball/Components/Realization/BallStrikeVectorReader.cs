@@ -1,12 +1,14 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Zenject;
 
 public class BallStrikeVectorReader : BallComponent
 {
     [SerializeField] private Camera _camera;
-    [SerializeField] private RectTransform _inputRotationZone;
+    [SerializeField] private SpriteRenderer _inputZone;
 
     [Inject] private MainInputMap _userInput;
 
@@ -48,13 +50,24 @@ public class BallStrikeVectorReader : BallComponent
 
     private void OnShotStarted(InputAction.CallbackContext context)
     {
+        StartCoroutine(HandleShotStart());
+        
+
+        
+    }
+
+    private IEnumerator HandleShotStart()
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (EventSystem.current.IsPointerOverGameObject())
+            yield break;
+
         var currentTouchPosition = _userInput.MainInput.StrikePosition.ReadValue<Vector2>();
 
         Vector3 worldTouchPosition = _camera.ScreenToWorldPoint(currentTouchPosition);
 
-        Vector2 localTouchPosition = _inputRotationZone.InverseTransformPoint(worldTouchPosition);
-
-        if (_inputRotationZone.rect.Contains(localTouchPosition))
+        if (_inputZone.bounds.Contains(worldTouchPosition))
         {
             _userInput.MainInput.StrikeVector.performed += OnStrikeVectorPerformed;
             _userInput.MainInput.Shot.canceled += OnShotCancelled;

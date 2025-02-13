@@ -32,7 +32,7 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
 
     public int GetPassiveValue(BallVolumesTypes type)
     {
-        return Bag.Passive.Where(cell => cell.Equals(type)).Sum(cell => cell.Value);
+        return Bag.Passive.Where(cell => cell.IsEqual(type)).Sum(cell => cell.Value);
     }
 
     public int GetCageValue(BallVolumesTypes type)

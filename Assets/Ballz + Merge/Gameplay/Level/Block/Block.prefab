@@ -319,6 +319,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _view: {fileID: 8935961053071447934}
   _physic: {fileID: 6717544510263611824}
+  Debug: []
 --- !u!1 &4704764694367186416
 GameObject:
   m_ObjectHideFlags: 0

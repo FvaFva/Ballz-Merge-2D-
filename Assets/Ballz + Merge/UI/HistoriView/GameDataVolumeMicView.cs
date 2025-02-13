@@ -11,9 +11,12 @@ public class GameDataVolumeMicView : MonoBehaviour
 
     [Inject] private BallVolumesMap _map;
 
+    private Sprite _sprite;
+
     public GameDataVolumeMicView Init()
     {
         ProjectContext.Instance.Container.Inject(this);
+        _sprite = _icon.sprite;
         return this;
     }
 
@@ -21,6 +24,13 @@ public class GameDataVolumeMicView : MonoBehaviour
     {
         gameObject.SetActive(false);
         return this;
+    }
+
+    public void Clear()
+    {
+        _chance.text = "";
+        _header.text = "";
+        _icon.sprite = _sprite;
     }
 
     public void Show(string volumeName, int value)=> Show(_map.GetVolume(volumeName), value);

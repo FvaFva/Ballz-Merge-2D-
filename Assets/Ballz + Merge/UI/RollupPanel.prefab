@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefab: {fileID: 8234991321312361403, guid: 10abf5aa43825354b808366c62e34e50, type: 3}
+  _countPreload: 15
 --- !u!1 &3221663385767861453
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,6 +506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d7f3c56da4e644abe9526a7f8e39bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isShadowChanged: 1
 --- !u!1 &7784055920812747460
 GameObject:
   m_ObjectHideFlags: 0
