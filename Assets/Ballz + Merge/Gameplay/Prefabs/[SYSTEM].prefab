@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
-  _wavesToDrop: 2
+  _wavesToDrop: 1
   _selector: {fileID: 0}
   _drops:
   - {fileID: 11400000, guid: 79f637b56a2d55248b3a787e42b02502, type: 2}
@@ -101,9 +101,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
-  _blocksDestroyerSettings: {fileID: 11400000, guid: 633f37b3f430ba04e8db339ac07735bc, type: 2}
-  _waveSpawnedSettings: {fileID: 11400000, guid: f5ec194ce0d14a24a811b92a2e7f20b4, type: 2}
-  _chainHitBlocksSettings: {fileID: 11400000, guid: ca04e9967517e8f4b8ed80648c025f2a, type: 2}
 --- !u!1 &4883004509405864141
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,7 +382,6 @@ MonoBehaviour:
   _physicsGrid: {fileID: 0}
   _blocksBus: {fileID: 0}
   _ballLevelVolume: {fileID: 0}
-  _blockPrefab: {fileID: 7282855710844971790, guid: 990de75b06802ea40b9a0ad3d1909cef, type: 3}
   _blocksSpawner: {fileID: 0}
   _score: {fileID: 7744337803995700564}
   _animationSkipper: {fileID: 0}
