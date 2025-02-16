@@ -14,6 +14,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     private const string RestartQuestName = "Restart";
 
     [SerializeField] private UIView _mainUI;
+    [SerializeField] private Camera _uICamera;
     [SerializeField] private List<CyclicBehavior> _components;
 
     private List<ILevelFinisher> _finishers = new List<ILevelFinisher>();
@@ -28,7 +29,6 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     [Inject] private UserQuestioner _userQuestioner;
     [Inject] private Ball _ball;
     [Inject] private UIRootView _rootUI;
-    [Inject] private GridSettings _gridSettings;
 
     public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
 
@@ -88,7 +88,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         }
 
         _sceneCallBack = callback;
-        _rootUI.AttachSceneUI(_mainUI);
+        _rootUI.AttachSceneUI(_mainUI, _uICamera);
         RestartLevel();
     }
 

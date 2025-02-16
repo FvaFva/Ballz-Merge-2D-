@@ -1,25 +1,33 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.ParticleSystem;
 
 public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private GameDataVolumeMicView _view;
+    [SerializeField] private ParticleSystem _backlight;
 
     private BallVolumeCageContainer _container;
     private RectTransform _transform;
+    private ShapeModule _shapeModule;
+    private ExternalForcesModule _externalForcesModule;
 
     public BallVolumesBagCell Current {  get; private set; }
-    public bool IsFree { get; private set; }
+    public bool IsFree => !Current.IsInited;
 
     private void Awake()
     {
         _transform = GetComponent<RectTransform>();
+        _shapeModule = _backlight.shape;
+        _externalForcesModule = _backlight.externalForces;
+        _backlight.Stop();
+        
     }
 
-    public BallVolumeCageElement ConnectContainer(BallVolumeCageContainer container)
+    private void OnEnable()
     {
-        _container = container;
-        return this;
+        Vector2 scale = _transform.rect.size * _transform.lossyScale;
+        _shapeModule.scale = new Vector3(scale.x, scale.y, 1f);
     }
 
     public BallVolumeCageElement Apply(BallVolumesBagCell volume)
@@ -27,7 +35,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
         if (Current.IsEqual(volume))
             return this;
 
-        if(volume.IsEmpty())
+        if(!volume.IsInited)
         {
             Clear();
             return this;
@@ -41,14 +49,14 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
     public BallVolumeCageElement Clear()
     {
         Current = default;
-        IsFree = true;
-        Hide();
+        _view.Hide();
+        _backlight.Stop();
         return this;
     }
 
     public void Hide()
     {
-        _view.Hide();
+        _view.Clear();
     }
 
     public void Show()
@@ -56,21 +64,18 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
         ShowCurrent();
     }   
     
-    public BallVolumeCageElement Activate()
+    public BallVolumeCageElement Init(BallVolumeCageContainer container)
     {
-        if (IsFree == false)
-            ShowCurrent();
-        else
-            IsFree = false;
-        
+        _container = container;
         gameObject.SetActive(true);
         return this;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        _container.Put(this, _transform.position);
-        _view.Hide();
+        _container.Put(this, _transform.position, eventData.position);
+        _view.Clear();
+        HighLightToContainer(true);
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -80,19 +85,34 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
 
     public void OnDrag(PointerEventData eventData)
     {
-        _container.ApplyDelta(eventData.delta);
+        _container.ApplyDelta(eventData.position);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         _container.Disable();
+        HighLightToContainer(false);
 
-        if(!Current.IsEmpty())
+        if (Current.IsInited)
             ShowCurrent();
     }
 
     private void ShowCurrent()
     {
         _view.Show(Current.Volume, Current.Value);
+    }
+
+    private void HighLightToContainer(bool isActive)
+    {
+        if(isActive)
+        {
+            _externalForcesModule.AddInfluence(_container.Field);
+            _backlight.Play();
+        }
+        else
+        {
+            _externalForcesModule.RemoveAllInfluences();
+            _backlight.Stop();
+        }
     }
 }

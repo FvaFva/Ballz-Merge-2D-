@@ -11,7 +11,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
     private List<BallVolumeCageElement> _elements;
     private Queue<BallVolumeCageElement> _cage;
 
-    public IEnumerable<BallVolumesBagCell> ActiveVolumes => _cage.Select(x=>x.Current);
+    public IEnumerable<BallVolumesBagCell> ActiveVolumes => _elements.Where(x=>x.IsFree == false).Select(x => x.Current);
 
     public void Clear()
     {
@@ -27,12 +27,12 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         {
             if(cageElement.IsFree)
             {
-                cageElement.Activate().Apply(ballVolume);
+                cageElement.Apply(ballVolume);
                 return;
             }
         }
 
-        _elements.Add(Instantiate(_prefab, transform).Apply(ballVolume).ConnectContainer(_container));
+        _elements.Add(Instantiate(_prefab, transform).Init(_container).Apply(ballVolume));
     }
 
     public void RebuildCage()
@@ -67,6 +67,6 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         _cage = new Queue<BallVolumeCageElement>();
 
         for (int i = 0; i < _countPreload; i++)
-            _elements.Add(Instantiate(_prefab, transform).Clear().ConnectContainer(_container));
+            _elements.Add(Instantiate(_prefab, transform).Clear().Init(_container));
     }
 }
