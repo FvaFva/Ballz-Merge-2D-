@@ -22,9 +22,8 @@ public class UIView : MonoBehaviour
         _transform = transform;
     }
 
-    public void MoveToContainer(RectTransform container)
+    public void Activate()
     {
-        _transform.SetParent(container);
         gameObject.SetActive(true);
     }
 
