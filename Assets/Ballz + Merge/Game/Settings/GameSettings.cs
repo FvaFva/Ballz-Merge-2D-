@@ -17,13 +17,13 @@ namespace BallzMerge.Root.Settings
 
         public GameSettings(GameSettingsMenu settingsMenu, GameSettingsStorage db, AudioMixer mixer, TimeScaler timeScaler)
         {
-            SoundVolumeGlobal = new GameSettingsDataProxyAudio(mixer, "SoundVolumeGlobal");
-            SoundVolumeEffects = new GameSettingsDataProxyAudio(mixer, "SoundVolumeEffects");
-            SoundVolumeMusic = new GameSettingsDataProxyAudio(mixer, "SoundVolumeMusic");
+            SoundVolumeGlobal = new GameSettingsDataProxyAudio(mixer, "Global");
+            SoundVolumeEffects = new GameSettingsDataProxyAudio(mixer, "Effects");
+            SoundVolumeMusic = new GameSettingsDataProxyAudio(mixer, "Music");
             DisplayApplier = new DisplayApplier();
-            DisplayQualityPreset = new QualityPreset("QualityPreset");
+            DisplayQualityPreset = new QualityPreset("Quality");
             DisplayResolution = new DisplayResolution("Resolution", DisplayApplier);
-            DisplayMode = new DisplayMode("DisplayMode", DisplayApplier);
+            DisplayMode = new DisplayMode("Display", DisplayApplier);
             _timeScaler = timeScaler;
             _settingsMenu = settingsMenu;
             _settingsMenu.ValueChanged += OnSettingsChanged;
@@ -50,7 +50,7 @@ namespace BallzMerge.Root.Settings
             foreach (var setting in _settings.Values)
             {
                 setting.Change(_db.Get(setting));
-                _settingsMenu.UpdateValue(setting);
+                _settingsMenu.UpdateStartValue(setting);
             }
         }
 
@@ -70,13 +70,13 @@ namespace BallzMerge.Root.Settings
 
         private void GenerateMenu()
         {
-            _settingsMenu.Add(SoundVolumeGlobal, PanelToggleType.AudioToggle, additionalZero: 2, pointsAfterDot: 2);
-            _settingsMenu.Add(SoundVolumeEffects, PanelToggleType.AudioToggle, additionalZero: 2, pointsAfterDot: 2);
-            _settingsMenu.Add(SoundVolumeMusic, PanelToggleType.AudioToggle, additionalZero: 2, pointsAfterDot: 2);
+            _settingsMenu.Add(SoundVolumeGlobal, PanelToggleType.AudioToggle);
+            _settingsMenu.Add(SoundVolumeEffects, PanelToggleType.AudioToggle);
+            _settingsMenu.Add(SoundVolumeMusic, PanelToggleType.AudioToggle);
             _settingsMenu.Add(DisplayQualityPreset, PanelToggleType.DisplayToggle);
             _settingsMenu.Add(DisplayResolution, PanelToggleType.DisplayToggle);
             _settingsMenu.Add(DisplayMode, PanelToggleType.DisplayToggle);
-            _settingsMenu.Add(_timeScaler, PanelToggleType.AudioToggle, "X", 1, 0, 1);
+            _settingsMenu.Add(_timeScaler, PanelToggleType.AudioToggle);
         }
 
         private void OnSettingsChanged(string key, float value)
@@ -87,7 +87,7 @@ namespace BallzMerge.Root.Settings
                 return;
 
             changed.Change(value);
-            _settingsMenu.UpdateValue(changed);
+            _settingsMenu.UpdateLabel(changed);
             _db.Set(changed);
         }
     }

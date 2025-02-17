@@ -2722,7 +2722,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e94c678e68598ad49a015dd2396900ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _newColor: {r: 0.5254902, g: 0.019607844, b: 0.9254902, a: 1}
+  _newColor: {r: 0.37254903, g: 0.007843138, b: 0.65882355, a: 1}
 --- !u!114 &5824879688009591903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2735,7 +2735,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.63529414, g: 0.02745098, b: 1, a: 0}
+  m_EffectColor: {r: 0.5254902, g: 0.019607844, b: 0.9254902, a: 0}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
 --- !u!114 &5022942526123440667
@@ -3748,7 +3748,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e94c678e68598ad49a015dd2396900ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _newColor: {r: 0.5254902, g: 0.019607844, b: 0.9254902, a: 1}
+  _newColor: {r: 0.37254903, g: 0.007843138, b: 0.65882355, a: 1}
 --- !u!114 &892327393046025733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3761,7 +3761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.63529414, g: 0.02745098, b: 1, a: 0}
+  m_EffectColor: {r: 0.5254902, g: 0.019607844, b: 0.9254902, a: 0}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
 --- !u!114 &5944855398810704476
@@ -5004,7 +5004,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 65.25
+  m_fontSize: 65.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5626,8 +5626,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6888470221240595469}
   - component: {fileID: 4223142769037947320}
-  - component: {fileID: 3592797181893669546}
-  - component: {fileID: 493670958664116109}
   m_Layer: 5
   m_Name: Viewport
   m_TagString: Untagged

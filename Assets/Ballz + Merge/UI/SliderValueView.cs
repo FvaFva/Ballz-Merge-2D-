@@ -3,79 +3,103 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SliderValueView : MonoBehaviour
+public class SliderValueView : MonoBehaviour, IDisposable
 {
-    private const int Ten = 10;
-    private const int Min = 0;
-    private const int Max = 3;
-
     [SerializeField] private Slider _slider;
     [SerializeField] private TMP_Text _label;
     [SerializeField] private TMP_Text _header;
-    [SerializeField] private string _suffix;
     [SerializeField] private string _key;
-    [SerializeField, Range(Min, Max)] private int _additionalZero;
-    [SerializeField, Range(Min, Max)] private int _pointsAfterDot;
 
-    private int _multiplier;
-    private float _shift;
+    private int _countOfPresets;
+    private float _step;
+    private int _preset;
+    private bool _isStepByStep;
 
     public event Action<string, float> ValueChanged;
 
-    private void Awake()
+    public void Dispose()
     {
-        _multiplier = (int)Math.Pow(Ten, _additionalZero);
+        _slider.onValueChanged.RemoveListener(SetPreset);
+        _slider.onValueChanged.RemoveListener(SetValue);
     }
 
-    private void OnEnable()
+    public void SetStartValues(float value, string label)
     {
-        _slider.onValueChanged.AddListener(SetLabel);
-        SetLabel(_slider.value);
+        _slider.value = 0;
+
+        if (_isStepByStep)
+        {
+            _preset = Mathf.RoundToInt(value);
+
+            for (float i = _preset; i > 0; i--)
+                _slider.value += _step;
+        }
+        else
+        {
+            _slider.value = value;
+        }
+
+        SetLabel(label);
     }
 
-    private void OnDisable()
-    {
-        _slider.onValueChanged.RemoveListener(SetLabel);
-    }
-
-    public void SetValue(float value, string label = null)
-    {
-        _slider.value = value;
-        SetLabel(value, label);
-    }
-
-    public void SetProperty(string header = "", string suffix = "", string key = "", int additionalZero = int.MinValue, int pointsAfterDot = int.MinValue, int shift = int.MinValue)
+    public void SetProperty(int? countOfPresets = null, string header = "", string key = "")
     {
         bool isNewKey = string.IsNullOrEmpty(key) == false;
         _key = isNewKey ? key : _key;
 
-        if (string.IsNullOrEmpty(header))
+        if (CheckStepByStep(countOfPresets))
+        {
+            SetStep((int)countOfPresets);
+            _slider.onValueChanged.AddListener(SetPreset);
+        }
+        else
+        {
+            _slider.onValueChanged.AddListener(SetValue);
+        }
+
+        if (string.IsNullOrEmpty(header) == false)
             _header.text = header;
-        else if(isNewKey)
-            _header.text = ConvertKeyToLabel();
-
-        _suffix = string.IsNullOrEmpty(suffix) ? _suffix : suffix;
-        _additionalZero = additionalZero.Equals(int.MinValue) ? _additionalZero : Mathf.Clamp(additionalZero, Min, Max);
-        _pointsAfterDot = pointsAfterDot.Equals(int.MinValue) ? _pointsAfterDot : Mathf.Clamp(pointsAfterDot, Min, Max);
-        _shift = shift.Equals(int.MinValue) ? _shift : shift;
-        _multiplier = (int)Math.Pow(Ten, _additionalZero);
+        else if (isNewKey)
+            _header.text = _key;
     }
 
-    private string ConvertKeyToLabel()
+    private bool CheckStepByStep(int? countOfPresets)
     {
-        return _key;
+        _isStepByStep = countOfPresets is not null;
+        return _isStepByStep;
     }
 
-    private void SetLabel(float value)
+    private void SetStep(int countOfPresets)
+    {
+        _countOfPresets = Math.Max(0, countOfPresets);
+        _step = _countOfPresets.Equals(0) ? 0 : _slider.maxValue / countOfPresets;
+    }
+
+    private void SetValue(float value)
     {
         ValueChanged?.Invoke(_key, value);
     }
 
-    private void SetLabel(float value, string label)
+    private void SetPreset(float value)
     {
-        if (label is null)
-            _label.text = (_multiplier * value + _shift).ToString($"F{_pointsAfterDot}") + _suffix;
-        else
-            _label.text = label;
+        decimal stepDec = (decimal)_step;
+        decimal valueDec = (decimal)value;
+        decimal snappedValueDec = Math.Round(valueDec / stepDec) * stepDec;
+
+        float snappedValue = (float)snappedValueDec;
+
+        if (value != snappedValue)
+        {
+            value = snappedValue;
+            _preset = Mathf.RoundToInt(value / _step);
+        }
+
+        _slider.value = value;
+        ValueChanged?.Invoke(_key, _preset);
+    }
+
+    public void SetLabel(string label)
+    {
+        _label.text = label;
     }
 }

@@ -24,14 +24,16 @@ namespace BallzMerge.Data
                 slider.ValueChanged -= OnSliderChanged;
         }
 
-        public void Add(IGameSettingData settingData, PanelToggleType panelType, string suffix = "", int additionalZero = int.MinValue, int pointsAfterDot = int.MinValue, int shift = int.MinValue)
+        public void Add(IGameSettingData settingData, PanelToggleType panelType)
         {
             SliderValueView newSlider = Instantiate(_prefab, _settingsPanelController.GetContent(panelType));
-            newSlider.SetProperty(key: settingData.Name, header: settingData.Name, suffix: suffix, additionalZero: additionalZero, pointsAfterDot: pointsAfterDot, shift: shift);
+            newSlider.SetProperty(countOfPresets: settingData.CountOfPresets, key: settingData.Name, header: settingData.Name);
             _sliders.Add(settingData, newSlider);
         }
 
-        public void UpdateValue(IGameSettingData settingData) => _sliders[settingData].SetValue(settingData.Value, settingData.Label);
+        public void UpdateStartValue(IGameSettingData settingData) => _sliders[settingData].SetStartValues(settingData.Value, settingData.Label);
+
+        public void UpdateLabel(IGameSettingData settingData) => _sliders[settingData].SetLabel(settingData.Label);
 
         private void OnSliderChanged(string key, float value) => ValueChanged?.Invoke(key, value);
     }
