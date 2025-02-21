@@ -141,8 +141,10 @@ namespace BallzMerge.Data
                     currentDataId = data.Count - 1;
                 }
 
-                string volume = reader[_volumeStorage.VolumeColumName].ToString();
-                int value = Convert.ToInt32(reader[_volumeStorage.ValueColumName]);
+                object dbValue = reader[_volumeStorage.ValueColumName];
+                object dbVolume = reader[_volumeStorage.VolumeColumName];
+                string volume = dbVolume.ToString();
+                int value = Convert.IsDBNull(dbValue) ? 0 : Convert.ToInt32(dbValue);
                 data[currentDataId].Add(volume, value);
             }
         }

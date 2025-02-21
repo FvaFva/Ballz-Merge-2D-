@@ -1,5 +1,6 @@
 using BallzMerge.Root.Settings;
 using ModestTree;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,6 +21,7 @@ public class InfoPanelShowcase : MonoBehaviour
     [Inject] private MainInputMap _userInput;
 
     private Queue<IInfoPanelView> _panels = new Queue<IInfoPanelView>();
+    public event Action<bool> UIViewStateChanged;
     private IInfoPanelView _current;
 
     private void Start()
@@ -90,12 +92,11 @@ public class InfoPanelShowcase : MonoBehaviour
     private void OpenDefault()
     {
         TryActivate(_default);
-        _openDefaultButton.gameObject.SetActive(false);
-        _closeArea.gameObject.SetActive(true);
     }
 
     private void Deactivate()
     {
+        UIViewStateChanged?.Invoke(true);
         HideAllPanels();
         _current = null;
         _panels.Clear();
@@ -109,7 +110,10 @@ public class InfoPanelShowcase : MonoBehaviour
         if (_current == null)
         {
             ShowPanel(panelView);
+            UIViewStateChanged?.Invoke(false);
             _content.SetActive(true);
+            _openDefaultButton.gameObject.SetActive(false);
+            _closeArea.gameObject.SetActive(true);
             return true;
         }
 
