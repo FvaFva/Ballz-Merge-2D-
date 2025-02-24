@@ -4,8 +4,9 @@ namespace BallzMerge.Root
 {
     using Data;
     using Settings;
+    using System;
 
-    public class UIRootView : MonoBehaviour
+    public class UIRootView : MonoBehaviour, IDisposable
     {
         private const int StandardDistance = 0;
 
@@ -30,10 +31,16 @@ namespace BallzMerge.Root
             _loadingScreen.Hide();
         }
 
+        public void Dispose()
+        {
+            _infoPanelShowcase.UIViewStateChanged -= ChangeStateUIView;
+        }
+
         public void AttachSceneUI(UIView sceneUI, Camera uICamera = null)
         {
             _sceneUI = sceneUI;
-            _sceneUI.Activate();
+            ChangeStateUIView(true);
+            _infoPanelShowcase.UIViewStateChanged += ChangeStateUIView;
             _escapeMenu.UpdateButtonView(_sceneUI.IsUseSettingsQuiteButton, _sceneUI.IsUseSettingsMaineMenuButton);
 
             if(uICamera != null)
@@ -53,6 +60,11 @@ namespace BallzMerge.Root
                 _sceneUI.LeftRoot();
                 _sceneUI = null;
             }
+        }
+
+        private void ChangeStateUIView(bool state)
+        {
+            _sceneUI.ChangeState(state);
         }
     }
 }

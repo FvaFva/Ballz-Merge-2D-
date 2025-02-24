@@ -7,10 +7,10 @@ namespace BallzMerge.Data
     public class GameHistoryStorage
     {
         private const string TableName = "GameHistory";
-        private const string ScoreColumName = "Score";
-        private const string IDColumName = "GameID";
-        private const string DateColumName = "Date";
-        private const string NumberColumName = "Number";
+        private const string ScoreColumnName = "Score";
+        private const string IDColumnName = "GameID";
+        private const string DateColumnName = "Date";
+        private const string NumberColumnName = "Number";
 
         private string _dbPath;
         private GameHistoryVolumesStorage _volumeStorage;
@@ -32,16 +32,16 @@ namespace BallzMerge.Data
                 using(var command = connection.CreateCommand())
                 {
                     command.CommandText = @$"SELECT 
-                                               game.{IDColumName} as {IDColumName},
-                                               game.{ScoreColumName} as {ScoreColumName},
-                                               game.{NumberColumName} as {NumberColumName},
-                                               game.{DateColumName} as {DateColumName},
+                                               game.{IDColumnName} as {IDColumnName},
+                                               game.{ScoreColumnName} as {ScoreColumnName},
+                                               game.{NumberColumnName} as {NumberColumnName},
+                                               strftime('%d.%m.', game.{DateColumnName}) || substr(strftime('%Y', game.{DateColumnName}), 3, 2) as {DateColumnName},
                                                volumes.{_volumeStorage.ValueColumName} as {_volumeStorage.ValueColumName},
                                                volumes.{_volumeStorage.VolumeColumName} as {_volumeStorage.VolumeColumName}
                                           FROM {TableName} as game
                                               LEFT JOIN {_volumeStorage.TableName} as volumes
-                                              ON game.{IDColumName} = volumes.{IDColumName}
-                                          ORDER BY {IDColumName}";
+                                              ON game.{IDColumnName} = volumes.{IDColumnName}
+                                          ORDER BY {IDColumnName}";
 
                     using (var reader = command.ExecuteReader())
                         GenerateDataByReader(reader, data);
@@ -63,7 +63,7 @@ namespace BallzMerge.Data
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = $"SELECT MAX({ScoreColumName}) FROM {TableName}";
+                    command.CommandText = $"SELECT MAX({ScoreColumnName}) FROM {TableName}";
                     var result = command.ExecuteScalar();
 
                     if(result != DBNull.Value)
@@ -86,10 +86,10 @@ namespace BallzMerge.Data
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = $"INSERT INTO {TableName} ({ScoreColumName}, {IDColumName}, {DateColumName}) VALUES (@{ScoreColumName}, @{IDColumName}, @{DateColumName})";
-                    command.Parameters.AddWithValue(ScoreColumName, score);
-                    command.Parameters.AddWithValue(IDColumName, gameUUID);
-                    command.Parameters.AddWithValue(DateColumName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    command.CommandText = $"INSERT INTO {TableName} ({ScoreColumnName}, {IDColumnName}, {DateColumnName}) VALUES (@{ScoreColumnName}, @{IDColumnName}, @{DateColumnName})";
+                    command.Parameters.AddWithValue(ScoreColumnName, score);
+                    command.Parameters.AddWithValue(IDColumnName, gameUUID);
+                    command.Parameters.AddWithValue(DateColumnName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
                     command.ExecuteNonQuery();
                 }
@@ -108,15 +108,15 @@ namespace BallzMerge.Data
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = $@"CREATE TABLE IF NOT EXISTS {TableName}
-                                            ({NumberColumName} INTEGER PRIMARY KEY,
-                                            {ScoreColumName} INTEGER,
-                                            {DateColumName} TEXT,
-                                            {IDColumName} TEXT NOT NULL UNIQUE)";
+                                            ({NumberColumnName} INTEGER PRIMARY KEY,
+                                            {ScoreColumnName} INTEGER,
+                                            {DateColumnName} TEXT,
+                                            {IDColumnName} TEXT NOT NULL UNIQUE)";
 
                     command.ExecuteNonQuery();
                 }
 
-                _volumeStorage = new GameHistoryVolumesStorage(connection, IDColumName);
+                _volumeStorage = new GameHistoryVolumesStorage(connection, IDColumnName);
 
                 connection.Close();
             }
@@ -129,20 +129,22 @@ namespace BallzMerge.Data
 
             while (reader.Read())
             {
-                string currentGame = reader[IDColumName].ToString();
+                string currentGame = reader[IDColumnName].ToString();
 
                 if (currentGame.Equals(lastGame) == false)
                 {
                     lastGame = currentGame;
-                    int score = Convert.ToInt32(reader[ScoreColumName]);
-                    int number = Convert.ToInt32(reader[NumberColumName]);
-                    string date = reader[DateColumName].ToString();
+                    int score = Convert.ToInt32(reader[ScoreColumnName]);
+                    int number = Convert.ToInt32(reader[NumberColumnName]);
+                    string date = reader[DateColumnName].ToString();
                     data.Add(new GameHistoryData(lastGame, score, date, number));
                     currentDataId = data.Count - 1;
                 }
 
-                string volume = reader[_volumeStorage.VolumeColumName].ToString();
-                int value = Convert.ToInt32(reader[_volumeStorage.ValueColumName]);
+                object dbValue = reader[_volumeStorage.ValueColumName];
+                object dbVolume = reader[_volumeStorage.VolumeColumName];
+                string volume = dbVolume.ToString();
+                int value = Convert.IsDBNull(dbValue) ? 0 : Convert.ToInt32(dbValue);
                 data[currentDataId].Add(volume, value);
             }
         }

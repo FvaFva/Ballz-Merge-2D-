@@ -22,9 +22,9 @@ public class UIView : MonoBehaviour
         _transform = transform;
     }
 
-    public void Activate()
+    public void ChangeState(bool state)
     {
-        gameObject.SetActive(true);
+        gameObject.SetActive(state);
     }
 
     public void LeftRoot()

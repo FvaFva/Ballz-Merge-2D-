@@ -41,7 +41,7 @@ public class GameDataVolumeMicView : MonoBehaviour
     {
         gameObject.SetActive(true);
         _chance.text = value.ToString();
-        _header.text = volume.Name;
-        _icon.sprite = volume.Icon;
+        _header.text = volume?.Name;
+        _icon.sprite = volume?.Icon;
     }
 }
