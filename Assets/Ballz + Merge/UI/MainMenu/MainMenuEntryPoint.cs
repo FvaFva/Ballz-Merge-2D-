@@ -1,6 +1,7 @@
 using BallzMerge.Root;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -17,6 +18,7 @@ namespace BallzMerge.MainMenu
 
         private List<IInitializable> _initializedComponents;
         private Action<SceneExitData> _callback;
+        private MainInputMap _userInput;
 
         public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
 
@@ -59,6 +61,9 @@ namespace BallzMerge.MainMenu
         {
             _rootUI.AttachSceneUI(_view);
             _callback = callback;
+            //_userInput = new MainInputMap();
+            //_userInput.Enable();
+            //ProjectContext.Instance.Container.Bind<MainInputMap>().FromInstance(_userInput).AsSingle().NonLazy();
         }
 
         private void OnStartRequire()
@@ -69,6 +74,7 @@ namespace BallzMerge.MainMenu
         private void LeftScene(SceneExitData exitData)
         {
             _callback?.Invoke(exitData);
+            //_userInput.Disable();
         }
     }
 }

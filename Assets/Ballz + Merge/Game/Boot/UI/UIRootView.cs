@@ -33,14 +33,14 @@ namespace BallzMerge.Root
 
         public void Dispose()
         {
-            _infoPanelShowcase.UIViewStateChanged -= DeactivateUIView;
+            _infoPanelShowcase.UIViewStateChanged -= ChangeStateUIView;
         }
 
         public void AttachSceneUI(UIView sceneUI, Camera uICamera = null)
         {
             _sceneUI = sceneUI;
-            _sceneUI.ChangeState(true);
-            _infoPanelShowcase.UIViewStateChanged += DeactivateUIView;
+            ChangeStateUIView(true);
+            _infoPanelShowcase.UIViewStateChanged += ChangeStateUIView;
             _escapeMenu.UpdateButtonView(_sceneUI.IsUseSettingsQuiteButton, _sceneUI.IsUseSettingsMaineMenuButton);
 
             if(uICamera != null)
@@ -62,7 +62,7 @@ namespace BallzMerge.Root
             }
         }
 
-        private void DeactivateUIView(bool state)
+        private void ChangeStateUIView(bool state)
         {
             _sceneUI.ChangeState(state);
         }
