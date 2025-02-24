@@ -22,6 +22,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         [Inject] private BlocksInGame _activeBlocks;
         [Inject] private DiContainer _diContainer;
 
+        private BallVolumeHitInspector _hitInspector;
+
         public event Action WaveSpawned;
 
         private void Awake()
@@ -51,7 +53,8 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Init()
         {
-           _additionalEffectHandler.ConnectActiveBlocks(_activeBlocks);
+            _additionalEffectHandler.ConnectActiveBlocks(_activeBlocks);
+            _hitInspector = new BallVolumeHitInspector(_activeBlocks, _ballLevelVolume, TryMoveBlock);
         }
 
         public bool TryFinish()
@@ -99,29 +102,11 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void OnBlockHit(Block block, Vector2Int direction)
         {
-            if (_ballLevelVolume.GetCageValue(BallVolumesTypes.Crush) != 0)
-            {
-                DestroyBlock(block);
-                _additionalEffectHandler.HandleEvent(new(BlockAdditionalEffectEvents.Destroy, block));
-                return;
-            }
-
-            if (_blockMagneticObserver.CheckBlock(block, out Block secondBlock) && _ballLevelVolume.GetCageValue(BallVolumesTypes.Magnet) != 0)
-            {
-                //MergeBlocks(block, secondBlock);
-                return;
-            }
-
-            if (_ballLevelVolume.GetCageValue(BallVolumesTypes.NumberReductor) != 0)
-            {
-                if (CheckChangeNumber(block, -1))
-                    return;
-            }
-
-            if (_ballLevelVolume.GetCageValue(BallVolumesTypes.MoveIncreaser) != 0)
-                TryMoveBlock(block, direction, _ballLevelVolume.GetPassiveValue(BallVolumesTypes.MoveIncreaser));
-            else
-                TryMoveBlock(block, direction);
+            var data = new BallVolumeHitData();
+            data.Direction = direction;
+            data.Block = block;
+            _hitInspector.Explore(data);
+            TryMoveBlock(block, direction);
 
             _additionalEffectHandler.HandleEvent(new(BlockAdditionalEffectEvents.Move, block, direction));
         }

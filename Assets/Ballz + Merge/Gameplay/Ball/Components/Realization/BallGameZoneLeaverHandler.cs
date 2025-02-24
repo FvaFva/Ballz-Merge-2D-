@@ -9,6 +9,7 @@ public class BallGameZoneLeaverHandler : BallComponent
     [Inject] private BallWaveVolume _ballVolume;
 
     private Transform _transform;
+    private int _countBounce = 0;
 
     private void Awake()
     {
@@ -27,7 +28,7 @@ public class BallGameZoneLeaverHandler : BallComponent
 
     private void HandlePlayZoneLeaving()
     {
-        if (_ballVolume.GetCageValue(BallVolumesTypes.BotBounce) != 0)
+        if (_countBounce == 0)
             return;
 
         MyBody.velocity = Vector2.zero;

@@ -46,19 +46,12 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         }
     }
 
-    public int CheckNext(BallVolumesTypes type)
+    public BallVolumesBagCell CheckNext()
     {
         if(_cage.Count == 0)
-            return 0;
+            return default;
 
-        if(_cage.Peek().Current.IsEqual(type))
-        {
-            var cell = _cage.Dequeue();
-            cell.Hide();
-            return cell.Current.Value;
-        }
-
-        return 0;
+        return _cage.Dequeue().Current;
     }
 
     public void Init()

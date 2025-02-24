@@ -6,6 +6,7 @@ public struct BallVolumesBagCell
     public BallVolume Volume;
     public string Name;
     public readonly bool IsInited;
+    public int Value => IsInited ? Rarity.Weight : 0;
 
     public BallVolumesBagCell(BallVolume volume, DropRarity rarity)
     {
@@ -29,6 +30,4 @@ public struct BallVolumesBagCell
     {
         return IsInited && Volume == bagCell.Volume && Rarity == bagCell.Rarity;
     }
-
-    public int Value => IsInited ? Rarity.Weight : 0;
 }
