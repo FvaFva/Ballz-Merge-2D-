@@ -2,36 +2,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
 {
     private const int CountPreload = 20;
 
-    [SerializeField] private List<ButtonToggle> _toggles;
+    [SerializeField] private ButtonToggle _dateID;
+    [SerializeField] private ButtonToggle _score;
+    [SerializeField] private ButtonToggle _number;
     [SerializeField] private GameDataView _gameDataPrefab;
     [SerializeField] private RectTransform _dataParent;
 
-    private Dictionary<ButtonToggle, Action<ButtonToggle>> _togglesDictionary = new();
-    private string[] _toggleLabels = { "ID", "Date" };
-    private string[] _symbols = { "(↑)", "(↓)" };
-    private int _index = 0;
-    private bool _isScoreAscending = true;
-    private bool _isNumberAscending = true;
+    private readonly List<ButtonToggle> _toggles = new List<ButtonToggle>();
+    private readonly string[] _toggleLabels = { "ID", "Date" };
+    private readonly string[] _symbols = { "(↑)", "(↓)" };
+    private readonly List<GameDataView> _allViews = new List<GameDataView>();
+
     private ButtonToggle _currentToggle;
     private List<GameHistoryData> _data;
-    private List<GameDataView> _allViews = new List<GameDataView>();
     private RectTransform _rootParent;
     private RectTransform _transform;
 
     public void Show(RectTransform showcase)
     {
-        foreach (var toggle in _togglesDictionary)
-            toggle.Key.Initialize(_symbols[0], _symbols[1], toggle.Value);
-
         gameObject.SetActive(true);
         _transform.SetParent(showcase, false);
     }
@@ -42,9 +36,10 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
             return false;
 
         _data = data;
-        _togglesDictionary.Add(_toggles[0], ChangeStateView);
-        _togglesDictionary.Add(_toggles[1], OrderNumber);
-        _togglesDictionary.Add(_toggles[2], OrderScore);
+        _toggles.Add(_dateID.Initialize(_toggleLabels[0], _toggleLabels[1], ChangeStateView));
+        _toggles.Add(_score.Initialize(_symbols[0], _symbols[1], OrderScore));
+        _toggles.Add(_number.Initialize(_symbols[0], _symbols[1], OrderNumber));
+        _dateID.ChangeState();
 
         if (_data.Count > _allViews.Count)
             GenerateViews(_data.Count - _allViews.Count);
@@ -62,8 +57,8 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
         _transform.SetParent(_rootParent, false);
         gameObject.SetActive(false);
 
-        foreach (var toggle in _togglesDictionary)
-            toggle.Key.Close();
+        foreach (var toggle in _toggles)
+            toggle.Close();
     }
 
     public void Init()
@@ -77,7 +72,7 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     private void Show()
     {
         for (int i = 0; i < _data.Count; i++)
-            _allViews[i].Show(GetData(_data[i]), _data[i].Score, _data[i].Number, _data[i].Volumes);
+            _allViews[i].Show(_data[i].GetDateOrID(_dateID.State), _data[i].Score, _data[i].Number, _data[i].Volumes);
     }
 
     private void GenerateViews(int count)
@@ -86,47 +81,24 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
             _allViews.Add(Instantiate(_gameDataPrefab, _dataParent).Init());
     }
 
-    private void ChangeStateView(ButtonToggle buttonToggle)
-    {
-        _index = (_index + 1) % _toggleLabels.Length;
-        //_toggleLabel.text = _toggleLabels[_index];
+    private void ChangeStateView(ButtonToggle _) => Show();
 
-        if (_currentToggle != null)
+    private void OrderScore(ButtonToggle toggle) => ToggleSort(toggle, x => x.Score);
+
+    private void OrderNumber(ButtonToggle toggle) => ToggleSort(toggle, x => x.Number);
+
+    private void ToggleSort<T>(ButtonToggle toggle, Func<GameHistoryData, T> keySelector)
+    {
+        _data = toggle.State ? _data.OrderBy(keySelector).ToList() : _data.OrderByDescending(keySelector).ToList();
+        Show();
+        ResetCurrentToggleLabel(toggle);
+    }
+
+    private void ResetCurrentToggleLabel(ButtonToggle toggle)
+    {
+        if (_currentToggle != null && _currentToggle != toggle)
             _currentToggle.ResetLabel();
 
-        _currentToggle = buttonToggle;
-        Show();
-    }
-
-    private void OrderScore(ButtonToggle buttonToggle)
-    {
-        ToggleSort(ref _isScoreAscending, x => x.Score);
-        SetNewLabel(buttonToggle);
-    }
-
-    private void OrderNumber(ButtonToggle buttonToggle)
-    {
-        ToggleSort(ref _isNumberAscending, x => x.Number);
-        SetNewLabel(buttonToggle);
-    }
-
-    private void ToggleSort<T>(ref bool ascending, Func<GameHistoryData, T> keySelector)
-    {
-        _data = ascending ? _data.OrderBy(keySelector).ToList() : _data.OrderByDescending(keySelector).ToList();
-        ascending = !ascending;
-        Show();
-    }
-
-    private void SetNewLabel(ButtonToggle buttonToggle)
-    {
-        if (_currentToggle != null && _currentToggle != buttonToggle)
-            _currentToggle.ResetLabel();
-
-        _currentToggle = buttonToggle;
-    }
-
-    private string GetData(GameHistoryData data)
-    {
-        return _index == 0 ? data.ID : data.Date;
+        _currentToggle = toggle;
     }
 }

@@ -1,54 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 [Serializable]
 public class ButtonToggle
 {
-    public Button Toggle;
-    public TMP_Text Label;
+    [SerializeField] private Button _toggle;
+    [SerializeField] private TMP_Text _label;
 
     private string _originalLabel;
     private string _ascendingText;
     private string _descendingText;
-    private bool _isAscending;
+    public bool State { get; private set; }
 
     private Action<ButtonToggle> _triggered;
 
-    public void Initialize(string ascendingText, string descendingText, Action<ButtonToggle> onTrigger)
+    public ButtonToggle Initialize(string ascendingText, string descendingText, Action<ButtonToggle> onTrigger)
     {
-        if (Label != null)
-            _originalLabel = Label.text;
+        if (_label != null)
+            _originalLabel = _label.text;
 
-        if (Toggle != null)
-            Toggle.onClick.AddListener(AppendLabel);
+        if (_toggle != null)
+            _toggle.onClick.AddListener(ChangeState);
 
         _triggered = onTrigger;
-
         _ascendingText = ascendingText;
         _descendingText = descendingText;
+        return this;
     }
 
     public void Close()
     {
-        if (Toggle != null)
-            Toggle.onClick.RemoveListener(AppendLabel);
+        if (_toggle != null)
+            _toggle.onClick.RemoveListener(ChangeState);
     }
 
     public void ResetLabel()
     {
-        if (Label != null)
-            Label.text = _originalLabel;
+        if (_label != null)
+            _label.text = _originalLabel;
     }
 
-    private void AppendLabel()
+    public void ChangeState()
     {
-        if (Label == null)
+        if (_label == null)
             return;
 
-        _isAscending = !_isAscending;
-        Label.text = _isAscending ? $"{_originalLabel} {_ascendingText}" : $"{_originalLabel} {_descendingText}";
+        State = !State;
+        _label.text = State ? $"{_originalLabel} {_ascendingText}" : $"{_originalLabel} {_descendingText}";
         _triggered?.Invoke(this);
     }
 }
