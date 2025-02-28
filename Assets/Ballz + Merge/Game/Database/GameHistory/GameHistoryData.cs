@@ -20,5 +20,7 @@ namespace BallzMerge.Data
         }
 
         public void Add(string volume, int value) => Volumes[volume] = value;
+
+        public string GetDateOrID(bool state) => state ? ID : Date;
     }
 }
