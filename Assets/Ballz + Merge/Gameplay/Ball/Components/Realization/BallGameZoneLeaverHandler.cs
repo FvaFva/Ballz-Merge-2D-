@@ -1,13 +1,12 @@
-﻿using Zenject;
-using UnityEngine;
+﻿using UnityEngine;
 using BallzMerge.Gameplay.BallSpace;
 
 public class BallGameZoneLeaverHandler : BallComponent
 {
     [SerializeField] private BallCollisionHandler _collisionHandler;
+    [SerializeField] private BallWaveVolume _ballVolume;
 
-    [Inject] private BallWaveVolume _ballVolume;
-
+    private readonly Vector3 _shift = new Vector3(0, 0.1f);
     private Transform _transform;
     private int _countBounce = 0;
 
@@ -26,13 +25,21 @@ public class BallGameZoneLeaverHandler : BallComponent
         _collisionHandler.GameZoneLeft -= HandlePlayZoneLeaving;
     }
 
+    public override void ChangeActivity(bool state)
+    {
+        base.ChangeActivity(state);
+
+        if (state)
+            _countBounce = _ballVolume.GetPassiveValue(BallVolumesTypes.BotBounce);
+    }
+
     private void HandlePlayZoneLeaving()
     {
-        if (_countBounce == 0)
+        if (_countBounce-- != 0)
             return;
 
         MyBody.velocity = Vector2.zero;
-        _transform.position += new Vector3(0, 0.1f);
+        _transform.position += _shift;
         ActivateTrigger();
     }
 }

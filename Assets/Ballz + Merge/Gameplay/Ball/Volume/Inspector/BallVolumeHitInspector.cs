@@ -1,22 +1,27 @@
+using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class BallVolumeHitInspector
 {
-    Func<Block, Vector2Int, float, bool> _mover;
-    private readonly BlocksInGame _blocks;
-    private readonly BallWaveVolume _ballLevelVolume;
+    [Inject] private readonly BlocksInGame _blocks;
+    [Inject] private readonly BallWaveVolume _ballLevelVolume;
+    [Inject] private readonly GridSettings _grid;
+
+    private readonly BlocksMover _mover;
+    private readonly BlockMagneticObserver _magneticObserver;
     private readonly Dictionary<BallVolumesTypes, Action<BallVolumeHitData, DropRarity>> _map;
 
-    public BallVolumeHitInspector(BlocksInGame blocks, BallWaveVolume ballLevelVolume, Func<Block, Vector2Int, float, bool> mover)
+    [Inject]
+    public BallVolumeHitInspector(BlocksMover mover, DiContainer diContainer)
     {
-        _blocks = blocks;
-        _ballLevelVolume = ballLevelVolume;
         _map = new Dictionary<BallVolumesTypes, Action<BallVolumeHitData, DropRarity>>();
         _mover = mover;
+        _magneticObserver = diContainer.Instantiate<BlockMagneticObserver>();
         Bind();
     }
 
@@ -33,12 +38,24 @@ public class BallVolumeHitInspector
         _map.Add(BallVolumesTypes.Crush, Crush);
         _map.Add(BallVolumesTypes.NumberReductor, NumberReductor);
         _map.Add(BallVolumesTypes.MoveIncreaser, MoveIncreaser);
-        _map.Add(BallVolumesTypes.Magnet, Magnet);
+        _map.Add(BallVolumesTypes.Magnet, _magneticObserver.Activate);
     }
 
     private void Crush(BallVolumeHitData data, DropRarity rarity)
     {
-        data.Block.Destroy();
+        if(rarity.Weight >= 3)
+        {
+            data.Block.Destroy();
+            return;
+        }
+
+        var nextPosition = data.Block.GridPosition + data.Direction;
+        bool isOutside = _grid.IsOutside(nextPosition);
+
+        if (isOutside)
+            data.Block.Destroy();
+        else if(rarity.Weight == 2 || _blocks.HaveAtPosition(nextPosition))
+            data.Block.Destroy();
     }
 
     private void NumberReductor(BallVolumeHitData data, DropRarity rarity)
@@ -48,11 +65,13 @@ public class BallVolumeHitInspector
 
     private void MoveIncreaser(BallVolumeHitData data, DropRarity rarity)
     {
-        _mover?.Invoke(data.Block, data.Direction, rarity.Weight + 1);
-    }
+        for (int i = rarity.Weight; i > 0; i--)
+        {
+            Vector2Int extraBlockPosition = data.Block.GridPosition + data.Direction * i;
+            var extraBlock = _blocks.GetAtPosition(extraBlockPosition);
 
-    private void Magnet(BallVolumeHitData data, DropRarity rarity)
-    {
-
+            if(extraBlock != null)
+                _mover.Try(extraBlock, data.Direction);
+        }
     }
 }

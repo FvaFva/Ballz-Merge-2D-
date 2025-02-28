@@ -59,13 +59,13 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _camera.transform.position = _cameraPosition;
         _currentWave = 0;
         _count = _fieldExpanderSettings.Count;
-        _extraColumns = _gridSettings.GridSize.x;
-        _extraRows = _gridSettings.GridSize.y;
+        _extraColumns = _gridSettings.Size.x;
+        _extraRows = _gridSettings.Size.y;
     }
 
     public void FinishLevel()
     {
-        _gridSettings.ReloadGridSize();
+        _gridSettings.ReloadSize();
         _ballWaveVolume.Bag.Added -= OnAbilityAdd;
     }
 
@@ -78,7 +78,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     private void AddColumn()
     {
         _count--;
-        _gridSettings.AddGridSize(Vector2Int.right);
+        _gridSettings.AddSize(Vector2Int.right);
         _physicGrid.SpawnColumn(false, ++_extraColumns);
         SetComponentsPosition(_propertyColumn);
         _boards.ChangePositionScale(true, _propertyColumn);
@@ -86,7 +86,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     private void AddRow()
     {
-        _gridSettings.AddGridSize(Vector2Int.up);
+        _gridSettings.AddSize(Vector2Int.up);
         _physicGrid.SpawnRow(++_extraRows);
         _blocksBus.MoveAllBlocks(Vector2Int.up);
         SetComponentsPosition(_propertyRow);

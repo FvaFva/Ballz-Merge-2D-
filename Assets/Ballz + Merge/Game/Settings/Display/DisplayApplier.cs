@@ -1,7 +1,6 @@
-using System.Linq;
 using UnityEngine;
 
-public class DisplayApplier : MonoBehaviour
+public class DisplayApplier
 {
     private Resolution _resolution;
     private FullScreenMode _fullScreenMode;

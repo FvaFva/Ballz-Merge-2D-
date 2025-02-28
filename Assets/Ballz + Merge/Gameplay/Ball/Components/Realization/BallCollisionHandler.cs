@@ -14,7 +14,6 @@ namespace BallzMerge.Gameplay.BallSpace
         private Transform _transform;
 
         public event Action<Vector2> Hit;
-        public event Action<GridCell, Vector2> HitBlock;
         public event Action NonBlockHit;
         public event Action GameZoneLeft;
 

@@ -32,18 +32,18 @@ namespace BallzMerge.Gameplay.Level
 
         public void SpawnColumn(bool isStart, int column = 1)
         {
-            for (int i = column - 1; i < _settings.GridSize.x; i++)
+            for (int i = column - 1; i < _settings.Size.x; i++)
             {
-                for (int j = 0; j < _settings.GridSize.y; j++)
+                for (int j = 0; j < _settings.Size.y; j++)
                     InitCell(i, j);
             }
         }
 
         public void SpawnRow(int row)
         {
-            for (int i = 0; i < _settings.GridSize.x; i++)
+            for (int i = 0; i < _settings.Size.x; i++)
             {
-                for (int j = row - 1; j < _settings.GridSize.y; j++)
+                for (int j = row - 1; j < _settings.Size.y; j++)
                     InitCell(i, j);
             }
         }

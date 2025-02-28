@@ -13,6 +13,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         public IEnumerable<Block> Blocks => _blocks;
 
         public event Action<Block> BlockRemoved;
+        public event Action<Block> BlockNumberChanged;
+        public event Action<Block> BlockDestroyed;
         public event Action<Block, Vector2Int> BlockHit;
         public event Action<Block, Block> BlocksMerged;
 
@@ -21,6 +23,11 @@ namespace BallzMerge.Gameplay.BlockSpace
         public Block GetAtPosition(Vector2Int position)
         {
             return _blocks.Where(b => b.GridPosition == position).FirstOrDefault();
+        }
+
+        public bool HaveAtPosition(Vector2Int position)
+        {
+            return _blocks.Where(b => b.GridPosition == position).Any();
         }
 
         public bool TryDeactivateUnderLine(int y)
@@ -117,13 +124,20 @@ namespace BallzMerge.Gameplay.BlockSpace
                 block.Hit += OnBlockHit;
                 block.Freed += Remove;
                 block.CameToNewCell += OnBlockCameNewPosition;
+                block.Destroyed += OnBlockDestroy;
+                block.NumberChanged += OnChangedNumber;
             }
             else
             {
                 block.Hit -= OnBlockHit;
                 block.Freed -= Remove;
                 block.CameToNewCell -= OnBlockCameNewPosition;
+                block.Destroyed -= OnBlockDestroy;
+                block.NumberChanged += OnChangedNumber;
             }
         }
+
+        private void OnBlockDestroy(Block block) => BlockDestroyed?.Invoke(block);
+        private void OnChangedNumber(Block block) => BlockNumberChanged?.Invoke(block);
     }
 }

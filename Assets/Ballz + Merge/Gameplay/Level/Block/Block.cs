@@ -18,6 +18,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private Transform _transform;
         private Tweener _moveTween;
+        private bool _isAlive;
 
         public Vector2Int GridPosition { get; private set; }
         public Vector2 WorldPosition => _transform.position;
@@ -27,6 +28,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         public event Action<Block, Vector2Int> Hit;
         public event Action<Block> CameToNewCell;
         public event Action<Block> Freed;
+        public event Action<Block> Destroyed;
+        public event Action<Block> NumberChanged;
 
         public List<string> Debug = new List<string>();
 
@@ -52,6 +55,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _transform.parent = parent;
             _view.Init(_gridSettings.MoveTime, _gridSettings.CellSize);
             _physic.Init(virtualBox);
+            _isAlive= true;
             Deactivate();
             return this;
         }
@@ -88,6 +92,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Merge(Vector3 worldPositionMergedBlock)
         {
+            _isAlive = false;
             Debug.Add($"Merge {worldPositionMergedBlock}");
             GridPosition = Vector2Int.zero;
             StopCurrentMoveTween();
@@ -99,7 +104,9 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Destroy()
         {
+            _isAlive = false;
             Debug.Add($"Destroy");
+            Destroyed?.Invoke(this);
             StopCurrentMoveTween();
             Number = 0;
             _view.PlayDestroy(Deactivate);
@@ -111,6 +118,11 @@ namespace BallzMerge.Gameplay.BlockSpace
             Debug.Add($"ChangeNumber {count}");
             Number += count;
             _view.ChangeNumber(Number);
+
+            if(Number == 0)
+                Destroy();
+            else
+                NumberChanged?.Invoke(this);
         }
 
         public void PlayBounceAnimation(Vector2 direction)
@@ -145,8 +157,10 @@ namespace BallzMerge.Gameplay.BlockSpace
         private void OnComeToNewCell()
         {
             Debug.Add($"OnComeToNewCell");
-            _physic.Activate();
             CameToNewCell?.Invoke(this);
+
+            if(_isAlive)
+                _physic.Activate();
         }
 
         private void OnHit(Vector2Int direction) => Hit?.Invoke(this, direction);

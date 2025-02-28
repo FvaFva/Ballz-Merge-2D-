@@ -6,6 +6,8 @@ namespace BallzMerge.Gameplay.Level
     [CreateAssetMenu(fileName = "New grid settings", menuName = "Bellz+Merge/Grid/Settings", order = 51)]
     public class GridSettings : ScriptableObject
     {
+        private const int ZeroBoard = 0;
+
         [SerializeField] private float _cellSize;
         [SerializeField] private float _cellSpacing;
         [SerializeField] private Vector2Int _gridSize;
@@ -15,19 +17,19 @@ namespace BallzMerge.Gameplay.Level
         private Vector2Int _additionalGridSize;
 
         public float CellSize => _cellSize;
-        public Vector2Int GridSize => _gridSize + _additionalGridSize;
+        public Vector2Int Size => _gridSize + _additionalGridSize;
         public Vector2 ViewPosition => _viewPosition;
         public float CellSpacing => _cellSpacing;
-        public int FirstRowIndex => GridSize.y - 1;
+        public int FirstRowIndex => Size.y - 1;
         public int LastRowIndex => 0;
         public float MoveTime => _moveTime;
 
-        public void ReloadGridSize()
+        public void ReloadSize()
         {
             _additionalGridSize = Vector2Int.zero;
         }
 
-        public void AddGridSize(Vector2Int additionalSize)
+        public void AddSize(Vector2Int additionalSize)
         {
             _additionalGridSize += additionalSize;
         }
@@ -41,5 +43,7 @@ namespace BallzMerge.Gameplay.Level
 
             return positions;
         }
+
+        public bool IsOutside(Vector2Int point) => point.x < ZeroBoard || point.y > FirstRowIndex || point.x >= Size.x;
     }
 }
