@@ -15,8 +15,7 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     [SerializeField] private RectTransform _dataParent;
 
     private readonly List<ButtonToggle> _toggles = new List<ButtonToggle>();
-    private readonly string[] _toggleLabels = { "ID", "Date" };
-    private readonly string[] _symbols = { "(↑)", "(↓)" };
+    private readonly string[] _toggleLabels = { "ID", "Date", "(↑)", "(↓)" };
     private readonly List<GameDataView> _allViews = new List<GameDataView>();
 
     private ButtonToggle _currentToggle;
@@ -37,14 +36,13 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
 
         _data = data;
         _toggles.Add(_dateID.Initialize(_toggleLabels[0], _toggleLabels[1], ChangeStateView));
-        _toggles.Add(_score.Initialize(_symbols[0], _symbols[1], OrderScore));
-        _toggles.Add(_number.Initialize(_symbols[0], _symbols[1], OrderNumber));
-        _dateID.ChangeState();
+        _toggles.Add(_score.Initialize(_toggleLabels[2], _toggleLabels[3], OrderScore));
+        _toggles.Add(_number.Initialize(_toggleLabels[2], _toggleLabels[3], OrderNumber));
 
         if (_data.Count > _allViews.Count)
             GenerateViews(_data.Count - _allViews.Count);
 
-        Show();
+        _dateID.ChangeState();
 
         return true;
     }
@@ -73,6 +71,7 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     {
         for (int i = 0; i < _data.Count; i++)
             _allViews[i].Show(_data[i].GetDateOrID(_dateID.State), _data[i].Score, _data[i].Number, _data[i].Volumes);
+        //Debug.Log($"Ошибка: {_allViews[i]}, данные - {_data[i]}, номер - {_data[i].Number}, счёт - {_data[i].Score}, способности - {_data[i].Volumes}");
     }
 
     private void GenerateViews(int count)
