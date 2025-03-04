@@ -1,21 +1,28 @@
+using R3;
 using System.Collections.Generic;
+using UnityEngine;
 using Zenject;
 
 namespace BallzMerge.Achievement
 {
     public class AchievementSettingsGameBinder : CyclicBehavior, IInitializable
     {
+        [SerializeField] private AchievementView _achievementView;
+        [SerializeField] private RectTransform _achievementContainer;
+
         [Inject] private DiContainer _container;
         [Inject] private AchievementsBus _bus;
 
+        private AchievementDisplayer _displayer;
         private List<AchievementObserverBase> _observers = new List<AchievementObserverBase>();
 
         private void OnEnable()
         {
             foreach (var observer in _observers)
             {
-                observer.ReachedStep += OnSteReached;
+                observer.ReachedStep += OnStepReached;
                 observer.ChangedPoints += OnPointsChanged;
+                observer.ReachedAchievement += OnReachedAchievement;
             }
         }
 
@@ -23,8 +30,9 @@ namespace BallzMerge.Achievement
         {
             foreach (var observer in _observers)
             {
-                observer.ReachedStep -= OnSteReached;
+                observer.ReachedStep -= OnStepReached;
                 observer.ChangedPoints -= OnPointsChanged;
+                observer.ReachedAchievement -= OnReachedAchievement;
             }
         }
 
@@ -35,6 +43,8 @@ namespace BallzMerge.Achievement
 
         private void LoadSettings()
         {
+            _displayer = new AchievementDisplayer(_achievementView, _achievementContainer);
+
             foreach (var setting in _bus.GetSettings())
             {
                 switch (setting.Key.ID.Internal)
@@ -58,7 +68,8 @@ namespace BallzMerge.Achievement
             _observers.Add(newObserver);
             newObserver.Construct();
             newObserver.ChangedPoints += OnPointsChanged;
-            newObserver.ReachedStep += OnSteReached;
+            newObserver.ReachedStep += OnStepReached;
+            newObserver.ReachedAchievement += OnReachedAchievement;
         }
 
         private void OnPointsChanged(AchievementsTypes type, int points)
@@ -66,9 +77,16 @@ namespace BallzMerge.Achievement
             _bus.AddPoints(type, points);
         }
 
-        private void OnSteReached(AchievementsTypes type, AchievementPointsStep pointsStep)
+        private void OnStepReached(AchievementsTypes type, AchievementPointsStep pointsStep, AchievementObserverBase observer)
         {
-            _bus.Apply(type, pointsStep);
+            _bus.AddSteps(type, pointsStep);
+            _displayer.SpawnView(observer.Property.Name, observer.Property.Description, observer.Property.Image);
+        }
+
+        private void OnReachedAchievement(AchievementsTypes type, AchievementObserverBase observer)
+        {
+            _bus.ReachAchievement(type);
+            _displayer.SpawnView(observer.Property.Name, observer.Property.Description, observer.Property.Image);
         }
     }
 }

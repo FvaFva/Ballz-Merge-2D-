@@ -29,7 +29,7 @@ namespace BallzMerge.Achievement
             _db.Achievement.AddPoints(internalKey, points);
         }
 
-        public void Apply(AchievementsTypes internalKey, AchievementPointsStep data)
+        public void AddSteps(AchievementsTypes internalKey, AchievementPointsStep data)
         {
             if (_db.Achievement.TryWrite(internalKey, data))
             {
@@ -42,6 +42,11 @@ namespace BallzMerge.Achievement
             {
                 Debug.Log($"A new achievement cant written! {internalKey} - {data.Points} of {data.Step}");
             }
+        }
+
+        public void ReachAchievement(AchievementsTypes internalKey)
+        {
+            Debug.Log($"Achievement {internalKey} complete");
         }
 
         public IDictionary<AchievementSettings, AchievementPointsStep> GetSettings() =>

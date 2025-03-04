@@ -71,7 +71,6 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     {
         for (int i = 0; i < _data.Count; i++)
             _allViews[i].Show(_data[i].GetDateOrID(_dateID.State), _data[i].Score, _data[i].Number, _data[i].Volumes);
-        //Debug.Log($"Ошибка: {_allViews[i]}, данные - {_data[i]}, номер - {_data[i].Number}, счёт - {_data[i].Score}, способности - {_data[i].Volumes}");
     }
 
     private void GenerateViews(int count)
