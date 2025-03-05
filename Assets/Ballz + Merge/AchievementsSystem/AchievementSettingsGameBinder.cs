@@ -1,4 +1,3 @@
-using R3;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -43,7 +42,7 @@ namespace BallzMerge.Achievement
 
         private void LoadSettings()
         {
-            _displayer = new AchievementDisplayer(_achievementView, _achievementContainer);
+            _displayer = gameObject.AddComponent<AchievementDisplayer>().Init(_achievementView, _achievementContainer);
 
             foreach (var setting in _bus.GetSettings())
             {
@@ -86,7 +85,7 @@ namespace BallzMerge.Achievement
         private void OnReachedAchievement(AchievementsTypes type, AchievementObserverBase observer)
         {
             _bus.ReachAchievement(type);
-            _displayer.SpawnView(observer.Property.Name, observer.Property.Description, observer.Property.Image);
+            _displayer.SpawnView("Открыто достижение!", observer.Property.Name, observer.Property.Image);
         }
     }
 }

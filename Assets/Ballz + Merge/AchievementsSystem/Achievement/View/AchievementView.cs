@@ -10,12 +10,13 @@ namespace BallzMerge.Achievement
         [SerializeField] private TMP_Text _description;
         [SerializeField] private Image _icon;
 
-        public void Show(string label, string description, Sprite image)
+        public RectTransform RectTransform => (RectTransform)gameObject.transform;
+
+        public void SetData(string label, string description, Sprite image)
         {
             _label.text = label;
             _description.text = description;
             _icon.sprite = image;
-            gameObject.SetActive(true);
         }
     }
 }
