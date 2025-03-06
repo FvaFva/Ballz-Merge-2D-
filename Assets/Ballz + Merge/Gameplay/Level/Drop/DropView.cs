@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.ParticleSystem;
 
 namespace BallzMerge.Gameplay.Level
 {
@@ -12,26 +13,35 @@ namespace BallzMerge.Gameplay.Level
 
         [SerializeField] private TMP_Text _name;
         [SerializeField] private TMP_Text _description;
-        [SerializeField] private TMP_Text _value;
+        [SerializeField] private DropViewSuffix _suffix;
         [SerializeField] private Image _icon;
         [SerializeField] private Image _colorView;
         [SerializeField] private Button _activator;
-        [SerializeField] private RectTransform _additionalInfo;
+        [SerializeField] private ParticleSystem _particles;
         [SerializeField] private List<Image> _shineMasks;
 
         private Drop _current;
         private Sprite _default;
         private List<Material> _shineMaterials;
+        private RectTransform _activatorTransform;
+        private MainModule _mainModule;
+        private ShapeModule _shapeModule;
 
         public event Action<Drop> Selected;
 
         private void Awake()
         {
             _default = _icon.sprite;
+            _activatorTransform = (RectTransform)_activator.transform;
+            _shapeModule = _particles.shape;
+            _mainModule = _particles.main;
         }
 
         private void OnEnable()
         {
+            Vector2 scale = _activatorTransform.rect.size * _activatorTransform.lossyScale;
+            _shapeModule.scale = new Vector3(scale.x, scale.y, 0f);
+            _mainModule.startColor = _current.Color;
             _activator.AddListener(OnSelect);
         }
 
@@ -56,7 +66,7 @@ namespace BallzMerge.Gameplay.Level
         {
             _current = drop;
 
-            if (_current == null)
+            if (_current.IsEmpty)
                 Hide();
             else
                 Activate();
@@ -64,10 +74,9 @@ namespace BallzMerge.Gameplay.Level
 
         private void Activate()
         {
-            _additionalInfo.gameObject.SetActive(_current.IsReducible);
+            _suffix.UpdateView(_current.Suffix);
             _name.text = _current.Name;
             _description.text = _current.Description;
-            _value.text = _current.Rarity.Weight.ToString();
             _icon.sprite = _current.Icon;
             _colorView.color = _current.Color;
 
@@ -79,16 +88,17 @@ namespace BallzMerge.Gameplay.Level
         {
             _name.text = string.Empty;
             _description.text = string.Empty;
-            _value.text = string.Empty;
             _colorView.color = Color.gray;
             _icon.sprite = _default;
-            _additionalInfo.gameObject.SetActive(false);
+            _suffix.gameObject.SetActive(false);
         }
 
         private void OnSelect()
         {
-            if (_current != null)
-                Selected?.Invoke(_current);
+            if (_current.IsEmpty)
+                return;
+
+            Selected?.Invoke(_current);
         }
     }
 }

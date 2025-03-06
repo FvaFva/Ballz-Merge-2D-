@@ -60,8 +60,8 @@ namespace BallzMerge.Gameplay.Level
         private void OnHideAnimationFinished()
         {
             _callback();
-            _firstSlot.Show(null);
-            _secondSlot.Show(null);
+            _firstSlot.Show(default);
+            _secondSlot.Show(default);
             gameObject.SetActive(false);
         }
     }

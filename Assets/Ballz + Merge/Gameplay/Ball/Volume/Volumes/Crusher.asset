@@ -13,8 +13,14 @@ MonoBehaviour:
   m_Name: Crusher
   m_EditorClassIdentifier: 
   _type: 0
-  _counting: 0
+  _species: 0
   _icon: {fileID: 21300000, guid: 4fea7209b87bf684698342b7de78e2d0, type: 3}
   _name: Crusher
-  _description: When you contact block have chance to destroy it
-  _isReducible: 1
+  _description: When you hit a block you will destroy it under a certain condition
+  _suffixes:
+  - Rarity: {fileID: 11400000, guid: a3ee3d68bf5a68a47b9136ccd18ae439, type: 2}
+    Suffix: If there is a field boundary behind the block
+  - Rarity: {fileID: 11400000, guid: de1bfb22cde269241bb3c06c6f4ae76d, type: 2}
+    Suffix: If there is a field boundary or another block behind the block
+  - Rarity: {fileID: 11400000, guid: 0cf2a46033e6a4e41980736da5596fbd, type: 2}
+    Suffix: Definitely destroy

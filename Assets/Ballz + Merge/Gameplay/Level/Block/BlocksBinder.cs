@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.Level;
 using System;
 using System.Collections;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlocksBus : CyclicBehavior, IInitializable
+    public class BlocksBinder : CyclicBehavior
     {
         [SerializeField] private BlocksSpawner _spawner;
         [SerializeField] private AdditionalEffectsPool _effectsPool;
@@ -29,13 +28,11 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _mover = _diContainer.Instantiate<BlocksMover>();
             _hitInspector = _diContainer.Instantiate<BallVolumeHitInspector>(new object[] { _mover });
+            _additionalEffectHandler.Init(_activeBlocks, _mover);
         }
 
         private void OnEnable()
         {
-            _additionalEffectHandler.BlockDestroyRequired += OnDestroyBlock;
-            _additionalEffectHandler.BlockMoveRequired += MoveBlock;
-            _additionalEffectHandler.BlockNumberChangedRequired += OnChangeNumber;
             _activeBlocks.BlockHit += OnBlockHit;
             _activeBlocks.BlocksMerged += OnMergeBlocks;
             _activeBlocks.BlockDestroyed += OnDestroyBlock;
@@ -43,17 +40,9 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void OnDisable()
         {
-            _additionalEffectHandler.BlockDestroyRequired -= OnDestroyBlock;
-            _additionalEffectHandler.BlockMoveRequired -= MoveBlock;
-            _additionalEffectHandler.BlockNumberChangedRequired -= OnChangeNumber;
             _activeBlocks.BlockHit -= OnBlockHit;
             _activeBlocks.BlocksMerged -= OnMergeBlocks;
             _activeBlocks.BlockDestroyed -= OnDestroyBlock;
-        }
-
-        public void Init()
-        {
-            _additionalEffectHandler.ConnectActiveBlocks(_activeBlocks);
         }
 
         public bool TryFinish()
@@ -103,8 +92,6 @@ namespace BallzMerge.Gameplay.BlockSpace
             data.Block = block;
             _hitInspector.Explore(data);
             _mover.Try(block, direction);
-
-            _additionalEffectHandler.HandleEvent(new(BlockAdditionalEffectEvents.Move, block, direction));
         }
 
         private void OnDestroyBlock(Block block)
@@ -113,14 +100,8 @@ namespace BallzMerge.Gameplay.BlockSpace
             _destroyImpact.ShowImpact();
         }
 
-        private void MoveBlock(Block block, Vector2Int direction) => _mover.Try(block, direction);
-
-        private void OnChangeNumber(Block block, int count) => _additionalEffectHandler.HandleEvent(new(BlockAdditionalEffectEvents.NumberChanged, block, count));
-
         private void OnMergeBlocks(Block firstBlock, Block secondBlock)
         {
-            _additionalEffectHandler.HandleEvent(new(BlockAdditionalEffectEvents.Destroy, firstBlock));
-            _additionalEffectHandler.HandleEvent(new(BlockAdditionalEffectEvents.Destroy, secondBlock));
             _mergeImpact.ShowImpact();
         }
     }

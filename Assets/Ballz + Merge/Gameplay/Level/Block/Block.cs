@@ -18,8 +18,8 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private Transform _transform;
         private Tweener _moveTween;
-        private bool _isAlive;
 
+        public bool IsAlive { get; private set; }
         public Vector2Int GridPosition { get; private set; }
         public Vector2 WorldPosition => _transform.position;
         public int Number { get; private set; }
@@ -29,7 +29,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         public event Action<Block> CameToNewCell;
         public event Action<Block> Freed;
         public event Action<Block> Destroyed;
-        public event Action<Block> NumberChanged;
+        public event Action<Block, int> NumberChanged;
+        public event Action<Block, Vector2Int> Moved;
 
         public List<string> Debug = new List<string>();
 
@@ -55,7 +56,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _transform.parent = parent;
             _view.Init(_gridSettings.MoveTime, _gridSettings.CellSize);
             _physic.Init(virtualBox);
-            _isAlive= true;
+            IsAlive= true;
             Deactivate();
             return this;
         }
@@ -87,12 +88,13 @@ namespace BallzMerge.Gameplay.BlockSpace
                 .OnComplete(OnComeToNewCell);
             
             _view.AnimationMove(step);
+            Moved?.Invoke(this, step);
             _physic.Deactivate();
         }
 
         public void Merge(Vector3 worldPositionMergedBlock)
         {
-            _isAlive = false;
+            IsAlive = false;
             Debug.Add($"Merge {worldPositionMergedBlock}");
             GridPosition = Vector2Int.zero;
             StopCurrentMoveTween();
@@ -104,7 +106,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Destroy()
         {
-            _isAlive = false;
+            IsAlive = false;
             Debug.Add($"Destroy");
             Destroyed?.Invoke(this);
             StopCurrentMoveTween();
@@ -119,10 +121,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             Number += count;
             _view.ChangeNumber(Number);
 
-            if(Number == 0)
+            if(Number <= 0)
                 Destroy();
             else
-                NumberChanged?.Invoke(this);
+                NumberChanged?.Invoke(this, count);
         }
 
         public void PlayBounceAnimation(Vector2 direction)
@@ -159,7 +161,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             Debug.Add($"OnComeToNewCell");
             CameToNewCell?.Invoke(this);
 
-            if(_isAlive)
+            if(IsAlive)
                 _physic.Activate();
         }
 

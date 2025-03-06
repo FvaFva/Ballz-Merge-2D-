@@ -25,7 +25,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     private SceneExitData _quiteRequireData;
     private ConductorBetweenWaves _conductor;
 
-    [Inject] private BlocksBus _blocksBus;
+    [Inject] private BlocksBinder _blocksBus;
     [Inject] private UserQuestioner _userQuestioner;
     [Inject] private Ball _ball;
     [Inject] private UIRootView _rootUI;

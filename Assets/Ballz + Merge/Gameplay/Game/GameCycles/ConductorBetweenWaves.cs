@@ -8,9 +8,9 @@ namespace BallzMerge.Gameplay.Level
     {
         private Dropper _dropper;
         private BallAwaitBreaker _awaitBreaker;
-        private BlocksBus _blockBus;
+        private BlocksBinder _blockBus;
 
-        public ConductorBetweenWaves(BallAwaitBreaker awaitBreaker, Dropper dropper, BlocksBus bus)
+        public ConductorBetweenWaves(BallAwaitBreaker awaitBreaker, Dropper dropper, BlocksBinder bus)
         {
             _dropper = dropper;
             _awaitBreaker = awaitBreaker;

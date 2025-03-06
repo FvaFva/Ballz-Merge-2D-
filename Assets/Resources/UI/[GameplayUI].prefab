@@ -1734,6 +1734,8 @@ MonoBehaviour:
   _icon: {fileID: 1950428597849583759}
   _disabledElements: {fileID: 6158347432223219592}
   _audio: {fileID: 1624535994950719198}
+  _field: {fileID: 0}
+  _mainCanvas: {fileID: 0}
 --- !u!1 &7522540858966445535
 GameObject:
   m_ObjectHideFlags: 0

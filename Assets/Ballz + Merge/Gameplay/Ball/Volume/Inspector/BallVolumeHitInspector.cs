@@ -54,7 +54,7 @@ public class BallVolumeHitInspector
 
         if (isOutside)
             data.Block.Destroy();
-        else if(rarity.Weight == 2 || _blocks.HaveAtPosition(nextPosition))
+        else if(rarity.Weight == 2 && _blocks.HaveAtPosition(nextPosition))
             data.Block.Destroy();
     }
 
