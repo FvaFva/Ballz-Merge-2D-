@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Magnet
   m_EditorClassIdentifier: 
   _type: 4
-  _counting: 0
+  _species: 0
   _icon: {fileID: 4877825377717948546, guid: 4fa7b8d359c0fb440863a5be50d9d8cd, type: 3}
   _name: Magnet
-  _description: When ball is contacts with block there is a chance to destroy other
-    block with the same number
-  _isReducible: 1
+  _description: When a block hits it magnetizes it and if the next touch is on another
+    block, the first one will be moved if their difference in number is less than
+    {WEIGHT}.
+  _suffixes: []

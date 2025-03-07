@@ -1,57 +1,23 @@
-﻿using UnityEditor;
+﻿using System;
 using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level
 {
-    [CreateAssetMenu(fileName = "New drop", menuName = "Bellz+Merge/Drop/Drop", order = 51)]
-    public class Drop : ScriptableObject
+    public struct Drop
     {
-        [SerializeField] private BallVolume _volume;
-        [SerializeField] private DropRarity _rarity;
-
-        public BallVolume Volume => _volume;
-        public Sprite Icon => _volume.Icon;
-        public string Name => _volume.Name;
-        public string Description => _volume.Description;
-        public Color Color => _rarity.Color;
-        public int CountInPool => _rarity.CountInPool;
-        public bool IsReducible => _volume.IsReducible;
-        public DropRarity Rarity => _rarity;
-
-        private void OnValidate()
+        public Drop (BallVolume volume, DropRarity rarity)
         {
-#if UNITY_EDITOR
-            if (_volume != null && _rarity != null)
-                RenameAsset($"[{_volume.Name}] - [{_rarity.name}]");
-#endif
+            Volume = volume;
+            Rarity = rarity;
         }
 
-#if UNITY_EDITOR
-        private void RenameAsset(string newName)
-        {
-            if (newName == name)
-                return;
-
-            string assetPath = AssetDatabase.GetAssetPath(this);
-
-            if (string.IsNullOrEmpty(assetPath))
-            {
-                Debug.LogWarning("Asset path is null or empty.");
-                return;
-            }
-
-            string result = AssetDatabase.RenameAsset(assetPath, newName);
-
-            if (!string.IsNullOrEmpty(result))
-            {
-                Debug.LogError("Error renaming asset: " + result);
-            }
-            else
-            {
-                EditorUtility.SetDirty(this);
-                AssetDatabase.SaveAssetIfDirty(this);
-            }
-        }
-#endif
+        public BallVolume Volume;
+        public DropRarity Rarity;
+        public readonly Sprite Icon => Volume.Icon;
+        public readonly string Name => Volume.Name;
+        public readonly string Description => Volume.GetDescription(Rarity);
+        public readonly Color Color => Rarity.Color;
+        public readonly string Suffix => Volume.GetSuffix(Rarity);
+        public readonly bool IsEmpty => Volume == null || Rarity == null;
     }
 }

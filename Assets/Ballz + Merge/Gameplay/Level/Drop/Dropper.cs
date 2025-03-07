@@ -9,7 +9,12 @@ namespace BallzMerge.Gameplay.Level
     {
         [SerializeField] private int _wavesToDrop;
         [SerializeField] private DropSelector _selector;
-        [SerializeField] private List<Drop> _drops;
+        [SerializeField] private DropRarity _rar;
+        [SerializeField] private DropRarity _legendary;
+        [SerializeField] private DropRarity _common;
+        [SerializeField] private List<BallVolume> _commons;
+        [SerializeField] private List<BallVolume> _rarities;
+        [SerializeField] private List<BallVolume> _legends;
         [SerializeField] private ValueView _view;
 
         private List<Drop> _pool;
@@ -21,11 +26,9 @@ namespace BallzMerge.Gameplay.Level
         {
             _pool = new List<Drop>();
 
-            foreach (Drop drop in _drops)
-            {
-                for (int i = 0; i < drop.CountInPool; i++)
-                    _pool.Add(drop);
-            }
+            InitRarity(_rar, _rarities);
+            InitRarity(_common, _commons);
+            InitRarity(_legendary, _legends);
         }
 
         public void StartLevel()
@@ -49,6 +52,15 @@ namespace BallzMerge.Gameplay.Level
         {
             IsReadyToDrop = --_waveCount <= 0;
             _view.Show(_waveCount);
+        }
+
+        private void InitRarity(DropRarity rarity, List<BallVolume> volumes)
+        {
+            foreach (BallVolume volume in _rarities)
+            {
+                for (int i = 0; i < rarity.CountInPool; i++)
+                    _pool.Add(new Drop(volume, rarity));
+            }
         }
     }
 }

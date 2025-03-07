@@ -1,25 +1,22 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
     public class BlockAdditionalEffectBandler : BlockAdditionalEffectBase
     {
+        private const int FirstIndex = 0;
+        private const int SecondIndex = 1;
+
         [SerializeField] private LineRenderer _renderer;
         [SerializeField] private ParticleSystem _particleFirst;
         [SerializeField] private ParticleSystem _particleLast;
 
         private Block _connectBlock;
-
-        private void FixedUpdate()
-        {
-            if (Current != null && _connectBlock != null)
-            {
-                _renderer.SetPosition(0, Current.WorldPosition);
-                _renderer.SetPosition(1, _connectBlock.WorldPosition);
-                _particleFirst.transform.position = Current.WorldPosition;
-                _particleLast.transform.position = _connectBlock.WorldPosition;
-            }
-        }
+        private Transform _particleFirstTransform;
+        private Transform _particleLastTransform;
+        private Dictionary<Block, bool> _blocksSubscriptionStates = new Dictionary<Block, bool>();
 
         public override void HandleWave()
         {
@@ -27,52 +24,95 @@ namespace BallzMerge.Gameplay.BlockSpace
                 Deactivate();
         }
 
-        protected override bool TryInit(BlocksInGame blocks)
+        protected override bool TryActivate()
         {
-            if (blocks == null)
-                return false;
-
-            _connectBlock = blocks.GetRandomBlock(Current);
+            _connectBlock = ActiveBlocks.GetRandomBlock(Current);
 
             if (_connectBlock == null)
                 return false;
 
             Current.ConnectEffect();
             _connectBlock.ConnectEffect();
+            _blocksSubscriptionStates.Add(Current, false);
+            _blocksSubscriptionStates.Add(_connectBlock, false);
+            UpdateSubscription(Current, true);
+            UpdateSubscription(_connectBlock, true);
             return true;
         }
 
-        private Block GetAnotherBlock(Block block)
+        protected override void HandleUpdate()
         {
-            return block == Current ? _connectBlock : Current;
+            _renderer.SetPosition(FirstIndex, Current.WorldPosition);
+            _renderer.SetPosition(SecondIndex, _connectBlock.WorldPosition);
+            _particleFirstTransform.position = Current.WorldPosition;
+            _particleLastTransform.position = _connectBlock.WorldPosition;
         }
 
-        private void OnBlockDestroyed(Block block)
+        protected override void Init()
         {
-            _connectBlock = null;
-            InvokeActionBlockDestroyed(block);
-            Deactivate();
+            _particleFirstTransform = _particleFirst.transform;
+            _particleLastTransform = _particleLast.transform;
         }
 
-        public override void HandleEvent(BlockAdditionalEffectEventProperty property)
+        protected override void HandleDeactivate()
         {
-            if (property.Current == Current || property.Current == _connectBlock)
+            UpdateSubscription(_connectBlock, false);
+            UpdateSubscription(Current, false);
+            _blocksSubscriptionStates.Clear();
+        }
+
+        private void UpdateSubscription(Block block, bool isActive)
+        {
+            if(block == null) 
+                return;
+
+            if (_blocksSubscriptionStates[block] == isActive)
+                return;
+            else
+                _blocksSubscriptionStates[block] = isActive;
+
+            if (isActive)
             {
-                Block block = GetAnotherBlock(property.Current);
-
-                switch (property.EffectEvents)
-                {
-                    case BlockAdditionalEffectEvents.Move:
-                        InvokeActionBlockMoved(block, property.Direction);
-                        break;
-                    case BlockAdditionalEffectEvents.NumberChanged:
-                        InvokeActionNumberChanged(block, property.Count, false);
-                        break;
-                    case BlockAdditionalEffectEvents.Destroy:
-                        OnBlockDestroyed(block);
-                        break;
-                }
+                block.Moved += OnMoved;
+                block.Destroyed += OnDestroyed;
+                block.NumberChanged += OnNumberChanged;
             }
+            else
+            {
+                block.Moved -= OnMoved;
+                block.Destroyed -= OnDestroyed;
+                block.NumberChanged -= OnNumberChanged;
+            }
+        }
+
+        private void OnNumberChanged(Block block, int Count)
+        {
+            var another = block == Current ? _connectBlock : Current;
+            UpdateSubscription(another, false);
+            another.ChangeNumber(Count);
+
+            if(another.IsAlive)
+                UpdateSubscription(another, true);
+            else
+                block.Destroy();
+        }
+
+        private void OnDestroyed(Block block)
+        {
+            var another = block == Current ? _connectBlock : Current;
+            UpdateSubscription(another, false);
+            another.Destroy();
+        }
+
+        private void OnMoved(Block block, Vector2Int step)
+        {
+            if (step == Vector2Int.down)
+                return;
+
+            var another = block == Current ? _connectBlock : Current;
+            another.Moved -= OnMoved;
+            Mover.Try(another, step);
+            another.Moved += OnMoved;
         }
     }
 }

@@ -4,50 +4,52 @@ using UnityEngine;
 
 public class BlockAdditionalEffectIncreaser : BlockAdditionalEffectBase
 {
+    private const int Power = 1;
+
     [SerializeField] private ParticleSystem _particleEffect;
     [SerializeField] private ParticleSystem _hitImpact;
 
-    private BlocksInGame _activeBlocks;
-
-    private void FixedUpdate()
-    {
-        if (Current != null)
-            _particleEffect.transform.position = Current.WorldPosition;
-    }
-
-    public override void HandleEvent(BlockAdditionalEffectEventProperty property)
-    {
-        if (property.EffectEvents == BlockAdditionalEffectEvents.Destroy && property.Current == Current)
-            Deactivate();
-    }
+    private Transform _particleTransform;
+    private Transform _hitImpactTransform;
 
     public override void HandleWave()
     {
-        Block block = _activeBlocks.GetRandomBlock(Current, true);
+        Block block = ActiveBlocks.GetRandomBlock(Current, true);
 
         if (block == null)
             return;
 
-        _hitImpact.transform.position = Current.WorldPosition;
-        _hitImpact.transform.LookAt(block.transform);
+        _hitImpactTransform.position = Current.WorldPosition;
+        _hitImpactTransform.LookAt(block.transform);
         _hitImpact.Play();
         StartCoroutine(DelayedActionNumberChanged(block));
     }
 
-    protected override bool TryInit(BlocksInGame blocks)
+    protected override bool TryActivate()
     {
-        if (blocks == null)
-            return false;
-
-        _activeBlocks = blocks;
+        _particleEffect.Play();
         Current.ConnectEffect();
         return true;
+    }
+
+    protected override void HandleUpdate() => _particleTransform.position = Current.WorldPosition;
+
+    protected override void Init()
+    {
+        _particleTransform = _particleEffect.transform;
+        _hitImpactTransform = _hitImpact.transform;
+    }
+
+    protected override void HandleDeactivate()
+    {
+        _particleEffect.Stop();
     }
 
     private IEnumerator DelayedActionNumberChanged(Block block)
     {
         yield return new WaitForSeconds(_hitImpact.main.duration);
-        InvokeActionNumberChanged(block, 1, true);
+        block.ChangeNumber(Power);
         block.PlayShakeAnimation();
+        EffectsPool.SpawnEffect(BlockAdditionalEffectEvents.Increase, block.WorldPosition);
     }
 }

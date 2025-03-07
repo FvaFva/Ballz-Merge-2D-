@@ -14,7 +14,7 @@ public class MainSceneInjection : MonoInstaller
     [Header("Bind")]
     [SerializeField] private Ball _ball;
     [SerializeField] private PhysicGrid _physicsGrid;
-    [SerializeField] private BlocksBus _blocksBus;
+    [SerializeField] private BlocksBinder _blocksBus;
     [SerializeField] private BallWaveVolume _ballLevelVolume;
 
     [Header("Inject")]
@@ -29,7 +29,7 @@ public class MainSceneInjection : MonoInstaller
     {
         Container.Bind<Ball>().FromInstance(_ball.PreLoad()).AsSingle().NonLazy();
         Container.Bind<PhysicGrid>().FromInstance(_physicsGrid).AsSingle().NonLazy();
-        Container.Bind<BlocksBus>().FromInstance(_blocksBus).AsSingle().NonLazy();
+        Container.Bind<BlocksBinder>().FromInstance(_blocksBus).AsSingle().NonLazy();
         Container.Bind<BallWaveVolume>().FromInstance(_ballLevelVolume).AsSingle().NonLazy();
         Container.Bind<AchievementSettingsGameBinder>().FromInstance(_achievementSource).AsSingle().NonLazy();
  

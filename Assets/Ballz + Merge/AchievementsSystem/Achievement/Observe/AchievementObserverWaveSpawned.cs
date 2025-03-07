@@ -5,7 +5,7 @@ namespace BallzMerge.Achievement
 {
     public class AchievementObserverWaveSpawned : AchievementObserverBase
     {
-        [Inject] private BlocksBus _blocksBus;
+        [Inject] private BlocksBinder _blocksBus;
 
         private int _wavesLeft;
 

@@ -12,7 +12,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     [Inject] private PhysicGrid _physicGrid;
     [Inject] private GridSettings _gridSettings;
-    [Inject] private BlocksBus _blocksBus;
+    [Inject] private BlocksBinder _blocksBus;
     [Inject] private BallWaveVolume _ballWaveVolume;
 
     private int _count;

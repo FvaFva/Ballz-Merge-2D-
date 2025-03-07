@@ -1,8 +1,6 @@
 using BallzMerge.Data;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class DisplayResolution : IGameSettingData
 {

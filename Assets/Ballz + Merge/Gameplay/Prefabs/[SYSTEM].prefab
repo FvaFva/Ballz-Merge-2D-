@@ -48,13 +48,20 @@ MonoBehaviour:
   _wavesToDrop: 1
   _selector: {fileID: 0}
   _drops:
-  - {fileID: 11400000, guid: 79f637b56a2d55248b3a787e42b02502, type: 2}
-  - {fileID: 11400000, guid: dacc77d3f6552014695d473165e2a20b, type: 2}
-  - {fileID: 11400000, guid: 54413f3ef302ceb4bbf39697c689569e, type: 2}
-  - {fileID: 11400000, guid: 11bc6811957ce1b4599cfe271d465ebb, type: 2}
-  - {fileID: 11400000, guid: 9346e50c2ab63fb44b2df9691d7e304d, type: 2}
-  - {fileID: 11400000, guid: 3c625a91e7c0eae44b1939c76c0c56a8, type: 2}
-  - {fileID: 11400000, guid: 386b6e21f9dd2934a8438fdc022e78c7, type: 2}
+  - Volume: {fileID: 0}
+    Rarity: {fileID: 0}
+  - Volume: {fileID: 0}
+    Rarity: {fileID: 0}
+  - Volume: {fileID: 0}
+    Rarity: {fileID: 0}
+  - Volume: {fileID: 0}
+    Rarity: {fileID: 0}
+  - Volume: {fileID: 0}
+    Rarity: {fileID: 0}
+  - Volume: {fileID: 0}
+    Rarity: {fileID: 0}
+  - Volume: {fileID: 0}
+    Rarity: {fileID: 0}
   _view: {fileID: 0}
 --- !u!1 &1836125578464020323
 GameObject:

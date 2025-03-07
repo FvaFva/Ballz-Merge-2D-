@@ -6,11 +6,13 @@ namespace BallzMerge.Gameplay.BlockSpace
     public abstract class BlockAdditionalEffectBase : MonoBehaviour
     {
         protected Block Current { get; private set; }
-        protected bool IsActive;
+        protected bool IsActive { get; private set; }
+        protected AdditionalEffectsPool EffectsPool { get; private set; }
+        protected BlocksInGame ActiveBlocks { get; private set; }
+        protected BlocksMover Mover {  get; private set; }
 
-        public event Action<Block, Vector2Int> BlockMoved;
-        public event Action<Block, int, bool> NumberChanged;
-        public event Action<Block> BlockDestroyed;
+        private Action UpdateHandler = () => { };
+
         public event Action<BlockAdditionalEffectBase> Removed;
 
         private void Awake()
@@ -18,45 +20,58 @@ namespace BallzMerge.Gameplay.BlockSpace
             Deactivate();
         }
 
+        private void FixedUpdate()
+        {
+            UpdateHandler();
+        }
+
+        public BlockAdditionalEffectBase Init(BlocksInGame blocks, AdditionalEffectsPool effectsPool, BlocksMover mover)
+        {
+            EffectsPool = effectsPool;
+            ActiveBlocks = blocks;
+            Mover = mover;
+            Init();
+            return this;
+        }
+
         public abstract void HandleWave();
 
-        public abstract void HandleEvent(BlockAdditionalEffectEventProperty property);
-
-        public void Init(Block targetBlock, BlocksInGame blocks)
+        public void Activate(Block targetBlock)
         {
             Current = targetBlock;
+            IsActive = true;
+            Current.Freed += OnBlockDestroy;
 
-            if (TryInit(blocks) == false)
-                Deactivate();
-            else
+            if (TryActivate())
+            {
+                UpdateHandler = HandleUpdate;
                 gameObject.SetActive(true);
+            }
+            else
+            {
+                Deactivate();
+            }
         }
 
         public void Deactivate()
         {
+            HandleDeactivate();
+            UpdateHandler = () => { };
             Current = null;
-            Removed?.Invoke(this);
+            IsActive = false;
             gameObject.SetActive(false);
+            Removed?.Invoke(this);
         }
 
-        protected void InvokeActionBlockMoved(Block block, Vector2Int direction)
+        protected abstract bool TryActivate();
+        protected abstract void HandleUpdate();
+        protected abstract void Init();
+        protected abstract void HandleDeactivate();
+
+        private void OnBlockDestroy(Block block)
         {
-            BlockMoved?.Invoke(block, direction);
+            block.Freed -= OnBlockDestroy;
+            Deactivate();
         }
-
-        protected void InvokeActionNumberChanged(Block block, int count, bool isEffect)
-        {
-            if (isEffect)
-                NumberChanged?.Invoke(block, count, true);
-            else
-                NumberChanged?.Invoke(block, count, false);
-        }
-
-        protected void InvokeActionBlockDestroyed(Block block)
-        {
-            BlockDestroyed?.Invoke(block);
-        }
-
-        protected abstract bool TryInit(BlocksInGame blocks);
     }
 }

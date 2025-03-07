@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: FieldExpander
   m_EditorClassIdentifier: 
   _type: 6
-  _counting: 1
+  _species: 1
   _icon: {fileID: -8206527719075107155, guid: 9f52384938bbcb04f955eeb31cbdf309, type: 3}
   _name: Field Expander
   _description: ' Expands the field horizontally'
+  _suffixes: []

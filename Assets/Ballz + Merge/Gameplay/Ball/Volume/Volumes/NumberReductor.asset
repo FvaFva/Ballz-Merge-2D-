@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: NumberReductor
   m_EditorClassIdentifier: 
   _type: 2
-  _counting: 0
+  _species: 0
   _icon: {fileID: -8346272617545206613, guid: 239c67cac2d3a76488ef1edec1af1e59, type: 3}
   _name: Number reductor
-  _description: When ball is contacts with block there is a chance to reduce his
-    number
-  _isReducible: 1
+  _description: When a block is hit, its number decreases by {WEIGHT}.
+  _suffixes: []
