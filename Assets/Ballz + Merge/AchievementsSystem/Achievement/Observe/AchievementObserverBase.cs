@@ -5,16 +5,18 @@ namespace BallzMerge.Achievement
     public abstract class AchievementObserverBase : IDisposable
     {
         protected readonly int Count;
-        protected readonly AchievementProperty Property;
+        public readonly AchievementProperty Property;
 
-        public event Action<AchievementsTypes, AchievementPointsStep> ReachedStep;
+        public event Action<AchievementsTypes, AchievementPointsStep, AchievementObserverBase> ReachedStep;
         public event Action<AchievementsTypes, int> ChangedPoints;
+        public event Action<AchievementsTypes, AchievementObserverBase> ReachedAchievement;
 
         public AchievementObserverBase(AchievementSettings settings, AchievementPointsStep pointsStep)
         {
             Property = new AchievementProperty(settings, pointsStep);
             Property.ChangedStep += OnStepChanged;
             Property.ChangedPoints += OnPointsChanged;
+            Property.Reached += OnAchievementReached;
             Count = 1;
         }
 
@@ -22,6 +24,7 @@ namespace BallzMerge.Achievement
         {
             Property.ChangedStep -= OnStepChanged;
             Property.ChangedPoints -= OnPointsChanged;
+            Property.Reached -= OnAchievementReached;
             Destruct();
         }
 
@@ -31,12 +34,18 @@ namespace BallzMerge.Achievement
 
         private void OnStepChanged()
         {
-            ReachedStep?.Invoke(Property.Type, Property.Values);
+            ReachedStep?.Invoke(Property.Type, Property.PointsStep, this);
         }
 
         private void OnPointsChanged(int count)
         {
             ChangedPoints?.Invoke(Property.Type, count);
+        }
+
+        protected void OnAchievementReached()
+        {
+            ReachedAchievement?.Invoke(Property.Type, this);
+            Dispose();
         }
     }
 }

@@ -1,37 +1,43 @@
 using System;
+using UnityEngine;
 
 namespace BallzMerge.Achievement
 {
     public class AchievementProperty
     {
         private AchievementSettings _settings;
-        private AchievementPointsStep _values;
+        private AchievementPointsStep _pointsStep;
 
         public AchievementProperty(AchievementSettings settings, AchievementPointsStep pointsStep)
         {
             _settings = settings;
-            _values = pointsStep;
+            _pointsStep = pointsStep;
             Type = settings.ID.Internal;
         }
 
         public readonly AchievementsTypes Type;
-        public AchievementPointsStep Values => _values;
+        public AchievementPointsStep PointsStep => _pointsStep;
+        public string Name => _settings.Name;
+        public string Description => _settings.Description;
+        public Sprite Image => _settings.Image;
+
         public event Action ChangedStep;
         public event Action<int> ChangedPoints;
+        public event Action Reached;
 
         public void Apply(int points)
         {
-            _values.Points += points;
-            int stepsReached = _settings.CheckReachedNewSteps(_values);
+            _pointsStep.Points += points;
 
-            for (int i = 0; i < stepsReached; i++)
+            if (_settings.CheckReachedNewSteps(_pointsStep.Points, ref _pointsStep.Step))
             {
-                _values.Step++;
                 ChangedStep?.Invoke();
+
+                if (_settings.CheckReachedAchievement(_pointsStep.Step))
+                    Reached?.Invoke();
             }
 
-            if (stepsReached == 0)
-                ChangedPoints?.Invoke(points);
+            ChangedPoints?.Invoke(_pointsStep.Points);
         }
     }
 }

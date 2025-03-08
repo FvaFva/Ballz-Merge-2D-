@@ -3,7 +3,7 @@
 namespace BallzMerge.Achievement
 {
     [Serializable]
-    public struct AchievementKyes
+    public struct AchievementKey
     {
         public string Google;
         public AchievementsTypes Internal;

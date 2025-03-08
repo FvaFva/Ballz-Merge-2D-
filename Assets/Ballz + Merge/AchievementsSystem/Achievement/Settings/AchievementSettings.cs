@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace BallzMerge.Achievement
 {
     [CreateAssetMenu(fileName = "New Achievement settings", menuName = "Bellz+Merge/Achievements/AchievementSettings", order = 51)]
@@ -11,23 +10,28 @@ namespace BallzMerge.Achievement
         [SerializeField] private string _name;
         [SerializeField] private string _description;
         [SerializeField] private Sprite _image;
-        [SerializeField] private AchievementKyes _iD;
+        [SerializeField] private AchievementKey _iD;
 
         public int MaxTargets => _steps.Count;
         public string Name => _name;
-        public AchievementKyes ID => _iD;
+        public string Description => _description;
+        public Sprite Image => _image;
+        public AchievementKey ID => _iD;
 
-        public int CheckReachedNewSteps(AchievementPointsStep pointsStep)
+        public bool CheckReachedNewSteps(int points, ref int step)
         {
-            int stepsReached = 0;
-
-            for (int i = pointsStep.Step; i < _steps.Count; i++)
+            for (int i = step; i < _steps.Count; i++)
             {
-                if (pointsStep.Points >= _steps[i])
-                    stepsReached ++;
+                if (points >= _steps[i])
+                {
+                    step++;
+                    return true;
+                }
             }
 
-            return stepsReached;
+            return false;
         }
+
+        public bool CheckReachedAchievement(int step) => step == _steps.Count - 1;
     }
 }

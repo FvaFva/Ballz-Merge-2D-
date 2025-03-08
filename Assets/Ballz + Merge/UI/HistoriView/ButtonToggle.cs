@@ -10,13 +10,13 @@ public class ButtonToggle
     [SerializeField] private TMP_Text _label;
 
     private string _originalLabel;
-    private string _ascendingText;
-    private string _descendingText;
+    private string _firstToggleLabel;
+    private string _secondToggleLabel;
     public bool State { get; private set; }
 
     private Action<ButtonToggle> _triggered;
 
-    public ButtonToggle Initialize(string ascendingText, string descendingText, Action<ButtonToggle> onTrigger)
+    public ButtonToggle Initialize(string firstToggleLabel, string secondToggleLabel, Action<ButtonToggle> onTrigger)
     {
         if (_label != null)
             _originalLabel = _label.text;
@@ -25,8 +25,8 @@ public class ButtonToggle
             _toggle.onClick.AddListener(ChangeState);
 
         _triggered = onTrigger;
-        _ascendingText = ascendingText;
-        _descendingText = descendingText;
+        _firstToggleLabel = firstToggleLabel;
+        _secondToggleLabel = secondToggleLabel;
         return this;
     }
 
@@ -48,7 +48,7 @@ public class ButtonToggle
             return;
 
         State = !State;
-        _label.text = State ? $"{_originalLabel} {_ascendingText}" : $"{_originalLabel} {_descendingText}";
+        _label.text = State ? $"{_originalLabel}{_firstToggleLabel}" : $"{_originalLabel}{_secondToggleLabel}";
         _triggered?.Invoke(this);
     }
 }

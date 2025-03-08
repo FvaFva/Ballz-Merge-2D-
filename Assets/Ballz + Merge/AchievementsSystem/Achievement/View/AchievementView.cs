@@ -4,20 +4,19 @@ using UnityEngine.UI;
 
 namespace BallzMerge.Achievement
 {
-    internal class AchievementView : MonoBehaviour
+    public class AchievementView : MonoBehaviour
     {
         [SerializeField] private TMP_Text _label;
+        [SerializeField] private TMP_Text _description;
         [SerializeField] private Image _icon;
 
-        public bool IsWithIcon { get; private set; }
+        public RectTransform RectTransform => (RectTransform)gameObject.transform;
 
-        public void Show(string text, Texture2D texture)
+        public void SetData(string label, string description, Sprite image)
         {
-            _label.text = text;
-            IsWithIcon = texture != null;
-
-            if (IsWithIcon)
-                _icon.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            _label.text = label;
+            _description.text = description;
+            _icon.sprite = image;
         }
     }
 }

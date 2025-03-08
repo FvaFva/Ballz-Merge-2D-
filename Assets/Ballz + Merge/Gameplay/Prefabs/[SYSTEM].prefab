@@ -89,7 +89,7 @@ Transform:
   m_GameObject: {fileID: 1836125578464020323}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 390.76685, y: 278.78625, z: -5.7791996}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -108,6 +108,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 0
+  _achievementView: {fileID: 8158375075602472419, guid: b46fce6cbbec40b45900093fd1251b3b, type: 3}
+  _achievementContainer: {fileID: 0}
 --- !u!1 &4883004509405864141
 GameObject:
   m_ObjectHideFlags: 0

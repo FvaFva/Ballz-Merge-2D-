@@ -28,7 +28,7 @@ namespace BallzMerge.GooglePGS
             _authenticator.Authenticated -= InitializeAchievementsDescriptions;
         }
 
-        public void IssueAchievement(AchievementKyes achievement, Action<bool> callback)
+        public void IssueAchievement(AchievementKey achievement, Action<bool> callback)
         {
             if (_isReadyToWork == false)
                 return;

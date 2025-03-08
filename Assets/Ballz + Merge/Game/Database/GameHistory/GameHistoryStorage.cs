@@ -35,7 +35,7 @@ namespace BallzMerge.Data
                                                game.{IDColumnName} as {IDColumnName},
                                                game.{ScoreColumnName} as {ScoreColumnName},
                                                game.{NumberColumnName} as {NumberColumnName},
-                                               strftime('%d.%m.', game.{DateColumnName}) || substr(strftime('%Y', game.{DateColumnName}), 3, 2) as {DateColumnName},
+                                               strftime('%d.%m.', game.{DateColumnName}) || substr(strftime('%Y', game.{DateColumnName}), 3, 2) || strftime(' %H:', game.{DateColumnName}) || strftime('%M', game.{DateColumnName}) as {DateColumnName},
                                                volumes.{_volumeStorage.ValueColumName} as {_volumeStorage.ValueColumName},
                                                volumes.{_volumeStorage.VolumeColumName} as {_volumeStorage.VolumeColumName}
                                           FROM {TableName} as game
