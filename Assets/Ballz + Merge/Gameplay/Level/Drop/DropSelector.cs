@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level
@@ -59,9 +60,15 @@ namespace BallzMerge.Gameplay.Level
 
         private void OnHideAnimationFinished()
         {
-            _callback();
             _firstSlot.Show(default);
             _secondSlot.Show(default);
+            StartCoroutine(DelayedCallBack());
+        }
+
+        private IEnumerator DelayedCallBack()
+        {
+            yield return new WaitForSeconds(AnimationTime);
+            _callback();
             gameObject.SetActive(false);
         }
     }

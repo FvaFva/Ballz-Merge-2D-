@@ -34,6 +34,7 @@ public class MainSceneInjection : MonoInstaller
         Container.Bind<AchievementSettingsGameBinder>().FromInstance(_achievementSource).AsSingle().NonLazy();
  
         Container.Bind<BlocksInGame>().FromNew().AsSingle().NonLazy();
+        Container.Bind<BlocksMover>().FromNew().AsSingle().NonLazy();
         Container.Bind<ISceneEnterPoint>().To<GameCycler>().FromInstance(_loader).AsSingle().NonLazy();
 
         Container.Inject(_blocksSpawner);

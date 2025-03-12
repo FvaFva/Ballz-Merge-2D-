@@ -11,10 +11,14 @@ namespace BallzMerge.Gameplay.BlockSpace
     {
         private static int _id = 0;
         static public int ID { get { return ++_id; } }
+
+        private const int OutBoardPosition = int.MaxValue;
+
         [SerializeField] private BlockViewModel _view;
         [SerializeField] private BlockPhysicModel _physic;
 
         [Inject] private GridSettings _gridSettings;
+        [Inject] private BlocksMover _mover;
 
         private Transform _transform;
         private Tweener _moveTween;
@@ -27,10 +31,9 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public event Action<Block, Vector2Int> Hit;
         public event Action<Block> CameToNewCell;
-        public event Action<Block> Freed;
+        public event Action<Block> Deactivated;
         public event Action<Block> Destroyed;
         public event Action<Block, int> NumberChanged;
-        public event Action<Block, Vector2Int> Moved;
 
         public List<string> Debug = new List<string>();
 
@@ -56,7 +59,6 @@ namespace BallzMerge.Gameplay.BlockSpace
             _transform.parent = parent;
             _view.Init(_gridSettings.MoveTime, _gridSettings.CellSize);
             _physic.Init(virtualBox);
-            IsAlive= true;
             Deactivate();
             return this;
         }
@@ -66,6 +68,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             Debug.Add("Activate");
             _transform.localPosition = (Vector2)gridPosition * _gridSettings.CellSize;
             IsWithEffect = false;
+            IsAlive = true;
             Number = number;
             GridPosition = gridPosition;
             _view.Activate(number, color);
@@ -74,11 +77,21 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void ConnectEffect()
         {
+            Debug.Add("Add effect");
             IsWithEffect = true;
         }
 
-        public void Move(Vector2Int step)
+        public bool Move(Vector2Int step, bool isMoveDown = false)
         {
+            if(IsAlive == false)
+                return false;
+
+            if(CantMove(step, isMoveDown))
+            {
+                PlayBounceAnimation(step);
+                return false;
+            }
+
             Debug.Add($"Move {step}");
             StopCurrentMoveTween();
             GridPosition += step;
@@ -86,10 +99,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             _moveTween = _transform
                 .DOLocalMove(newPosition, _gridSettings.MoveTime)
                 .OnComplete(OnComeToNewCell);
-            
+
             _view.AnimationMove(step);
-            Moved?.Invoke(this, step);
             _physic.Deactivate();
+            return true;
         }
 
         public void Merge(Vector3 worldPositionMergedBlock)
@@ -144,10 +157,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             _view.Deactivate();
             _physic.Deactivate();
             Number = 0;
-            _transform.localPosition = Vector2.zero;
+            _transform.localPosition = Vector2.one * OutBoardPosition;
             _transform.rotation = Quaternion.identity;
             StopCurrentMoveTween();
-            Freed?.Invoke(this);
+            Deactivated?.Invoke(this);
         }
 
         private void StopCurrentMoveTween()
@@ -166,5 +179,19 @@ namespace BallzMerge.Gameplay.BlockSpace
         }
 
         private void OnHit(Vector2Int direction) => Hit?.Invoke(this, direction);
+
+        private bool CantMove(Vector2Int step, bool isMoveDown)
+        {
+            bool downVector = step == Vector2Int.down;
+            bool forceDownMove = isMoveDown && downVector;
+
+            if (forceDownMove)
+                return false;
+
+            if (downVector)
+                return true;
+
+            return _mover.IsFree(GridPosition + step) == false;
+        }
     }
 }

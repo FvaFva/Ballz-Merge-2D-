@@ -11,4 +11,10 @@ public static class ListExtension
         list.Remove(element);
         return element;
     }
+
+    public static void TryRemove<T>(this List<T> list, T element)
+    {
+        if(list.Contains(element))
+            list.Remove(element);
+    }
 }

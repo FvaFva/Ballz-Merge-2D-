@@ -1,6 +1,7 @@
 ﻿using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.BlockSpace;
 using System;
+using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level
 {
@@ -8,13 +9,13 @@ namespace BallzMerge.Gameplay.Level
     {
         private Dropper _dropper;
         private BallAwaitBreaker _awaitBreaker;
-        private BlocksBinder _blockBus;
+        private BlocksBinder _binder;
 
-        public ConductorBetweenWaves(BallAwaitBreaker awaitBreaker, Dropper dropper, BlocksBinder bus)
+        public ConductorBetweenWaves(BallAwaitBreaker awaitBreaker, Dropper dropper, BlocksBinder binder)
         {
             _dropper = dropper;
             _awaitBreaker = awaitBreaker;
-            _blockBus = bus;
+            _binder = binder;
         }
 
         public event Action WaveLoaded;
@@ -22,7 +23,7 @@ namespace BallzMerge.Gameplay.Level
 
         public void Start()
         {
-            ProcessBus();
+            ProcessBinder();
         }
 
         private void ProcessDropper() 
@@ -35,13 +36,18 @@ namespace BallzMerge.Gameplay.Level
                 ProcessBall();
         }
 
-        private void ProcessBus()
+        private void ProcessBinder()
         {
-            if (_blockBus.TryFinish())
+            if (_binder.TryFinish())
+            {
                 GameFinished?.Invoke();
-            else
-                _blockBus.StartSpawnWave(ProcessDropper);
+                return;
+            }
+
+            _binder.StartMoveAllBlocks(Vector2Int.down, AfterMoveBlock);
         }
+
+        private void AfterMoveBlock() => _binder.StartSpawnWave(ProcessDropper);
 
         private void ProcessBall()
         {

@@ -121,14 +121,14 @@ namespace BallzMerge.Gameplay.BlockSpace
             if (subscribe)
             {
                 block.Hit += OnBlockHit;
-                block.Freed += Remove;
+                block.Deactivated += Remove;
                 block.CameToNewCell += OnBlockCameNewPosition;
                 block.Destroyed += OnBlockDestroy;
             }
             else
             {
                 block.Hit -= OnBlockHit;
-                block.Freed -= Remove;
+                block.Deactivated -= Remove;
                 block.CameToNewCell -= OnBlockCameNewPosition;
                 block.Destroyed -= OnBlockDestroy;
             }

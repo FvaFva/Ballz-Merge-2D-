@@ -9,7 +9,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         protected bool IsActive { get; private set; }
         protected AdditionalEffectsPool EffectsPool { get; private set; }
         protected BlocksInGame ActiveBlocks { get; private set; }
-        protected BlocksMover Mover {  get; private set; }
 
         private Action UpdateHandler = () => { };
 
@@ -25,11 +24,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             UpdateHandler();
         }
 
-        public BlockAdditionalEffectBase Init(BlocksInGame blocks, AdditionalEffectsPool effectsPool, BlocksMover mover)
+        public BlockAdditionalEffectBase Init(BlocksInGame blocks, AdditionalEffectsPool effectsPool)
         {
             EffectsPool = effectsPool;
             ActiveBlocks = blocks;
-            Mover = mover;
             Init();
             return this;
         }
@@ -40,10 +38,11 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             Current = targetBlock;
             IsActive = true;
-            Current.Freed += OnBlockDestroy;
+            Current.Deactivated += OnBlockDestroy;
 
             if (TryActivate())
             {
+                HandleUpdate();
                 UpdateHandler = HandleUpdate;
                 gameObject.SetActive(true);
             }
@@ -70,7 +69,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void OnBlockDestroy(Block block)
         {
-            block.Freed -= OnBlockDestroy;
+            block.Deactivated -= OnBlockDestroy;
             Deactivate();
         }
     }

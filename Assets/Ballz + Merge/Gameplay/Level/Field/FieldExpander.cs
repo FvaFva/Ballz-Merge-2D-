@@ -12,7 +12,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     [Inject] private PhysicGrid _physicGrid;
     [Inject] private GridSettings _gridSettings;
-    [Inject] private BlocksBinder _blocksBus;
+    [Inject] private BlocksBinder _blocksBinder;
     [Inject] private BallWaveVolume _ballWaveVolume;
 
     private int _count;
@@ -88,7 +88,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     {
         _gridSettings.AddSize(Vector2Int.up);
         _physicGrid.SpawnRow(++_extraRows);
-        _blocksBus.MoveAllBlocks(Vector2Int.up);
+        _blocksBinder.StartMoveAllBlocks(Vector2Int.up, () => { return; });
         SetComponentsPosition(_propertyRow);
         _boards.ChangePositionScale(false, _propertyRow);
     }

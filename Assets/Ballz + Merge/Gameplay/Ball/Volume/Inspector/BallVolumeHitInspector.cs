@@ -12,15 +12,13 @@ public class BallVolumeHitInspector
     [Inject] private readonly BallWaveVolume _ballLevelVolume;
     [Inject] private readonly GridSettings _grid;
 
-    private readonly BlocksMover _mover;
     private readonly BlockMagneticObserver _magneticObserver;
     private readonly Dictionary<BallVolumesTypes, Action<BallVolumeHitData, DropRarity>> _map;
 
     [Inject]
-    public BallVolumeHitInspector(BlocksMover mover, DiContainer diContainer)
+    public BallVolumeHitInspector(DiContainer diContainer)
     {
         _map = new Dictionary<BallVolumesTypes, Action<BallVolumeHitData, DropRarity>>();
-        _mover = mover;
         _magneticObserver = diContainer.Instantiate<BlockMagneticObserver>();
         Bind();
     }
@@ -71,7 +69,7 @@ public class BallVolumeHitInspector
             var extraBlock = _blocks.GetAtPosition(extraBlockPosition);
 
             if(extraBlock != null)
-                _mover.Try(extraBlock, data.Direction);
+                extraBlock.Move(data.Direction);
         }
     }
 }

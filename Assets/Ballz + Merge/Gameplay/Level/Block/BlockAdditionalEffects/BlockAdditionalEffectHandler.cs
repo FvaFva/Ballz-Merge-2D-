@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlockAdditionalEffectHandler : CyclicBehavior, ILevelFinisher
+    public class BlockAdditionalEffectHandler : CyclicBehavior, ILevelFinisher, IWaveUpdater
     {
         [SerializeField] private BlockAdditionalEffectSettings _settings;
         [SerializeField] private AdditionalEffectsPool _effectsPool;
@@ -12,20 +12,18 @@ namespace BallzMerge.Gameplay.BlockSpace
         [SerializeField] private int _countOfPreload;
 
         private BlocksInGame _activeBlocks;
-        private BlocksMover _mover;
         private Queue<BlockAdditionalEffectBase> _effects;
         private List<BlockAdditionalEffectBase> _activeEffects;
 
-        public void Init(BlocksInGame activeBlocks, BlocksMover mover)
+        public void Init(BlocksInGame activeBlocks)
         {
             _activeBlocks = activeBlocks;
-            _mover = mover;
             _effects = new Queue<BlockAdditionalEffectBase>();
             _activeEffects = new List<BlockAdditionalEffectBase>();
 
             for (int i = 0; i < _settings.Properties.Length; i++)
                 for (int j = 0; j < _countOfPreload; j++)
-                    _effects.Enqueue(Instantiate(_settings.Properties[i].Prefab, transform).Init(_activeBlocks, _effectsPool, _mover));
+                    _effects.Enqueue(Instantiate(_settings.Properties[i].Prefab, transform).Init(_activeBlocks, _effectsPool));
         }
 
         public void FinishLevel()
@@ -34,16 +32,19 @@ namespace BallzMerge.Gameplay.BlockSpace
                 effect.Deactivate();
         }
 
-        public void HandleWave(IEnumerable<Block> wave)
+        public void UpdateWave()
         {
             foreach (var activeEffect in _activeEffects.ToArray())
                 activeEffect.HandleWave();
+        }
 
+        public void HandleWave(IEnumerable<Block> wave)
+        {
             if (wave.Count() == 0 || _settings.ChanceToGetPrefab() == false)
                 return;
 
             if (_effects.TryDequeue(out BlockAdditionalEffectBase effect) == false)
-                effect = Instantiate(_settings.GetPrefab(), transform).Init(_activeBlocks, _effectsPool, _mover);
+                effect = Instantiate(_settings.GetPrefab(), transform).Init(_activeBlocks, _effectsPool);
 
             _activeEffects.Add(effect);
             UpdateEffectSubscription(effect, true);

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +16,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private Transform _particleFirstTransform;
         private Transform _particleLastTransform;
         private Dictionary<Block, bool> _blocksSubscriptionStates = new Dictionary<Block, bool>();
+        private bool _isActive;
 
         public override void HandleWave()
         {
@@ -27,13 +27,16 @@ namespace BallzMerge.Gameplay.BlockSpace
         protected override bool TryActivate()
         {
             _connectBlock = ActiveBlocks.GetRandomBlock(Current);
+            _blocksSubscriptionStates.Add(Current, false);
 
             if (_connectBlock == null)
                 return false;
 
+            _isActive = true;
+            ChangeViewActivity(true);
             Current.ConnectEffect();
             _connectBlock.ConnectEffect();
-            _blocksSubscriptionStates.Add(Current, false);
+            _connectBlock.Deactivated += HandleDeactivateBlock;
             _blocksSubscriptionStates.Add(_connectBlock, false);
             UpdateSubscription(Current, true);
             UpdateSubscription(_connectBlock, true);
@@ -54,11 +57,20 @@ namespace BallzMerge.Gameplay.BlockSpace
             _particleLastTransform = _particleLast.transform;
         }
 
-        protected override void HandleDeactivate()
+        protected override void HandleDeactivate() => HandleDeactivateBlock(Current);
+
+        private void HandleDeactivateBlock(Block block)
         {
-            UpdateSubscription(_connectBlock, false);
-            UpdateSubscription(Current, false);
-            _blocksSubscriptionStates.Clear();
+            if (_isActive)
+            {
+                _isActive = false;
+                ChangeViewActivity(false);
+                UpdateSubscription(_connectBlock, false);
+                UpdateSubscription(Current, false);
+                _connectBlock.Deactivated -= HandleDeactivateBlock;
+                _blocksSubscriptionStates.Clear();
+                Another(block).Destroy();
+            }
         }
 
         private void UpdateSubscription(Block block, bool isActive)
@@ -73,46 +85,42 @@ namespace BallzMerge.Gameplay.BlockSpace
 
             if (isActive)
             {
-                block.Moved += OnMoved;
-                block.Destroyed += OnDestroyed;
+                block.Hit += OnHit;
                 block.NumberChanged += OnNumberChanged;
             }
             else
             {
-                block.Moved -= OnMoved;
-                block.Destroyed -= OnDestroyed;
+                block.Hit -= OnHit;
                 block.NumberChanged -= OnNumberChanged;
             }
         }
 
         private void OnNumberChanged(Block block, int Count)
         {
-            var another = block == Current ? _connectBlock : Current;
-            UpdateSubscription(another, false);
+            var another = Another(block);
+            block.NumberChanged -= OnNumberChanged;
             another.ChangeNumber(Count);
+            block.NumberChanged += OnNumberChanged;
+        }
 
-            if(another.IsAlive)
-                UpdateSubscription(another, true);
+        private void OnHit(Block block, Vector2Int step) => Another(block).Move(step);
+
+        private Block Another(Block block) => block == Current ? _connectBlock : Current;
+
+        private void ChangeViewActivity(bool isActive)
+        {
+            _renderer.enabled = isActive;
+
+            if (isActive)
+            {
+                _particleLast.Play();
+                _particleFirst.Play();
+            }
             else
-                block.Destroy();
-        }
-
-        private void OnDestroyed(Block block)
-        {
-            var another = block == Current ? _connectBlock : Current;
-            UpdateSubscription(another, false);
-            another.Destroy();
-        }
-
-        private void OnMoved(Block block, Vector2Int step)
-        {
-            if (step == Vector2Int.down)
-                return;
-
-            var another = block == Current ? _connectBlock : Current;
-            another.Moved -= OnMoved;
-            Mover.Try(another, step);
-            another.Moved += OnMoved;
+            {
+                _particleLast.Stop();
+                _particleFirst.Stop();
+            }
         }
     }
 }
