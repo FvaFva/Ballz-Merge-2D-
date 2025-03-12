@@ -47,21 +47,29 @@ MonoBehaviour:
   _initOrder: 0
   _wavesToDrop: 1
   _selector: {fileID: 0}
-  _drops:
-  - Volume: {fileID: 0}
-    Rarity: {fileID: 0}
-  - Volume: {fileID: 0}
-    Rarity: {fileID: 0}
-  - Volume: {fileID: 0}
-    Rarity: {fileID: 0}
-  - Volume: {fileID: 0}
-    Rarity: {fileID: 0}
-  - Volume: {fileID: 0}
-    Rarity: {fileID: 0}
-  - Volume: {fileID: 0}
-    Rarity: {fileID: 0}
-  - Volume: {fileID: 0}
-    Rarity: {fileID: 0}
+  _rar: {fileID: 11400000, guid: de1bfb22cde269241bb3c06c6f4ae76d, type: 2}
+  _legendary: {fileID: 11400000, guid: 0cf2a46033e6a4e41980736da5596fbd, type: 2}
+  _common: {fileID: 11400000, guid: a3ee3d68bf5a68a47b9136ccd18ae439, type: 2}
+  _commons:
+  - {fileID: 11400000, guid: 633131de00ef3bb44a8a18b2acf5d1e1, type: 2}
+  - {fileID: 11400000, guid: f1fb058d57eab7842be4166ded94430e, type: 2}
+  - {fileID: 11400000, guid: 476b26b56fdac45449b8767e352f51aa, type: 2}
+  - {fileID: 11400000, guid: 912ba8b549bc0cd4aa089d39f842c595, type: 2}
+  - {fileID: 11400000, guid: 539050c420ce7784793c42545581a1ba, type: 2}
+  - {fileID: 11400000, guid: 8eaa075cc9c38ce45b9609f930942331, type: 2}
+  _rarities:
+  - {fileID: 11400000, guid: 633131de00ef3bb44a8a18b2acf5d1e1, type: 2}
+  - {fileID: 11400000, guid: f1fb058d57eab7842be4166ded94430e, type: 2}
+  - {fileID: 11400000, guid: 476b26b56fdac45449b8767e352f51aa, type: 2}
+  - {fileID: 11400000, guid: e3d4edb00e8da054d8d306795fbac0c8, type: 2}
+  - {fileID: 11400000, guid: 912ba8b549bc0cd4aa089d39f842c595, type: 2}
+  - {fileID: 11400000, guid: 539050c420ce7784793c42545581a1ba, type: 2}
+  - {fileID: 11400000, guid: 8eaa075cc9c38ce45b9609f930942331, type: 2}
+  _legends:
+  - {fileID: 11400000, guid: 633131de00ef3bb44a8a18b2acf5d1e1, type: 2}
+  - {fileID: 11400000, guid: f1fb058d57eab7842be4166ded94430e, type: 2}
+  - {fileID: 11400000, guid: 912ba8b549bc0cd4aa089d39f842c595, type: 2}
+  - {fileID: 11400000, guid: 8eaa075cc9c38ce45b9609f930942331, type: 2}
   _view: {fileID: 0}
 --- !u!1 &1836125578464020323
 GameObject:

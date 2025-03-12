@@ -10,12 +10,17 @@ namespace BallzMerge.Achievement
         [SerializeField] private TMP_Text _description;
         [SerializeField] private Image _icon;
 
-        public RectTransform RectTransform => (RectTransform)gameObject.transform;
+        public RectTransform RectTransform { get; private set; }
 
-        public void SetData(string label, string description, Sprite image)
+        private void Awake()
+        {
+            RectTransform = (RectTransform)transform;
+        }
+
+        public void SetData(string label, string description, Sprite image, int currentStep, int maxTargets)
         {
             _label.text = label;
-            _description.text = description;
+            _description.text = currentStep != 0 ? $"({currentStep}/{maxTargets})\n{description}" : description;
             _icon.sprite = image;
         }
     }

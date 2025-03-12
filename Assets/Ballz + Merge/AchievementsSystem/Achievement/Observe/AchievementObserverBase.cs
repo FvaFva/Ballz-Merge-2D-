@@ -7,9 +7,9 @@ namespace BallzMerge.Achievement
         protected readonly int Count;
         public readonly AchievementProperty Property;
 
-        public event Action<AchievementsTypes, AchievementPointsStep, AchievementObserverBase> ReachedStep;
+        public event Action<AchievementsTypes, AchievementPointsStep, AchievementData, AchievementObserverBase> ReachedStep;
         public event Action<AchievementsTypes, int> ChangedPoints;
-        public event Action<AchievementsTypes, AchievementObserverBase> ReachedAchievement;
+        public event Action<AchievementsTypes, AchievementData, AchievementObserverBase> ReachedAchievement;
 
         public AchievementObserverBase(AchievementSettings settings, AchievementPointsStep pointsStep)
         {
@@ -32,19 +32,19 @@ namespace BallzMerge.Achievement
 
         public abstract void Construct();
 
-        private void OnStepChanged()
+        private void OnStepChanged(AchievementsTypes achievementType, AchievementPointsStep pointsStep, AchievementData achievementData)
         {
-            ReachedStep?.Invoke(Property.Type, Property.PointsStep, this);
+            ReachedStep?.Invoke(achievementType, pointsStep, achievementData, this);
         }
 
-        private void OnPointsChanged(int count)
+        private void OnPointsChanged(AchievementsTypes achievementType, int count)
         {
-            ChangedPoints?.Invoke(Property.Type, count);
+            ChangedPoints?.Invoke(achievementType, count);
         }
 
-        protected void OnAchievementReached()
+        protected void OnAchievementReached(AchievementsTypes achievementType, AchievementData achievementData)
         {
-            ReachedAchievement?.Invoke(Property.Type, this);
+            ReachedAchievement?.Invoke(achievementType, achievementData, this);
             Dispose();
         }
     }
