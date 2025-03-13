@@ -7,23 +7,22 @@ namespace BallzMerge.Achievement
     {
         private AchievementSettings _settings;
         private AchievementPointsStep _pointsStep;
+        private readonly AchievementsTypes _type;
+        private readonly AchievementData _data;
 
         public AchievementProperty(AchievementSettings settings, AchievementPointsStep pointsStep)
         {
             _settings = settings;
             _pointsStep = pointsStep;
-            Type = settings.ID.Internal;
+            _type = settings.ID.Internal;
+            _data = new AchievementData(_settings.Name, _settings.Description, _settings.Image, _settings.MaxTargets);
         }
 
-        public readonly AchievementsTypes Type;
         public AchievementPointsStep PointsStep => _pointsStep;
-        public string Name => _settings.Name;
-        public string Description => _settings.Description;
-        public Sprite Image => _settings.Image;
 
-        public event Action ChangedStep;
-        public event Action<int> ChangedPoints;
-        public event Action Reached;
+        public event Action<AchievementsTypes, AchievementPointsStep, AchievementData> ChangedStep;
+        public event Action<AchievementsTypes, int> ChangedPoints;
+        public event Action<AchievementsTypes, AchievementData> Reached;
 
         public void Apply(int points)
         {
@@ -31,13 +30,13 @@ namespace BallzMerge.Achievement
 
             if (_settings.CheckReachedNewSteps(_pointsStep.Points, ref _pointsStep.Step))
             {
-                ChangedStep?.Invoke();
+                ChangedStep?.Invoke(_type, _pointsStep, _data);
 
                 if (_settings.CheckReachedAchievement(_pointsStep.Step))
-                    Reached?.Invoke();
+                    Reached?.Invoke(_type, _data);
             }
 
-            ChangedPoints?.Invoke(_pointsStep.Points);
+            ChangedPoints?.Invoke(_type, _pointsStep.Points);
         }
     }
 }

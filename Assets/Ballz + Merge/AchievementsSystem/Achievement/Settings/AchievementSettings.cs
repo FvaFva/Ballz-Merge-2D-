@@ -20,18 +20,20 @@ namespace BallzMerge.Achievement
 
         public bool CheckReachedNewSteps(int points, ref int step)
         {
+            bool isReached = false;
+
             for (int i = step; i < _steps.Count; i++)
             {
                 if (points >= _steps[i])
                 {
                     step++;
-                    return true;
+                    isReached = true;
                 }
             }
 
-            return false;
+            return isReached;
         }
 
-        public bool CheckReachedAchievement(int step) => step == _steps.Count - 1;
+        public bool CheckReachedAchievement(int step) => step == _steps.Count;
     }
 }

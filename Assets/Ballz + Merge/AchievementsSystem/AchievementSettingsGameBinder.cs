@@ -76,16 +76,16 @@ namespace BallzMerge.Achievement
             _bus.AddPoints(type, points);
         }
 
-        private void OnStepReached(AchievementsTypes type, AchievementPointsStep pointsStep, AchievementObserverBase observer)
+        private void OnStepReached(AchievementsTypes type, AchievementPointsStep pointsStep, AchievementData achievementData, AchievementObserverBase observer)
         {
             _bus.AddSteps(type, pointsStep);
-            _displayer.SpawnView(observer.Property.Name, observer.Property.Description, observer.Property.Image);
+            _displayer.SpawnView(achievementData.Name, achievementData.Description, achievementData.Image, pointsStep.Step, achievementData.MaxTargets);
         }
 
-        private void OnReachedAchievement(AchievementsTypes type, AchievementObserverBase observer)
+        private void OnReachedAchievement(AchievementsTypes type, AchievementData achievementData, AchievementObserverBase observer)
         {
             _bus.ReachAchievement(type);
-            _displayer.SpawnView("Открыто достижение!", observer.Property.Name, observer.Property.Image);
+            _displayer.SpawnView("Открыто достижение!", achievementData.Name, achievementData.Image, 0, 0);
         }
     }
 }

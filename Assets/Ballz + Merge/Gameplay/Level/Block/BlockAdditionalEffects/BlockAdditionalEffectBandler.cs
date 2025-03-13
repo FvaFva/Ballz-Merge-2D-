@@ -75,7 +75,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void UpdateSubscription(Block block, bool isActive)
         {
-            if(block == null) 
+            if(block == null || _blocksSubscriptionStates.ContainsKey(block) == false) 
                 return;
 
             if (_blocksSubscriptionStates[block] == isActive)

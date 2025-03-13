@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 318efa92e696cb54f9b13999dc381c75, type: 3}
   m_Name: AchievementBlocksDestroyerSettings
   m_EditorClassIdentifier: 
-  _steps: 0100000003000000
+  _steps: 010000000200000003000000
   _name: Destroyer
   _description: "\u041D\u0430\u0447\u0438\u0441\u043B\u044F\u0435\u0442\u0441\u044F
     \u043F\u0440\u0438 \u0443\u043D\u0438\u0447\u0442\u043E\u0436\u0435\u043D\u0438\u0438
