@@ -10,12 +10,20 @@ public class SliderValueView : MonoBehaviour, IDisposable
     [SerializeField] private TMP_Text _header;
     [SerializeField] private string _key;
 
+    public RectTransform RectTransform { get; private set; }
+
     private int _countOfPresets;
     private float _step;
     private int _preset;
     private bool _isStepByStep;
 
     public event Action<string, float> ValueChanged;
+
+    public SliderValueView Init()
+    {
+        RectTransform = (RectTransform)transform;
+        return this;
+    }
 
     public void Dispose()
     {

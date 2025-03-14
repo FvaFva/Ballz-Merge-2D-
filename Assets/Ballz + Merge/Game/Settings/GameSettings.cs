@@ -70,13 +70,13 @@ namespace BallzMerge.Root.Settings
 
         private void GenerateMenu()
         {
-            _settingsMenu.Add(SoundVolumeGlobal, PanelToggleType.AudioToggle);
-            _settingsMenu.Add(SoundVolumeEffects, PanelToggleType.AudioToggle);
-            _settingsMenu.Add(SoundVolumeMusic, PanelToggleType.AudioToggle);
-            _settingsMenu.Add(DisplayQualityPreset, PanelToggleType.DisplayToggle);
-            _settingsMenu.Add(DisplayResolution, PanelToggleType.DisplayToggle);
-            _settingsMenu.Add(DisplayMode, PanelToggleType.DisplayToggle);
-            _settingsMenu.Add(_timeScaler, PanelToggleType.AudioToggle);
+            _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeGlobal, PanelToggleType.AudioToggle);
+            _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeEffects, PanelToggleType.AudioToggle);
+            _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeMusic, PanelToggleType.AudioToggle);
+            _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayQualityPreset, PanelToggleType.DisplayToggle);
+            _settingsMenu.AddInstantiate(GameSettingType.GameScreenResolutionSetting, DisplayResolution, PanelToggleType.DisplayToggle);
+            _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayMode, PanelToggleType.DisplayToggle);
+            _settingsMenu.AddInstantiate(GameSettingType.GameSetting, _timeScaler, PanelToggleType.AudioToggle);
         }
 
         private void OnSettingsChanged(string key, float value)

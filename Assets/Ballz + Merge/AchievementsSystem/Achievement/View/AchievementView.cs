@@ -23,5 +23,11 @@ namespace BallzMerge.Achievement
             _description.text = currentStep != 0 ? $"({currentStep}/{maxTargets})\n{description}" : description;
             _icon.sprite = image;
         }
+
+        public AchievementView SetBackgroundColor(Color color)
+        {
+            _icon.color = color;
+            return this;
+        }
     }
 }
