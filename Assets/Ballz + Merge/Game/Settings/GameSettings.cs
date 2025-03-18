@@ -4,9 +4,9 @@ namespace BallzMerge.Root.Settings
 {
     using Data;
     using System.Collections.Generic;
-    using System.Threading.Channels;
     using UnityEngine;
     using UnityEngine.Audio;
+    using UnityEngine.UI;
 
     public class GameSettings : IDisposable
     {
@@ -20,16 +20,19 @@ namespace BallzMerge.Root.Settings
             SoundVolumeGlobal = new GameSettingsDataProxyAudio(mixer, "Global");
             SoundVolumeEffects = new GameSettingsDataProxyAudio(mixer, "Effects");
             SoundVolumeMusic = new GameSettingsDataProxyAudio(mixer, "Music");
-            DisplayApplier = new DisplayApplier();
             DisplayQualityPreset = new QualityPreset("Quality");
-            DisplayResolution = new DisplayResolution("Resolution", DisplayApplier);
-            DisplayMode = new DisplayMode("Display", DisplayApplier);
+            DisplayResolution = new DisplayResolution("Resolution");
+            DisplayMode = new DisplayMode("Display");
             _timeScaler = timeScaler;
             _settingsMenu = settingsMenu;
             _settingsMenu.ValueChanged += OnSettingsChanged;
             _db = db;
             CashSettings();
             GenerateMenu();
+            Button applyButton = _settingsMenu.GetApplyButton(GameSettingType.GameScreenResolutionSetting);
+            DisplayApplier = new DisplayApplier(applyButton);
+            DisplayResolution.SetDisplayApplier(DisplayApplier);
+            DisplayMode.SetDisplayApplier(DisplayApplier);
         }
 
         public readonly GameSettingsDataProxyAudio SoundVolumeGlobal;
@@ -75,7 +78,7 @@ namespace BallzMerge.Root.Settings
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeMusic, PanelToggleType.AudioToggle);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayQualityPreset, PanelToggleType.DisplayToggle);
             _settingsMenu.AddInstantiate(GameSettingType.GameScreenResolutionSetting, DisplayResolution, PanelToggleType.DisplayToggle);
-            _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayMode, PanelToggleType.DisplayToggle);
+            _settingsMenu.AddExist(GameSettingType.GameScreenResolutionSetting, DisplayMode);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, _timeScaler, PanelToggleType.AudioToggle);
         }
 
