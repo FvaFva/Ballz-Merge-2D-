@@ -16,6 +16,12 @@ public class SliderValueView : MonoBehaviour, IDisposable
     private Dictionary<IGameSettingData, SliderProperty> _slidersTypes = new Dictionary<IGameSettingData, SliderProperty>();
 
     public event Action<string, float> ValueChanged;
+    public event Action Initialized;
+
+    private void OnEnable()
+    {
+        Initialized?.Invoke();
+    }
 
     public void Init(IGameSettingData settingData)
     {
@@ -36,7 +42,7 @@ public class SliderValueView : MonoBehaviour, IDisposable
     {
         SliderProperty sliderProperty = _slidersTypes.Values.Where(sp => sp.SettingData == settingData).FirstOrDefault();
         sliderProperty.SetLabel(settingData.Label);
-        _slidersTypes[settingData] = sliderProperty.SetStartValues(settingData.Value);
+        _slidersTypes[settingData] = sliderProperty.SetValue(settingData.Value);
     }
 
     public SliderValueView SetProperty(IGameSettingData settingData, int? countOfPresets = null, string header = "", string key = "")

@@ -26,11 +26,13 @@ namespace BallzMerge.Root.Settings
             _timeScaler = timeScaler;
             _settingsMenu = settingsMenu;
             _settingsMenu.ValueChanged += OnSettingsChanged;
+            _settingsMenu.Initialized += ReadData;
             _db = db;
             CashSettings();
             GenerateMenu();
             Button applyButton = _settingsMenu.GetApplyButton(GameSettingType.GameScreenResolutionSetting);
             DisplayApplier = new DisplayApplier(applyButton);
+            DisplayApplier.Applied += OnSettingsApplyChanges;
             DisplayResolution.SetDisplayApplier(DisplayApplier);
             DisplayMode.SetDisplayApplier(DisplayApplier);
         }
@@ -46,6 +48,7 @@ namespace BallzMerge.Root.Settings
         public void Dispose()
         {
             _settingsMenu.ValueChanged -= OnSettingsChanged;
+            _settingsMenu.Initialized -= ReadData;
         }
 
         public void ReadData()
@@ -91,7 +94,16 @@ namespace BallzMerge.Root.Settings
 
             changed.Change(value);
             _settingsMenu.UpdateLabel(changed);
-            _db.Set(changed);
+
+            if (changed == DisplayMode || changed == DisplayResolution)
+                return;
+
+            OnSettingsApplyChanges(changed);
+        }
+
+        private void OnSettingsApplyChanges(IGameSettingData settingData)
+        {
+            _db.Set(settingData);
         }
     }
 }

@@ -1,4 +1,5 @@
 using BallzMerge.Data;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -31,14 +32,13 @@ public class DisplayResolution : IGameSettingData
     public void SetDisplayApplier(DisplayApplier displayApplier)
     {
         _displayApplier = displayApplier;
-        _displayApplier.SetResolution(_resolution);
     }
 
     public void Change(float value)
     {
         Value = value;
-        Label = $"{_resolutions[Mathf.RoundToInt(Value)].width}x{_resolutions[Mathf.RoundToInt(Value)].height}";
-        _resolution = _resolutions[Mathf.RoundToInt(Value)];
-        _displayApplier.SetResolution(_resolution);
+        Label = $"{_resolutions[(int)Math.Ceiling(Value)].width}x{_resolutions[(int)Math.Ceiling(Value)].height}";
+        _resolution = _resolutions[(int)Math.Ceiling(Value)];
+        _displayApplier.SetResolution(_resolution, this, Value);
     }
 }

@@ -22,7 +22,7 @@ public class DisplayMode : IGameSettingData
 
         _modes = new List<DisplayType>
         {
-            { new DisplayType(FullScreenMode.FullScreenWindow, "Windowed fullscreen") },
+            { new DisplayType(FullScreenMode.FullScreenWindow, "Windowed Fullscreen") },
             { new DisplayType(FullScreenMode.ExclusiveFullScreen, "Fullscreen") },
             { new DisplayType(FullScreenMode.Windowed, "Windowed") }
         };
@@ -44,7 +44,6 @@ public class DisplayMode : IGameSettingData
     public void SetDisplayApplier(DisplayApplier displayApplier)
     {
         _displayApplier = displayApplier;
-        _displayApplier.SetScreenMode(_fullScreenMode);
     }
 
     public void Change(float value)
@@ -52,6 +51,6 @@ public class DisplayMode : IGameSettingData
         Value = value;
         Label = _modes[Mathf.RoundToInt(Value)].DisplayName;
         _fullScreenMode = _modes[Mathf.RoundToInt(Value)].FullScreenMode;
-        _displayApplier.SetScreenMode(_fullScreenMode);
+        _displayApplier.SetScreenMode(_fullScreenMode, this, Value);
     }
 }

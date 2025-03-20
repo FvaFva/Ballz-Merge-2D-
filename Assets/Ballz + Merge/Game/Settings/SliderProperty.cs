@@ -10,10 +10,9 @@ public class SliderProperty : IDisposable
     [SerializeField] private Slider _slider;
     [SerializeField] private TMP_Text _label;
     [SerializeField] private TMP_Text _header;
-    [SerializeField] private IGameSettingData _settingData;
     [SerializeField] private string _key;
 
-    public IGameSettingData SettingData => _settingData;
+    public IGameSettingData SettingData { get; private set; }
 
     private int _countOfPresets;
     private float _step;
@@ -25,18 +24,19 @@ public class SliderProperty : IDisposable
     public void Dispose()
     {
         _slider.onValueChanged.RemoveListener(SetPreset);
-        _slider.onValueChanged.RemoveListener(SetValue);
+        _slider.onValueChanged.RemoveListener(OnValueChanged);
     }
 
     public void SetSettingData(IGameSettingData settingData)
     {
-        _settingData = settingData;
+        SettingData = settingData;
     }
 
-    public SliderProperty SetStartValues(float value)
+    public SliderProperty SetValue(float value)
     {
         if (_isStepByStep)
         {
+            _slider.value = 0;
             _preset = Mathf.RoundToInt(value);
 
             for (float i = _preset; i > 0; i--)
@@ -62,7 +62,7 @@ public class SliderProperty : IDisposable
         }
         else
         {
-            _slider.onValueChanged.AddListener(SetValue);
+            _slider.onValueChanged.AddListener(OnValueChanged);
         }
 
         if (string.IsNullOrEmpty(header) == false)
@@ -79,7 +79,7 @@ public class SliderProperty : IDisposable
         return this;
     }
 
-    private void SetValue(float value)
+    private void OnValueChanged(float value)
     {
         ValueChanged?.Invoke(_key, value);
     }
