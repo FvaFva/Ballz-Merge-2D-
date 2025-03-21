@@ -13,8 +13,9 @@ namespace BallzMerge.Data
         private Dictionary<IGameSettingData, SliderValueView> _sliders = new Dictionary<IGameSettingData, SliderValueView>();
         private Dictionary<GameSettingType, GameSettingProperty> _settingsTypes = new Dictionary<GameSettingType, GameSettingProperty>();
 
+        public PanelSwitch PanelSwitch => _settingsPanelController;
+
         public event Action<string, float> ValueChanged;
-        public event Action Initialized;
 
         private void Awake()
         {
@@ -25,19 +26,13 @@ namespace BallzMerge.Data
         private void OnEnable()
         {
             foreach (var sliderProperty in _sliders.Values)
-            {
                 sliderProperty.ValueChanged += OnSliderChanged;
-                sliderProperty.Initialized += OnSliderInitialized;
-            }
         }
 
         private void OnDisable()
         {
             foreach (var sliderProperty in _sliders.Values)
-            {
                 sliderProperty.ValueChanged -= OnSliderChanged;
-                sliderProperty.Initialized -= OnSliderInitialized;
-            }
         }
 
         public void AddInstantiate(GameSettingType settingType, IGameSettingData settingData, PanelToggleType panelType)
@@ -71,7 +66,5 @@ namespace BallzMerge.Data
         public void UpdateLabel(IGameSettingData settingData) => _sliders[settingData].SetLabel(settingData);
 
         private void OnSliderChanged(string key, float value) => ValueChanged?.Invoke(key, value);
-
-        private void OnSliderInitialized() => Initialized?.Invoke();
     }
 }

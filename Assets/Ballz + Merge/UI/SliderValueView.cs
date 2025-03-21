@@ -16,12 +16,6 @@ public class SliderValueView : MonoBehaviour, IDisposable
     private Dictionary<IGameSettingData, SliderProperty> _slidersTypes = new Dictionary<IGameSettingData, SliderProperty>();
 
     public event Action<string, float> ValueChanged;
-    public event Action Initialized;
-
-    private void OnEnable()
-    {
-        Initialized?.Invoke();
-    }
 
     public void Init(IGameSettingData settingData)
     {

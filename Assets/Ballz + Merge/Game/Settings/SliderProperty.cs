@@ -98,17 +98,8 @@ public class SliderProperty : IDisposable
 
     private void SetPreset(float value)
     {
-        decimal stepDec = (decimal)_step;
-        decimal valueDec = (decimal)value;
-        decimal snappedValueDec = Math.Round(valueDec / stepDec) * stepDec;
-
-        float snappedValue = (float)snappedValueDec;
-
-        if (value != snappedValue)
-        {
-            value = snappedValue;
-            _preset = Mathf.RoundToInt(value / _step);
-        }
+        value = Mathf.RoundToInt(value / _step) * _step;
+        _preset = Mathf.RoundToInt(value / _step);
 
         _slider.value = value;
         ValueChanged?.Invoke(_key, _preset);
