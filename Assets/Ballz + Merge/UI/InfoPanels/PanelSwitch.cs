@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Linq;
+using System;
 
 public class PanelSwitch : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class PanelSwitch : MonoBehaviour
 
     private Dictionary<PanelToggleType, PanelToggle> _panelToggles = new();
     private int _initializedCount = 0;
+
+    public event Action PanelSwitched;
 
     private void Awake()
     {
@@ -67,6 +70,7 @@ public class PanelSwitch : MonoBehaviour
 
         triggeredPanelToggle.Select();
         triggeredPanelToggle.Selected -= ApplyContent;
+        PanelSwitched?.Invoke();
     }
 
     private void ApplyContent(RectTransform content)

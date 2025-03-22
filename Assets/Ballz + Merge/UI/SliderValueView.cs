@@ -1,105 +1,60 @@
+using BallzMerge.Data;
 using System;
-using TMPro;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SliderValueView : MonoBehaviour, IDisposable
 {
-    [SerializeField] private Slider _slider;
-    [SerializeField] private TMP_Text _label;
-    [SerializeField] private TMP_Text _header;
-    [SerializeField] private string _key;
+    [SerializeField] private List<SliderProperty> _slidersProperty;
+    [SerializeField] private Button _applyButton;
 
-    private int _countOfPresets;
-    private float _step;
-    private int _preset;
-    private bool _isStepByStep;
+    public Button ApplyButton => _applyButton;
+    public RectTransform RectTransform { get; private set; }
+
+    private Dictionary<IGameSettingData, SliderProperty> _slidersTypes = new Dictionary<IGameSettingData, SliderProperty>();
 
     public event Action<string, float> ValueChanged;
 
+    public void Init(IGameSettingData settingData)
+    {
+        SliderProperty sliderProperty = _slidersProperty.Where(sp => sp.SettingData == null).FirstOrDefault();
+        sliderProperty.SetSettingData(settingData);
+        _slidersTypes.Add(sliderProperty.SettingData, sliderProperty);
+        sliderProperty.ValueChanged += SetValue;
+        RectTransform = (RectTransform)transform;
+    }
+
     public void Dispose()
     {
-        _slider.onValueChanged.RemoveListener(SetPreset);
-        _slider.onValueChanged.RemoveListener(SetValue);
+        foreach (SliderProperty sliderProperty in _slidersTypes.Values)
+            sliderProperty.ValueChanged -= SetValue;
     }
 
-    public void SetStartValues(float value, string label)
+    public void SetStartValues(IGameSettingData settingData)
     {
-        _slider.value = 0;
-
-        if (_isStepByStep)
-        {
-            _preset = Mathf.RoundToInt(value);
-
-            for (float i = _preset; i > 0; i--)
-                _slider.value += _step;
-        }
-        else
-        {
-            _slider.value = value;
-        }
-
-        SetLabel(label);
+        SliderProperty sliderProperty = _slidersTypes.Values.Where(sp => sp.SettingData == settingData).FirstOrDefault();
+        sliderProperty.SetLabel(settingData.Label);
+        _slidersTypes[settingData] = sliderProperty.SetValue(settingData.Value);
     }
 
-    public void SetProperty(int? countOfPresets = null, string header = "", string key = "")
+    public SliderValueView SetProperty(IGameSettingData settingData, int? countOfPresets = null, string header = "", string key = "")
     {
-        bool isNewKey = string.IsNullOrEmpty(key) == false;
-        _key = isNewKey ? key : _key;
+        SliderProperty sliderProperty = _slidersTypes.Values.Where(sp => sp.SettingData == settingData).FirstOrDefault();
+        _slidersTypes[settingData] = sliderProperty.SetProperty(countOfPresets, header, key);
 
-        if (CheckStepByStep(countOfPresets))
-        {
-            SetStep((int)countOfPresets);
-            _slider.onValueChanged.AddListener(SetPreset);
-        }
-        else
-        {
-            _slider.onValueChanged.AddListener(SetValue);
-        }
-
-        if (string.IsNullOrEmpty(header) == false)
-            _header.text = header;
-        else if (isNewKey)
-            _header.text = _key;
+        return this;
     }
 
-    private bool CheckStepByStep(int? countOfPresets)
+    private void SetValue(string key, float value)
     {
-        _isStepByStep = countOfPresets is not null;
-        return _isStepByStep;
+        ValueChanged?.Invoke(key, value);
     }
 
-    private void SetStep(int countOfPresets)
+    public void SetLabel(IGameSettingData settingData)
     {
-        _countOfPresets = Math.Max(0, countOfPresets);
-        _step = _countOfPresets.Equals(0) ? 0 : _slider.maxValue / countOfPresets;
-    }
-
-    private void SetValue(float value)
-    {
-        ValueChanged?.Invoke(_key, value);
-    }
-
-    private void SetPreset(float value)
-    {
-        decimal stepDec = (decimal)_step;
-        decimal valueDec = (decimal)value;
-        decimal snappedValueDec = Math.Round(valueDec / stepDec) * stepDec;
-
-        float snappedValue = (float)snappedValueDec;
-
-        if (value != snappedValue)
-        {
-            value = snappedValue;
-            _preset = Mathf.RoundToInt(value / _step);
-        }
-
-        _slider.value = value;
-        ValueChanged?.Invoke(_key, _preset);
-    }
-
-    public void SetLabel(string label)
-    {
-        _label.text = label;
+        SliderProperty sliderProperty = _slidersTypes.Values.Where(sp => sp.SettingData == settingData).FirstOrDefault();
+        _slidersTypes[settingData] = sliderProperty.SetLabel(settingData.Label);
     }
 }

@@ -24,6 +24,8 @@ public class InfoPanelShowcase : MonoBehaviour
     public event Action<bool> UIViewStateChanged;
     private IInfoPanelView _current;
 
+    public event Action CloseTriggered;
+
     private void Start()
     {
         _closeArea.gameObject.SetActive(false);
@@ -84,9 +86,14 @@ public class InfoPanelShowcase : MonoBehaviour
             _current.Hide();
 
         if (_panels.TryDequeue(out IInfoPanelView temp))
+        {
             ShowPanel(temp);
+            CloseTriggered?.Invoke();
+        }
         else
+        {
             Deactivate();
+        }
     }
 
     private void OpenDefault()
@@ -103,6 +110,7 @@ public class InfoPanelShowcase : MonoBehaviour
         _content.SetActive(false);
         _openDefaultButton.gameObject.SetActive(true);
         _closeArea.gameObject.SetActive(false);
+        CloseTriggered?.Invoke();
     }
 
     private bool TryActivate(IInfoPanelView panelView)

@@ -16,14 +16,13 @@ public class DisplayMode : IGameSettingData
 
     public int? CountOfPresets { get; private set; }
 
-    public DisplayMode(string name, DisplayApplier displayApplier)
+    public DisplayMode(string name)
     {
         Name = name;
-        _displayApplier = displayApplier;
 
         _modes = new List<DisplayType>
         {
-            { new DisplayType(FullScreenMode.FullScreenWindow, "Windowed fullscreen") },
+            { new DisplayType(FullScreenMode.FullScreenWindow, "Windowed Fullscreen") },
             { new DisplayType(FullScreenMode.ExclusiveFullScreen, "Fullscreen") },
             { new DisplayType(FullScreenMode.Windowed, "Windowed") }
         };
@@ -40,7 +39,11 @@ public class DisplayMode : IGameSettingData
         }
 
         _fullScreenMode = _modes[Mathf.RoundToInt(Value)].FullScreenMode;
-        _displayApplier.SetScreenMode(_fullScreenMode);
+    }
+
+    public void SetDisplayApplier(DisplayApplier displayApplier)
+    {
+        _displayApplier = displayApplier;
     }
 
     public void Change(float value)
@@ -48,6 +51,6 @@ public class DisplayMode : IGameSettingData
         Value = value;
         Label = _modes[Mathf.RoundToInt(Value)].DisplayName;
         _fullScreenMode = _modes[Mathf.RoundToInt(Value)].FullScreenMode;
-        _displayApplier.SetScreenMode(_fullScreenMode);
+        _displayApplier.SetScreenMode(_fullScreenMode, this, Value);
     }
 }

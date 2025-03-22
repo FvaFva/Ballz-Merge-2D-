@@ -13,10 +13,9 @@ public class DisplayResolution : IGameSettingData
     public string Label { get; private set; }
     public int? CountOfPresets { get; private set; }
 
-    public DisplayResolution(string name, DisplayApplier displayApplier)
+    public DisplayResolution(string name)
     {
         Name = name;
-        _displayApplier = displayApplier;
 
         _resolutions = Screen.resolutions
             .Select(res => new Resolution { width = res.width, height = res.height })
@@ -27,7 +26,11 @@ public class DisplayResolution : IGameSettingData
 
         Value = _resolutions.ToList().FindIndex(res => res.width == Screen.currentResolution.width && res.height == Screen.currentResolution.height);
         _resolution = _resolutions[Mathf.RoundToInt(Value)];
-        _displayApplier.SetResolution(_resolution);
+    }
+
+    public void SetDisplayApplier(DisplayApplier displayApplier)
+    {
+        _displayApplier = displayApplier;
     }
 
     public void Change(float value)
@@ -35,6 +38,6 @@ public class DisplayResolution : IGameSettingData
         Value = value;
         Label = $"{_resolutions[Mathf.RoundToInt(Value)].width}x{_resolutions[Mathf.RoundToInt(Value)].height}";
         _resolution = _resolutions[Mathf.RoundToInt(Value)];
-        _displayApplier.SetResolution(_resolution);
+        _displayApplier.SetResolution(_resolution, this, Value);
     }
 }

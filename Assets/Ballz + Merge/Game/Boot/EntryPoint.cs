@@ -102,7 +102,7 @@ namespace BallzMerge.Root
         {
             _rootView = GenerateDontDestroyFromHub<UIRootView>();
             GenerateDontDestroyFromHub<GlobalEffects>();
-            _gameSettings = new GameSettings(_rootView.SettingsMenu, _data.Settings, _hub.Get<AudioMixer>(), _timeScaler);
+            _gameSettings = new GameSettings(_rootView.SettingsMenu, _data.Settings, _hub.Get<AudioMixer>(), _timeScaler, _rootView.InfoPanelShowcase);
             _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack, _gameSettings);
         }
 
