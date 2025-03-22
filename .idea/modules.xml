@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Ballz-Merge-2D-.iml" filepath="$PROJECT_DIR$/.idea/Ballz-Merge-2D-.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/BallzMerge2D.iml" filepath="$PROJECT_DIR$/.idea/BallzMerge2D.iml" />
     </modules>
   </component>
 </project>

@@ -16,6 +16,10 @@ namespace BallzMerge.Root
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Enter()
         {
+            Debug.Log("Game runed");
+#if UNITY_ANDROID && !UNITY_EDITOR
+            SQLiteLoader.Init();
+#endif
             Application.targetFrameRate = 60;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
@@ -44,22 +48,27 @@ namespace BallzMerge.Root
         {
             string sceneName = ScenesNames.MAINMENU;
 #if UNITY_EDITOR
-            if (CheckDebugScene(out sceneName) == false)
+            if (IsItDebug(ref sceneName))
                 return;
 #endif
             LoadScene(sceneName);
         }
 
-        private bool CheckDebugScene(out string sceneName)
+        private bool IsItDebug(ref string sceneName)
         {
-            sceneName = SceneManager.GetActiveScene().name;
-            
-            if (_hub.Get<DevelopersScenes>().Scenes.Contains(sceneName) == false
-                && sceneName != ScenesNames.BOOT
-                && sceneName != ScenesNames.GAMEPLAY)
+            string activeScene = SceneManager.GetActiveScene().name;
+            bool isItGameplay = activeScene == ScenesNames.GAMEPLAY || _hub.Get<DevelopersScenes>().Scenes.Contains(activeScene);
+
+            if(isItGameplay)
+            {
+                sceneName = activeScene;
+                return false;
+            }
+
+            if (activeScene == ScenesNames.BOOT)
                 return false;
 
-            return _hub.Get<DevelopersScenes>().Scenes.Contains(sceneName) || sceneName == ScenesNames.GAMEPLAY;
+            return true;
         }
 
         private void LoadScene(string targetScene)

@@ -1,9 +1,11 @@
+#if UNITY_ANDROID
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using System;
 
 namespace BallzMerge.GooglePGS
 {
+
     public class Authenticator : CyclicBehavior, IInitializable
     {
         public bool IsAuthenticated { get; private set; }
@@ -11,11 +13,13 @@ namespace BallzMerge.GooglePGS
 
         private void Authenticate()
         {
+
             PlayGamesPlatform.Activate();
             PlayGamesPlatform.Instance.Authenticate(OnAuthenticate);
-        }
 
-        private void OnAuthenticate(SignInStatus status)
+}
+
+private void OnAuthenticate(SignInStatus status)
         {
             IsAuthenticated = status != SignInStatus.Success;
 
@@ -31,3 +35,4 @@ namespace BallzMerge.GooglePGS
         }
     }
 }
+#endif

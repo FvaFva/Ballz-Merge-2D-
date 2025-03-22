@@ -1,16 +1,38 @@
 apply plugin: 'com.android.library'
 **APPLY_PLUGINS**
 
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+    }
+    dependencies {
+       classpath 'com.android.tools.build:gradle:8.7.0'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.sqlite:sqlite-android:2.5.0-rc02'
 // Android Resolver Dependencies Start
     implementation 'com.google.games:gpgs-plugin-support:0.11.01' // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:11
 // Android Resolver Dependencies End
 **DEPS**}
 
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
 // Android Resolver Exclusions Start
 android {
   packagingOptions {
+      doNotStrip '**/*.so' // Не удалять .so файлы
+      pickFirst '**/libsqlite3.so' // Добавить libsqlite3.so
       exclude ('/lib/armeabi/*' + '*')
       exclude ('/lib/armeabi-v7a/*' + '*')
       exclude ('/lib/mips/*' + '*')

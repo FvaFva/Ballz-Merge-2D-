@@ -1,12 +1,12 @@
-﻿using GooglePlayGames;
-using System;
+﻿using System;
 using System.Linq;
 using UnityEngine;
 
 namespace BallzMerge.GooglePGS
 {
     using Achievement;
-
+#if UNITY_ANDROID
+    using GooglePlayGames;
     public class AchievementsGooglePGSConnector
     {
         [SerializeField] private Authenticator _authenticator;
@@ -34,6 +34,7 @@ namespace BallzMerge.GooglePGS
                 return;
 
             PlayGamesPlatform.Instance.ReportProgress(achievement.Google, 100, callback);
+
         }
 
         public void RequirePlayerAchievementsData(Action<(string, bool)[]> callback)
@@ -45,6 +46,7 @@ namespace BallzMerge.GooglePGS
             {
                 callback?.Invoke(achievements.Select(achievement => (achievement.id, achievement.completed)).ToArray());
             });
+
         }
 
         private void InitializeAchievementsDescriptions()
@@ -61,4 +63,5 @@ namespace BallzMerge.GooglePGS
             });
         }
     }
+#endif
 }

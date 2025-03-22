@@ -1,0 +1,21 @@
+# ninja log v5
+35	169	7638465422605165	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	8d948d5d405b6437
+5	955	7638465430449773	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	f8a779c80360432e
+170	384	7638465423979234	C:/WorkSpace/BallzMerge2D/Library/PramData/AndroidApplicationController/Cache/com.FavoritGames.BallzMerge2D/gradle-project/unityLibrary/build/intermediates/cxx/Debug/4r5w053z/obj/x86/libswappywrapper.so	e375eae1730ece17
+9	906	7638465429958059	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	99d0ffb648d7b62a
+18	810	7638465428996166	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	e24443951c2a32fc
+1	835	7638465429203985	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	7cc80cedcb04eb03
+23	852	7638465429418342	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	cf2273bab766289c
+29	879	7638465429704584	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	5a26d54cac9afe85
+13	960	7638465430479621	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	bf01e1ec9bf36e1e
+960	1105	7638465431475650	C:/WorkSpace/BallzMerge2D/Library/PramData/AndroidApplicationController/Cache/com.FavoritGames.BallzMerge2D/gradle-project/unityLibrary/build/intermediates/cxx/Debug/4r5w053z/obj/x86/libgame.so	41bce6839cded73a
+54	353	7638508555506981	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	8d948d5d405b6437
+355	817	7638508558687556	C:/WorkSpace/BallzMerge2D/Library/PramData/AndroidApplicationController/Cache/com.FavoritGames.BallzMerge2D/gradle-project/unityLibrary/build/intermediates/cxx/Debug/4r5w053z/obj/x86/libswappywrapper.so	e375eae1730ece17
+11	1359	7638508565725517	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	7cc80cedcb04eb03
+31	1364	7638508565842314	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	e24443951c2a32fc
+17	1383	7638508566058849	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	99d0ffb648d7b62a
+47	1395	7638508566169628	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	cf2273bab766289c
+39	1435	7638508566572927	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	5a26d54cac9afe85
+24	1523	7638508567462965	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	f8a779c80360432e
+5	1539	7638508567578663	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	bf01e1ec9bf36e1e
+1539	1690	7638508568642184	C:/WorkSpace/BallzMerge2D/Library/PramData/AndroidApplicationController/Cache/com.FavoritGames.BallzMerge2D/gradle-project/unityLibrary/build/intermediates/cxx/Debug/4r5w053z/obj/x86/libgame.so	41bce6839cded73a
