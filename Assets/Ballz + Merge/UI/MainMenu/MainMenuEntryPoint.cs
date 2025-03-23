@@ -1,7 +1,6 @@
 using BallzMerge.Root;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -17,11 +16,14 @@ namespace BallzMerge.MainMenu
         [Inject] private UIRootView _rootUI;
 
         private List<IInitializable> _initializedComponents;
+        private List<IDependentScreenOrientation> _orientators;
         private Action<SceneExitData> _callback;
 
         public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
+        public IEnumerable<IDependentScreenOrientation> Orientators => _orientators;
 
         public bool IsAvailable {  get; private set; }
+
 
         private void Start()
         {
@@ -31,11 +33,15 @@ namespace BallzMerge.MainMenu
         private void Awake()
         {
             _initializedComponents = new List<IInitializable>();
+            _orientators = new List<IDependentScreenOrientation>();
 
             foreach (var component in _behaviors)
             {
                 if(component is IInitializable componentInstance)
                     _initializedComponents.Add(componentInstance);
+
+                if(component is IDependentScreenOrientation orientator)
+                    _orientators.Add(orientator);
             }
         }
 
@@ -70,7 +76,6 @@ namespace BallzMerge.MainMenu
         private void LeftScene(SceneExitData exitData)
         {
             _callback?.Invoke(exitData);
-            //_userInput.Disable();
         }
     }
 }

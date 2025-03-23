@@ -21,6 +21,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     private List<IInitializable> _initializedComponents = new List<IInitializable>();
     private List<ILevelStarter> _starters = new List<ILevelStarter>();
     private List<IWaveUpdater> _wavers = new List<IWaveUpdater>();
+    private List<IDependentScreenOrientation> _orientators = new List<IDependentScreenOrientation>();
     private Action<SceneExitData> _sceneCallBack;
     private SceneExitData _quiteRequireData;
     private ConductorBetweenWaves _conductor;
@@ -32,6 +33,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     [Inject] private GridSettings _gridSettings;
 
     public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
+    public IEnumerable<IDependentScreenOrientation> Orientators => _orientators;
 
     public bool IsAvailable {  get; private set; }
 
@@ -51,7 +53,10 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
             if (cyclical is IWaveUpdater waver)
                 _wavers.Add(waver);
 
-            if(cyclical is Dropper dropper)
+            if (cyclical is IDependentScreenOrientation orientator)
+                _orientators.Add(orientator);
+
+            if (cyclical is Dropper dropper)
                 _conductor = new ConductorBetweenWaves(_ball.GetBallComponent<BallAwaitBreaker>(), dropper, _blocksBus);
         }
 
