@@ -1,13 +1,10 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace BallzMerge.Root
 {
-    using BallzMerge.Achievement;
-    using BallzMerge.Data;
+    using Achievement;
     using Settings;
-    using UnityEngine.Audio;
 
     public class EntryPoint
     {
@@ -16,6 +13,9 @@ namespace BallzMerge.Root
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Enter()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            SQLiteLoader.Init();
+#endif
             Application.targetFrameRate = 60;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
@@ -23,18 +23,14 @@ namespace BallzMerge.Root
             _instance.RunGame();
         }
 
-        private Coroutines _coroutines;
         private UIRootView _rootView;
         private SceneLoader _sceneLoader;
-        private MainInputMap _userInput;
-        private ResourcesHub _hub;
         private GameSettings _gameSettings;
-        private DataBaseSource _data;
-        private TimeScaler _timeScaler;
+        private OwnerPrimaryComponents _primary;
 
         private EntryPoint()
         {
-            InitPrimaryComponents();
+            _primary = new OwnerPrimaryComponents();
             BindToContainerPrimaryComponents();
             InitMinorComponents();
             BindToContainerMinorComponents();
@@ -44,33 +40,23 @@ namespace BallzMerge.Root
         {
             string sceneName = ScenesNames.MAINMENU;
 #if UNITY_EDITOR
-            if (CheckDebugScene(out sceneName) == false)
+            DebugScenesChecker checker = new DebugScenesChecker();
+
+            if (checker.IsItDebug(ref sceneName, _primary.Hub.Get<DevelopersScenes>()))
                 return;
 #endif
             LoadScene(sceneName);
         }
 
-        private bool CheckDebugScene(out string sceneName)
-        {
-            sceneName = SceneManager.GetActiveScene().name;
-            
-            if (_hub.Get<DevelopersScenes>().Scenes.Contains(sceneName) == false
-                && sceneName != ScenesNames.BOOT
-                && sceneName != ScenesNames.GAMEPLAY)
-                return false;
-
-            return _hub.Get<DevelopersScenes>().Scenes.Contains(sceneName) || sceneName == ScenesNames.GAMEPLAY;
-        }
-
         private void LoadScene(string targetScene)
         {
             _rootView.ClearSceneUI();
-            _coroutines.StartCoroutine(_sceneLoader.LoadScene(targetScene));
+            _primary.Coroutines.StartCoroutine(_sceneLoader.LoadScene(targetScene));
         }
 
         private void QuitGame()
         {
-            _userInput.Disable();
+            _primary.UserInput.Disable();
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -78,30 +64,19 @@ namespace BallzMerge.Root
 #endif
         }
 
-        private void InitPrimaryComponents()
-        {
-            _data = new DataBaseSource();
-            _timeScaler = new TimeScaler();
-            _userInput = new MainInputMap();
-            _userInput.Enable();
-            _hub = new ResourcesHub();
-            _coroutines = new GameObject("[COROUTINES]").AddComponent<Coroutines>();
-            Object.DontDestroyOnLoad(_coroutines.gameObject);
-        }
-
         private void InitMinorComponents()
         {
             _rootView = GenerateDontDestroyFromHub<UIRootView>();
             GenerateDontDestroyFromHub<GlobalEffects>();
-            _gameSettings = new GameSettings(_rootView.SettingsMenu, _data.Settings, _hub.Get<AudioMixer>(), _timeScaler, _rootView.InfoPanelShowcase);
-            _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack, _gameSettings);
+            _gameSettings = new GameSettings(_rootView.SettingsMenu, _primary, _rootView.InfoPanelShowcase);
+            _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack, _gameSettings, _primary.OrientationObserver);
         }
 
         private void BindToContainerPrimaryComponents()
         {
-            BindSingleton<IGamePauseController, TimeScaler>(_timeScaler);
-            BindSingleton(_data);
-            BindSingleton(_userInput);
+            BindSingleton<IGamePauseController, TimeScaler>(_primary.TimeScaler);
+            BindSingleton(_primary.Data);
+            BindSingleton(_primary.UserInput);
             BindSingleton(new EffectPool());
             BindSingleton(GenerateDontDestroyFromHub<AchievementsBus>());
         }
@@ -117,7 +92,7 @@ namespace BallzMerge.Root
 
         private T GenerateDontDestroyFromHub<T>() where T : Component
         {
-            T prefab = _hub.Get<T>();
+            T prefab = _primary.Hub.Get<T>();
             T instance = ProjectContext.Instance.Container.InstantiatePrefabForComponent<T>(prefab);
             instance.transform.SetParent(null);
             Object.DontDestroyOnLoad(instance.gameObject);

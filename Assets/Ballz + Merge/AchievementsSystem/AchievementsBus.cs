@@ -1,5 +1,7 @@
 ﻿using BallzMerge.Data;
+#if UNITY_ANDROID
 using BallzMerge.GooglePGS;
+#endif
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,7 +14,9 @@ namespace BallzMerge.Achievement
         [SerializeField] private List<AchievementSettings> _settings;
         [Inject] private DataBaseSource _db;
 
+#if UNITY_ANDROID
         private AchievementsGooglePGSConnector _google;
+#endif
         private bool _isUsingGoogle;
         private bool _isUsingSteam;
         private bool _isUsingApple;

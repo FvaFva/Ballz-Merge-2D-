@@ -1,36 +1,37 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
 
 namespace BallzMerge.Root.Settings
 {
     using Data;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Audio;
-    using UnityEngine.UI;
 
     public class GameSettings : IDisposable
     {
         private readonly GameSettingsMenu _settingsMenu;
         private readonly GameSettingsStorage _db;
-        private Dictionary<string, IGameSettingData> _settings;
         private readonly TimeScaler _timeScaler;
         private readonly InfoPanelShowcase _infoPanelShowcase;
+        private Dictionary<string, IGameSettingData> _settings;
 
-        public GameSettings(GameSettingsMenu settingsMenu, GameSettingsStorage db, AudioMixer mixer, TimeScaler timeScaler, InfoPanelShowcase infoPanelShowcase)
+        internal GameSettings(GameSettingsMenu settingsMenu, OwnerPrimaryComponents primary, InfoPanelShowcase infoPanelShowcase)
         {
+            var mixer = primary.Hub.Get<AudioMixer>();
             SoundVolumeGlobal = new GameSettingsDataProxyAudio(mixer, "Global");
             SoundVolumeEffects = new GameSettingsDataProxyAudio(mixer, "Effects");
             SoundVolumeMusic = new GameSettingsDataProxyAudio(mixer, "Music");
             DisplayQualityPreset = new QualityPreset("Quality");
             DisplayResolution = new DisplayResolution("Resolution");
             DisplayMode = new DisplayMode("Display");
-            _timeScaler = timeScaler;
+            _timeScaler = primary.TimeScaler;
             _infoPanelShowcase = infoPanelShowcase;
             _settingsMenu = settingsMenu;
             _settingsMenu.ValueChanged += OnSettingsChanged;
             _settingsMenu.PanelSwitch.PanelSwitched += ReadData;
             _infoPanelShowcase.CloseTriggered += ReadData;
-            _db = db;
+            _db = primary.Data.Settings;
             CashSettings();
             GenerateMenu();
             Button applyButton = _settingsMenu.GetApplyButton(GameSettingType.GameScreenResolutionSetting);

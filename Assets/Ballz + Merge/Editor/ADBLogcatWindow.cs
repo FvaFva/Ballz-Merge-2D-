@@ -14,8 +14,9 @@ public class ADBLogcatWindow : EditorWindow
     private string _logText = "";
     private string _adbPath;
     private bool _logUpdated;
-    private string _additionalProperty = "-s Unity";
+    private string _additionalProperty = "-s Unity DEBUG ERROR";
     private bool _isInDraw = false;
+    private bool _isInLog;
 
     [MenuItem("Tools/ADB Logcat")]
     public static void ShowWindow()
@@ -39,11 +40,12 @@ public class ADBLogcatWindow : EditorWindow
         float totalWidth = position.width;
 
         float labelWidth = totalWidth * 0.2f;
-        float textFieldWidth = totalWidth * 0.5f;
+        float textFieldWidth = totalWidth * 0.25f;
         float buttonWidth = totalWidth * 0.1f;
 
         GUILayout.Label("Extra property:", GUILayout.Width(labelWidth));
         _additionalProperty = GUILayout.TextField(_additionalProperty, GUILayout.Width(textFieldWidth));
+        _isInLog = GUILayout.Toggle(_isInLog, "In log", GUILayout.Width(textFieldWidth));
 
         if (GUILayout.Button("Start Logcat", GUILayout.Width(buttonWidth)))
             StartLogcat();
@@ -64,27 +66,15 @@ public class ADBLogcatWindow : EditorWindow
 
         string[] latestLogs = _logText.Split('\n');
 
-        foreach (string line in latestLogs)
+        if (_isInLog == false)
         {
-            if (string.IsNullOrEmpty(line))
-                continue;
-
-            if (line.ToLower().Contains("error") || line.ToLower().Contains("exception"))
+            foreach (string line in latestLogs)
             {
-                if (_errorsInConsole.Contains(line) == false)
-                {
-                    _errorsInConsole.Add(line);
-                    UnityEngine.Debug.LogError($"WOW! Android did BRRRR - \n[{line}]");
-                }
+                if (string.IsNullOrEmpty(line))
+                    continue;
 
-                GUI.color = Color.red;
+                LogInGUI(line);
             }
-            else
-            {
-                GUI.color = Color.white;
-            }
-            
-            GUILayout.Label(line);
         }
 
         GUILayout.EndScrollView();
@@ -159,6 +149,9 @@ public class ADBLogcatWindow : EditorWindow
                 {
                     _logText += line + "\n";
                     _logUpdated = true;
+
+                    if(line.Contains("Log(") == false)
+                        UnityEngine.Debug.Log(line);
                 }
             }
         }
@@ -173,5 +166,25 @@ public class ADBLogcatWindow : EditorWindow
     {
         Repaint();
         EditorApplication.update -= UpdateLog;
+    }
+
+    private void LogInGUI(string line)
+    {
+        if (line.ToLower().Contains("error") || line.ToLower().Contains("exception"))
+        {
+            if (_errorsInConsole.Contains(line) == false)
+            {
+                _errorsInConsole.Add(line);
+                UnityEngine.Debug.LogError($"WOW! Android did BRRRR - \n[{line}]");
+            }
+
+            GUI.color = Color.red;
+        }
+        else
+        {
+            GUI.color = Color.white;
+        }
+
+        GUILayout.Label(line);
     }
 }
