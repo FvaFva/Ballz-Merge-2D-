@@ -67,6 +67,8 @@ namespace BallzMerge.Root
         private void InitMinorComponents()
         {
             _rootView = GenerateDontDestroyFromHub<UIRootView>();
+            _rootView.Containers.Init();
+            _primary.OrientationObserver.CheckInRoot(_rootView.Containers);
             GenerateDontDestroyFromHub<GlobalEffects>();
             _gameSettings = new GameSettings(_rootView.SettingsMenu, _primary, _rootView.InfoPanelShowcase);
             _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack, _gameSettings, _primary.OrientationObserver);

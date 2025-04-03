@@ -35,7 +35,7 @@ namespace BallzMerge.Root
         {
             _loadView.Show();
             _targetSceneEntryPoint.Clear();
-            _orientationObserver.CheckOutAll();
+            _orientationObserver.CheckOutScene();
 
             foreach (var _ in LoadSceneFromBoot(name))
                 yield return _checkTime;
@@ -82,7 +82,7 @@ namespace BallzMerge.Root
             }
 
             foreach (IDependentScreenOrientation orientator in _targetSceneEntryPoint.Current.Orientators)
-                _orientationObserver.CheckIn(orientator);
+                _orientationObserver.CheckInSceneElements(orientator);
 
             _targetSceneEntryPoint.Current.Init(_sceneExit);
             _loadView.MoveProgress(1, 1);

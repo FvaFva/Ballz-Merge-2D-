@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BallzMerge.ScreenOrientations
 {
     public class ScreenOrientationObserver : MonoBehaviour
     {
-        private List<IDependentScreenOrientation> _elements = new List<IDependentScreenOrientation>();
+        private List<IDependentScreenOrientation> _sceneElements = new List<IDependentScreenOrientation>();
+        private List<IDependentScreenOrientation> _rootElements = new List<IDependentScreenOrientation>();
 
         private ScreenOrientation _last;
 
@@ -14,7 +16,7 @@ namespace BallzMerge.ScreenOrientations
 
         private void Awake()
         {
-#if UNITY_ANDROID || UNITY_IOS
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             _orientation = Mobile;
 #else
             _orientation = StandalonePC;
@@ -31,17 +33,21 @@ namespace BallzMerge.ScreenOrientations
             }
         }
 
-        public void CheckOutAll()
+        public void CheckInRoot(IDependentScreenOrientation element) => CheckInElement(element, _rootElements);
+
+        public void CheckInSceneElements(IDependentScreenOrientation element) => CheckInElement(element, _sceneElements);
+
+        public void CheckOutScene()
         {
-            _elements.Clear();
+            _sceneElements.Clear();
         }
 
-        public void CheckIn(IDependentScreenOrientation element)
+        private void CheckInElement(IDependentScreenOrientation element, List<IDependentScreenOrientation> elements)
         {
-            if (_elements.Contains(element))
+            if (elements.Contains(element))
                 return;
 
-            _elements.Add(element);
+            elements.Add(element);
             element.UpdateScreenOrientation(_last);
         }
 
@@ -57,7 +63,7 @@ namespace BallzMerge.ScreenOrientations
 
         private void UpdateElements()
         {
-            foreach (var element in _elements)
+            foreach (var element in _sceneElements.Concat(_rootElements))
                 element.UpdateScreenOrientation(_last);
         }
     }

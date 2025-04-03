@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
+using System;
 
 namespace BallzMerge.Root
 {
     using Data;
     using Settings;
-    using System;
 
-    public class UIRootView : MonoBehaviour, IDisposable
+    public class UIRootView : MonoBehaviour
     {
         private const int StandardDistance = 0;
 
         [SerializeField] private LoadScreen _loadingScreen;
-        [SerializeField] private RectTransform _sceneContainer;
+        [SerializeField] private UIRootContainers _containers;
         [SerializeField] private UserQuestioner _questioner;
         [SerializeField] private EscapeMenu _escapeMenu;
         [SerializeField] private InfoPanelShowcase _infoPanelShowcase;
@@ -25,22 +25,27 @@ namespace BallzMerge.Root
         public EscapeMenu EscapeMenu => _escapeMenu;
         public GameSettingsMenu SettingsMenu => _settingsMenu;
         public InfoPanelShowcase InfoPanelShowcase => _infoPanelShowcase;
+        public UIRootContainers Containers => _containers;
 
         private void Awake()
         {
             _loadingScreen.Hide();
         }
 
-        public void Dispose()
+        private void OnDisable()
         {
             _infoPanelShowcase.UIViewStateChanged -= ChangeStateUIView;
+        }
+
+        private void OnEnable()
+        {
+            _infoPanelShowcase.UIViewStateChanged += ChangeStateUIView;
         }
 
         public void AttachSceneUI(UIView sceneUI, Camera uICamera = null)
         {
             _sceneUI = sceneUI;
             ChangeStateUIView(true);
-            _infoPanelShowcase.UIViewStateChanged += ChangeStateUIView;
             _escapeMenu.UpdateButtonView(_sceneUI.IsUseSettingsQuiteButton, _sceneUI.IsUseSettingsMaineMenuButton);
 
             if(uICamera != null)
@@ -49,6 +54,8 @@ namespace BallzMerge.Root
                 _mainCanvas.worldCamera = uICamera;
                 _mainCanvas.planeDistance = StandardDistance;
             }
+
+            _containers.TakeNewItems(sceneUI.Items);
         }
 
         public void ClearSceneUI()

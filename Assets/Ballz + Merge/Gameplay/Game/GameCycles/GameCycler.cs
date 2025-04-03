@@ -94,6 +94,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         }
 
         _sceneCallBack = callback;
+        _mainUI.Init();
         _rootUI.AttachSceneUI(_mainUI, _uICamera);
         RestartLevel();
     }
