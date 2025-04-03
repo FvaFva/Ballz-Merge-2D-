@@ -1,20 +1,20 @@
-﻿using System;
+﻿using BallzMerge.Root;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class UserQuestioner : MonoBehaviour
 {
-    private const float TimeScaleForQuestion = 0;
-
-    [SerializeField] private Canvas _questCanvas;
     [SerializeField] private TMP_Text _label;
     [SerializeField] private Button _yes;
     [SerializeField] private Button _no;
 
+    [Inject] IGamePauseController _pauseController;
+
     private Queue<UserQuestion> _questions = new Queue<UserQuestion>();
-    private float _lastTimeScale;
     private UserQuestion _current;
 
     public event Action<UserQuestion> Answer;
@@ -34,17 +34,20 @@ public class UserQuestioner : MonoBehaviour
     public void Show(UserQuestion question)
     {
         if (_current.IsEmpty())
+        {
+            _pauseController.Stop();
+            gameObject.SetActive(true);
             Display(question);
+        }
         else
+        {
             _questions.Enqueue(question);
+        }
     }
 
     private void Display(UserQuestion question)
     {
         _current = question;
-        _lastTimeScale = Time.timeScale;
-        Time.timeScale = TimeScaleForQuestion;
-        _questCanvas.enabled = true;
         _label.text = question.Description;
     }
 
@@ -61,9 +64,9 @@ public class UserQuestioner : MonoBehaviour
     private void Hide()
     {
         _current = default;
-        Time.timeScale = _lastTimeScale;
-        _questCanvas.enabled = false;
+        _pauseController.SetRegular();
         _label.text = String.Empty;
+        gameObject.SetActive(false);
     }
 
     private void OnAnswerNo()

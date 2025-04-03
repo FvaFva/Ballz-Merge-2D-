@@ -1,31 +1,19 @@
-﻿using System;
-using UnityEngine;
+﻿using BallzMerge.Data;
+using System;
 using Zenject;
 
-public class PlayerScore : CyclicBehaviour, ILevelStarter, ILevelFinisher, IInitializable
+public class PlayerScore : CyclicBehavior, ILevelStarter, ILevelFinisher, IInitializable, IWaveUpdater
 {
-    private const string ScoreName = "Score";
-
-    [Inject] private BlocksBus _blocks;
-    [Inject] private UserQuestioner _userQuestioner;
+    [Inject] private DataBaseSource _data;
+    [Inject] private BallWaveVolume _waveVolume;
 
     public int Score { get; private set; }
     public int BestScore { get; private set; }
     public event Action ScoreChanged;
 
-    private void OnEnable()
-    {
-        _blocks.WaveLoaded += OnWaveLoaded;
-    }
-
-    private void OnDisable()
-    {
-        _blocks.WaveLoaded -= OnWaveLoaded;
-    }
-
     public void Init()
     {
-        BestScore = PlayerPrefs.GetInt(ScoreName, 0);
+        BestScore = _data.History.GetBestScore();
         ScoreChanged?.Invoke();
     }
 
@@ -36,31 +24,20 @@ public class PlayerScore : CyclicBehaviour, ILevelStarter, ILevelFinisher, IInit
 
     public void FinishLevel()
     {
-        if (Score > BestScore)
-        {
-            _userQuestioner.Answer += OnUserAnswer;
-            _userQuestioner.Show(new UserQuestion(ScoreName, $"{Score} - the best score! Do you want to save?"));
-        }
-    }
+        if (Score == 0)
+            return;
 
-    private void OnWaveLoaded()
-    {
-        Score++;
+        _data.History.SaveResult(Score, _waveVolume.Bag);
+
+        if (Score > BestScore)
+            BestScore = Score;
+
         ScoreChanged?.Invoke();
     }
 
-    private void OnUserAnswer(UserQuestion answer)
+    public void UpdateWave()
     {
-        if(answer.Name == ScoreName)
-        {
-            _userQuestioner.Answer -= OnUserAnswer;
-
-            if(answer.IsPositiveAnswer)
-            {
-                BestScore = Score;
-                PlayerPrefs.SetInt(ScoreName, BestScore);
-                ScoreChanged?.Invoke();
-            }
-        }
+        Score++;
+        ScoreChanged?.Invoke();
     }
 }

@@ -1,40 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class BallWaveVolumeView : MonoBehaviour
 {
+    [SerializeField] private bool _isLoadGlobalVolumesOnEnable;
     [SerializeField] private BallWaveVolume _source;
     [SerializeField] private RectTransform _viewPort;
-    [SerializeField] private InfoPanel _infoPanelPrefab;
+    [SerializeField] private GameDataVolumeMicView _viewPrefab;
 
-    private Dictionary<BallVolumesTypes, InfoPanel> _views;
-
-    private void Awake()
-    {
-        _views = new Dictionary<BallVolumesTypes, InfoPanel>();
-
-        foreach (BallVolumesTypes volume in Enum.GetValues(typeof(BallVolumesTypes)))
-            _views.Add(volume, Instantiate(_infoPanelPrefab, _viewPort).Init(0, volume.ToString()));
-    }
+    private Queue<GameDataVolumeMicView> _free = new Queue<GameDataVolumeMicView>();
+    private Queue<GameDataVolumeMicView> _busy = new Queue<GameDataVolumeMicView>();
 
     private void OnEnable()
     {
-        _source.Updated += OnSourceUpdate;
-        _source.Changed += OnSourceChanged;
+        _source.Changed += OnSourceUpdate;
+
+        if(_isLoadGlobalVolumesOnEnable)
+            ShowVolumes(_source.Bag.All);
+        else
+            ShowVolumes(_source.GetActiveVolumes());
     }
 
     private void OnDisable()
     {
-        _source.Updated -= OnSourceUpdate;
-        _source.Changed -= OnSourceChanged;
+        _source.Changed -= OnSourceUpdate;
     }
 
-    private void OnSourceUpdate(IDictionary<BallVolumesTypes, float> valuePairs)
+    private void OnSourceUpdate()
     {
-        foreach (var newValue in valuePairs)
-            _views[newValue.Key].Show(newValue.Value * 100);
+        ShowVolumes(_source.GetActiveVolumes());
     }
 
-    private void OnSourceChanged(BallVolumesTypes type, float value) => _views[type].Show(value);
+    private void ShowVolumes(IEnumerable<BallVolumesBagCell> volumes)
+    {
+        HideAll();
+
+        foreach (var newValue in _source.GetActiveVolumes())
+        {
+            GameDataVolumeMicView tempView;
+
+            if (_free.TryDequeue(out tempView) == false)
+                tempView = Instantiate(_viewPrefab, _viewPort).Init();
+
+            tempView.Show(newValue.Volume, newValue.Value);
+            _busy.Enqueue(tempView);
+        }
+    }
+
+    private void HideAll()
+    {
+        while (_busy.TryDequeue(out GameDataVolumeMicView tempView))
+            _free.Enqueue(tempView.Hide());
+    }
 }

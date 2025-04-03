@@ -1,54 +1,75 @@
 ﻿using DG.Tweening;
 using System;
+using System.Collections;
 using UnityEngine;
 
-public class DropSelector : CyclicBehaviour, ILevelFinisher
+namespace BallzMerge.Gameplay.Level
 {
-    private const float AnimationTime = 0.5f;
-
-    [SerializeField] private CanvasGroup _canvasGroup;
-    [SerializeField] private Canvas _canvas;
-    [SerializeField] private DropView _firstSlot;
-    [SerializeField] private DropView _secondSlot;
-
-    public event Action<BallVolumesTypes, float> DropSelected;
-
-    private void OnEnable()
+    public class DropSelector : CyclicBehavior, ILevelFinisher, IInitializable
     {
-        _firstSlot.Selected += OnSelect;
-        _secondSlot.Selected += OnSelect;
-    }
+        private const float AnimationTime = 0.8f;
 
-    private void OnDisable()
-    {
-        _firstSlot.Selected -= OnSelect;
-        _secondSlot.Selected -= OnSelect;
-    }
+        [SerializeField] private CanvasGroup _canvasGroup;
+        [SerializeField] private DropView _firstSlot;
+        [SerializeField] private DropView _secondSlot;
 
-    public void Show(Drop first, Drop second)
-    {
-        _firstSlot.Show(first);
-        _secondSlot.Show(second);
-        _canvas.enabled = true;
-        _canvasGroup.DOFade(1, AnimationTime);
-    }
+        private Action _callback;
 
-    public void FinishLevel()
-    {
-        _canvasGroup.alpha = 0;
-        _canvas.enabled = false;
-    }
+        public event Action<BallVolume, DropRarity> DropSelected;
 
-    private void OnSelect(Drop drop, float count)
-    {
-        Hide();
-        DropSelected?.Invoke(drop.WaveDropType, count);
-    }
+        private void OnEnable()
+        {
+            _firstSlot.Selected += OnSelect;
+            _secondSlot.Selected += OnSelect;
+        }
 
-    private void Hide ()
-    {
-        _firstSlot.Show(null);
-        _secondSlot.Show(null);
-        _canvasGroup.DOFade(0, AnimationTime).OnComplete(() => _canvas.enabled = false);
+        private void OnDisable()
+        {
+            _firstSlot.Selected -= OnSelect;
+            _secondSlot.Selected -= OnSelect;
+        }
+
+        public void Init()
+        {
+            _firstSlot.CashMaterials();
+            _secondSlot.CashMaterials();
+        }
+
+        public void Show(Drop first, Drop second, Action callback)
+        {
+            _firstSlot.Show(first);
+            _secondSlot.Show(second);
+            gameObject.SetActive(true);
+            _canvasGroup.DOFade(1, AnimationTime);
+            _callback = callback;
+        }
+
+        public void FinishLevel()
+        {
+            _canvasGroup.alpha = 0;
+            gameObject.SetActive(false);
+        }
+
+        private void OnSelect(Drop drop)
+        {
+            Hide();
+            DropSelected?.Invoke(drop.Volume, drop.Rarity);
+        }
+
+        private void Hide() => _canvasGroup.DOFade(0, AnimationTime).OnComplete(OnHideAnimationFinished);
+
+        private void OnHideAnimationFinished()
+        {
+            _firstSlot.Show(default);
+            _secondSlot.Show(default);
+            StartCoroutine(DelayedCallBack());
+        }
+
+        private IEnumerator DelayedCallBack()
+        {
+            yield return new WaitForSeconds(AnimationTime);
+            _callback();
+            gameObject.SetActive(false);
+        }
     }
 }

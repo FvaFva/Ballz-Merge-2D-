@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BallzMerge.Gameplay.Level;
+using System;
 
 [Serializable]
 public struct MoveSettingsCountBlocksProperties

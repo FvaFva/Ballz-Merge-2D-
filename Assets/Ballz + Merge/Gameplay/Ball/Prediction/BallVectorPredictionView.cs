@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BallzMerge.Gameplay.BallSpace;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
@@ -13,7 +14,13 @@ public class BallVectorPredictionView : BallComponent
     private void OnEnable()
     {
         _predictor.Predicted += OnChangedPrediction;
-        _ball.GetBallComponent<BallShooter>().Triggered += HideVew;
+        _ball.EnterGame += HideVew;
+    }
+
+    private void OnDisable()
+    {
+        _predictor.Predicted -= OnChangedPrediction;
+        _ball.EnterGame -= HideVew;
     }
 
     private void OnChangedPrediction(IEnumerable<Vector3> positions)
@@ -23,8 +30,5 @@ public class BallVectorPredictionView : BallComponent
         _lineRenderer.SetPositions(positionsArray);
     }
 
-    private void HideVew()
-    {
-        _lineRenderer.positionCount = 0;
-    }
+    private void HideVew() => _lineRenderer.positionCount = 0;
 }

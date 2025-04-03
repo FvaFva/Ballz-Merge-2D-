@@ -1,102 +1,108 @@
-﻿using System.Collections.Generic;
+﻿using BallzMerge.Gameplay.BallSpace;
+using BallzMerge.Gameplay.Level;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
 
-public class BlocksSpawner : CyclicBehaviour, ILevelStarter, IInitializable
+namespace BallzMerge.Gameplay.BlockSpace
 {
-    [SerializeField] private int _countPreload;
-    [SerializeField] private Transform _blockParent;
-    [SerializeField] private MoveSettingsNumbers _numbersProperties;
-    [SerializeField] private MoveSettingsCountBlocks _countProperties;
-    [SerializeField] private MoveColorMap _colorMap;
-
-    [Inject] private DiContainer _container;
-    [Inject] private Block _prefab;
-    [Inject] private GridSettings _gridSettings;
-
-    private Queue<Block> _blocks = new Queue<Block>();
-    private List<Block> _allBlocks = new List<Block>();
-    private int _currentWave;
-
-    public void Init()
+    public class BlocksSpawner : CyclicBehavior, ILevelStarter, IInitializable
     {
-        for(int i  = 0; i < _countPreload; i++)
-            _blocks.Enqueue(Generate());
-    }
+        [SerializeField] private int _countPreload;
+        [SerializeField] private Transform _blockParent;
+        [SerializeField] private MoveSettingsNumbers _numbersProperties;
+        [SerializeField] private MoveSettingsCountBlocks _countProperties;
+        [SerializeField] private MoveColorMap _colorMap;
+        [SerializeField] private Block _prefab;
+        [SerializeField] private VirtualWorldFactory _factory;
 
-    public void StartLevel()
-    {
-        _currentWave = 0;
-    }
+        [Inject] private DiContainer _container;
+        [Inject] private GridSettings _gridSettings;
+        [Inject] private BlocksInGame _activeBlocks;
 
-    public IEnumerable<Block> SpawnWave()
-    {
-        _currentWave++;
-        Block[] blocks = new Block[GetBlockCount()];
-        List<int> positions = _gridSettings.GetPositionsInRow();
+        private Queue<Block> _blocks = new Queue<Block>();
+        private int _currentWave;
 
-        for (int i = 0; i < blocks.Length; i++)
+        private void OnEnable()
         {
-            if (_blocks.TryDequeue(out blocks[i]) == false)
-                blocks[i] = Generate();
-
-            blocks[i].Deactivated += Deactivated;
-            int number = GetBlockNumber();
-            Vector2Int gridPosition = new Vector2Int(positions.TakeRandom(), _gridSettings.FirstRowIndex);
-            blocks[i].Activate(number, gridPosition, _colorMap.GetColor(number));
+            _activeBlocks.BlockRemoved += OnBlockFree;
         }
 
-        return blocks;
-    }
-
-    private void Deactivated(Block block)
-    {
-        _blocks.Enqueue(block);
-        block.Deactivated -= Deactivated;
-    }
-
-    private int GetBlockCount()
-    {
-        var property = _countProperties.Properties.Where(prop => prop.Range.IsInRange(_currentWave)).FirstOrDefault();
-
-        if (property.IsEmpty())
-            property = _countProperties.Properties.Where(item => item.Range.TerminalWave == _countProperties.Properties.Max(item => item.Range.TerminalWave)).FirstOrDefault();
-
-        if (property.IsEmpty())
-            Debug.Log("No property");
-
-        int point = Random.Range(1, 101);
-        int previous = 0;
-
-        foreach(var chancesToCount in property.CountBlocks)
+        private void OnDisable()
         {
-            if (chancesToCount.Chance + previous > point)
-                return chancesToCount.Count;
-
-            previous += chancesToCount.Chance;
+            _activeBlocks.BlockRemoved += OnBlockFree;
         }
 
-        return 0;
-    }
+        public void Init()
+        {
+            for (int i = 0; i < _countPreload; i++)
+                _blocks.Enqueue(Generate());
+        }
 
-    private int GetBlockNumber()
-    {
-        var property = _numbersProperties.Properties.Where(prop => prop.Range.IsInRange(_currentWave)).FirstOrDefault();
+        public void StartLevel()
+        {
+            _currentWave = 0;
+        }
 
-        if (property.IsEmpty())
-            property = _numbersProperties.Properties.Where(item => item.Range.TerminalWave == _numbersProperties.Properties.Max(item => item.Range.TerminalWave)).FirstOrDefault();
+        public IEnumerable<Block> SpawnWave()
+        {
+            _currentWave++;
+            int count = GetBlockCount();
+            List<int> positions = _gridSettings.GetPositionsInRow();
 
-        if (property.IsEmpty())
+            for (int i = 0; i < count; i++)
+            {
+                if (_blocks.TryDequeue(out Block temp) == false)
+                    temp = Generate();
+
+                int number = GetBlockNumber();
+                Vector2Int gridPosition = new Vector2Int(positions.TakeRandom(), _gridSettings.FirstRowIndex);
+                temp.Activate(number, gridPosition, _colorMap.GetColor(number));
+                _activeBlocks.AddBlocks(temp);
+                yield return temp;
+            }
+        }
+
+        private int GetBlockCount()
+        {
+            var property = _countProperties.Properties.Where(prop => prop.Range.IsInRange(_currentWave)).FirstOrDefault();
+
+            if (property.IsEmpty())
+                property = _countProperties.Properties.Where(item => item.Range.TerminalWave == _countProperties.Properties.Max(item => item.Range.TerminalWave)).FirstOrDefault();
+
+            if (property.IsEmpty())
+                Debug.Log("No property");
+
+            int point = Random.Range(1, 101);
+            int previous = 0;
+
+            foreach (var chancesToCount in property.CountBlocks)
+            {
+                if (chancesToCount.Chance + previous > point)
+                    return chancesToCount.Count;
+
+                previous += chancesToCount.Chance;
+            }
+
             return 0;
+        }
 
-        return property.NumbersToSpawn[Random.Range(0, property.NumbersToSpawn.Length)];
-    }
+        private int GetBlockNumber()
+        {
+            var property = _numbersProperties.Properties.Where(prop => prop.Range.IsInRange(_currentWave)).FirstOrDefault();
 
-    private Block Generate()
-    {
-        Block block = _container.InstantiatePrefabForComponent<Block>(_prefab).Initialize(_blockParent);
-        _allBlocks.Add(block);
-        return block;
+            if (property.IsEmpty())
+                property = _numbersProperties.Properties.Where(item => item.Range.TerminalWave == _numbersProperties.Properties.Max(item => item.Range.TerminalWave)).FirstOrDefault();
+
+            if (property.IsEmpty())
+                return 0;
+
+            return property.NumbersToSpawn[Random.Range(0, property.NumbersToSpawn.Length)];
+        }
+
+        private Block Generate() => _container.InstantiatePrefabForComponent<Block>(_prefab).Initialize(_blockParent, _factory.GenerateBoxForBlock());
+
+        private void OnBlockFree(Block block) => _blocks.Enqueue(block);
     }
 }

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
+  m_Name: MoveIncreaser
+  m_EditorClassIdentifier: 
+  _type: 5
+  _species: 0
+  _icon: {fileID: -8998594483597734657, guid: d7ea6ba195d83d84a8d046f7983b6629, type: 3}
+  _name: Move Increaser
+  _description: On hit, attempts to move {WEIGHT} blocks behind.
+  _suffixes: []

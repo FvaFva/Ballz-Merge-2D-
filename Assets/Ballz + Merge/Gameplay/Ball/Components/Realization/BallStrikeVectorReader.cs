@@ -1,38 +1,38 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using Zenject;
 
 public class BallStrikeVectorReader : BallComponent
 {
+    [SerializeField] private Camera _camera;
+    [SerializeField] private SpriteRenderer _inputZone;
+
     [Inject] private MainInputMap _userInput;
 
     private Vector3 _vector;
-    private Camera _camera;
     private Transform _transform;
     private float _cameraY;
-    private Action<Vector3> _currentProcessor;
 
     public event Action<Vector3> Changed;
     public event Action<Vector3> Dropped;
-    public Vector3 view;
 
     private void Awake()
     {
-        _camera = Camera.main;
         _transform = transform;
         _cameraY = _camera.transform.position.y;
-        _currentProcessor = DesktopProcessor;
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        Vector3 old = _vector;
-        _currentProcessor(old);
+        _userInput.MainInput.Shot.started += OnShotStarted;
     }
 
-    public void ChangeToAndroid()
+    private void OnDisable()
     {
-        _currentProcessor = AndroidProcessor;
+        _userInput.MainInput.Shot.started -= OnShotStarted;
     }
 
     public Vector3 GetVector()
@@ -48,23 +48,53 @@ public class BallStrikeVectorReader : BallComponent
         return _camera.ScreenToWorldPoint(input) - _transform.position;
     }
 
-    private void AndroidProcessor(Vector3 old)
+    private void OnShotStarted(InputAction.CallbackContext context)
     {
-        _vector = _userInput.MainInput.StrikeVector.ReadValue<Vector2>();
+        StartCoroutine(HandleShotStart());
+        
 
-        if (old.Equals(_vector) == false)
+        
+    }
+
+    private IEnumerator HandleShotStart()
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (EventSystem.current.IsPointerOverGameObject())
+            yield break;
+
+        var currentTouchPosition = _userInput.MainInput.StrikePosition.ReadValue<Vector2>();
+
+        Vector3 worldTouchPosition = _camera.ScreenToWorldPoint(currentTouchPosition);
+
+        if (_inputZone.bounds.Contains(worldTouchPosition))
         {
-            if (_vector == Vector3.zero)
-            {
-                _vector = old;
-                Vector3 dropVector = GetVector();
-                _vector = Vector3.zero;
-                Dropped(dropVector);
-            }
-            else
-            {
-                Changed?.Invoke(GetVector());
-            }
+            _userInput.MainInput.StrikeVector.performed += OnStrikeVectorPerformed;
+            _userInput.MainInput.Shot.canceled += OnShotCancelled;
+        }
+    }
+
+    private void OnShotCancelled(InputAction.CallbackContext context)
+    {
+        _userInput.MainInput.StrikeVector.performed -= OnStrikeVectorPerformed;
+        _userInput.MainInput.Shot.canceled -= OnShotCancelled;
+
+        Vector3 dropVector = GetVector();
+        _vector = Vector3.zero;
+        Dropped?.Invoke(dropVector);
+    }
+
+    private void OnStrikeVectorPerformed(InputAction.CallbackContext context)
+    {
+        AndroidProcessor(context.ReadValue<Vector2>());
+    }
+
+    private void AndroidProcessor(Vector3 direction)
+    {
+        if (direction.Equals(_vector) == false)
+        {
+            _vector = GetMouseVector(direction);
+            Changed?.Invoke(GetVector());
         }
     }
 

@@ -13,23 +13,19 @@ public class BallShooter : BallComponent
 
     [Inject] private MainInputMap _userInput;
 
-    private Rigidbody2D _rb;
     private bool _isOverUI;
-
-    private void Awake()
-    {
-        _rb = GetRigidbody();
-    }
 
     private void OnEnable()
     {
-        _userInput.MainInput.Shot.performed += OnPlayerShootOrder;
+        if (Application.platform == RuntimePlatform.Android)
+            _userInput.MainInput.Shot.performed += ctx => OnPlayerShootOrder();
+
         _vectorReader.Dropped += OnInputVectorDrop;
     }
 
     private void OnDisable()
     {
-        _userInput.MainInput.Shot.performed -= OnPlayerShootOrder;
+        _userInput.MainInput.Shot.performed -= ctx => OnPlayerShootOrder();
         _vectorReader.Dropped -= OnInputVectorDrop;
     }
 
@@ -38,7 +34,7 @@ public class BallShooter : BallComponent
         _isOverUI = EventSystem.current.IsPointerOverGameObject();
     }
 
-    private void OnPlayerShootOrder(InputAction.CallbackContext ctx)
+    private void OnPlayerShootOrder()
     {
         if (_isOverUI)
             return;
@@ -56,7 +52,7 @@ public class BallShooter : BallComponent
 
     private void Shot(Vector3 vector)
     {
-        _rb.AddForce(vector * _force, ForceMode2D.Force);
+        MyBody.AddForce(vector * _force, ForceMode2D.Force);
         ActivateTrigger();
     }
 }

@@ -1,36 +1,46 @@
 using UnityEngine;
 using Zenject;
+using BallzMerge.Gameplay.BlockSpace;
+using BallzMerge.Gameplay.BallSpace;
+using BallzMerge.Gameplay.Level;
+using BallzMerge.Root;
+using BallzMerge.Achievement;
 
 public class MainSceneInjection : MonoInstaller
 {
+    [Header("Project context bind")]
+    [SerializeField] private GameCycler _loader;
+
     [Header("Bind")]
     [SerializeField] private Ball _ball;
     [SerializeField] private PhysicGrid _physicsGrid;
-    [SerializeField] private UserQuestioner _questioner;
-    [SerializeField] private BlocksBus _blocksBus;
+    [SerializeField] private BlocksBinder _blocksBus;
     [SerializeField] private BallWaveVolume _ballLevelVolume;
-
-    [Header("Factory")]
-    [SerializeField] private Block _blockPrefab;
 
     [Header("Inject")]
     [SerializeField] private BlocksSpawner _blocksSpawner;
     [SerializeField] private PlayerScore _score;
+    [SerializeField] private GameAnimationSkipper _animationSkipper;
+    [SerializeField] private AchievementSettingsGameBinder _achievementSource;
+
+    [Inject] private TargetSceneEntryPointContainer _entryPointBinder;
 
     public override void InstallBindings()
     {
-        Container.Bind<MainInputMap>().FromNew().AsSingle().NonLazy();
-        Container.Bind<AudioSettings>().FromNew().AsSingle().NonLazy();
-
-        Container.Bind<Ball>().FromInstance(_ball).AsSingle().NonLazy();
+        Container.Bind<Ball>().FromInstance(_ball.PreLoad()).AsSingle().NonLazy();
         Container.Bind<PhysicGrid>().FromInstance(_physicsGrid).AsSingle().NonLazy();
-        Container.Bind<UserQuestioner>().FromInstance(_questioner).AsSingle().NonLazy();
-        Container.Bind<BlocksBus>().FromInstance(_blocksBus).AsSingle().NonLazy();
+        Container.Bind<BlocksBinder>().FromInstance(_blocksBus).AsSingle().NonLazy();
         Container.Bind<BallWaveVolume>().FromInstance(_ballLevelVolume).AsSingle().NonLazy();
+        Container.Bind<AchievementSettingsGameBinder>().FromInstance(_achievementSource).AsSingle().NonLazy();
+ 
+        Container.Bind<BlocksInGame>().FromNew().AsSingle().NonLazy();
+        Container.Bind<BlocksMover>().FromNew().AsSingle().NonLazy();
+        Container.Bind<ISceneEnterPoint>().To<GameCycler>().FromInstance(_loader).AsSingle().NonLazy();
 
-        Container.Bind<Block>().FromComponentInNewPrefab(_blockPrefab).AsTransient();
+        Container.Inject(_blocksSpawner);
+        Container.Inject(_score);
+        Container.Inject(_animationSkipper);
 
-        Container.InjectGameObject(_blocksSpawner.gameObject);
-        Container.InjectGameObject(_score.gameObject);
+        _entryPointBinder.Set(_loader);
     }
 }

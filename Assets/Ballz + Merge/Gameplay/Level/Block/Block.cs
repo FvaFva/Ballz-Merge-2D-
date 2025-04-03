@@ -1,109 +1,197 @@
+using BallzMerge.Gameplay.Level;
 using DG.Tweening;
 using System;
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class Block : MonoBehaviour
+namespace BallzMerge.Gameplay.BlockSpace
 {
-    private const float AnimationTime = 0.3f;
-    private const float FadeTime = 0.6f;
-    private const float MoveScaleCoefficient = 0.85f;
-    private const float BounceScaleCoefficient = 0.5f;
-    private const string FadeProperty = "_fade";
-
-    [SerializeField] private SpriteRenderer _view;
-    [SerializeField] private TMP_Text _numberView;
-
-    [Inject] private GridSettings _gridSettings;
-
-    private Transform _transform;
-    private Tweener _moveTween;
-    private Vector3 _baseScale;
-    private Material _material;
-
-    public Vector2Int GridPosition {  get; private set; }
-    public Vector2 WorldPosition => _transform.position;
-    public int Number {  get; private set; }
-
-    public event Action<Block> Deactivated;
-    public event Action<Block> CameToNewCell;
-
-    private void Awake()
+    public class Block : MonoBehaviour
     {
-        _transform = transform;
-        _baseScale = transform.localScale;
-        _material = _view.material;
-    }
+        private static int _id = 0;
+        static public int ID { get { return ++_id; } }
 
-    public Block Initialize(Transform parent)
-    {
-        _transform.parent = parent;
-        Deactivate();
-        return this;
-    }
+        private const int OutBoardPosition = int.MaxValue;
 
-    public void Activate(int number, Vector2Int gridPosition, Color color)
-    {
-        Number = number;
-        _material.DOFloat(1, FadeProperty, FadeTime);
-        _view.enabled = true;
-        _view.color = color;
-        _numberView.enabled = true;
-        _numberView.text = number.ToString();
-        _transform.localPosition = (Vector2)gridPosition * _gridSettings.CellSize;
-        _transform.localScale = _baseScale;
-        GridPosition = gridPosition;
-    }
+        [SerializeField] private BlockViewModel _view;
+        [SerializeField] private BlockPhysicModel _physic;
 
-    public void Move(Vector2Int step)
-    {
-        GridPosition += step;
-        StopCurrentMoveTween();
-        _moveTween = _transform.DOLocalMove((Vector2)GridPosition * _gridSettings.CellSize, AnimationTime).SetEase(Ease.OutBack).OnComplete(() => CameToNewCell?.Invoke(this));
-        Vector3 scale = _baseScale;
+        [Inject] private GridSettings _gridSettings;
+        [Inject] private BlocksMover _mover;
 
-        if (step.y != 0)
-            scale.x *= MoveScaleCoefficient;
-        else
-            scale.y *= MoveScaleCoefficient;
+        private Transform _transform;
+        private Tweener _moveTween;
 
-        _transform.DOScale(scale, AnimationTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale);
-    }
+        public bool IsAlive { get; private set; }
+        public Vector2Int GridPosition { get; private set; }
+        public Vector2 WorldPosition => _transform.position;
+        public int Number { get; private set; }
+        public bool IsWithEffect { get; private set; }
 
-    public void Merge(Vector3 worldPositionMergedBlock)
-    {
-        GridPosition = Vector2Int.zero;
-        _numberView.enabled = false;
-        StopCurrentMoveTween();
-        Vector3 midpoint = Vector3.Lerp(WorldPosition, worldPositionMergedBlock, 0.5f);
-        _transform.DOMove(midpoint, AnimationTime).OnComplete(Deactivate);
-        _transform.DOShakeScale(AnimationTime, 0.3f, 50, 200);
-        _transform.DOScale(_baseScale * 0.5f, AnimationTime);
-        _material.DOFloat(0, FadeProperty, FadeTime);
-    }
+        public event Action<Block, Vector2Int> Hit;
+        public event Action<Block> CameToNewCell;
+        public event Action<Block> Deactivated;
+        public event Action<Block> Destroyed;
+        public event Action<Block, int> NumberChanged;
 
-    public void Shake(Vector2 direction)
-    {
-        Vector2 startPosition = (Vector2)_transform.position;
-        Sequence sequence = DOTween.Sequence();
-        sequence.Append(_transform.DOMove(startPosition + direction * MoveScaleCoefficient, AnimationTime).SetLoops(2, LoopType.Yoyo));
-        Vector3 newScale = new Vector3((direction.y + BounceScaleCoefficient) * _transform.localScale.x, (direction.x + BounceScaleCoefficient) * _transform.localScale.y);
-        sequence.Join(_transform.DOScale(newScale, AnimationTime).SetLoops(2, LoopType.Yoyo).OnComplete(() => _transform.localScale = _baseScale));
-        sequence.Play();
-    }
+        public List<string> Debug = new List<string>();
 
-    public void Deactivate()
-    {
-        _view.enabled = false;
-        _numberView.enabled = false;
-        _transform.localPosition = Vector2.zero;
-        Deactivated?.Invoke(this);
-    }
+        private void Awake()
+        {
+            _transform = transform;
+        }
 
-    private void StopCurrentMoveTween()
-    {
-        if (_moveTween != null && _moveTween.IsActive())
-            _moveTween.Kill();
+        private void OnEnable()
+        {
+            _physic.Hit += OnHit;
+        }
+
+        private void OnDisable()
+        {
+            _physic.Hit -= OnHit;
+        }
+
+        public Block Initialize(Transform parent, GridVirtualCell virtualBox)
+        {
+            Debug.Add("init");
+            name = $"Block {ID}";
+            _transform.parent = parent;
+            _view.Init(_gridSettings.MoveTime, _gridSettings.CellSize);
+            _physic.Init(virtualBox);
+            Deactivate();
+            return this;
+        }
+
+        public void Activate(int number, Vector2Int gridPosition, Color color)
+        {
+            Debug.Add("Activate");
+            _transform.localPosition = (Vector2)gridPosition * _gridSettings.CellSize;
+            IsWithEffect = false;
+            IsAlive = true;
+            Number = number;
+            GridPosition = gridPosition;
+            _view.Activate(number, color);
+            _physic.Activate();
+        }
+
+        public void ConnectEffect()
+        {
+            Debug.Add("Add effect");
+            IsWithEffect = true;
+        }
+
+        public bool Move(Vector2Int step, bool isMoveDown = false)
+        {
+            if(IsAlive == false)
+                return false;
+
+            if(CantMove(step, isMoveDown))
+            {
+                PlayBounceAnimation(step);
+                return false;
+            }
+
+            Debug.Add($"Move {step}");
+            StopCurrentMoveTween();
+            GridPosition += step;
+            var newPosition = (Vector2)GridPosition * _gridSettings.CellSize;
+            _moveTween = _transform
+                .DOLocalMove(newPosition, _gridSettings.MoveTime)
+                .OnComplete(OnComeToNewCell);
+
+            _view.AnimationMove(step);
+            _physic.Deactivate();
+            return true;
+        }
+
+        public void Merge(Vector3 worldPositionMergedBlock)
+        {
+            IsAlive = false;
+            Debug.Add($"Merge {worldPositionMergedBlock}");
+            GridPosition = Vector2Int.zero;
+            StopCurrentMoveTween();
+            Vector3 midpoint = Vector3.Lerp(WorldPosition, worldPositionMergedBlock, 0.5f);
+            _transform.DOMove(midpoint, _gridSettings.MoveTime).OnComplete(Deactivate);
+            _view.PlayMerge();
+            _physic.Deactivate();
+        }
+
+        public void Destroy()
+        {
+            IsAlive = false;
+            Debug.Add($"Destroy");
+            Destroyed?.Invoke(this);
+            StopCurrentMoveTween();
+            Number = 0;
+            _view.PlayDestroy(Deactivate);
+            _physic.Deactivate();
+        }
+
+        public void ChangeNumber(int count)
+        {
+            Debug.Add($"ChangeNumber {count}");
+            Number += count;
+            _view.ChangeNumber(Number);
+
+            if(Number <= 0)
+                Destroy();
+            else
+                NumberChanged?.Invoke(this, count);
+        }
+
+        public void PlayBounceAnimation(Vector2 direction)
+        {
+            _view.PlayBounce(direction, GridPosition);
+        }
+
+        public void PlayShakeAnimation()
+        {
+            _view.PlayShake();
+        }
+
+        public void Deactivate()
+        {
+            Debug.Add($"Deactivate");
+            DOTween.Kill(_transform);
+            _view.Deactivate();
+            _physic.Deactivate();
+            Number = 0;
+            _transform.localPosition = Vector2.one * OutBoardPosition;
+            _transform.rotation = Quaternion.identity;
+            StopCurrentMoveTween();
+            Deactivated?.Invoke(this);
+        }
+
+        private void StopCurrentMoveTween()
+        {
+            if (_moveTween != null && _moveTween.IsActive())
+                _moveTween.Kill();
+        }
+
+        private void OnComeToNewCell()
+        {
+            Debug.Add($"OnComeToNewCell");
+            CameToNewCell?.Invoke(this);
+
+            if(IsAlive)
+                _physic.Activate();
+        }
+
+        private void OnHit(Vector2Int direction) => Hit?.Invoke(this, direction);
+
+        private bool CantMove(Vector2Int step, bool isMoveDown)
+        {
+            bool downVector = step == Vector2Int.down;
+            bool forceDownMove = isMoveDown && downVector;
+
+            if (forceDownMove)
+                return false;
+
+            if (downVector)
+                return true;
+
+            return _mover.IsFree(GridPosition + step) == false;
+        }
     }
 }

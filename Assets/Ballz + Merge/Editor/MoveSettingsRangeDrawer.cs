@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using BallzMerge.Gameplay.Level;
+using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(MoveSettingsRange))]

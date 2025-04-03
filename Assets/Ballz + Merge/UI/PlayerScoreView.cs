@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class PlayerScoreView : MonoBehaviour
 {
-    [SerializeField] private InfoPanel _score;
-    [SerializeField] private InfoPanel _best;
+    [SerializeField] private ValueView _score;
     [SerializeField] private PlayerScore _playerScore;
 
     private void Awake()
@@ -24,6 +23,5 @@ public class PlayerScoreView : MonoBehaviour
     private void UpdateScore()
     {
         _score.Show(_playerScore.Score);
-        _best.Show(_playerScore.BestScore);
     }
 }

@@ -1,81 +1,142 @@
-﻿using System.Collections;
+﻿using BallzMerge.Gameplay.BallSpace;
+using BallzMerge.Gameplay.BlockSpace;
+using BallzMerge.Gameplay.Level;
+using BallzMerge.Root;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
 
-public class GameCycler: MonoBehaviour 
+public class GameCycler: MonoBehaviour, ISceneEnterPoint
 {
+    private const string QuitQuestName = "Quit";
     private const string RestartQuestName = "Restart";
 
-    [SerializeField] private List<CyclicBehaviour> _components;
+    [SerializeField] private UIView _mainUI;
+    [SerializeField] private Camera _uICamera;
+    [SerializeField] private List<CyclicBehavior> _components;
 
     private List<ILevelFinisher> _finishers = new List<ILevelFinisher>();
+    private List<IInitializable> _initializedComponents = new List<IInitializable>();
     private List<ILevelStarter> _starters = new List<ILevelStarter>();
     private List<IWaveUpdater> _wavers = new List<IWaveUpdater>();
+    private List<IDependentScreenOrientation> _orientators = new List<IDependentScreenOrientation>();
+    private Action<SceneExitData> _sceneCallBack;
+    private SceneExitData _quiteRequireData;
+    private ConductorBetweenWaves _conductor;
 
-    [Inject] private MainInputMap _userInput;
-    [Inject] private BlocksBus _blocksBus;
+    [Inject] private BlocksBinder _blocksBus;
     [Inject] private UserQuestioner _userQuestioner;
     [Inject] private Ball _ball;
+    [Inject] private UIRootView _rootUI;
+    [Inject] private GridSettings _gridSettings;
 
-    private void Start()
+    public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
+    public IEnumerable<IDependentScreenOrientation> Orientators => _orientators;
+
+    public bool IsAvailable {  get; private set; }
+
+    private void Awake()
     {
         foreach (var cyclical in _components.OrderBy(item => item.Order))
         {
-            if (cyclical is IInitializable initializable)
-                initializable.Init();
+            if (cyclical is IInitializable initializeComponent)
+                _initializedComponents.Add(initializeComponent);
 
-            if(cyclical is ILevelFinisher finisher)
+            if (cyclical is ILevelFinisher finisher)
                 _finishers.Add(finisher);
 
-            if(cyclical is ILevelStarter starter)
+            if (cyclical is ILevelStarter starter)
                 _starters.Add(starter);
 
             if (cyclical is IWaveUpdater waver)
                 _wavers.Add(waver);
+
+            if (cyclical is IDependentScreenOrientation orientator)
+                _orientators.Add(orientator);
+
+            if (cyclical is Dropper dropper)
+                _conductor = new ConductorBetweenWaves(_ball.GetBallComponent<BallAwaitBreaker>(), dropper, _blocksBus);
         }
 
-        _userInput.Enable();
-        RestartLevel();
+        IsAvailable = true;
     }
 
     private void OnEnable()
     {
-        _blocksBus.BlockFinished += OnBlockFinished;
-        _ball.EnterAim += OnBallEnterAim;
+        _ball.LeftGame += OnBallLeftGame;
+        _conductor.GameFinished += OnGameFinished;
+        _conductor.WaveLoaded += OnWaveLoaded;
+        _rootUI.EscapeMenu.QuitRequired += OnMenuQuitRequire;
     }
 
     private void OnDisable()
     {
-        _blocksBus.BlockFinished -= OnBlockFinished;
-        _ball.EnterAim -= OnBallEnterAim;
+        _ball.LeftGame -= OnBallLeftGame;
+        _conductor.GameFinished -= OnGameFinished;
+        _conductor.WaveLoaded -= OnWaveLoaded;
+        _rootUI.EscapeMenu.QuitRequired -= OnMenuQuitRequire;
     }
 
     private void OnDestroy()
     {
-        _userInput.Disable();
+        IsAvailable = false;
     }
 
-    private void OnBallEnterAim()
+    public void Init(Action<SceneExitData> callback)
     {
-        foreach(IWaveUpdater waver in _wavers)
+        if (_conductor == null)
+        {
+            Debug.LogError("WARNING!! CONDUCTOR WAS FIRED!");
+            callback.Invoke(new SceneExitData(ScenesNames.MAINMENU));
+            return;
+        }
+
+        _sceneCallBack = callback;
+        _mainUI.Init();
+        _rootUI.AttachSceneUI(_mainUI, _uICamera);
+        RestartLevel();
+    }
+
+    private void OnBallLeftGame()
+    {
+        _conductor.Start();
+    }
+
+    private void RestartLevel()
+    {
+        _gridSettings.ReloadSize();
+
+        foreach (ILevelStarter starter in _starters)
+            starter.StartLevel();
+
+        _conductor.Start();
+    }
+
+    private void OnWaveLoaded()
+    {
+        foreach (IWaveUpdater waver in _wavers)
             waver.UpdateWave();
     }
 
-    private void OnBlockFinished()
+    private void OnGameFinished()
     {
-        StartCoroutine(DelayedLevelFinish());
-    }
-
-    private IEnumerator DelayedLevelFinish()
-    {
-        yield return new WaitForFixedUpdate();
-
         foreach (ILevelFinisher finisher in _finishers)
             finisher.FinishLevel();
 
-        _userQuestioner.Show(new UserQuestion(RestartQuestName, $"Want one more game?"));
+        StartQuest(RestartQuestName, "Want one more game?");
+    }
+
+    private void OnMenuQuitRequire(SceneExitData exitData)
+    {
+        _quiteRequireData = exitData;
+        StartQuest(QuitQuestName, "Really left dat the best run?");
+    }
+
+    private void StartQuest(string id, string header)
+    {
+        _userQuestioner.Show(new UserQuestion(id, header));
         _userQuestioner.Answer += OnUserAnswer;
     }
 
@@ -88,22 +149,12 @@ public class GameCycler: MonoBehaviour
             if (answer.IsPositiveAnswer)
                 RestartLevel();
             else
-                Quit();
-        }    
-    }
-
-    private void RestartLevel()
-    {
-        foreach(ILevelStarter starter in _starters)
-            starter.StartLevel();
-    }
-
-    private void Quit()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+                _sceneCallBack.Invoke(new SceneExitData(ScenesNames.MAINMENU));
+        }
+        else if (answer is {Name: QuitQuestName, IsPositiveAnswer: true})
+        {
+            _userQuestioner.Answer -= OnUserAnswer;
+            _sceneCallBack.Invoke(_quiteRequireData);
+        }
     }
 }

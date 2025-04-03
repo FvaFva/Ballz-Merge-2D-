@@ -1,49 +1,67 @@
-﻿using System;
+﻿using BallzMerge.Gameplay.Level;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Zenject;
 
-public class BlocksMover
+namespace BallzMerge.Gameplay.BlockSpace
 {
-    private List<Block> _inMove = new List<Block>();
-
-    public event Action<Block> BlockMoved;
-    public event Action<Vector2Int, bool> ChangedCellActivity;
-
-    public void Move(Block block, Vector2Int direction)
+    public class BlocksMover
     {
-        ChangedCellActivity?.Invoke(block.GridPosition, false);
-        block.CameToNewCell += OnBlockMoved;
-        _inMove.Add(block);
-        block.Move(direction);
-        ChangedCellActivity?.Invoke(block.GridPosition, true);
-    }
+        private readonly Vector2Int WrongDirection = Vector2Int.down;
 
-    public void Merge(Block block1, Block block2)
-    {
-        ChangedCellActivity?.Invoke(block1.GridPosition, false);
-        ChangedCellActivity?.Invoke(block2.GridPosition, false);
-        block1.Merge(block2.WorldPosition);
-        block2.Merge(block1.WorldPosition);
-    }
+        [Inject] private GridSettings _grid;
+        [Inject] private BlocksInGame _activeBlocks;
 
-    public void MoveAllDawn(IEnumerable<Block> movedBlocks)
-    {
-        foreach (Block block in movedBlocks)
-            Move(block, Vector2Int.down);
-    }
+        private List<Block> _blocksInMove;
+        private Action _onComeAllBlocks;
 
-    public void Clear()
-    {
-        foreach(Block block in _inMove)
-            block.CameToNewCell -= OnBlockMoved;
+        public BlocksMover()
+        {
+            _blocksInMove = new List<Block>();
+        }
 
-        _inMove.Clear();
-    }
+        public IEnumerable MoveAll(IEnumerable<Block> blocks, Vector2Int direction, Action callBack)
+        {
+            _onComeAllBlocks = callBack;
 
-    private void OnBlockMoved(Block block)
-    {
-        _inMove.Remove(block);
-        block.CameToNewCell -= OnBlockMoved;
-        BlockMoved?.Invoke(block);
+            foreach (var block in blocks.ToArray())
+            {
+                if(block.Move(direction, true))
+                {
+                    block.CameToNewCell += OnCome;
+                    block.Deactivated += OnCome;
+                    _blocksInMove.Add(block);
+                }
+
+                yield return null;
+            }
+
+            if (_blocksInMove.Count == 0)
+                _onComeAllBlocks();
+        }
+
+        public bool IsFree(Vector2Int position)
+        {
+            if(_grid.IsOutside(position) || IsCollisionBlock(position))
+                return false;
+            return true;
+        }
+
+        private bool IsWrongDirection(Vector2Int direction) => direction == WrongDirection;
+
+        private bool IsCollisionBlock(Vector2Int nextPosition) => _activeBlocks.HaveAtPosition(nextPosition);
+
+        private void OnCome(Block block)
+        {
+            block.CameToNewCell -= OnCome;
+            block.Deactivated -= OnCome;
+            _blocksInMove.TryRemove(block);
+
+            if (_blocksInMove.Count == 0)
+                _onComeAllBlocks();
+        }
     }
 }

@@ -1,68 +1,52 @@
+using BallzMerge.Gameplay.Level;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class BallWaveVolume : CyclicBehaviour, IWaveUpdater, IInitializable, ILevelFinisher
+public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILevelFinisher
 {
     [SerializeField] private DropSelector _dropSelector;
+    [SerializeField] private BallVolumesCageView _cage;
 
-    private BallGlobalVolume _globalVolumes;
-    private Dictionary<BallVolumesTypes, float> _volumes;
+    private Func<IEnumerable<BallVolumesBagCell>> _getActiveVolumesGenerator = () => (Enumerable.Empty<BallVolumesBagCell>());
 
-    public event Action<IDictionary<BallVolumesTypes, float>> Updated;
-    public event Action<BallVolumesTypes, float> Changed;
+    public BallVolumesBag Bag {  get; private set; }
+
+    public event Action Changed;
 
     public void Init()
     {
-        _globalVolumes = new BallGlobalVolume(_dropSelector);
-        _globalVolumes.Changed += UpdateWave;
-        _volumes = new Dictionary<BallVolumesTypes, float>();
-
-        foreach (var volume in _globalVolumes.Volumes)
-            _volumes.Add(volume.Key, volume.Value);
-
-        Updated?.Invoke(_volumes);
+        Bag = new BallVolumesBag(_dropSelector);
+        Bag.Added += OnBagChanged;
+        _cage.Init();
+        _getActiveVolumesGenerator = () => Bag.Passive.Concat(_cage.ActiveVolumes);
     }
 
     public void UpdateWave()
     {
-        foreach (var volume in _globalVolumes.Volumes)
-            _volumes[volume.Key] = volume.Value;
-
-        Updated?.Invoke(_volumes);
+        _cage.RebuildCage();
+        Changed?.Invoke();
     }
 
-    public float GetMaxVolume(BallVolumesTypes ballVolume) => _globalVolumes.Volumes[ballVolume];
+    public IEnumerable<BallVolumesBagCell> GetActiveVolumes() => _getActiveVolumesGenerator();
 
-    public bool CheckVolume(BallVolumesTypes ballVolume)
-    {
-        float volume = _volumes[ballVolume];
+    public int GetPassiveValue(BallVolumesTypes type) => Bag.Passive.Where(cell => cell.IsEqual(type)).Sum(cell => cell.Value);
 
-        if(volume ==  0)
-            return false;
-        
-        if(volume >= 1)
-        {
-            _volumes[ballVolume]--;
-            Changed?.Invoke(ballVolume, _volumes[ballVolume]);
-            return true;
-        }
-
-        float dice = UnityEngine.Random.Range(0f, 1f);
-
-        if(volume >= dice)
-        {
-            _volumes[ballVolume] = 0;
-            Changed?.Invoke(ballVolume, _volumes[ballVolume]);
-            return true;
-        }
-
-        return false;
-    }
+    public BallVolumesBagCell GetCageValue() => _cage.CheckNext();
 
     public void FinishLevel()
     {
-        _globalVolumes.Changed -= UpdateWave;
-        Init();
+        _cage.Clear();
+        Bag.Clear();
+        Changed?.Invoke();
+    }
+
+    private void OnBagChanged(BallVolumesBagCell cell)
+    {
+        if(cell.IsEqual(BallVolumesSpecies.Hit))
+            _cage.AddVolume(cell);
+
+        Changed?.Invoke();
     }
 }

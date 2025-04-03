@@ -2,5 +2,9 @@
 {
     Crush,
     BotBounce,
-    ExtraAimPoints
+    NumberReductor,
+    ExtraAimPoints,
+    Magnet,
+    MoveIncreaser,
+    FieldExpander
 }

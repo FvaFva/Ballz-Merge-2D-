@@ -1,57 +1,67 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Zenject;
 
-public class PhysicGrid : CyclicBehaviour, ILevelFinisher, IInitializable
+namespace BallzMerge.Gameplay.Level
 {
-    [SerializeField] private GridCell _prefab;
-    [SerializeField] private Transform _cellParent;
-    [SerializeField] private VirtualWorldFactory _factory;
-
-    [Inject] private GridSettings _settings;
-
-    private Dictionary<Vector2Int, GridCell> _grid = new Dictionary<Vector2Int, GridCell>();
-
-    public void Init()
+    public class PhysicGrid : CyclicBehavior, ILevelStarter, ILevelFinisher
     {
-        BoxCollider2D[,] boxes = _factory.CreateBoxes(_settings);
+        [SerializeField] private GridCell _prefab;
+        [SerializeField] private Transform _cellParent;
 
-        for (int i = 0; i < _settings.GridSize.x; i++)
-            for (int j = 0; j < _settings.GridSize.y; j++)
-                InitCell(i, j, boxes[i,j]);
-    }
+        [Inject] private GridSettings _settings;
 
-    public void ChangeCellActivity(Vector2Int position, bool isActive)
-    {
-        if (_grid.ContainsKey(position) == false)
-            return;
+        private Dictionary<Vector2Int, GridCell> _grid = new Dictionary<Vector2Int, GridCell>();
+        private Queue<GridCell> _cellsPool = new Queue<GridCell>();
 
-        ChangeCellActivity(_grid[position], isActive);
-    }
+        public void StartLevel()
+        {
+            SpawnColumn(true);
+        }
 
-    public void ChangeCellActivity(GridCell cell, bool isActive)
-    {
-        cell.ChangeActivity(isActive);
-    }
+        public void FinishLevel()
+        {
+            foreach (GridCell cell in _grid.Values)
+            {
+                cell.ChangeActivity(false);
+                _cellsPool.Enqueue(cell);
+            }
 
-    public void FinishLevel()
-    {
-        foreach (GridCell activeCells in GetActiveCells())
-            ChangeCellActivity(activeCells, false);
-    }
+            _grid.Clear();
+        }
 
-    private void InitCell(int x, int y, BoxCollider2D virtualCollider)
-    {
-        GridCell cell = Instantiate(_prefab, _cellParent);
-        cell.name = $"[{x}] - [{y}]";
-        Vector2Int gridPosition = new Vector2Int(x, y);
-        cell.Init(gridPosition, _settings.CellSize, virtualCollider);
-        _grid.Add(gridPosition, cell);
-    }
+        public void SpawnColumn(bool isStart, int column = 1)
+        {
+            for (int i = column - 1; i < _settings.Size.x; i++)
+            {
+                for (int j = 0; j < _settings.Size.y; j++)
+                    InitCell(i, j);
+            }
+        }
 
-    private IEnumerable<GridCell> GetActiveCells()
-    {
-        return _grid.Values.Where(cell => cell.IsActive);
+        public void SpawnRow(int row)
+        {
+            for (int i = 0; i < _settings.Size.x; i++)
+            {
+                for (int j = row - 1; j < _settings.Size.y; j++)
+                    InitCell(i, j);
+            }
+        }
+
+        private void InitCell(int x, int y)
+        {
+            Vector2Int gridPosition = new Vector2Int(x, y);
+            GridCell cell = GetCell();
+            _grid.Add(gridPosition, cell);
+            cell.Init(gridPosition, _settings.CellSize);
+        }
+
+        private GridCell GetCell()
+        {
+            if (_cellsPool.TryDequeue(out GridCell cell) == false)
+                cell = Instantiate(_prefab, _cellParent); ;
+
+            return cell;
+        }
     }
 }
