@@ -62,12 +62,6 @@ namespace BallzMerge.Gameplay.Level
         {
             _firstSlot.Show(default);
             _secondSlot.Show(default);
-            StartCoroutine(DelayedCallBack());
-        }
-
-        private IEnumerator DelayedCallBack()
-        {
-            yield return new WaitForSeconds(AnimationTime);
             _callback();
             gameObject.SetActive(false);
         }

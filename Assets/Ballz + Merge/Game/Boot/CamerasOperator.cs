@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace BallzMerge.Root
+namespace BallzMerge.Gameplay
 {
     public class CamerasOperator : CyclicBehavior, IDependentScreenOrientation, IInitializable, ILevelStarter
     {
