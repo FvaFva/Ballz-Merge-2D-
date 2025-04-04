@@ -8,7 +8,7 @@ namespace BallzMerge.Gameplay.BallSpace
     public class BallVectorPredictor : CyclicBehavior, IInitializable
     {
         private const float StepTime = 0.02f;
-        private const int MaxStepCount = 400;
+        private const int MaxStepCount = 1200;
 
         [SerializeField] private VirtualWorldFactory _factory;
 
@@ -23,19 +23,26 @@ namespace BallzMerge.Gameplay.BallSpace
         private void OnEnable()
         {
             if (_vectorReader != null)
+            {
                 _vectorReader.Changed += Predict;
+                _vectorReader.Canceled += OnCanceled;
+            }
         }
 
         private void OnDisable()
         {
             if (_vectorReader != null)
+            {
                 _vectorReader.Changed -= Predict;
+                _vectorReader.Canceled -= OnCanceled;
+            }
         }
 
         public void Init()
         {
             _vectorReader = _ballOriginal.GetBallComponent<BallStrikeVectorReader>();
             _vectorReader.Changed += Predict;
+            _vectorReader.Canceled += OnCanceled;
             _ballSimulated = _factory.CreateBall(_ballOriginal);
             _physicsScene = _factory.GetPhysicScene();
         }
@@ -53,6 +60,11 @@ namespace BallzMerge.Gameplay.BallSpace
             }
 
             Predicted?.Invoke(prediction);
+        }
+
+        private void OnCanceled()
+        {
+            Predicted?.Invoke(new List<Vector3>());
         }
     }
 }
