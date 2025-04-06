@@ -47,6 +47,7 @@ MonoBehaviour:
   _initOrder: 0
   _puck:
   - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &1688658867320399129
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,7 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mainUI: {fileID: 0}
-  _uICamera: {fileID: 0}
+  _operator: {fileID: 0}
   _components:
   - {fileID: 0}
   - {fileID: 0}

@@ -1,4 +1,5 @@
-﻿using BallzMerge.Gameplay.BallSpace;
+﻿using BallzMerge.Gameplay;
+using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
 using BallzMerge.Root;
@@ -14,7 +15,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     private const string RestartQuestName = "Restart";
 
     [SerializeField] private UIView _mainUI;
-    [SerializeField] private Camera _uICamera;
+    [SerializeField] private CamerasOperator _operator;
     [SerializeField] private List<CyclicBehavior> _components;
 
     private List<ILevelFinisher> _finishers = new List<ILevelFinisher>();
@@ -95,7 +96,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 
         _sceneCallBack = callback;
         _mainUI.Init();
-        _rootUI.AttachSceneUI(_mainUI, _uICamera);
+        _rootUI.AttachSceneUI(_mainUI, _operator.UI);
         RestartLevel();
     }
 
