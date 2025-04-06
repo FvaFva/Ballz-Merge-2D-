@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace BallzMerge.Root
@@ -7,9 +6,11 @@ namespace BallzMerge.Root
     public class UIRootContainers : MonoBehaviour, IDependentScreenOrientation
     {
         [SerializeField] private AdaptiveLayoutGroup _left;
-        [SerializeField] private AdaptiveLayoutGroup _right;
+        [SerializeField] private AdaptiveLayoutGroup _rightTop;
+        [SerializeField] private AdaptiveLayoutGroup _rightCentre;
         [SerializeField] private AdaptiveLayoutGroup _top;
-        [SerializeField] private AdaptiveLayoutGroup _bottom;
+        [SerializeField] private AdaptiveLayoutGroup _bottomRight;
+        [SerializeField] private AdaptiveLayoutGroup _bottomCentre;
 
         private Dictionary<CrossPosition, AdaptiveLayoutGroup> _groups;
         private List<UIRootContainerItem> _items;
@@ -21,9 +22,11 @@ namespace BallzMerge.Root
             _groups = new Dictionary<CrossPosition, AdaptiveLayoutGroup>
             {
                 { CrossPosition.Left, _left.Init() },
-                { CrossPosition.Right, _right.Init() },
+                { CrossPosition.RightTop, _rightTop.Init() },
+                { CrossPosition.RightCentre, _rightCentre.Init() },
                 { CrossPosition.Top, _top.Init() },
-                { CrossPosition.Bottom, _bottom.Init() }
+                { CrossPosition.BottomCentre, _bottomCentre.Init() },
+                { CrossPosition.BottomRight, _bottomRight.Init() }
             };
         }
 
@@ -32,6 +35,8 @@ namespace BallzMerge.Root
             _orientation = orientation;
 
             _top.UpdateScreenOrientation(orientation);
+            _bottomRight.UpdateScreenOrientation(orientation);
+            _rightCentre.UpdateScreenOrientation(orientation);
 
             UpdateItemsPositions();
         }
@@ -43,7 +48,7 @@ namespace BallzMerge.Root
 
             _items.Clear();
 
-            foreach (var item in items.OrderBy(i => i.OrderInGroup)) 
+            foreach (var item in items) 
                 _items.Add(item);
 
             UpdateItemsPositions();

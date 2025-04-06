@@ -1,19 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 [AddComponentMenu("Layout/Adaptive Layout Group")]
 public class AdaptiveLayoutGroup : LayoutGroup
 {
+    private const float One = 1f;
+    private const float MinValue = 0.0001f;
+    private const float Zero = 0f;
+
     [SerializeField] private float _spacing;
     [SerializeField] private bool _isInversive;
     [SerializeField] private bool _isUseAspectForMainAxis;
     [SerializeField] private bool _isVertical;
+    [SerializeField] private AlignmentWeight _alignment = AlignmentWeight.Start;
 
     private Dictionary<RectTransform, float> _childrenCrossSizes = new Dictionary<RectTransform, float>();
-    private float _totalWeight;
-    private float _calculatorCoefficient;
+    private Dictionary<RectTransform, LayoutElement> _mapLayout = new Dictionary<RectTransform, LayoutElement>();
+    private Func<LayoutElement, float> _weightGetter;
+    private float _totalChildrenCrossSize;
 
     public RectTransform Transform { get; private set; }
 
@@ -27,53 +34,36 @@ public class AdaptiveLayoutGroup : LayoutGroup
     {
         base.CalculateLayoutInputHorizontal();
         _childrenCrossSizes.Clear();
-        _totalWeight = 0f;
-        Func<LayoutElement, float> weightGetter = _isVertical ? (elem) => elem.flexibleHeight : (elem) => elem.flexibleWidth;
+        _totalChildrenCrossSize = Zero;
+        _weightGetter = _isVertical ? (elem) => elem.flexibleHeight : (elem) => elem.flexibleWidth;
+        Func<LayoutElement, float> crossSizeGetter = _isUseAspectForMainAxis ? GetChildAspect : GetChildWeight;
 
-        if (_isUseAspectForMainAxis)
-        {
-            foreach (var child in rectChildren)
+        _childrenCrossSizes = rectChildren
+            .Select(child =>
             {
-                var layout = child.GetComponent<LayoutElement>();
-                float aspect = 1f;
-                if (layout != null && layout.preferredHeight > 0)
-                    aspect = layout.preferredWidth / layout.preferredHeight;
+                var data = IsHaveLayout(child, out var layout)
+                ? (rect: child, value: crossSizeGetter(layout), order: layout.layoutPriority)
+                : (rect: child, value: One, order: Zero);
 
-                _childrenCrossSizes.Add(child, aspect);
-            }
-        }
-        else
-        {
-            foreach (var child in rectChildren)
-            {
-                var layout = child.GetComponent<LayoutElement>();
-                float weight = layout != null
-                    ? Mathf.Max(weightGetter(layout), 0.0001f)
-                    : 1f;
+                _totalChildrenCrossSize += data.value;
+                return data;
+            })
+            .OrderByDescending(data => data.order)
+            .ToDictionary(data => data.rect, data => data.value);
 
-                _totalWeight += weight;
-                _childrenCrossSizes.Add(child, weight);
-            }
-        }
-
-        _totalWeight = _totalWeight == 0 ? 0 : 1 / _totalWeight;
+        if (!_isUseAspectForMainAxis)
+            _totalChildrenCrossSize = _totalChildrenCrossSize == Zero ? Zero : One / _totalChildrenCrossSize;
     }
 
     public override void CalculateLayoutInputVertical(){}
 
-    public override void SetLayoutHorizontal()
-    {
-        ApplyLayout();
-    }
+    public override void SetLayoutHorizontal() => ApplyLayout();
 
-    public override void SetLayoutVertical()
-    {
-        ApplyLayout();
-    }
+    public override void SetLayoutVertical() => ApplyLayout();
 
     public void UpdateScreenOrientation(ScreenOrientation orientation)
     {
-        _isVertical = orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight;
+        _isVertical = orientation == ScreenOrientation.Portrait || orientation == ScreenOrientation.PortraitUpsideDown;
         _isVertical = _isVertical ^ _isInversive;
     }
 
@@ -88,43 +78,73 @@ public class AdaptiveLayoutGroup : LayoutGroup
         int crossAxis = 1 - mainAxis;
 
         float totalCrossSize = rectTransform.rect.size[crossAxis];
-
         float pos = (mainAxis == 0) ? padding.left : padding.top;
-        Func<float, float> calculator;
+
+        Func<float, float, float> calculator;
+        float calculatorCoefficient;
+
+        float totalMainSize = rectTransform.rect.size[mainAxis];
+        float totalSpacing = _spacing * (count - One);
 
         if (_isUseAspectForMainAxis)
         {
-            _calculatorCoefficient = totalCrossSize;
+            float offsetCoefficient = _alignment switch
+            {
+                AlignmentWeight.Start => 0f,
+                AlignmentWeight.Center => 0.5f,
+                AlignmentWeight.End => 1f,
+                _ => 0f
+            };
+
+            float availableCrossSize = rectTransform.rect.size[crossAxis];
+            calculatorCoefficient = availableCrossSize;
             calculator = CalculateByAspect;
+            float totalOccupiedMainSize = _childrenCrossSizes.Sum(x => CalculateByAspect(x.Value, availableCrossSize)) + totalSpacing;
+
+            float remainingSpace = totalMainSize - totalOccupiedMainSize;
+            float offset = offsetCoefficient * remainingSpace;
+
+            pos = (mainAxis == 0 ? padding.left : padding.top) + offset;
         }
         else
         {
-            float totalMainSize = rectTransform.rect.size[mainAxis];
-            float totalSpacing = _spacing * (count - 1);
             float totalPadding = _isVertical ? padding.vertical : padding.horizontal;
             float availableSize = totalMainSize - totalSpacing - totalPadding;
-            _calculatorCoefficient = availableSize;
+
+            calculatorCoefficient = availableSize;
             calculator = CalculateByWeight;
         }
 
         foreach (var child in _childrenCrossSizes)
         {
-            float mainSize = calculator(child.Value);
+            float mainSize = calculator(child.Value, calculatorCoefficient);
 
             SetChildAlongAxis(child.Key, mainAxis, pos, mainSize);
-            SetChildAlongAxis(child.Key, crossAxis, 0, totalCrossSize);
+            SetChildAlongAxis(child.Key, crossAxis, Zero, totalCrossSize);
 
             pos += mainSize + _spacing;
         }
     }
 
-    private float CalculateByAspect(float aspect)
+    private float CalculateByAspect(float aspect, float availableSize) => _isVertical ? availableSize / aspect : availableSize * aspect;
+
+    private float CalculateByWeight(float weight, float totalCrossSize) => totalCrossSize * weight * _totalChildrenCrossSize;
+
+    private float GetChildAspect(LayoutElement layout)
     {
-        return _isVertical ? _calculatorCoefficient / aspect : _calculatorCoefficient * aspect;
+        return layout.preferredHeight > 0
+            ? layout.preferredWidth / layout.preferredHeight
+            : One;
     }
 
-    private float CalculateByWeight(float weight)
+    private float GetChildWeight(LayoutElement layout) => Mathf.Max(_weightGetter(layout), MinValue);
+
+    private bool IsHaveLayout(RectTransform child, out LayoutElement layout)
     {
-        return _calculatorCoefficient * weight * _totalWeight;
+        if (!_mapLayout.ContainsKey(child))
+            _mapLayout.Add(child, child.GetComponent<LayoutElement>());
+
+        layout = _mapLayout[child];
+        return layout != null;
     }
 }

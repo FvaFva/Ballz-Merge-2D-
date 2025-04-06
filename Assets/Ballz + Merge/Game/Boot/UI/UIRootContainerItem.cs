@@ -8,7 +8,6 @@ namespace BallzMerge.Root
     {
         [SerializeField] private CrossPosition _positionVertical;
         [SerializeField] private CrossPosition _positionHorizontal;
-        [SerializeField] private int _orderInGroup;
 
         private RectTransform _transform;
         private RectTransform _parent;
@@ -16,7 +15,6 @@ namespace BallzMerge.Root
         private bool _updatePositionOnEnable;
 
         public IDictionary<ScreenOrientation, CrossPosition> Positions => _positions;
-        public int OrderInGroup => _orderInGroup;
         public AdaptiveLayoutGroup Group { get; private set; }
 
         private void OnEnable()
