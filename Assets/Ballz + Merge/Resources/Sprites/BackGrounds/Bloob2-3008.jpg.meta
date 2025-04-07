@@ -169,7 +169,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Bloob2-3008_0: 1291169873741606690
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

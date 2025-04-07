@@ -29,6 +29,7 @@
 # Gradle cache directory
 .gradle/
 .utmp/
+*/RelWithDebInfo/
 .idea/
 !.idea/codeStyles
 

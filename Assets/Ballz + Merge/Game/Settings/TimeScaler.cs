@@ -33,9 +33,15 @@ namespace BallzMerge.Root.Settings
             Change(Value);
         }
 
-        public void Change(float value)
+        public void Get(float value)
         {
             Value = Mathf.Clamp01(value);
+            Change(Value);
+        }
+
+        public void Change(float value)
+        {
+            Value = value;
             Label = (_labelMultiplier * value + Shift).ToString($"F{PointsAfterDot}") + Suffix;
             Time.timeScale = Mathf.Lerp(MinScale, MaxScale, Value);
         }

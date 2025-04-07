@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class AchievementsHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
 {
-    [SerializeField] private AchievementView _achievementViewPrefab;
+    [SerializeField] private PopupView _achievementViewPrefab;
     [SerializeField] private RectTransform _dataParent;
-    [SerializeField] private Color _achievementBackgroundColor;
 
-    private readonly List<AchievementView> _allViews = new List<AchievementView>();
+    private readonly List<PopupView> _allViews = new List<PopupView>();
     private RectTransform _rootParent;
     private RectTransform _transform;
     private List<KeyValuePair<AchievementSettings, AchievementPointsStep>> _achievementData;
@@ -48,6 +47,6 @@ public class AchievementsHistoryView : CyclicBehavior, IInitializable, IInfoPane
     private void GenerateViews(int count)
     {
         for (int i = 0; i < count; i++)
-            _allViews.Add(Instantiate(_achievementViewPrefab, _dataParent).SetBackgroundColor(_achievementBackgroundColor));
+            _allViews.Add(Instantiate(_achievementViewPrefab, _dataParent));
     }
 }

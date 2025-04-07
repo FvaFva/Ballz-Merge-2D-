@@ -42,11 +42,17 @@ public class DisplayResolution : IGameSettingData
         _displayApplier = displayApplier;
     }
 
+    public void Get(float value)
+    {
+        Value = CountOfPresets < value ? (float)CountOfPresets : value;
+        Change(Value);
+    }
+
     public void Change(float value)
     {
         Value = value;
         Label = $"{_resolutions[Mathf.RoundToInt(Value)].width}x{_resolutions[Mathf.RoundToInt(Value)].height}";
         _resolution = _resolutions[Mathf.RoundToInt(Value)];
-        _displayApplier.SetResolution(_resolution, this, Value);
+        _displayApplier.SetResolution(_resolution, this);
     }
 }

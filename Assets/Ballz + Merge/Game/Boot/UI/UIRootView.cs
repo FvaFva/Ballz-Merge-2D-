@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System;
 
 namespace BallzMerge.Root
 {
@@ -16,6 +15,7 @@ namespace BallzMerge.Root
         [SerializeField] private EscapeMenu _escapeMenu;
         [SerializeField] private InfoPanelShowcase _infoPanelShowcase;
         [SerializeField] private GameSettingsMenu _settingsMenu;
+        [SerializeField] private PopupDisplayer _popupDisplayer;
         [SerializeField] private Canvas _mainCanvas;
 
         private UIView _sceneUI;
@@ -25,6 +25,7 @@ namespace BallzMerge.Root
         public EscapeMenu EscapeMenu => _escapeMenu;
         public GameSettingsMenu SettingsMenu => _settingsMenu;
         public InfoPanelShowcase InfoPanelShowcase => _infoPanelShowcase;
+        public PopupDisplayer PopupsDisplayer => _popupDisplayer;
         public UIRootContainers Containers => _containers;
 
         private void Awake()
