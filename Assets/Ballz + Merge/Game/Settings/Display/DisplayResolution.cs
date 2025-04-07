@@ -53,6 +53,6 @@ public class DisplayResolution : IGameSettingData
         Value = value;
         Label = $"{_resolutions[Mathf.RoundToInt(Value)].width}x{_resolutions[Mathf.RoundToInt(Value)].height}";
         _resolution = _resolutions[Mathf.RoundToInt(Value)];
-        _displayApplier.SetResolution(_resolution, this, Value);
+        _displayApplier.SetResolution(_resolution, this);
     }
 }

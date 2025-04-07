@@ -1,12 +1,10 @@
 using BallzMerge.Achievement;
-using BallzMerge.Root;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
-public class AchievementDisplayer : MonoBehaviour
+public class PopupDisplayer : MonoBehaviour
 {
     private const float PopupDuration = 5f;
     private const float StartShift = 200f;
@@ -14,16 +12,12 @@ public class AchievementDisplayer : MonoBehaviour
     private const float AnimationDuration = 0.5f;
 
     [SerializeField] private RectTransform _container;
-    [SerializeField] private AchievementView _achievementView;
+    [SerializeField] private PopupView _achievementView;
 
-    private Queue<AchievementView> _activePopups = new Queue<AchievementView>();
+    private Queue<PopupView> _activePopups = new Queue<PopupView>();
     private Vector2 _startPosition;
     private Vector2 _nextPosition;
-    private string _currentLabel;
-    private string _currentDescription;
-    private Sprite _currentImage;
-    private int _currentStep;
-    private int _currentMaxTargets;
+    private string _currentMessage;
 
     private void Awake()
     {
@@ -31,20 +25,17 @@ public class AchievementDisplayer : MonoBehaviour
         _nextPosition = new Vector2(0, NextShift);
     }
 
-    public void SpawnView(string label, string description, Sprite image, int currentStep, int maxTargets)
+    public void ShowPopup(AchievementData achievementData, int currentStep = 0, string message = null)
     {
-        _currentLabel = label;
-        _currentDescription = description;
-        _currentImage = image;
-        _currentStep = currentStep;
-        _currentMaxTargets = maxTargets;
-        ShowAchievement();
-    }
+        _currentMessage = message ?? achievementData.Name;
 
-    private void ShowAchievement()
-    {
-        AchievementView achievementView = Instantiate(_achievementView, _container);
-        achievementView.SetData(_currentLabel, _currentDescription, _currentImage, _currentStep, _currentMaxTargets);
+        PopupView achievementView = Instantiate(_achievementView, _container);
+
+        if (message == null)
+            achievementView.SetData(achievementData.Name, achievementData.Description, achievementData.Image, currentStep, achievementData.MaxTargets);
+        else
+            achievementView.SetData(_currentMessage, achievementData.Name, achievementData.Image);
+
         _activePopups.Enqueue(achievementView);
 
         if (_activePopups.Count > 1)
@@ -53,13 +44,13 @@ public class AchievementDisplayer : MonoBehaviour
         achievementView.RectTransform.DOAnchorPos(_startPosition, AnimationDuration).OnComplete(() => StartCoroutine(WaitCoroutine(achievementView))).SetEase(Ease.InOutQuad);
     }
 
-    private IEnumerator WaitCoroutine(AchievementView achievementView)
+    private IEnumerator WaitCoroutine(PopupView achievementView)
     {
         yield return new WaitForSeconds(PopupDuration);
         HideAchievement(achievementView);
     }
 
-    private void HideAchievement(AchievementView achievementView)
+    private void HideAchievement(PopupView achievementView)
     {
         _activePopups.Dequeue();
 

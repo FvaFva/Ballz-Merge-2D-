@@ -57,6 +57,6 @@ public class DisplayMode : IGameSettingData
         Value = value;
         Label = _modes[Mathf.RoundToInt(Value)].DisplayName;
         _fullScreenMode = _modes[Mathf.RoundToInt(Value)].FullScreenMode;
-        _displayApplier.SetScreenMode(_fullScreenMode, this, Value);
+        _displayApplier.SetScreenMode(_fullScreenMode, this);
     }
 }

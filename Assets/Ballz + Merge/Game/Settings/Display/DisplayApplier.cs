@@ -24,13 +24,13 @@ public class DisplayApplier : IDisposable
         _applyButton.onClick.RemoveListener(SetResolution);
     }
 
-    public void SetResolution(Resolution resolution, IGameSettingData settingData, float value)
+    public void SetResolution(Resolution resolution, IGameSettingData settingData)
     {
         _resolution = resolution;
         _resolutionData = settingData;
     }
 
-    public void SetScreenMode(FullScreenMode fullScreenMode, IGameSettingData settingData, float value)
+    public void SetScreenMode(FullScreenMode fullScreenMode, IGameSettingData settingData)
     {
         _fullScreenMode = fullScreenMode;
         _displayModeData = settingData;
