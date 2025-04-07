@@ -24,12 +24,6 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
         
     }
 
-    private void OnEnable()
-    {
-        Vector2 scale = _transform.rect.size * _transform.lossyScale;
-        _shapeModule.scale = new Vector3(scale.x, scale.y, 0f);
-    }
-
     public BallVolumeCageElement Apply(BallVolumesBagCell volume)
     {
         if (Current.IsEqual(volume))
@@ -106,6 +100,8 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
     {
         if(isActive)
         {
+            Vector2 scale = _transform.rect.size * _transform.lossyScale;
+            _shapeModule.scale = new Vector3(scale.x, scale.y, 0f);
             _externalForcesModule.AddInfluence(_container.Field);
             _backlight.Play();
         }

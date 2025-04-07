@@ -1,108 +1,100 @@
+using BallzMerge.Gameplay;
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Zenject;
 
 public class BallStrikeVectorReader : BallComponent
 {
-    [SerializeField] private Camera _camera;
-    [SerializeField] private SpriteRenderer _inputZone;
+    [SerializeField] private CamerasOperator _operator;
+    [SerializeField] private RectTransform _inputZone;
+    [SerializeField] private RectTransform _cancelZone;
 
     [Inject] private MainInputMap _userInput;
 
     private Vector3 _vector;
-    private Transform _transform;
-    private float _cameraY;
+    private Vector2 _touchPoint;
 
     public event Action<Vector3> Changed;
     public event Action<Vector3> Dropped;
-
-    private void Awake()
-    {
-        _transform = transform;
-        _cameraY = _camera.transform.position.y;
-    }
+    public event Action Canceled;
 
     private void OnEnable()
     {
         _userInput.MainInput.Shot.started += OnShotStarted;
+        _inputZone.gameObject.SetActive(true);
+        _cancelZone.gameObject.SetActive(false);
     }
 
     private void OnDisable()
     {
         _userInput.MainInput.Shot.started -= OnShotStarted;
+        _inputZone.gameObject.SetActive(false);
+        _cancelZone.gameObject.SetActive(false);
     }
 
     public Vector3 GetVector()
     {
         Vector3 final = _vector;
-        final.z = 0;
         return final.normalized * -1;
     }
 
-    private Vector3 GetMouseVector(Vector3 input)
-    {
-        input.z = _cameraY;
-        return _camera.ScreenToWorldPoint(input) - _transform.position;
-    }
+    private void OnShotStarted(InputAction.CallbackContext context) => StartCoroutine(HandleEndOfFrame(EndFrameShotStarted));
 
-    private void OnShotStarted(InputAction.CallbackContext context)
-    {
-        StartCoroutine(HandleShotStart());
-        
+    private void OnShotCancelled(InputAction.CallbackContext context) => StartCoroutine(HandleEndOfFrame(EndFrameShotCancelled));
 
-        
-    }
-
-    private IEnumerator HandleShotStart()
+    private IEnumerator HandleEndOfFrame(Action action)
     {
         yield return new WaitForEndOfFrame();
 
-        if (EventSystem.current.IsPointerOverGameObject())
-            yield break;
+        action.Invoke();
+    }
 
-        var currentTouchPosition = _userInput.MainInput.StrikePosition.ReadValue<Vector2>();
-
-        Vector3 worldTouchPosition = _camera.ScreenToWorldPoint(currentTouchPosition);
-
-        if (_inputZone.bounds.Contains(worldTouchPosition))
+    private void EndFrameShotStarted()
+    {
+        if (IsCursorIn(_inputZone))
         {
             _userInput.MainInput.StrikeVector.performed += OnStrikeVectorPerformed;
             _userInput.MainInput.Shot.canceled += OnShotCancelled;
+            _cancelZone.gameObject.SetActive(true);
         }
     }
 
-    private void OnShotCancelled(InputAction.CallbackContext context)
+    private void EndFrameShotCancelled()
     {
         _userInput.MainInput.StrikeVector.performed -= OnStrikeVectorPerformed;
         _userInput.MainInput.Shot.canceled -= OnShotCancelled;
 
+        _cancelZone.gameObject.SetActive(false);
+
+        if (IsCursorIn(_cancelZone))
+        {
+            Canceled?.Invoke();
+            return;
+        }
+
         Vector3 dropVector = GetVector();
         _vector = Vector3.zero;
-        Dropped?.Invoke(dropVector);
+        Dropped?.Invoke(dropVector); 
     }
 
     private void OnStrikeVectorPerformed(InputAction.CallbackContext context)
     {
-        AndroidProcessor(context.ReadValue<Vector2>());
-    }
+        var direction = context.ReadValue<Vector2>();
 
-    private void AndroidProcessor(Vector3 direction)
-    {
         if (direction.Equals(_vector) == false)
         {
-            _vector = GetMouseVector(direction);
+            _vector = direction - _touchPoint;
             Changed?.Invoke(GetVector());
         }
     }
 
-    private void DesktopProcessor(Vector3 old)
+    private bool IsCursorIn(RectTransform zone)
     {
-        _vector = GetMouseVector(_userInput.MainInput.StrikeVector.ReadValue<Vector2>());
-
-        if (old.Equals(_vector) == false)
-            Changed?.Invoke(GetVector());
+        _touchPoint = _userInput.MainInput.StrikePosition.ReadValue<Vector2>();
+        Vector3 worldTouchPosition = _operator.UI.ScreenToWorldPoint(_touchPoint);
+        Vector2 localTouchPosition = zone.InverseTransformPoint(worldTouchPosition);
+        return zone.rect.Contains(localTouchPosition);
     }
 }
