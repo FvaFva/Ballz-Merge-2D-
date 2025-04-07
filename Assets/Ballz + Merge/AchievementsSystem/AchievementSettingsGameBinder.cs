@@ -1,3 +1,4 @@
+using BallzMerge.Root;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -6,14 +7,17 @@ namespace BallzMerge.Achievement
 {
     public class AchievementSettingsGameBinder : CyclicBehavior, IInitializable
     {
-        [SerializeField] private AchievementView _achievementView;
-        [SerializeField] private RectTransform _achievementContainer;
-
         [Inject] private DiContainer _container;
         [Inject] private AchievementsBus _bus;
+        [Inject] private UIRootView _rootView;
 
         private AchievementDisplayer _displayer;
         private List<AchievementObserverBase> _observers = new List<AchievementObserverBase>();
+
+        private void Awake()
+        {
+            _displayer = _rootView.PopupsDisplayer;
+        }
 
         private void OnEnable()
         {
@@ -42,8 +46,6 @@ namespace BallzMerge.Achievement
 
         private void LoadSettings()
         {
-            _displayer = gameObject.AddComponent<AchievementDisplayer>().Init(_achievementView, _achievementContainer);
-
             foreach (var setting in _bus.GetSettings())
             {
                 switch (setting.Key.ID.Internal)

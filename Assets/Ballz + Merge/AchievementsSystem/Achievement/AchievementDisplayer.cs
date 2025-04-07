@@ -1,8 +1,10 @@
 using BallzMerge.Achievement;
+using BallzMerge.Root;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class AchievementDisplayer : MonoBehaviour
 {
@@ -11,8 +13,9 @@ public class AchievementDisplayer : MonoBehaviour
     private const float NextShift = 210f;
     private const float AnimationDuration = 0.5f;
 
-    private RectTransform _container;
-    private AchievementView _achievementView;
+    [SerializeField] private RectTransform _container;
+    [SerializeField] private AchievementView _achievementView;
+
     private Queue<AchievementView> _activePopups = new Queue<AchievementView>();
     private Vector2 _startPosition;
     private Vector2 _nextPosition;
@@ -22,13 +25,10 @@ public class AchievementDisplayer : MonoBehaviour
     private int _currentStep;
     private int _currentMaxTargets;
 
-    public AchievementDisplayer Init(AchievementView achievementView, RectTransform container)
+    private void Awake()
     {
-        _achievementView = achievementView;
-        _container = container;
         _startPosition = new Vector2(0, StartShift);
         _nextPosition = new Vector2(0, NextShift);
-        return this;
     }
 
     public void SpawnView(string label, string description, Sprite image, int currentStep, int maxTargets)

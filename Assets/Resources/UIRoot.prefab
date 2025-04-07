@@ -821,8 +821,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 331.39874, y: -108.73639}
-  m_SizeDelta: {x: 562.7975, y: 167.47278}
+  m_AnchoredPosition: {x: 335.05798, y: -107.50284}
+  m_SizeDelta: {x: 570.11597, y: 165.00568}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9172797952437762442
 CanvasRenderer:
@@ -971,6 +971,8 @@ MonoBehaviour:
   _escapeMenu: {fileID: 2772632440533154457}
   _infoPanelShowcase: {fileID: 6524913278225997247}
   _settingsMenu: {fileID: 4333600167246555589}
+  _achievementContainer: {fileID: 0}
+  _displayer: {fileID: 0}
   _mainCanvas: {fileID: 347128362140179676}
 --- !u!1 &1471398760042399942
 GameObject:
@@ -1064,7 +1066,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 314.8
+  m_fontSize: 311.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3920,8 +3922,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 944.1962, y: -108.73639}
-  m_SizeDelta: {x: 562.7975, y: 167.47278}
+  m_AnchoredPosition: {x: 955.17395, y: -107.50284}
+  m_SizeDelta: {x: 570.11597, y: 165.00568}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4781293431341106582
 CanvasRenderer:
@@ -4145,7 +4147,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100.95
+  m_fontSize: 91.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5004,7 +5006,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 71.15
+  m_fontSize: 69
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6273,11 +6275,9 @@ MonoBehaviour:
   _settingsPrefabs:
   - _sliderValueView: {fileID: 4198498107382772452, guid: 9686f334a1c86f548a6a169d6d7ef210, type: 3}
     _settingType: 0
-    _applyButton: {fileID: 0}
     _height: 180
   - _sliderValueView: {fileID: 4198498107382772452, guid: 9c47dd515bab11845835dd7a7e3403fa, type: 3}
     _settingType: 1
-    _applyButton: {fileID: 0}
     _height: 360
 --- !u!114 &2814658365248518064
 MonoBehaviour:

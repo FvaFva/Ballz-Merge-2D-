@@ -2,6 +2,7 @@
 
 namespace BallzMerge.Root
 {
+    using BallzMerge.Achievement;
     using Data;
     using Settings;
     using System;
@@ -16,6 +17,7 @@ namespace BallzMerge.Root
         [SerializeField] private EscapeMenu _escapeMenu;
         [SerializeField] private InfoPanelShowcase _infoPanelShowcase;
         [SerializeField] private GameSettingsMenu _settingsMenu;
+        [SerializeField] private AchievementDisplayer _displayer;
         [SerializeField] private Canvas _mainCanvas;
 
         private UIView _sceneUI;
@@ -25,6 +27,7 @@ namespace BallzMerge.Root
         public EscapeMenu EscapeMenu => _escapeMenu;
         public GameSettingsMenu SettingsMenu => _settingsMenu;
         public InfoPanelShowcase InfoPanelShowcase => _infoPanelShowcase;
+        public AchievementDisplayer PopupsDisplayer => _displayer;
 
         private void Awake()
         {

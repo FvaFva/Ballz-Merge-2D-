@@ -42,6 +42,12 @@ public class DisplayResolution : IGameSettingData
         _displayApplier = displayApplier;
     }
 
+    public void Get(float value)
+    {
+        Value = CountOfPresets < value ? (float)CountOfPresets : value;
+        Change(Value);
+    }
+
     public void Change(float value)
     {
         Value = value;

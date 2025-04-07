@@ -10,5 +10,6 @@ namespace BallzMerge.Data
         public int? CountOfPresets { get; }
 
         public void Change(float value);
+        public void Get(float value);
     }
 }
