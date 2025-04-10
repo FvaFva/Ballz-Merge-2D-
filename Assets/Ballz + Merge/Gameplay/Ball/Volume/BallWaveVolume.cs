@@ -12,8 +12,19 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
     private Func<IEnumerable<BallVolumesBagCell>> _getActiveVolumesGenerator = () => (Enumerable.Empty<BallVolumesBagCell>());
 
     public BallVolumesBag Bag {  get; private set; }
+    public BallVolumesCageView Cage => _cage;
 
     public event Action Changed;
+
+    private void OnEnable()
+    {
+        _dropSelector.Opened += OnDropOpened;
+    }
+
+    private void OnDisable()
+    {
+        _dropSelector.Opened -= OnDropOpened;
+    }
 
     public void Init()
     {
@@ -33,8 +44,6 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
 
     public int GetPassiveValue(BallVolumesTypes type) => Bag.Passive.Where(cell => cell.IsEqual(type)).Sum(cell => cell.Value);
 
-    public BallVolumesBagCell GetCageValue() => _cage.CheckNext();
-
     public void FinishLevel()
     {
         _cage.Clear();
@@ -48,5 +57,10 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
             _cage.AddVolume(cell);
 
         Changed?.Invoke();
+    }
+
+    private void OnDropOpened()
+    {
+        _cage.HideAllHightLights();
     }
 }

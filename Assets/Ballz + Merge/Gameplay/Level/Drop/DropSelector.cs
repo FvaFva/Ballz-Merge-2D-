@@ -1,6 +1,5 @@
 ﻿using DG.Tweening;
 using System;
-using System.Collections;
 using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level
@@ -16,6 +15,7 @@ namespace BallzMerge.Gameplay.Level
         private Action _callback;
 
         public event Action<BallVolume, DropRarity> DropSelected;
+        public event Action Opened;
 
         private void OnEnable()
         {
@@ -42,6 +42,7 @@ namespace BallzMerge.Gameplay.Level
             gameObject.SetActive(true);
             _canvasGroup.DOFade(1, AnimationTime);
             _callback = callback;
+            Opened?.Invoke();
         }
 
         public void FinishLevel()
