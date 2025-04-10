@@ -60,7 +60,7 @@ namespace BallzMerge.Root.Settings
         {
             foreach (var setting in _settings.Values)
             {
-                setting.Change(_db.Get(setting));
+                setting.Get(_db.Get(setting));
                 _settingsMenu.UpdateStartValue(setting);
             }
         }

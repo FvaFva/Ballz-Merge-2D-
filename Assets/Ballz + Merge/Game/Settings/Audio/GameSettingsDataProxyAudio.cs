@@ -5,12 +5,9 @@ namespace BallzMerge.Root.Settings
 {
     using Data;
     using System;
-    using UnityEngine.InputSystem;
 
     public class GameSettingsDataProxyAudio : IGameSettingData
     {
-        private const float MinValue = 0f;
-        private const float MaxValue = 1f;
         private const float MixerMultiplayer = 20f;
         private const float MuteValueDB = -80f;
         private const int AdditionalZero = 2;
@@ -33,9 +30,15 @@ namespace BallzMerge.Root.Settings
         public string Label { get; private set; }
         public int? CountOfPresets { get; private set; }
 
+        public void Get(float value)
+        {
+            Value = Mathf.Clamp01(value);
+            Change(Value);
+        }
+
         public void Change(float value)
         {
-            Value = Mathf.Clamp(value, MinValue, MaxValue);
+            Value = value;
             Label = (_labelMultiplier * value + Shift).ToString($"F{PointsAfterDot}") + Suffix;
 
             if (Mathf.Approximately(Value, 0f))

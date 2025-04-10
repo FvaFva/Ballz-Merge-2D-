@@ -1,3 +1,4 @@
+using BallzMerge.Root;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -6,14 +7,19 @@ namespace BallzMerge.Achievement
 {
     public class AchievementSettingsGameBinder : CyclicBehavior, IInitializable
     {
-        [SerializeField] private AchievementView _achievementView;
-        [SerializeField] private RectTransform _achievementContainer;
+        private const string Message = "Открыто достижение!";
 
         [Inject] private DiContainer _container;
         [Inject] private AchievementsBus _bus;
+        [Inject] private UIRootView _rootView;
 
-        private AchievementDisplayer _displayer;
+        private PopupDisplayer _displayer;
         private List<AchievementObserverBase> _observers = new List<AchievementObserverBase>();
+
+        private void Awake()
+        {
+            _displayer = _rootView.PopupsDisplayer;
+        }
 
         private void OnEnable()
         {
@@ -42,8 +48,6 @@ namespace BallzMerge.Achievement
 
         private void LoadSettings()
         {
-            _displayer = gameObject.AddComponent<AchievementDisplayer>().Init(_achievementView, _achievementContainer);
-
             foreach (var setting in _bus.GetSettings())
             {
                 switch (setting.Key.ID.Internal)
@@ -76,16 +80,16 @@ namespace BallzMerge.Achievement
             _bus.AddPoints(type, points);
         }
 
-        private void OnStepReached(AchievementsTypes type, AchievementPointsStep pointsStep, AchievementData achievementData, AchievementObserverBase observer)
+        private void OnStepReached(AchievementsTypes type, AchievementPointsStep pointsStep, AchievementData achievementData)
         {
             _bus.AddSteps(type, pointsStep);
-            _displayer.SpawnView(achievementData.Name, achievementData.Description, achievementData.Image, pointsStep.Step, achievementData.MaxTargets);
+            _displayer.ShowPopup(achievementData, pointsStep.Step);
         }
 
-        private void OnReachedAchievement(AchievementsTypes type, AchievementData achievementData, AchievementObserverBase observer)
+        private void OnReachedAchievement(AchievementsTypes type, AchievementData achievementData)
         {
             _bus.ReachAchievement(type);
-            _displayer.SpawnView("Открыто достижение!", achievementData.Name, achievementData.Image, 0, 0);
+            _displayer.ShowPopup(achievementData, message : Message);
         }
     }
 }
