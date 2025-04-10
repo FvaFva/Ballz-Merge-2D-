@@ -12,6 +12,7 @@ namespace BallzMerge.Gameplay.BallSpace
         private BallCollisionHandler _collisionHandler;
         private BlocksInGame _blocks;
         private DropRarity _rarity;
+        private Action<bool> _callback;
 
         [Inject]
         public BlockMagneticObserver(Ball ball, BlocksInGame blocks)
@@ -22,29 +23,35 @@ namespace BallzMerge.Gameplay.BallSpace
 
         public void Dispose() => Clear();
 
-        public void Activate(BallVolumeHitData hitData, DropRarity rarity)
+        public void Activate(BallVolumeHitData hitData, DropRarity rarity, Action<bool> callback)
         {
             _rarity = rarity;
             _lastBlock = hitData.Block;
-            _collisionHandler.NonBlockHit += Clear;
+            _collisionHandler.NonBlockHit += OnNonBlockHit;
             _blocks.BlockHit += OnBlockHit;
+            _callback = callback;
         }
 
         public void OnBlockHit(Block hitBlock, Vector2Int direction)
         {
             bool isBlocksCorrect = _lastBlock != null && _lastBlock != hitBlock;
+            bool isWent = false;
 
             if (isBlocksCorrect && IsDifferenceNumberLessRarity(hitBlock))
-                _lastBlock.Move(hitBlock.GridPosition - direction - _lastBlock.GridPosition);
+                isWent = _lastBlock.Move(hitBlock.GridPosition - direction - _lastBlock.GridPosition);
 
-            Clear();
+            Clear(isWent);
         }
 
-        private void Clear()
+        private void OnNonBlockHit() => Clear();
+
+        private void Clear(bool isWent = false)
         {
             _rarity = default;
             _lastBlock = default;
-            _collisionHandler.NonBlockHit -= Clear;
+            _callback?.Invoke(isWent);
+            _callback = null;
+            _collisionHandler.NonBlockHit -= OnNonBlockHit;
             _blocks.BlockHit -= OnBlockHit;
         }
 

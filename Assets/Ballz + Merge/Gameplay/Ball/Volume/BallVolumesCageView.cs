@@ -1,17 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using BallzMerge.Root;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zenject;
 
 public class BallVolumesCageView : MonoBehaviour, IInitializable
 {
+    private const float SlowMoTime = 1.7f;
+
     [SerializeField] private BallVolumeCageElement _prefab;
     [SerializeField] private BallVolumeCageContainer _container;
     [SerializeField] private int _countPreload;
 
-    private List<BallVolumeCageElement> _elements;
+    private List<BallVolumeCageElement> _elements = new List<BallVolumeCageElement>();
     private Queue<BallVolumeCageElement> _cage;
+    private bool _isInited;
+
+    [Inject] private IGameTimeOwner _timeScaler;
 
     public IEnumerable<BallVolumesBagCell> ActiveVolumes => _elements.Where(x=>x.IsFree == false).Select(x => x.Current);
+
+    private void OnEnable()
+    {
+        foreach (var element in _elements)
+            element.RequiredSlowMo += OnRequiredSlowMo;
+    }
+
+    private void OnDisable()
+    {
+        foreach (var element in _elements)
+            element.RequiredSlowMo -= OnRequiredSlowMo;
+    }
 
     public void Clear()
     {
@@ -32,7 +51,13 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
             }
         }
 
-        _elements.Add(Instantiate(_prefab, transform).Init(_container).Apply(ballVolume));
+        _elements.Add(GenerateElement());
+    }
+
+    public void HideAllHightLights()
+    {
+        foreach (var element in _elements)
+            element.ChangeHighlight(false);
     }
 
     public void RebuildCage()
@@ -42,8 +67,11 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         foreach (BallVolumeCageElement cageElement in _elements.Where(element => !element.IsFree))
         {
             cageElement.Show();
+            cageElement.ChangeHighlight(false);
             _cage.Enqueue(cageElement);
         }
+
+        HighlightNext();
     }
 
     public BallVolumesBagCell CheckNext()
@@ -51,15 +79,38 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         if(_cage.Count == 0)
             return default;
 
-        return _cage.Dequeue().Current;
+        var last = _cage.Dequeue();
+        HighlightNext();
+        last.ChangeHighlight(false);
+        return last.Current;
     }
 
     public void Init()
     {
-        _elements = new List<BallVolumeCageElement>();
+        if(_isInited) 
+            return;
+
+        _isInited = true;
         _cage = new Queue<BallVolumeCageElement>();
 
         for (int i = 0; i < _countPreload; i++)
-            _elements.Add(Instantiate(_prefab, transform).Clear().Init(_container));
+            _elements.Add(GenerateElement());
     }
+
+    private void HighlightNext()
+    {
+        if (_cage.Count == 0)
+            return;
+
+        _cage.Peek().ChangeHighlight(true);
+    }
+
+    private BallVolumeCageElement GenerateElement()
+    {
+        var newElement = Instantiate(_prefab, transform).Init(_container).Clear();
+        newElement.RequiredSlowMo += OnRequiredSlowMo;
+        return newElement;
+    }
+
+    private void OnRequiredSlowMo() => _timeScaler.PlaySlowMo(SlowMoTime);
 }

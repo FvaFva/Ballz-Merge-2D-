@@ -9,7 +9,7 @@ public class GameAnimationSkipper : MonoBehaviour
     [SerializeField] private Button _skipButton;
 
     [Inject] private BallzMerge.Root.Settings.GameSettingsDataProxyAudio _audio;
-    [Inject] private IGamePauseController _scaler;
+    [Inject] private IGameTimeOwner _scaler;
     [Inject] private UIRootView _rootView;
     [Inject] private Ball _ball;
 

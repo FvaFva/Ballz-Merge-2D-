@@ -76,7 +76,7 @@ namespace BallzMerge.Root
 
         private void BindToContainerPrimaryComponents()
         {
-            BindSingleton<IGamePauseController, TimeScaler>(_primary.TimeScaler);
+            BindSingleton<IGameTimeOwner, TimeScaler>(_primary.TimeScaler);
             BindSingleton(_primary.Data);
             BindSingleton(_primary.UserInput);
             BindSingleton(new EffectPool());
