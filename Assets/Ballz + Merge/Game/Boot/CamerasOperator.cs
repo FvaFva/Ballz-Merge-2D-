@@ -14,7 +14,8 @@ namespace BallzMerge.Gameplay
         [SerializeField] private Camera _effects;
         [SerializeField] private Camera _uI;
 
-        private Dictionary<Camera, float> _sizeCoefficients = new Dictionary<Camera, float>();
+        private Dictionary<Camera, (float, Vector2)> _values;
+        private Dictionary<Camera, Vector3> _startPositions;
         private float _currentSize;
 
         public Camera Main { get { return _main;} }
@@ -24,34 +25,31 @@ namespace BallzMerge.Gameplay
 
         public void Init()
         {
+            _values = new Dictionary<Camera, (float, Vector2)>();
+            _startPositions = new Dictionary<Camera, Vector3>();
             _currentSize = _currentSize == 0 ? LandscapeSize : _currentSize;
-            
-            if(_main !=  null)
-                _sizeCoefficients.Add(_main, 0);
 
-            if (_gameplay != null)
-                _sizeCoefficients.Add(_gameplay, 0);
+            TryAddCamera(_main);
+            TryAddCamera(_gameplay);
+            TryAddCamera(_effects);
+            TryAddCamera(_uI);
 
-            if (_effects != null)
-                _sizeCoefficients.Add(_effects, 0);
-
-            if (_uI != null)
-                _sizeCoefficients.Add(_uI, 0);
-
-            UpdateCoefficients();
+            UpdateValues();
         }
 
-        public void ChangeCoefficient(Camera camera, float coefficient)
+        public void AddValue(Camera camera, float size = 0, Vector2 position = default)
         {
-            _sizeCoefficients[camera] = coefficient;
-            camera.orthographicSize = OrthographicSize(coefficient);
+            var current = _values[camera];
+            _values[camera] = (current.Item1 + size, current.Item2 + position);
+            camera.orthographicSize = OrthographicSize(size);
+            camera.transform.position = Position(camera, position);
         }
 
         public void StartLevel()
         {
-            foreach (var item in _sizeCoefficients.Keys.ToList())
+            foreach (var item in _values.Keys.ToList())
             {
-                _sizeCoefficients[item] = 0;
+                _values[item] = (0, Vector2.zero);
                 item.orthographicSize = OrthographicSize(0);
             }
         }
@@ -59,15 +57,28 @@ namespace BallzMerge.Gameplay
         public void UpdateScreenOrientation(ScreenOrientation orientation)
         {
             _currentSize = orientation == ScreenOrientation.Portrait ? PortraitSize : LandscapeSize;
-            UpdateCoefficients();
+            UpdateValues();
         }
 
-        private void UpdateCoefficients()
+        private void UpdateValues()
         {
-            foreach (var item in _sizeCoefficients)
-                item.Key.orthographicSize = OrthographicSize(item.Value);
+            foreach (var item in _values)
+            {
+                item.Key.orthographicSize = OrthographicSize(item.Value.Item1);
+                item.Key.transform.position = Position(item.Key, item.Value.Item2);
+            }
+        }
+
+        private void TryAddCamera(Camera camera)
+        {
+            if (camera != null)
+            {
+                _values.Add(camera, (0, Vector2.zero));
+                _startPositions.Add(camera, camera.transform.position);
+            }
         }
 
         private float OrthographicSize(float coefficient) => _currentSize + (coefficient * _currentSize);
+        private Vector3 Position(Camera camera, Vector3 additional) => _startPositions[camera] + additional;
     }
 }

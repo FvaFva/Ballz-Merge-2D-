@@ -1,3 +1,4 @@
+using BallzMerge.Gameplay;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
 using UnityEngine;
@@ -8,7 +9,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     [SerializeField] private PlayZoneBoards _boards;
     [SerializeField] private FieldExpanderSettings _fieldExpanderSettings;
     [SerializeField] private ParticleSystem _fieldEffect;
-    [SerializeField] private Camera _camera;
+    [SerializeField] private CamerasOperator _cameras;
 
     [Inject] private PhysicGrid _physicGrid;
     [Inject] private GridSettings _gridSettings;
@@ -24,8 +25,6 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     private ParticleSystem.ShapeModule _fieldShape;
     private Vector2 _fieldPosition;
     private Vector2 _fieldScale;
-    private float _cameraOrthographicSize;
-    private Vector2 _cameraPosition;
     private PositionScaleProperty _propertyColumn;
     private PositionScaleProperty _propertyRow;
 
@@ -34,8 +33,6 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _fieldShape = _fieldEffect.shape;
         _fieldPosition = _fieldEffect.transform.position;
         _fieldScale = _fieldEffect.shape.scale;
-        _cameraOrthographicSize = _camera.orthographicSize;
-        _cameraPosition = _camera.transform.position;
         _halfSize = _gridSettings.CellSize / 2;
         _propertyRow = new PositionScaleProperty(new Vector2(0, _halfSize), new Vector2(0, _gridSettings.CellSize));
         _propertyColumn = new PositionScaleProperty(new Vector2(_halfSize, 0), new Vector2(_gridSettings.CellSize, 0));
@@ -55,8 +52,6 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _ballWaveVolume.Bag.Added += OnAbilityAdd;
         _fieldEffect.transform.position = _fieldPosition;
         _fieldShape.scale = _fieldScale;
-        _camera.orthographicSize = _cameraOrthographicSize;
-        _camera.transform.position = _cameraPosition;
         _currentWave = 0;
         _count = _fieldExpanderSettings.Count;
         _extraColumns = _gridSettings.Size.x;
@@ -97,7 +92,6 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     {
         _fieldEffect.transform.position += property.Position;
         _fieldShape.scale += property.Scale;
-        _camera.orthographicSize += _halfSize;
-        _camera.transform.position += property.Position;
+        _cameras.AddValue(_cameras.Gameplay, 0.2f, property.Position);
     }
 }

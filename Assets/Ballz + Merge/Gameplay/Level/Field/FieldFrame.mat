@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Field
+  m_Name: FieldFrame
   m_Shader: {fileID: -6465566751694194690, guid: d75da8cb4d24c2040b6c5dfeddad9893, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -55,13 +55,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Emission: 4
-    - _MaxDistance: 2
-    - _Offset: 1.7
+    - _Emission: 1.85
+    - _MaxDistance: 0.08
+    - _Offset: 0.74
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _EmissionColor: {r: 1, g: 0.43214107, b: 0, a: 1}
-    - _Position: {r: 0, g: -9.5, b: 0, a: 0}
+    - _EmissionColor: {r: 1, g: 0, b: 0.03096056, a: 1}
+    - _Position: {r: 0, g: -10, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

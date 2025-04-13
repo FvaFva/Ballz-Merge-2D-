@@ -64,6 +64,7 @@ namespace BallzMerge.MainMenu
 
         public void Init(Action<SceneExitData> callback)
         {
+            _view.Init();
             _rootUI.AttachSceneUI(_view);
             _callback = callback;
         }

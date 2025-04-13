@@ -1,28 +1,39 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BallFieldSpreader : BallComponent
 {
     private const string PropertyName = "_Position";
 
-    [SerializeField] private ParticleSystemRenderer _field;
+    [SerializeField] private List<ParticleSystemRenderer> _fields;
 
-    private Material _fieldMaterial;
+    private List<Material> _materials;
     private Transform _transform;
     private Vector3 _outfield = Vector3.one * 900;
 
     private void Awake()
     {
-        _fieldMaterial = _field.material;
+        _materials = new List<Material>();
+
+        foreach (var field in _fields)
+            _materials.Add(field.material);
+
         _transform = transform;
     }
 
     private void OnDisable()
     {
-        _fieldMaterial.SetVector(PropertyName, _outfield);
+        UpdateProperty(_outfield);
     }
 
     private void Update()
     {
-        _fieldMaterial.SetVector(PropertyName, _transform.position);
+        UpdateProperty(_transform.position);
+    }
+
+    private void UpdateProperty(Vector3 value)
+    {
+        foreach (var fieldMaterial in _materials)
+            fieldMaterial.SetVector(PropertyName, value);
     }
 }
