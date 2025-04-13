@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using static UnityEngine.InputSystem.HID.HID;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level
 {
@@ -10,15 +10,20 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private PlayZoneBoard _topBorder;
         [SerializeField] private PlayZoneBoard _bottomBorder;
 
+        private List<PlayZoneBoard> _boards;
+
         private PlayZoneBoards _simulation;
         private bool _isWithSimulation;
 
         public void Init()
         {
-            _topBorder.Init();
-            _bottomBorder.Init();
-            _leftBorder.Init();
-            _rightBorder.Init();
+            _boards = new List<PlayZoneBoard>
+            {
+                _topBorder.Init(),
+                _bottomBorder.Init(),
+                _leftBorder.Init(),
+                _rightBorder.Init()
+            };
         }
 
         public void StartLevel()
@@ -61,18 +66,15 @@ namespace BallzMerge.Gameplay.Level
         private void MarkAsVirtual()
         {
             Init();
-            _topBorder.MarkAsVirtual();
-            _bottomBorder.MarkAsVirtual();
-            _leftBorder.MarkAsVirtual();
-            _rightBorder.MarkAsVirtual();
+
+            foreach (var board in _boards)
+                board.MarkAsVirtual();
         }
 
         private void ResetPositionScaleBorder()
         {
-            _topBorder.SetBase();
-            _bottomBorder.SetBase();
-            _leftBorder.SetBase();
-            _rightBorder.SetBase();
+            foreach (var board in _boards)
+                board.SetBase();
 
             if (_isWithSimulation)
                 _simulation.ResetPositionScaleBorder();

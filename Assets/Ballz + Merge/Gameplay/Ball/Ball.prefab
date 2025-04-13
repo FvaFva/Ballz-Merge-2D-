@@ -44355,6 +44355,91 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &7784333685239224951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4792011075559909119}
+  - component: {fileID: 6528606111077874039}
+  - component: {fileID: 3190908413486746859}
+  m_Layer: 0
+  m_Name: View II
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4792011075559909119
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7784333685239224951}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4397546227461154052}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &6528606111077874039
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7784333685239224951}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &3190908413486746859
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7784333685239224951}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 38b69bb172df35b49ae2c10fd9a081b2, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7863256248302584616
 GameObject:
   m_ObjectHideFlags: 0
@@ -44371,7 +44456,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2466235042945730760
 Transform:
   m_ObjectHideFlags: 0
@@ -44488,6 +44573,7 @@ Transform:
   - {fileID: 2466235042945730760}
   - {fileID: 6779585393757039828}
   - {fileID: 6176954025743720281}
+  - {fileID: 4792011075559909119}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &172665050409473703
@@ -44640,8 +44726,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ba90a2dfdc34c47814c62bda23e881, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 0}
-  _inputRotationZone: {fileID: 0}
+  _operator: {fileID: 0}
+  _inputZone: {fileID: 0}
+  _cancelZone: {fileID: 0}
 --- !u!114 &7792643679984454126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44680,9 +44767,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 960264e48ce624448b9c36e4310e9697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _view: {fileID: 7008862763245936527}
+  _3dView: {fileID: 7784333685239224951}
   _trailMain: {fileID: 8469860891145827801}
-  _hitColor: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 1}
 --- !u!114 &1424906618905554474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44726,6 +44812,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _collisionHandler: {fileID: 7792643679984454126}
+  _ballVolume: {fileID: 0}
 --- !u!114 &7278417036924050444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44738,7 +44825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab280a1569ad6d249806ea5cac255074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _field: {fileID: 0}
+  _fields: []
 --- !u!114 &6108565124518385327
 MonoBehaviour:
   m_ObjectHideFlags: 0
