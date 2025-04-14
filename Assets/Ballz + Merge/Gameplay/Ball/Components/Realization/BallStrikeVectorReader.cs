@@ -7,6 +7,8 @@ using Zenject;
 
 public class BallStrikeVectorReader : BallComponent
 {
+    private const float ClampCoefficient = 3.5f;
+
     [SerializeField] private CamerasOperator _operator;
     [SerializeField] private RectTransform _inputZone;
     [SerializeField] private RectTransform _stickZone;
@@ -91,7 +93,6 @@ public class BallStrikeVectorReader : BallComponent
     {
         var direction = context.ReadValue<Vector2>();
 
-        // Ограничиваем движение внутри прямоугольника
         Vector2 localPoint = GetConvertToLocalVector(_inputZone);
         Vector2 clampedPosition = ClampToRect(localPoint);
         _stickZone.anchoredPosition = clampedPosition;
@@ -119,11 +120,10 @@ public class BallStrikeVectorReader : BallComponent
     private Vector2 ClampToRect(Vector2 targetPosition)
     {
         Vector2 size = _inputZone.rect.size;
-        Vector2 halfSize = size / 3.5f;
+        Vector2 clampSize = size / ClampCoefficient;
 
-        // Ограничиваем позицию в пределах прямоугольника
-        float clampedX = Mathf.Clamp(targetPosition.x, -halfSize.x, halfSize.x);
-        float clampedY = Mathf.Clamp(targetPosition.y, -halfSize.y, halfSize.y);
+        float clampedX = Mathf.Clamp(targetPosition.x, -clampSize.x, clampSize.x);
+        float clampedY = Mathf.Clamp(targetPosition.y, -clampSize.y, clampSize.y);
 
         return new Vector2(clampedX, clampedY);
     }
