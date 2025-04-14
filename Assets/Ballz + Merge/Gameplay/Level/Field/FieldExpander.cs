@@ -1,10 +1,19 @@
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
+using System;
 using UnityEngine;
 using Zenject;
 
-public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevelFinisher
+public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevelFinisher, ILevelSaver
 {
+    private const string FieldEffectPositionX = "FieldEffectPositionX";
+    private const string FieldEffectPositionY = "FieldEffectPositionY";
+    private const string FieldEffectScaleX = "FieldEffectScaleX";
+    private const string FieldEffectScaleY = "FieldEffectScaleY";
+    private const string CameraOrthographicSize = "CameraOrthographicSize";
+    private const string CameraPositionX = "CameraPositionX";
+    private const string CameraPositionY = "CameraPositionY";
+
     [SerializeField] private PlayZoneBoards _boards;
     [SerializeField] private FieldExpanderSettings _fieldExpanderSettings;
     [SerializeField] private ParticleSystem _fieldEffect;
@@ -22,20 +31,23 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     private float _halfSize;
 
     private ParticleSystem.ShapeModule _fieldShape;
-    private Vector2 _fieldPosition;
-    private Vector2 _fieldScale;
-    private float _cameraOrthographicSize;
-    private Vector2 _cameraPosition;
+    private Vector2 _startFieldPosition;
+    private Vector2 _startFieldScale;
+    private float _startCameraOrthographicSize;
+    private Vector2 _startCameraPosition;
     private PositionScaleProperty _propertyColumn;
     private PositionScaleProperty _propertyRow;
+
+    public event Action<string, float> Saved;
+    public event Action<string> Requested;
 
     private void Awake()
     {
         _fieldShape = _fieldEffect.shape;
-        _fieldPosition = _fieldEffect.transform.position;
-        _fieldScale = _fieldEffect.shape.scale;
-        _cameraOrthographicSize = _camera.orthographicSize;
-        _cameraPosition = _camera.transform.position;
+        _startFieldPosition = _fieldEffect.transform.position;
+        _startFieldScale = _fieldEffect.shape.scale;
+        _startCameraOrthographicSize = _camera.orthographicSize;
+        _startCameraPosition = _camera.transform.position;
         _halfSize = _gridSettings.CellSize / 2;
         _propertyRow = new PositionScaleProperty(new Vector2(0, _halfSize), new Vector2(0, _gridSettings.CellSize));
         _propertyColumn = new PositionScaleProperty(new Vector2(_halfSize, 0), new Vector2(_gridSettings.CellSize, 0));
@@ -53,19 +65,11 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     public void StartLevel()
     {
         _ballWaveVolume.Bag.Added += OnAbilityAdd;
-        _fieldEffect.transform.position = _fieldPosition;
-        _fieldShape.scale = _fieldScale;
-        _camera.orthographicSize = _cameraOrthographicSize;
-        _camera.transform.position = _cameraPosition;
-        _currentWave = 0;
-        _count = _fieldExpanderSettings.Count;
-        _extraColumns = _gridSettings.Size.x;
-        _extraRows = _gridSettings.Size.y;
+        SetDefault();
     }
 
     public void FinishLevel()
     {
-        _gridSettings.ReloadSize();
         _ballWaveVolume.Bag.Added -= OnAbilityAdd;
     }
 
@@ -99,5 +103,45 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _fieldShape.scale += property.Scale;
         _camera.orthographicSize += _halfSize;
         _camera.transform.position += property.Position;
+        Save();
+    }
+
+    private void SetDefault()
+    {
+        _fieldEffect.transform.position = _startFieldPosition;
+        _fieldShape.scale = _startFieldScale;
+        _camera.orthographicSize = _startCameraOrthographicSize;
+        _camera.transform.position = _startCameraPosition;
+        _currentWave = 0;
+        _count = _fieldExpanderSettings.Count;
+        _extraColumns = _gridSettings.Size.x;
+        _extraRows = _gridSettings.Size.y;
+    }
+
+    public void Save()
+    {
+        Saved?.Invoke(FieldEffectPositionX, _fieldEffect.transform.position.x);
+        Saved?.Invoke(FieldEffectPositionY, _fieldEffect.transform.position.y);
+        Saved?.Invoke(FieldEffectScaleX, _fieldShape.scale.x);
+        Saved?.Invoke(FieldEffectScaleY, _fieldShape.scale.y);
+        Saved?.Invoke(CameraOrthographicSize, _camera.orthographicSize);
+        Saved?.Invoke(CameraPositionX, _camera.transform.position.x);
+        Saved?.Invoke(CameraPositionY, _camera.transform.position.y);
+    }
+
+    public void Restore()
+    {
+        SetDefault();
+        Save();
+    }
+
+    public void RequestLoad()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Load(string key, float value)
+    {
+        throw new NotImplementedException();
     }
 }

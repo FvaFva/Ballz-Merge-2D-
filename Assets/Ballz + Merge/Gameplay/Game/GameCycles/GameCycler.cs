@@ -9,10 +9,11 @@ using System.Linq;
 using UnityEngine;
 using Zenject;
 
-public class GameCycler: MonoBehaviour, ISceneEnterPoint
+public class GameCycler : MonoBehaviour, ISceneEnterPoint
 {
     private const string QuitQuestName = "Quit";
     private const string RestartQuestName = "Restart";
+    private const string SaveQuestName = "Save";
 
     [SerializeField] private UIView _mainUI;
     [SerializeField] private CamerasOperator _operator;
@@ -31,12 +32,14 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     [Inject] private UserQuestioner _userQuestioner;
     [Inject] private Ball _ball;
     [Inject] private UIRootView _rootUI;
-    [Inject] private GridSettings _gridSettings;
+
+    public event Action SaveGame;
+    public event Action LoadSave;
+    public event Action DropSave;
 
     public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
     public IEnumerable<IDependentScreenOrientation> Orientators => _orientators;
-
-    public bool IsAvailable {  get; private set; }
+    public bool IsAvailable { get; private set; }
 
     private void Awake()
     {
@@ -69,7 +72,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         _ball.LeftGame += OnBallLeftGame;
         _conductor.GameFinished += OnGameFinished;
         _conductor.WaveLoaded += OnWaveLoaded;
-        _rootUI.EscapeMenu.QuitRequired += OnMenuQuitRequire;
+        _rootUI.EscapeMenu.QuitRequired += OnQuitRequired;
     }
 
     private void OnDisable()
@@ -77,7 +80,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         _ball.LeftGame -= OnBallLeftGame;
         _conductor.GameFinished -= OnGameFinished;
         _conductor.WaveLoaded -= OnWaveLoaded;
-        _rootUI.EscapeMenu.QuitRequired -= OnMenuQuitRequire;
+        _rootUI.EscapeMenu.QuitRequired -= OnQuitRequired;
     }
 
     private void OnDestroy()
@@ -97,6 +100,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         _sceneCallBack = callback;
         _mainUI.Init();
         _rootUI.AttachSceneUI(_mainUI, _operator.UI);
+        LoadSave?.Invoke();
         RestartLevel();
     }
 
@@ -107,8 +111,6 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 
     private void RestartLevel()
     {
-        _gridSettings.ReloadSize();
-
         foreach (ILevelStarter starter in _starters)
             starter.StartLevel();
 
@@ -126,10 +128,11 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         foreach (ILevelFinisher finisher in _finishers)
             finisher.FinishLevel();
 
+        DropSave?.Invoke();
         StartQuest(RestartQuestName, "Want one more game?");
     }
 
-    private void OnMenuQuitRequire(SceneExitData exitData)
+    private void OnQuitRequired(SceneExitData exitData)
     {
         _quiteRequireData = exitData;
         StartQuest(QuitQuestName, "Really left dat the best run?");
@@ -152,9 +155,29 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
             else
                 _sceneCallBack.Invoke(new SceneExitData(ScenesNames.MAINMENU));
         }
-        else if (answer is {Name: QuitQuestName, IsPositiveAnswer: true})
+        else if (answer is { Name: QuitQuestName, IsPositiveAnswer: true })
         {
             _userQuestioner.Answer -= OnUserAnswer;
+
+            if (_quiteRequireData.TargetScene == ScenesNames.GAMEPLAY)
+            {
+                DropSave?.Invoke();
+                _sceneCallBack.Invoke(_quiteRequireData);
+            }
+            else
+            {
+                StartQuest(SaveQuestName, "Do you want yo save your progress?");
+            }
+        }
+        else if (answer.Name == SaveQuestName)
+        {
+            _userQuestioner.Answer -= OnUserAnswer;
+
+            if (answer.IsPositiveAnswer)
+                SaveGame?.Invoke();
+            else
+                DropSave?.Invoke();
+
             _sceneCallBack.Invoke(_quiteRequireData);
         }
     }

@@ -1,20 +1,27 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level
 {
     [CreateAssetMenu(fileName = "New grid settings", menuName = "Bellz+Merge/Grid/Settings", order = 51)]
-    public class GridSettings : ScriptableObject
+    public class GridSettings : ScriptableObject, ILevelSaver
     {
+        private const string GridSizeX = "GridSizeX";
+        private const string GridSizeY = "GridSizeY";
         private const int ZeroBoard = 0;
 
         [SerializeField] private float _cellSize;
         [SerializeField] private float _cellSpacing;
-        [SerializeField] private Vector2Int _gridSize;
+        [SerializeField] private Vector2Int _startGridSize;
         [SerializeField] private Vector2 _viewPosition;
         [SerializeField] private float _moveTime = 0.3f;
 
+        private Vector2Int _gridSize;
         private Vector2Int _additionalGridSize;
+
+        public event Action<string, float> Saved;
+        public event Action<string> Requested;
 
         public float CellSize => _cellSize;
         public Vector2Int Size => _gridSize + _additionalGridSize;
@@ -24,14 +31,22 @@ namespace BallzMerge.Gameplay.Level
         public int LastRowIndex => 0;
         public float MoveTime => _moveTime;
 
-        public void ReloadSize()
+        public void SetSize(float x, float y)
         {
+            _gridSize = new Vector2Int((int)x, (int)y);
+            _additionalGridSize = Vector2Int.zero;
+        }
+
+        public void SetDefaultSize()
+        {
+            _gridSize = _startGridSize;
             _additionalGridSize = Vector2Int.zero;
         }
 
         public void AddSize(Vector2Int additionalSize)
         {
             _additionalGridSize += additionalSize;
+            Save();
         }
 
         public List<int> GetPositionsInRow()
@@ -45,5 +60,28 @@ namespace BallzMerge.Gameplay.Level
         }
 
         public bool IsOutside(Vector2Int point) => point.x < ZeroBoard || point.y > FirstRowIndex || point.x >= Size.x;
+
+        public void Save()
+        {
+            Saved?.Invoke(GridSizeX, Size.x);
+            Saved?.Invoke(GridSizeY, Size.y);
+        }
+
+        public void RequestLoad()
+        {
+            Requested?.Invoke(GridSizeX);
+            Requested?.Invoke(GridSizeY);
+        }
+
+        public void Load(string key, float value)
+        {
+
+        }
+
+        public void Restore()
+        {
+            SetDefaultSize();
+            Save();
+        }
     }
 }
