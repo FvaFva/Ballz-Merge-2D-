@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 5
   _species: 0
-  _icon: {fileID: -8998594483597734657, guid: d7ea6ba195d83d84a8d046f7983b6629, type: 3}
+  _icon: {fileID: 21300000, guid: af7ec59840833464d9e58194e9b8bcea, type: 3}
   _name: Move Increaser
   _description: On hit, attempts to move {WEIGHT} blocks behind.
   _suffixes: []

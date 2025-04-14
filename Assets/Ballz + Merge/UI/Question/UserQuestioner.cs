@@ -12,7 +12,7 @@ public class UserQuestioner : MonoBehaviour
     [SerializeField] private Button _yes;
     [SerializeField] private Button _no;
 
-    [Inject] IGamePauseController _pauseController;
+    [Inject] IGameTimeOwner _pauseController;
 
     private Queue<UserQuestion> _questions = new Queue<UserQuestion>();
     private UserQuestion _current;

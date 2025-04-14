@@ -1,3 +1,4 @@
+using BallzMerge.Gameplay;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
 using System;
@@ -17,7 +18,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     [SerializeField] private PlayZoneBoards _boards;
     [SerializeField] private FieldExpanderSettings _fieldExpanderSettings;
     [SerializeField] private ParticleSystem _fieldEffect;
-    [SerializeField] private Camera _camera;
+    [SerializeField] private CamerasOperator _cameras;
 
     [Inject] private PhysicGrid _physicGrid;
     [Inject] private GridSettings _gridSettings;
@@ -101,6 +102,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     {
         _fieldEffect.transform.position += property.Position;
         _fieldShape.scale += property.Scale;
+        _cameras.AddValue(_cameras.Gameplay, 0.2f, property.Position);
         _camera.orthographicSize += _halfSize;
         _camera.transform.position += property.Position;
         Save();

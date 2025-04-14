@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d7ea6ba195d83d84a8d046f7983b6629
+guid: 20d18fb1f423a4747a855730c5913582
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8998594483597734657
-    second: MoveIncreaser_0
+      213: -2104634287030923273
+    second: BlockMagnet_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -122,11 +122,24 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MoveIncreaser_0
+      name: BlockMagnet_0
       rect:
         serializedVersion: 2
         x: 0
@@ -140,8 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ffc0e576ef19e1380800000000000000
-      internalID: -8998594483597734657
+      spriteID: 7ff0a6b4446dac2e0800000000000000
+      internalID: -2104634287030923273
       vertices: []
       indices: 
       edges: []
@@ -156,8 +169,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      MoveIncreaser_0: -8998594483597734657
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

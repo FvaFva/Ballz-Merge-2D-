@@ -1,4 +1,5 @@
 ﻿using BallzMerge.Gameplay.Level;
+using System;
 
 public struct BallVolumesBagCell
 {
@@ -7,6 +8,7 @@ public struct BallVolumesBagCell
     public string Name;
     public readonly bool IsInited;
     public int Value => IsInited ? Rarity.Weight : 0;
+    public Action<bool> ViewCallback;
 
     public BallVolumesBagCell(BallVolume volume, DropRarity rarity)
     {
@@ -14,6 +16,7 @@ public struct BallVolumesBagCell
         Volume = volume;
         IsInited = true;
         Name = volume.Type.ToString();
+        ViewCallback = null;
     }
 
     public bool IsEqual(BallVolumesTypes type)

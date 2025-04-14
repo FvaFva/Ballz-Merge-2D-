@@ -7,9 +7,9 @@ public class BallView: BallComponent
     private const float HitScaleCoefficientMin = 0.7f;
     private const float HitScaleCoefficientMax = 1.3f;
 
-    [SerializeField] private SpriteRenderer _view;
+    //[SerializeField] private SpriteRenderer _view;
+    [SerializeField] private GameObject _3dView;
     [SerializeField] private ParticleSystem _trailMain;
-    [SerializeField] private Color _hitColor;
 
     private Transform _transform;
     private Vector3 _baseScale;
@@ -18,8 +18,7 @@ public class BallView: BallComponent
     private void Awake()
     {
         _transform = transform;
-        _baseScale = _view.transform.localScale;
-        _baseColor = _view.color;
+        _baseScale = _3dView.transform.localScale;
     }
 
     public void ShowHit(Vector2 hitPosition)
@@ -38,19 +37,21 @@ public class BallView: BallComponent
             scale.y *= HitScaleCoefficientMin;
         }
          
-        _view.DOColor(_hitColor, TimeHitShow).SetLoops(2, LoopType.Yoyo);
-        _view.transform.DOScale(scale, TimeHitShow).SetLoops(2, LoopType.Yoyo).OnComplete(NormalizeState);
+        //_view.transform.DOScale(scale, TimeHitShow).SetLoops(2, LoopType.Yoyo).OnComplete(NormalizeState);
+        _3dView.transform.DOScale(scale, TimeHitShow).SetLoops(2, LoopType.Yoyo).OnComplete(NormalizeState);
     }
 
     public override void ChangeActivity(bool state)
     {
-        _view.enabled = state;
+        //_view.enabled = state;
+        _3dView.SetActive(state);
         _trailMain.gameObject.SetActive(state);
     }
 
     private void NormalizeState()
     {
-        _view.transform.localScale = _baseScale;
-        _view.color = _baseColor;
+        //_view.transform.localScale = _baseScale;
+        //_view.color = _baseColor;
+        _3dView.transform.localScale = _baseScale;
     }
 }
