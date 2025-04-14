@@ -32,8 +32,8 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     private float _halfSize;
 
     private ParticleSystem.ShapeModule _fieldShape;
-    private Vector2 _startFieldPosition;
-    private Vector2 _startFieldScale;
+    private Vector2 _fieldPosition;
+    private Vector2 _fieldScale;
     private float _startCameraOrthographicSize;
     private Vector2 _startCameraPosition;
     private PositionScaleProperty _propertyColumn;
@@ -45,10 +45,8 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     private void Awake()
     {
         _fieldShape = _fieldEffect.shape;
-        _startFieldPosition = _fieldEffect.transform.position;
-        _startFieldScale = _fieldEffect.shape.scale;
-        _startCameraOrthographicSize = _camera.orthographicSize;
-        _startCameraPosition = _camera.transform.position;
+        _fieldPosition = _fieldEffect.transform.position;
+        _fieldScale = _fieldEffect.shape.scale;
         _halfSize = _gridSettings.CellSize / 2;
         _propertyRow = new PositionScaleProperty(new Vector2(0, _halfSize), new Vector2(0, _gridSettings.CellSize));
         _propertyColumn = new PositionScaleProperty(new Vector2(_halfSize, 0), new Vector2(_gridSettings.CellSize, 0));
@@ -103,17 +101,14 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _fieldEffect.transform.position += property.Position;
         _fieldShape.scale += property.Scale;
         _cameras.AddValue(_cameras.Gameplay, 0.2f, property.Position);
-        _camera.orthographicSize += _halfSize;
-        _camera.transform.position += property.Position;
         Save();
     }
 
     private void SetDefault()
     {
-        _fieldEffect.transform.position = _startFieldPosition;
-        _fieldShape.scale = _startFieldScale;
-        _camera.orthographicSize = _startCameraOrthographicSize;
-        _camera.transform.position = _startCameraPosition;
+        _fieldEffect.transform.position = _fieldPosition;
+        _fieldShape.scale = _fieldScale;
+        _cameras.SetDefault();
         _currentWave = 0;
         _count = _fieldExpanderSettings.Count;
         _extraColumns = _gridSettings.Size.x;
@@ -126,9 +121,9 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         Saved?.Invoke(FieldEffectPositionY, _fieldEffect.transform.position.y);
         Saved?.Invoke(FieldEffectScaleX, _fieldShape.scale.x);
         Saved?.Invoke(FieldEffectScaleY, _fieldShape.scale.y);
-        Saved?.Invoke(CameraOrthographicSize, _camera.orthographicSize);
-        Saved?.Invoke(CameraPositionX, _camera.transform.position.x);
-        Saved?.Invoke(CameraPositionY, _camera.transform.position.y);
+        Saved?.Invoke(CameraOrthographicSize, _cameras.Gameplay.orthographicSize);
+        Saved?.Invoke(CameraPositionX, _cameras.Gameplay.transform.position.x);
+        Saved?.Invoke(CameraPositionY, _cameras.Gameplay.transform.position.y);
     }
 
     public void Restore()
@@ -139,11 +134,11 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     public void RequestLoad()
     {
-        throw new NotImplementedException();
+        
     }
 
     public void Load(string key, float value)
     {
-        throw new NotImplementedException();
+        
     }
 }

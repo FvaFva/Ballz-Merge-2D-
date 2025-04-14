@@ -9,16 +9,23 @@ public class BallStrikeVectorReader : BallComponent
 {
     [SerializeField] private CamerasOperator _operator;
     [SerializeField] private RectTransform _inputZone;
+    [SerializeField] private RectTransform _stickZone;
     [SerializeField] private RectTransform _cancelZone;
 
     [Inject] private MainInputMap _userInput;
 
     private Vector3 _vector;
     private Vector2 _touchPoint;
+    private Vector2 _startStickAnchorPosition;
 
     public event Action<Vector3> Changed;
     public event Action<Vector3> Dropped;
     public event Action Canceled;
+
+    private void Start()
+    {
+        _startStickAnchorPosition = _stickZone.anchoredPosition;
+    }
 
     private void OnEnable()
     {
@@ -67,6 +74,7 @@ public class BallStrikeVectorReader : BallComponent
         _userInput.MainInput.Shot.canceled -= OnShotCancelled;
 
         _cancelZone.gameObject.SetActive(false);
+        _stickZone.anchoredPosition = _startStickAnchorPosition;
 
         if (IsCursorIn(_cancelZone))
         {
@@ -83,6 +91,11 @@ public class BallStrikeVectorReader : BallComponent
     {
         var direction = context.ReadValue<Vector2>();
 
+        // Ограничиваем движение внутри прямоугольника
+        Vector2 localPoint = GetConvertToLocalVector(_inputZone);
+        Vector2 clampedPosition = ClampToRect(localPoint);
+        _stickZone.anchoredPosition = clampedPosition;
+
         if (direction.Equals(_vector) == false)
         {
             _vector = direction - _touchPoint;
@@ -92,9 +105,26 @@ public class BallStrikeVectorReader : BallComponent
 
     private bool IsCursorIn(RectTransform zone)
     {
+        Vector3 localPoint = GetConvertToLocalVector(zone);
+        return zone.rect.Contains(localPoint);
+    }
+
+    private Vector2 GetConvertToLocalVector(RectTransform rectTransform)
+    {
         _touchPoint = _userInput.MainInput.StrikePosition.ReadValue<Vector2>();
-        Vector3 worldTouchPosition = _operator.UI.ScreenToWorldPoint(_touchPoint);
-        Vector2 localTouchPosition = zone.InverseTransformPoint(worldTouchPosition);
-        return zone.rect.Contains(localTouchPosition);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, _touchPoint, _operator.UI, out Vector2 localPoint);
+        return localPoint;
+    }
+
+    private Vector2 ClampToRect(Vector2 targetPosition)
+    {
+        Vector2 size = _inputZone.rect.size;
+        Vector2 halfSize = size / 3.5f;
+
+        // Ограничиваем позицию в пределах прямоугольника
+        float clampedX = Mathf.Clamp(targetPosition.x, -halfSize.x, halfSize.x);
+        float clampedY = Mathf.Clamp(targetPosition.y, -halfSize.y, halfSize.y);
+
+        return new Vector2(clampedX, clampedY);
     }
 }
