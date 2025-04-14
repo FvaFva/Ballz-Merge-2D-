@@ -38,7 +38,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Texture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 183343a923919d14391fd818919b5d5b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -55,18 +55,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BoarderPower: 1
-    - _BoarderSize: 2
-    - _DestortianSpeed: 0.1
+    - _BoarderPower: 0.47
+    - _BoarderSize: -1.08
+    - _DestortianSpeed: 0.09
     - _IsWithBoarder: 1
     - _IsWithDestrotion: 1
-    - _NoizeScale: 1
+    - _NoizeScale: 0.22
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _ScrollSpeed: 0.1
-    - _SurfaceSpeed: 0.01
+    - _ScrollSpeed: 0.12
+    - _SurfaceSpeed: 0.11
     m_Colors:
-    - _BoarderColor: {r: 0, g: 0.0767061, b: 0.7924528, a: 1}
-    - _Color: {r: 0, g: 0.7593828, b: 1.075472, a: 0}
+    - _BoarderColor: {r: 0.007547021, g: 0.00021359364, b: 0.00021359364, a: 1}
+    - _Color: {r: 4.301889, g: 3.5537384, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
