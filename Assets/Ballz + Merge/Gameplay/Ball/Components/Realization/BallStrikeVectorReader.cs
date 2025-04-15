@@ -62,8 +62,13 @@ public class BallStrikeVectorReader : BallComponent
 
     private void EndFrameShotStarted()
     {
-        if (IsCursorIn(_inputZone))
+        _touchPoint = _userInput.MainInput.StrikePosition.ReadValue<Vector2>();
+
+        if (IsCursorIn(_touchPoint, _inputZone))
         {
+            Vector2 localPoint = GetConvertToLocalVector(_touchPoint, _inputZone);
+            Vector2 clampedPosition = ClampToRect(_inputZone, localPoint);
+            _stickZone.anchoredPosition = clampedPosition;
             _userInput.MainInput.StrikeVector.performed += OnStrikeVectorPerformed;
             _userInput.MainInput.Shot.canceled += OnShotCancelled;
             _cancelZone.gameObject.SetActive(true);
@@ -72,54 +77,75 @@ public class BallStrikeVectorReader : BallComponent
 
     private void EndFrameShotCancelled()
     {
-        _userInput.MainInput.StrikeVector.performed -= OnStrikeVectorPerformed;
         _userInput.MainInput.Shot.canceled -= OnShotCancelled;
 
         _cancelZone.gameObject.SetActive(false);
         _stickZone.anchoredPosition = _startStickAnchorPosition;
+        _touchPoint = _userInput.MainInput.StrikePosition.ReadValue<Vector2>();
 
-        if (IsCursorIn(_cancelZone))
+        if (IsCursorIn(_touchPoint, _cancelZone))
         {
+            _userInput.MainInput.StrikeVector.performed -= CheckGetOutFromZone;
+            _inputZone.gameObject.SetActive(true);
             Canceled?.Invoke();
             return;
         }
 
+        _userInput.MainInput.StrikeVector.performed -= OnStrikeVectorPerformed;
         Vector3 dropVector = GetVector();
         _vector = Vector3.zero;
-        Dropped?.Invoke(dropVector); 
+        Dropped?.Invoke(dropVector);
     }
 
     private void OnStrikeVectorPerformed(InputAction.CallbackContext context)
     {
         var direction = context.ReadValue<Vector2>();
 
-        Vector2 localPoint = GetConvertToLocalVector(_inputZone);
-        Vector2 clampedPosition = ClampToRect(localPoint);
-        _stickZone.anchoredPosition = clampedPosition;
-
         if (direction.Equals(_vector) == false)
         {
             _vector = direction - _touchPoint;
             Changed?.Invoke(GetVector());
         }
+
+        Vector2 localPoint = GetConvertToLocalVector(direction, _inputZone);
+        Vector2 clampedPosition = ClampToRect(_inputZone, localPoint);
+        _stickZone.anchoredPosition = clampedPosition;
+
+        if (IsCursorIn(direction, _cancelZone))
+        {
+            _userInput.MainInput.StrikeVector.performed -= OnStrikeVectorPerformed;
+            _userInput.MainInput.StrikeVector.performed += CheckGetOutFromZone;
+            _inputZone.gameObject.SetActive(false);
+        }
     }
 
-    private bool IsCursorIn(RectTransform zone)
+    private void CheckGetOutFromZone(InputAction.CallbackContext context)
     {
-        Vector3 localPoint = GetConvertToLocalVector(zone);
+        Vector2 position = context.ReadValue<Vector2>();
+
+        if (IsCursorIn(position, _cancelZone))
+            return;
+
+        _userInput.MainInput.StrikeVector.performed -= CheckGetOutFromZone;
+        _userInput.MainInput.StrikeVector.performed += OnStrikeVectorPerformed;
+        _inputZone.gameObject.SetActive(true);
+    }
+
+    private bool IsCursorIn(Vector2 point, RectTransform zone)
+    {
+        Vector3 localPoint = GetConvertToLocalVector(point, zone);
         return zone.rect.Contains(localPoint);
     }
 
-    private Vector2 GetConvertToLocalVector(RectTransform rectTransform)
+    private Vector2 GetConvertToLocalVector(Vector2 point, RectTransform rectTransform)
     {
-        _touchPoint = _userInput.MainInput.StrikePosition.ReadValue<Vector2>();
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, _touchPoint, _operator.UI, out Vector2 localPoint);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, point, _operator.UI, out Vector2 localPoint);
         return localPoint;
     }
 
-    private Vector2 ClampToRect(Vector2 targetPosition)
+    private static Vector2 ClampToRect(RectTransform zone, Vector2 targetPosition)
     {
-        Vector2 size = _inputZone.rect.size;
+        Vector2 size = zone.rect.size;
         Vector2 clampSize = size / ClampCoefficient;
 
         float clampedX = Mathf.Clamp(targetPosition.x, -clampSize.x, clampSize.x);
