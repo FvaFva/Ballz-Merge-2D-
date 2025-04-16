@@ -16,7 +16,7 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private DropViewSuffix _suffix;
         [SerializeField] private Image _icon;
         [SerializeField] private Image _colorView;
-        [SerializeField] private Button _activator;
+        [SerializeField] private Button _selector;
         [SerializeField] private ParticleSystem _particles;
         [SerializeField] private List<Image> _shineMasks;
 
@@ -32,7 +32,7 @@ namespace BallzMerge.Gameplay.Level
         private void Awake()
         {
             _default = _icon.sprite;
-            _activatorTransform = (RectTransform)_activator.transform;
+            _activatorTransform = (RectTransform)_selector.transform;
             _shapeModule = _particles.shape;
             _mainModule = _particles.main;
         }
@@ -42,12 +42,12 @@ namespace BallzMerge.Gameplay.Level
             Vector2 scale = _activatorTransform.rect.size * _activatorTransform.lossyScale;
             _shapeModule.scale = new Vector3(scale.x, scale.y, 0f);
             _mainModule.startColor = _current.Color;
-            _activator.AddListener(OnSelect);
+            _selector.AddListener(OnSelect);
         }
 
         private void OnDisable()
         {
-            _activator.RemoveListener(OnSelect);
+            _selector.RemoveListener(OnSelect);
         }
 
         public void CashMaterials()

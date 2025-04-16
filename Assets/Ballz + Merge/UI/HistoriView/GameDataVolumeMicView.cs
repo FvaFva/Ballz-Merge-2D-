@@ -40,6 +40,13 @@ public class GameDataVolumeMicView : MonoBehaviour
     public void Show(BallVolume volume, int value)
     {
         gameObject.SetActive(true);
+
+        if(volume == null)
+        {
+            Clear();
+            return;
+        }
+
         _chance.text = value.ToString();
         _header.text = volume?.Name;
         _icon.sprite = volume?.Icon;
