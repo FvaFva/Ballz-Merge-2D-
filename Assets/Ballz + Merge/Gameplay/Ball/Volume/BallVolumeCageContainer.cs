@@ -1,4 +1,5 @@
 ﻿using BallzMerge.Root.Audio;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ public class BallVolumeCageContainer : MonoBehaviour
     [SerializeField] private AudioSourceHandler _audio;
     [SerializeField] private ParticleSystemForceField _field;
     [SerializeField] private Canvas _mainCanvas;
+    [SerializeField] private RetainerInsideScreen _description;
+    [SerializeField] private TMP_Text _descriptionText;
 
     private BallVolumeCageElement _starter;
     private RectTransform _transform;
@@ -39,6 +42,7 @@ public class BallVolumeCageContainer : MonoBehaviour
             _icon.sprite = cell.Current.Volume.Icon;
 
         _disabledElements.SetActive(true);
+        _descriptionText.text = cell.Current.Volume.GetDescription(cell.Current.Rarity);
         _starter = cell;
         _transform.position = position;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -66,6 +70,7 @@ public class BallVolumeCageContainer : MonoBehaviour
             Vector2 delta = localPoint - _lastLocalPosition;
             _transform.anchoredPosition += delta;
             _lastLocalPosition = localPoint;
+            _description.UpdatePosition();
         }
     }
 }
