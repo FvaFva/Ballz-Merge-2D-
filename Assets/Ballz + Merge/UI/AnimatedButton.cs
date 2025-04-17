@@ -23,7 +23,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void Start()
     {
-        //_buttonView.Initialized += () => _buttonView.SetDefault();
+        _buttonView.Initialized += () => _buttonView.SetDefault();
         _isPointerDown = false;
         _isPointerEnter = false;
     }
@@ -40,7 +40,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public void Dispose()
     {
-        //_buttonView.Initialized -= () => _buttonView.SetDefault();
+        _buttonView.Initialized -= () => _buttonView.SetDefault();
     }
 
     public void OnPointerDown(PointerEventData eventData)
