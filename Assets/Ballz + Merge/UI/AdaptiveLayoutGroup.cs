@@ -53,9 +53,23 @@ public class AdaptiveLayoutGroup : LayoutGroup
 
         if (!_isUseAspectForMainAxis)
             _totalChildrenCrossSize = _totalChildrenCrossSize == Zero ? Zero : One / _totalChildrenCrossSize;
+
+
+        float preferredSize = _isVertical
+            ? CalculateTotalPreferredSize(1)
+            : CalculateTotalPreferredSize(0);
+
+        SetLayoutInputForAxis(preferredSize, preferredSize, -1, 0);
     }
 
-    public override void CalculateLayoutInputVertical(){}
+    public override void CalculateLayoutInputVertical()
+    {
+        float preferredSize = _isVertical
+        ? CalculateTotalPreferredSize(1)
+        : CalculateTotalPreferredSize(0);
+
+        SetLayoutInputForAxis(preferredSize, preferredSize, -1, 1);
+    }
 
     public override void SetLayoutHorizontal() => ApplyLayout();
 
@@ -65,6 +79,22 @@ public class AdaptiveLayoutGroup : LayoutGroup
     {
         _isVertical = orientation == ScreenOrientation.Portrait || orientation == ScreenOrientation.PortraitUpsideDown;
         _isVertical = _isVertical ^ _isInversive;
+    }
+
+    private float CalculateTotalPreferredSize(int axis)
+    {
+        int count = _childrenCrossSizes.Count;
+        if (count == 0)
+            return 0;
+
+        float totalSpacing = _spacing * (count - 1);
+        float totalMainSize = _isUseAspectForMainAxis
+            ? _childrenCrossSizes.Sum(x => CalculateByAspect(x.Value, rectTransform.rect.size[1 - axis]))
+            : 0f;
+
+        float paddingSize = (axis == 0) ? padding.horizontal : padding.vertical;
+
+        return totalMainSize + totalSpacing + paddingSize;
     }
 
     private void ApplyLayout()

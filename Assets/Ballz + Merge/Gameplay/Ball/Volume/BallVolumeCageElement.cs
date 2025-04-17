@@ -21,6 +21,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
     private void Awake()
     {
         _transform = GetComponent<RectTransform>();
+        _view.Init();
     }
 
     public BallVolumeCageElement Apply(BallVolumesBagCell volume)
@@ -90,6 +91,9 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (Current.IsInited == false)
+            return;
+
         _container.Put(this, _transform.position, eventData.position);
         _view.Clear();
         _backlight.Play(_container.Field);
