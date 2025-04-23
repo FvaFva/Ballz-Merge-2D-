@@ -1,4 +1,6 @@
 using Mono.Data.Sqlite;
+using System.Collections.Generic;
+using Unity.Services.CloudSave.Models;
 
 public class GameSavesStorage
 {
@@ -34,7 +36,7 @@ public class GameSavesStorage
         }
     }
 
-    public void TemporarySave(string key, float value)
+    public void Save(IDictionary<string, float> data)
     {
         using (var connection = new SqliteConnection(_dbPath))
         {
@@ -42,33 +44,20 @@ public class GameSavesStorage
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"INSERT OR REPLACE INTO {TemporaryGameSavesTable} ({Key}, {Value}) VALUES (@{Key}, @{Value})";
-                command.Parameters.AddWithValue(Key, key);
-                command.Parameters.AddWithValue(Value, value);
-                command.ExecuteNonQuery();
+                foreach (var item in data)
+                {
+                    command.CommandText = $"INSERT OR REPLACE INTO {GameSavesTable} ({Key}, {Value}) VALUES (@{Key}, @{Value})";
+                    command.Parameters.AddWithValue(Key, item.Key);
+                    command.Parameters.AddWithValue(Value, item.Value);
+                    command.ExecuteNonQuery();
+                }
             }
 
             connection.Close();
         }
     }
 
-    public void Save()
-    {
-        using (var connection = new SqliteConnection(_dbPath))
-        {
-            connection.Open();
-
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = $"INSERT INTO {GameSavesTable} ({Key}, {Value}) SELECT {Key}, {Value} FROM {TemporaryGameSavesTable}";
-                command.ExecuteNonQuery();
-            }
-
-            connection.Close();
-        }
-    }
-
-    public float Get(string key)
+    public IDictionary<string, float> Get()
     {
         float outputValue = 0;
         using (var connection = new SqliteConnection(_dbPath))
@@ -77,8 +66,7 @@ public class GameSavesStorage
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT {Value} FROM {GameSavesTable} WHERE {Key} = @{Key}";
-                command.Parameters.AddWithValue($"@{Key}", key);
+                command.CommandText = $"SELECT * FROM {GameSavesTable}";
                 using (var reader = command.ExecuteReader())
                 {
                     if (reader.Read())

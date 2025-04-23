@@ -2,6 +2,7 @@ using BallzMerge.Gameplay;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -38,9 +39,6 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     private Vector2 _startCameraPosition;
     private PositionScaleProperty _propertyColumn;
     private PositionScaleProperty _propertyRow;
-
-    public event Action<string, float> Saved;
-    public event Action<ILevelSaver, string> Requested;
 
     private void Awake()
     {
@@ -101,7 +99,6 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _fieldEffect.transform.position += property.Position;
         _fieldShape.scale += property.Scale;
         _cameras.AddValue(_cameras.Gameplay, 0.2f, property.Position);
-        Save();
     }
 
     private void SetDefault()
@@ -115,36 +112,16 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _extraRows = _gridSettings.Size.y;
     }
 
-    public void Save()
+    public IDictionary<string, float> GetSavingData()
     {
-        Saved?.Invoke(FieldEffectPositionX, _fieldEffect.transform.position.x);
-        Saved?.Invoke(FieldEffectPositionY, _fieldEffect.transform.position.y);
-        Saved?.Invoke(FieldEffectScaleX, _fieldShape.scale.x);
-        Saved?.Invoke(FieldEffectScaleY, _fieldShape.scale.y);
-        Saved?.Invoke(CameraOrthographicSize, _cameras.Gameplay.orthographicSize);
-        Saved?.Invoke(CameraPositionX, _cameras.Gameplay.transform.position.x);
-        Saved?.Invoke(CameraPositionY, _cameras.Gameplay.transform.position.y);
+        return new Dictionary<string, float>()
+        {
+            {FieldEffectPositionX,  _extraColumns}
+        };
     }
 
-    public void Restore()
+    public void Load(IDictionary<string, float> data)
     {
-        SetDefault();
-        Save();
-    }
-
-    public void Request()
-    {
-        Requested?.Invoke(this, FieldEffectPositionX);
-        Requested?.Invoke(this, FieldEffectPositionY);
-        Requested?.Invoke(this, FieldEffectScaleX);
-        Requested?.Invoke(this, FieldEffectScaleY);
-        Requested?.Invoke(this, CameraOrthographicSize);
-        Requested?.Invoke(this, CameraPositionX);
-        Requested?.Invoke(this, CameraPositionY);
-    }
-
-    public void Load(string key, float value)
-    {
-        
+        _extraColumns = (int)data[FieldEffectPositionX];
     }
 }

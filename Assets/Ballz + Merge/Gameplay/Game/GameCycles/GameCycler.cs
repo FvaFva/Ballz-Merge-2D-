@@ -25,7 +25,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     private List<IWaveUpdater> _wavers = new List<IWaveUpdater>();
     private List<IDependentScreenOrientation> _orientators = new List<IDependentScreenOrientation>();
     private Action<SceneExitData> _sceneCallBack;
-    private SceneExitData _quiteRequireData;
+    private SceneExitData _exitData;
     private ConductorBetweenWaves _conductor;
 
     [Inject] private BlocksBinder _blocksBus;
@@ -88,13 +88,19 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         IsAvailable = false;
     }
 
-    public void Init(Action<SceneExitData> callback)
+    public void Init(Action<SceneExitData> callback, IDictionary<string, float> loadData)
     {
         if (_conductor == null)
         {
             Debug.LogError("WARNING!! CONDUCTOR WAS FIRED!");
             callback.Invoke(new SceneExitData(ScenesNames.MAINMENU));
             return;
+        }
+
+        if(loadData != null)
+        {
+            foreach (var saver in _savers)
+                saver.Load(loadData);
         }
 
         _sceneCallBack = callback;
@@ -134,7 +140,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     private void OnQuitRequired(SceneExitData exitData)
     {
-        _quiteRequireData = exitData;
+        _exitData = exitData;
         StartQuest(QuitQuestName, "Really left dat the best run?");
     }
 
@@ -159,10 +165,10 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         {
             _userQuestioner.Answer -= OnUserAnswer;
 
-            if (_quiteRequireData.TargetScene == ScenesNames.GAMEPLAY)
+            if (_exitData.TargetScene == ScenesNames.GAMEPLAY)
             {
                 DropSave?.Invoke();
-                _sceneCallBack.Invoke(_quiteRequireData);
+                _sceneCallBack.Invoke(_exitData);
             }
             else
             {
@@ -174,11 +180,9 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             _userQuestioner.Answer -= OnUserAnswer;
 
             if (answer.IsPositiveAnswer)
-                SaveGame?.Invoke();
-            else
-                DropSave?.Invoke();
+                _exitData.ConnectSavers(null);
 
-            _sceneCallBack.Invoke(_quiteRequireData);
+            _sceneCallBack.Invoke(_exitData);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace BallzMerge.MainMenu
     {
         [SerializeField] private UIView _view;
         [SerializeField] private Button _startGame;
+        [SerializeField] private Button _continueGame;
         [SerializeField] private List<CyclicBehavior> _behaviors;
 
         [Inject] private UIRootView _rootUI;
@@ -49,12 +50,14 @@ namespace BallzMerge.MainMenu
         {
             _rootUI.EscapeMenu.QuitRequired += LeftScene;
             _startGame.AddListener(OnStartRequire);
+            _continueGame.AddListener(OnContinueRequire);
         }
 
         private void OnDisable()
         {
             _rootUI.EscapeMenu.QuitRequired -= LeftScene;
             _startGame.RemoveListener(OnStartRequire);
+            _continueGame.RemoveListener(OnContinueRequire);
         }
 
         private void OnDestroy()
@@ -62,7 +65,7 @@ namespace BallzMerge.MainMenu
             IsAvailable = false;
         }
 
-        public void Init(Action<SceneExitData> callback)
+        public void Init(Action<SceneExitData> callback, IDictionary<string, float> loadData)
         {
             _view.Init();
             _rootUI.AttachSceneUI(_view);
@@ -72,6 +75,11 @@ namespace BallzMerge.MainMenu
         private void OnStartRequire()
         {
             LeftScene(new SceneExitData(ScenesNames.GAMEPLAY));
+        }
+
+        private void OnContinueRequire()
+        {
+            LeftScene(new SceneExitData(ScenesNames.GAMEPLAY, true));
         }
 
         private void LeftScene(SceneExitData exitData)

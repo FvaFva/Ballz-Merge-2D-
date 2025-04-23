@@ -1,57 +1,28 @@
 using BallzMerge.Data;
-using BallzMerge.Gameplay.Level;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Zenject;
 
-public class GameSaves : CyclicBehavior, IInitializable
+public class GameSaves
 {
-    [SerializeField] private List<GameSaverProperty> _gameSavers;
-    [SerializeField] private GameCycler _gameCycler;
+    private GameSavesStorage _db;
 
-    [Inject] private GridSettings _gridSettings;
-    [Inject] private DataBaseSource _db;
-
-    public void Init()
+    public GameSaves(DataBaseSource db)
     {
-        foreach (GameSaverProperty gameSaver in _gameSavers)
-            gameSaver.LevelSaver.Saved += Save;
-
-        foreach (GameSaverProperty gameSaver in _gameSavers)
-            gameSaver.LevelSaver.Requested += LoadSave;
-
-        _gameCycler.SaveGame += SaveGame;
-        _gameCycler.LoadSave += Load;
-        _gameCycler.DropSave += DropSave;
+        _db = db.Saves;
     }
 
-    public void SaveGame()
+    public void SaveGame(IEnumerable<ILevelSaver> savers)
     {
-        _db.Saves.Save();
+        var data = new Dictionary<string, float>();
+
+        foreach (var saver in savers) 
+            foreach (var save in saver.GetSavingData())
+                data.Add(save.Key, save.Value);
+
+        _db.Save(data);
     }
 
-    private void Save(string key, float value)
+    public IDictionary<string, float> Load()
     {
-        _db.Saves.TemporarySave(key, value);
-    }
-
-    private void Load()
-    {
-        foreach (GameSaverProperty saverProperty in _gameSavers)
-            saverProperty.LevelSaver.Request();
-    }
-
-    private void LoadSave(ILevelSaver loader, string key)
-    {
-        loader.Load(key, _db.Saves.Get(key));
-    }
-
-    private void DropSave()
-    {
-        foreach (GameSaverProperty saverProperty in _gameSavers)
-            saverProperty.LevelSaver.Restore();
-
-        SaveGame();
+        return _db.Get();
     }
 }

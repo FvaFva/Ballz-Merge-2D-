@@ -5,10 +5,8 @@ using UnityEngine;
 namespace BallzMerge.Gameplay.Level
 {
     [CreateAssetMenu(fileName = "New grid settings", menuName = "Bellz+Merge/Grid/Settings", order = 51)]
-    public class GridSettings : ScriptableObject, ILevelSaver
+    public class GridSettings : ScriptableObject
     {
-        private const string GridSizeX = "GridSizeX";
-        private const string GridSizeY = "GridSizeY";
         private const int ZeroBoard = 0;
 
         [SerializeField] private float _cellSize;
@@ -46,7 +44,6 @@ namespace BallzMerge.Gameplay.Level
         public void AddSize(Vector2Int additionalSize)
         {
             _additionalGridSize += additionalSize;
-            Save();
         }
 
         public List<int> GetPositionsInRow()
@@ -60,28 +57,5 @@ namespace BallzMerge.Gameplay.Level
         }
 
         public bool IsOutside(Vector2Int point) => point.x < ZeroBoard || point.y > FirstRowIndex || point.x >= Size.x;
-
-        public void Save()
-        {
-            Saved?.Invoke(GridSizeX, Size.x);
-            Saved?.Invoke(GridSizeY, Size.y);
-        }
-
-        public void RequestLoad()
-        {
-            Requested?.Invoke(GridSizeX);
-            Requested?.Invoke(GridSizeY);
-        }
-
-        public void Load(string key, float value)
-        {
-
-        }
-
-        public void Restore()
-        {
-            SetDefaultSize();
-            Save();
-        }
     }
 }

@@ -10,6 +10,7 @@ namespace BallzMerge.Root
         public OwnerPrimaryComponents()
         {
             Data = new DataBaseSource();
+            Saver = new GameSaves(Data);
             TimeScaler = new TimeScaler();
             UserInput = new MainInputMap();
             UserInput.Enable();
@@ -24,6 +25,7 @@ namespace BallzMerge.Root
         public readonly TimeScaler TimeScaler;
         public readonly DataBaseSource Data;
         public readonly ScreenOrientationObserver OrientationObserver;
+        public readonly GameSaves Saver;
 
         private T AddDontDestroyOnLoad<T>(string name)where T : Component
         {
