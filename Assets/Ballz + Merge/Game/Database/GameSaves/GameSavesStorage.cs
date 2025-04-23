@@ -77,7 +77,7 @@ public class GameSavesStorage
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT {Value} FROM {TemporaryGameSavesTable} WHERE {Key} = @{Key}";
+                command.CommandText = $"SELECT {Value} FROM {GameSavesTable} WHERE {Key} = @{Key}";
                 command.Parameters.AddWithValue($"@{Key}", key);
                 using (var reader = command.ExecuteReader())
                 {

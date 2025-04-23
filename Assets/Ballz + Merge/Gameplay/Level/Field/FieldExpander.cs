@@ -40,7 +40,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     private PositionScaleProperty _propertyRow;
 
     public event Action<string, float> Saved;
-    public event Action<string> Requested;
+    public event Action<ILevelSaver, string> Requested;
 
     private void Awake()
     {
@@ -132,9 +132,15 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         Save();
     }
 
-    public void RequestLoad()
+    public void Request()
     {
-        
+        Requested?.Invoke(this, FieldEffectPositionX);
+        Requested?.Invoke(this, FieldEffectPositionY);
+        Requested?.Invoke(this, FieldEffectScaleX);
+        Requested?.Invoke(this, FieldEffectScaleY);
+        Requested?.Invoke(this, CameraOrthographicSize);
+        Requested?.Invoke(this, CameraPositionX);
+        Requested?.Invoke(this, CameraPositionY);
     }
 
     public void Load(string key, float value)

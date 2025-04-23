@@ -13,15 +13,16 @@ public class GameSaves : CyclicBehavior, IInitializable
     [Inject] private GridSettings _gridSettings;
     [Inject] private DataBaseSource _db;
 
-    private GameSaverProperty _currentSaver;
-
     public void Init()
     {
         foreach (GameSaverProperty gameSaver in _gameSavers)
-            gameSaver.LevelSaver.Saved += SaveLevel;
+            gameSaver.LevelSaver.Saved += Save;
+
+        foreach (GameSaverProperty gameSaver in _gameSavers)
+            gameSaver.LevelSaver.Requested += LoadSave;
 
         _gameCycler.SaveGame += SaveGame;
-        _gameCycler.LoadSave += LoadSaves;
+        _gameCycler.LoadSave += Load;
         _gameCycler.DropSave += DropSave;
     }
 
@@ -30,35 +31,20 @@ public class GameSaves : CyclicBehavior, IInitializable
         _db.Saves.Save();
     }
 
-    private void SaveLevel(string key, float value)
+    private void Save(string key, float value)
     {
         _db.Saves.TemporarySave(key, value);
     }
 
-    private void LoadSaves()
+    private void Load()
     {
         foreach (GameSaverProperty saverProperty in _gameSavers)
-        {
-            _currentSaver = saverProperty;
-            _currentSaver.LevelSaver.Requested += GetKey;
-            _currentSaver.LevelSaver.RequestLoad();
-            _currentSaver.LevelSaver.Requested -= GetKey;
-        }
+            saverProperty.LevelSaver.Request();
     }
 
-    private void LoadSave(GameSaverProperty saverProperty, string key, float value)
+    private void LoadSave(ILevelSaver loader, string key)
     {
-        saverProperty.LevelSaver.Load(key, value);
-    }
-
-    private void GetKey(string key)
-    {
-        LoadSave(_currentSaver, key, GetSave(key));
-    }
-
-    private float GetSave(string key)
-    {
-        return _db.Saves.Get(key);
+        loader.Load(key, _db.Saves.Get(key));
     }
 
     private void DropSave()
