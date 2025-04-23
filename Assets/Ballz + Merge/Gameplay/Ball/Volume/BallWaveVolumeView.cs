@@ -10,6 +10,7 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation
     [SerializeField] private GameDataVolumeMicView _viewPrefab;
     [SerializeField] private ContentSizeFitter _fitter;
     [SerializeField] private ScrollRect _scroll;
+    [SerializeField] private AdaptiveLayoutGroup _layout;
 
     private Queue<GameDataVolumeMicView> _free = new Queue<GameDataVolumeMicView>();
     private Queue<GameDataVolumeMicView> _busy = new Queue<GameDataVolumeMicView>();
@@ -31,7 +32,7 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation
 
     public void UpdateScreenOrientation(ScreenOrientation orientation)
     {
-        if (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight)
+        if (!_layout.IsInverse ^ (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight))
         {
             _fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
             _fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;

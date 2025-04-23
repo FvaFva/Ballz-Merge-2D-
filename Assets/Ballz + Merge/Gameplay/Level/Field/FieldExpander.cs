@@ -34,8 +34,8 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _fieldPosition = _fieldEffect.transform.position;
         _fieldScale = _fieldEffect.shape.scale;
         _halfSize = _gridSettings.CellSize / 2;
-        _propertyRow = new PositionScaleProperty(new Vector2(0, _halfSize), new Vector2(0, _gridSettings.CellSize));
-        _propertyColumn = new PositionScaleProperty(new Vector2(_halfSize, 0), new Vector2(_gridSettings.CellSize, 0));
+        _propertyRow = new PositionScaleProperty(0, _halfSize, 0, _gridSettings.CellSize);
+        _propertyColumn = new PositionScaleProperty(_halfSize, 0 , _gridSettings.CellSize, 0);
     }
 
     public void UpdateWave()
@@ -92,6 +92,6 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     {
         _fieldEffect.transform.position += property.Position;
         _fieldShape.scale += property.Scale;
-        _cameras.AddValue(_cameras.Gameplay, 0.2f, property.Position);
+        _cameras.AddValue(_cameras.Gameplay, 0.2f, -property.Position);
     }
 }

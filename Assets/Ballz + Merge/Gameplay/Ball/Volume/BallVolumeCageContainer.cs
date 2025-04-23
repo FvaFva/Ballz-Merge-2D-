@@ -29,8 +29,11 @@ public class BallVolumeCageContainer : MonoBehaviour
 
     public void Disable()
     {
-        _audio.Play(AudioEffectsTypes.Hit);
-        _disabledElements.SetActive(false);
+        if (_disabledElements.activeSelf)
+        {
+            _audio.Play(AudioEffectsTypes.Hit);
+            _disabledElements.SetActive(false);
+        }
     }
 
     public void Put(BallVolumeCageElement cell, Vector2 position, Vector2 tupPoint)
@@ -54,6 +57,9 @@ public class BallVolumeCageContainer : MonoBehaviour
 
     public void Swap(BallVolumeCageElement finisher)
     {
+        if (_starter == default)
+            return;
+
         var startValue = _starter.Current;
         _starter.Apply(finisher.Current);
         finisher.Apply(startValue);

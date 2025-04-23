@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a20a12498efdbe4baa065b0435a78d5, type: 3}
   m_Name: Field expander settings
   m_EditorClassIdentifier: 
-  _waveCount: 5
+  _waveCount: 1
   _count: 0
   _isLoop: 1

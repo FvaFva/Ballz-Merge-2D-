@@ -5,9 +5,9 @@ public struct PositionScaleProperty
     public Vector3 Position;
     public Vector3 Scale;
 
-    public PositionScaleProperty(Vector2 position, Vector2 scale)
+    public PositionScaleProperty(float positionX, float positionY, float scaleX, float scaleY)
     {
-        Position = position;
-        Scale = scale;
+        Position = new Vector3(positionX, positionY);
+        Scale = new Vector3(scaleX, scaleY);
     }
 }

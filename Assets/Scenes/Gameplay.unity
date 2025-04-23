@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &136282010 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8774381563151510597, guid: 45998badc5f6ef04b917032a3f27eb41, type: 3}
+  m_PrefabInstance: {fileID: 1018109364}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99ede625562d253418ef62ece43974b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &276649839 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 521480369056456209, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
@@ -128,6 +139,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dacd8899386491d4094bbb77548928a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &355006614 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8544411800531090215, guid: 45998badc5f6ef04b917032a3f27eb41, type: 3}
+  m_PrefabInstance: {fileID: 1018109364}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a91adf6e337cc54bae14bc2b87e4f19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &658145069 stripped
@@ -675,6 +697,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3370430089852694757, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
+      propertyPath: _puck.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3370430089852694757, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
       propertyPath: '_puck.Array.data[0]'
       value: 
       objectReference: {fileID: 1018109368}
@@ -682,6 +708,10 @@ PrefabInstance:
       propertyPath: '_puck.Array.data[1]'
       value: 
       objectReference: {fileID: 658145069}
+    - target: {fileID: 3370430089852694757, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
+      propertyPath: '_puck.Array.data[2]'
+      value: 
+      objectReference: {fileID: 136282010}
     - target: {fileID: 3922216773665705815, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
       propertyPath: _mainUI
       value: 
@@ -692,7 +722,7 @@ PrefabInstance:
       objectReference: {fileID: 3986105047705689018}
     - target: {fileID: 3922216773665705815, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
       propertyPath: _components.Array.size
-      value: 19
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3922216773665705815, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
       propertyPath: '_components.Array.data[0]'
@@ -750,6 +780,10 @@ PrefabInstance:
       propertyPath: '_components.Array.data[18]'
       value: 
       objectReference: {fileID: 1583720702}
+    - target: {fileID: 3922216773665705815, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
+      propertyPath: '_components.Array.data[19]'
+      value: 
+      objectReference: {fileID: 355006614}
     - target: {fileID: 4391648840110534136, guid: 62a0eb2d10922d043aa2d8da87376c13, type: 3}
       propertyPath: _achievementContainer
       value: 
