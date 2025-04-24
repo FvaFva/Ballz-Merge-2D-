@@ -24,6 +24,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     private List<ILevelStarter> _starters = new List<ILevelStarter>();
     private List<IWaveUpdater> _wavers = new List<IWaveUpdater>();
     private List<IDependentScreenOrientation> _orientators = new List<IDependentScreenOrientation>();
+    private List<ILevelSaver> _savers = new List<ILevelSaver>();
     private Action<SceneExitData> _sceneCallBack;
     private SceneExitData _exitData;
     private ConductorBetweenWaves _conductor;
@@ -32,10 +33,6 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     [Inject] private UserQuestioner _userQuestioner;
     [Inject] private Ball _ball;
     [Inject] private UIRootView _rootUI;
-
-    public event Action SaveGame;
-    public event Action LoadSave;
-    public event Action DropSave;
 
     public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
     public IEnumerable<IDependentScreenOrientation> Orientators => _orientators;
@@ -59,6 +56,9 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
             if (cyclical is IDependentScreenOrientation orientator)
                 _orientators.Add(orientator);
+
+            if (cyclical is ILevelSaver saver)
+                _savers.Add(saver);
 
             if (cyclical is Dropper dropper)
                 _conductor = new ConductorBetweenWaves(_ball.GetBallComponent<BallAwaitBreaker>(), dropper, _blocksBus);
@@ -88,7 +88,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         IsAvailable = false;
     }
 
-    public void Init(Action<SceneExitData> callback, IDictionary<string, float> loadData)
+    public void Init(Action<SceneExitData> callback, IDictionary<string, float> loadData = null)
     {
         if (_conductor == null)
         {
@@ -99,14 +99,13 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
         if(loadData != null)
         {
-            foreach (var saver in _savers)
+            foreach (ILevelSaver saver in _savers)
                 saver.Load(loadData);
         }
 
         _sceneCallBack = callback;
         _mainUI.Init();
         _rootUI.AttachSceneUI(_mainUI, _operator.UI);
-        LoadSave?.Invoke();
         RestartLevel();
     }
 
@@ -134,7 +133,6 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         foreach (ILevelFinisher finisher in _finishers)
             finisher.FinishLevel();
 
-        DropSave?.Invoke();
         StartQuest(RestartQuestName, "Want one more game?");
     }
 
@@ -167,7 +165,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
             if (_exitData.TargetScene == ScenesNames.GAMEPLAY)
             {
-                DropSave?.Invoke();
+                _exitData.ConnectSavers(null);
                 _sceneCallBack.Invoke(_exitData);
             }
             else
@@ -180,7 +178,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             _userQuestioner.Answer -= OnUserAnswer;
 
             if (answer.IsPositiveAnswer)
-                _exitData.ConnectSavers(null);
+                _exitData.ConnectSavers(_savers);
 
             _sceneCallBack.Invoke(_exitData);
         }

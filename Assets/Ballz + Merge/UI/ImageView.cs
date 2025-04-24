@@ -45,6 +45,11 @@ public class ImageView : MonoBehaviour
             ).SetEase(Ease.InOutQuad);
     }
 
+    public void SetShadow(float value)
+    {
+        _shadow.effectColor = new Color(_shadowColor.r, _shadowColor.g, _shadowColor.b, value);
+    }
+
     private void StopAllAnimations()
     {
         DOTween.Kill(_transform);

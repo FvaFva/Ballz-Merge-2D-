@@ -10,21 +10,25 @@ public class ImageAnimator : MonoBehaviour
     private const float EndShadow = 1f;
 
     [SerializeField] private ImageView _imageView;
+    [SerializeField] private ImageView _imageScale;
 
     public void DoDefault()
     {
         _imageView.SetSize(StartScale, Duration);
         _imageView.SetShadow(StartShadow, Duration);
+        _imageScale.SetSize(StartScale, Duration);
     }
 
     public void SetDefault()
     {
         _imageView.SetSize(new Vector2(StartScale, StartScale));
+        _imageView.SetShadow(StartShadow);
+        _imageScale.SetSize(new Vector2(StartScale, StartScale));
     }
 
     public void Highlight()
     {
-        _imageView.SetSize(HighlightValue, Duration);
+        _imageScale.SetSize(HighlightValue, Duration);
         _imageView.SetShadow(EndShadow, Duration);
     }
 

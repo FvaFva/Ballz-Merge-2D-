@@ -1,10 +1,9 @@
 using Mono.Data.Sqlite;
+using System;
 using System.Collections.Generic;
-using Unity.Services.CloudSave.Models;
 
 public class GameSavesStorage
 {
-    private const string TemporaryGameSavesTable = "TemporaryGameSaves";
     private const string GameSavesTable = "GameSaves";
     private const string Key = "Key";
     private const string Value = "Value";
@@ -25,7 +24,7 @@ public class GameSavesStorage
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $@"CREATE TABLE IF NOT EXISTS {TemporaryGameSavesTable}
+                command.CommandText = $@"CREATE TABLE IF NOT EXISTS {GameSavesTable}
                                             ({Key} TEXT PRIMARY KEY,
                                             {Value} REAL)";
 
@@ -59,7 +58,8 @@ public class GameSavesStorage
 
     public IDictionary<string, float> Get()
     {
-        float outputValue = 0;
+        Dictionary<string, float> data = new Dictionary<string, float>();
+
         using (var connection = new SqliteConnection(_dbPath))
         {
             connection.Open();
@@ -69,14 +69,14 @@ public class GameSavesStorage
                 command.CommandText = $"SELECT * FROM {GameSavesTable}";
                 using (var reader = command.ExecuteReader())
                 {
-                    if (reader.Read())
-                        outputValue = reader.GetFloat(0);
+                    while (reader.Read())
+                        data.Add(reader[Key].ToString(), (float)reader[Value]);
                 }
             }
 
             connection.Close();
         }
 
-        return outputValue;
+        return data;
     }
 }

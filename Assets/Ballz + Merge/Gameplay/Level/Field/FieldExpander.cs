@@ -62,12 +62,12 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     public void StartLevel()
     {
         _ballWaveVolume.Bag.Added += OnAbilityAdd;
-        SetDefault();
     }
 
     public void FinishLevel()
     {
         _ballWaveVolume.Bag.Added -= OnAbilityAdd;
+        SetDefault();
     }
 
     private void OnAbilityAdd(BallVolumesBagCell volume)
@@ -122,6 +122,6 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     public void Load(IDictionary<string, float> data)
     {
-        _extraColumns = (int)data[FieldEffectPositionX];
+        _extraColumns = Mathf.RoundToInt(data[FieldEffectPositionX]);
     }
 }

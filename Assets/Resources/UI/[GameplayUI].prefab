@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4129914122864531612}
   - component: {fileID: 8774381563151510597}
+  - component: {fileID: 1282259737850097110}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -59,6 +60,20 @@ MonoBehaviour:
   _isUseAspectForMainAxis: 1
   _isVertical: 0
   _alignment: 0
+--- !u!114 &1282259737850097110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45434701967549550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 0
 --- !u!1 &119092796677848157
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +217,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3298626994855174906, guid: 419b90540b692494ba5cba643389e364, type: 3}
+  m_Sprite: {fileID: -1955448553306655712, guid: 87e90e4b34d903f4bb8eb78b77fb3c61, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -238,7 +253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0}
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0}
   m_EffectDistance: {x: -10, y: 10}
   m_UseGraphicAlpha: 1
 --- !u!114 &8271556871693318830
@@ -267,6 +282,7 @@ GameObject:
   - component: {fileID: 6565319453388972109}
   - component: {fileID: 6395786100803945465}
   - component: {fileID: 3018845975050463701}
+  - component: {fileID: 5042968832610558270}
   m_Layer: 5
   m_Name: CancelAIMSystem
   m_TagString: Untagged
@@ -349,6 +365,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _imageView: {fileID: 7483216894139365809}
+  _imageScale: {fileID: 5042968832610558270}
+--- !u!114 &5042968832610558270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246041842404825902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68d5f5deb88845347b5f353adcc02ca1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shadow: {fileID: 6314729933427884282}
 --- !u!1 &253649650920653217
 GameObject:
   m_ObjectHideFlags: 0
@@ -742,8 +772,8 @@ MonoBehaviour:
   _source: {fileID: 0}
   _viewPort: {fileID: 4129914122864531612}
   _viewPrefab: {fileID: 8566410916225177917, guid: cd3498f222591864783744c2a225494b, type: 3}
-  _fitter: {fileID: 0}
-  _scroll: {fileID: 0}
+  _fitter: {fileID: 1282259737850097110}
+  _scroll: {fileID: 4869943421547001871}
 --- !u!1 &700609269911350032
 GameObject:
   m_ObjectHideFlags: 0
@@ -1400,6 +1430,7 @@ GameObject:
   - component: {fileID: 5908267531940523194}
   - component: {fileID: 3957915038968061141}
   - component: {fileID: 4855967259313208860}
+  - component: {fileID: 338679045065080379}
   m_Layer: 5
   m_Name: AIMSystem
   m_TagString: Untagged
@@ -1525,6 +1556,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _imageView: {fileID: 8271556871693318830}
+  _imageScale: {fileID: 338679045065080379}
+--- !u!114 &338679045065080379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4042120692301706061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68d5f5deb88845347b5f353adcc02ca1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shadow: {fileID: 947699911504022005}
 --- !u!1 &4108960509970860820
 GameObject:
   m_ObjectHideFlags: 0
@@ -3898,14 +3943,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.43137255}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1955448553306655712, guid: 87e90e4b34d903f4bb8eb78b77fb3c61, type: 3}
+  m_Sprite: {fileID: -3306040383903930270, guid: 77577b5fa2bb7b74ea85e245e2d09741, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

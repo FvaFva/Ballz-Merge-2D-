@@ -12,10 +12,10 @@ public class GameSaves
 
     public void SaveGame(IEnumerable<ILevelSaver> savers)
     {
-        var data = new Dictionary<string, float>();
+        Dictionary<string, float> data = new Dictionary<string, float>();
 
-        foreach (var saver in savers) 
-            foreach (var save in saver.GetSavingData())
+        foreach (ILevelSaver saver in savers) 
+            foreach (KeyValuePair<string, float> save in saver.GetSavingData())
                 data.Add(save.Key, save.Value);
 
         _db.Save(data);
