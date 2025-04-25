@@ -165,7 +165,6 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
             if (_exitData.TargetScene == ScenesNames.GAMEPLAY)
             {
-                _exitData.ConnectSavers(null);
                 _sceneCallBack.Invoke(_exitData);
             }
             else

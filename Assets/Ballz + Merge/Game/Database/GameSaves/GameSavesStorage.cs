@@ -70,7 +70,7 @@ public class GameSavesStorage
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
-                        data.Add(reader[Key].ToString(), (float)reader[Value]);
+                        data.Add(reader[Key].ToString(), Convert.ToSingle(reader[Value]));
                 }
             }
 

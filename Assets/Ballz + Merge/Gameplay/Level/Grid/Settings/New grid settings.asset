@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cellSize: 2.45
   _cellSpacing: 0
-  _startGridSize: {x: 5, y: 7}
+  _gridSize: {x: 5, y: 7}
   _viewPosition: {x: -4.929, y: -6.25}
   _moveTime: 0.3
