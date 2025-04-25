@@ -864,6 +864,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[GAMEPLAY]'
       objectReference: {fileID: 0}
+    - target: {fileID: 4874112928847685563, guid: ec052aca0755f1d449cec9001e2bc18d, type: 3}
+      propertyPath: _portraitAvailableSpacePrecent.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4874112928847685563, guid: ec052aca0755f1d449cec9001e2bc18d, type: 3}
+      propertyPath: _portraitAvailableSpacePrecent.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4874112928847685563, guid: ec052aca0755f1d449cec9001e2bc18d, type: 3}
+      propertyPath: _landscapeAvailableSpacePrecent.x
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4874112928847685563, guid: ec052aca0755f1d449cec9001e2bc18d, type: 3}
+      propertyPath: _landscapeAvailableSpacePrecent.y
+      value: 0.85
+      objectReference: {fileID: 0}
     - target: {fileID: 5909208586276750604, guid: ec052aca0755f1d449cec9001e2bc18d, type: 3}
       propertyPath: _predictor
       value: 

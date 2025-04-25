@@ -6,6 +6,8 @@ using Zenject;
 
 public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevelFinisher
 {
+    private const float FrameSize = 3.8f;
+
     [SerializeField] private PlayZoneBoards _boards;
     [SerializeField] private FieldExpanderSettings _fieldExpanderSettings;
     [SerializeField] private ParticleSystem _fieldEffect;
@@ -21,6 +23,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     private int _extraRows;
     private int _currentWave;
     private float _halfSize;
+    private float _sizeWithSpace;
 
     private ParticleSystem.ShapeModule _fieldShape;
     private Vector2 _fieldPosition;
@@ -34,6 +37,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _fieldPosition = _fieldEffect.transform.position;
         _fieldScale = _fieldEffect.shape.scale;
         _halfSize = _gridSettings.CellSize / 2;
+        _sizeWithSpace = _gridSettings.CellSize + _gridSettings.CellSpacing;
         _propertyRow = new PositionScaleProperty(0, _halfSize, 0, _gridSettings.CellSize);
         _propertyColumn = new PositionScaleProperty(_halfSize, 0 , _gridSettings.CellSize, 0);
     }
@@ -56,6 +60,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _count = _fieldExpanderSettings.Count;
         _extraColumns = _gridSettings.Size.x;
         _extraRows = _gridSettings.Size.y;
+        _cameras.SetGameplayBoardSize(BoardSize());
     }
 
     public void FinishLevel()
@@ -92,6 +97,12 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     {
         _fieldEffect.transform.position += property.Position;
         _fieldShape.scale += property.Scale;
-        _cameras.AddValue(_cameras.Gameplay, 0.2f, -property.Position);
+        _cameras.AddValue(_cameras.Gameplay, position : property.Position);
+        _cameras.SetGameplayBoardSize(BoardSize());
+    }
+
+    private Vector2 BoardSize()
+    {
+        return new Vector2(_sizeWithSpace * _extraColumns + FrameSize, _sizeWithSpace * _extraRows + FrameSize);
     }
 }
