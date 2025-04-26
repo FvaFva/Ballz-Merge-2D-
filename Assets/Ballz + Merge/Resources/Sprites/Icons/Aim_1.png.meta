@@ -142,12 +142,12 @@ TextureImporter:
       name: Aim_1_0
       rect:
         serializedVersion: 2
-        x: 79
-        y: 57
-        width: 921
-        height: 937
+        x: 83
+        y: 82
+        width: 857
+        height: 861
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -162,14 +162,15 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: d5487230086eb7b4694663a6692016a5
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Aim_1_0: -3306040383903930270
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

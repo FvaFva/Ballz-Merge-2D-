@@ -1,8 +1,9 @@
 using DG.Tweening;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
+public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler, IDisposable
 {
     private const float Duration = 0.125f;
     private const float PressedStateScale = 0.9f;
@@ -22,19 +23,24 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void Start()
     {
+        _buttonView.Initialized += () => _buttonView.SetDefault();
         _isPointerDown = false;
         _isPointerEnter = false;
     }
 
     private void OnEnable()
     {
-        _buttonView.Initialized += () => _buttonView.SetDefault();
         _transform.localScale = Vector3.one * StartScale;
     }
 
     private void OnDisable()
     {
         DOTween.Kill(_transform);
+    }
+
+    public void Dispose()
+    {
+        _buttonView.Initialized -= () => _buttonView.SetDefault();
     }
 
     public void OnPointerDown(PointerEventData eventData)

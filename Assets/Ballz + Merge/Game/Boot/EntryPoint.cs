@@ -106,6 +106,12 @@ namespace BallzMerge.Root
 
         private void SceneExitCallBack(SceneExitData exitData)
         {
+            if (exitData.Savers != null)
+                _primary.Saver.SaveGame(exitData.Savers);
+
+            if (exitData.IsLoad)
+                _sceneLoader.AddLoadData(_primary.Saver.Load());
+
             if (exitData.IsGameQuit)
                 QuitGame();
             else if (string.Empty.Equals(exitData.TargetScene) == false)

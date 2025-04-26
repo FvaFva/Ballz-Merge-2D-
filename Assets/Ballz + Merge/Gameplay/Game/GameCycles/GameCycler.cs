@@ -9,10 +9,11 @@ using System.Linq;
 using UnityEngine;
 using Zenject;
 
-public class GameCycler: MonoBehaviour, ISceneEnterPoint
+public class GameCycler : MonoBehaviour, ISceneEnterPoint
 {
     private const string QuitQuestName = "Quit";
     private const string RestartQuestName = "Restart";
+    private const string SaveQuestName = "Save";
 
     [SerializeField] private UIView _mainUI;
     [SerializeField] private CamerasOperator _operator;
@@ -23,20 +24,19 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
     private List<ILevelStarter> _starters = new List<ILevelStarter>();
     private List<IWaveUpdater> _wavers = new List<IWaveUpdater>();
     private List<IDependentScreenOrientation> _orientators = new List<IDependentScreenOrientation>();
+    private List<ILevelSaver> _savers = new List<ILevelSaver>();
     private Action<SceneExitData> _sceneCallBack;
-    private SceneExitData _quiteRequireData;
+    private SceneExitData _exitData;
     private ConductorBetweenWaves _conductor;
 
     [Inject] private BlocksBinder _blocksBus;
     [Inject] private UserQuestioner _userQuestioner;
     [Inject] private Ball _ball;
     [Inject] private UIRootView _rootUI;
-    [Inject] private GridSettings _gridSettings;
 
     public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
     public IEnumerable<IDependentScreenOrientation> Orientators => _orientators;
-
-    public bool IsAvailable {  get; private set; }
+    public bool IsAvailable { get; private set; }
 
     private void Awake()
     {
@@ -57,6 +57,9 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
             if (cyclical is IDependentScreenOrientation orientator)
                 _orientators.Add(orientator);
 
+            if (cyclical is ILevelSaver saver)
+                _savers.Add(saver);
+
             if (cyclical is Dropper dropper)
                 _conductor = new ConductorBetweenWaves(_ball.GetBallComponent<BallAwaitBreaker>(), dropper, _blocksBus);
         }
@@ -69,7 +72,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         _ball.LeftGame += OnBallLeftGame;
         _conductor.GameFinished += OnGameFinished;
         _conductor.WaveLoaded += OnWaveLoaded;
-        _rootUI.EscapeMenu.QuitRequired += OnMenuQuitRequire;
+        _rootUI.EscapeMenu.QuitRequired += OnQuitRequired;
     }
 
     private void OnDisable()
@@ -77,7 +80,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         _ball.LeftGame -= OnBallLeftGame;
         _conductor.GameFinished -= OnGameFinished;
         _conductor.WaveLoaded -= OnWaveLoaded;
-        _rootUI.EscapeMenu.QuitRequired -= OnMenuQuitRequire;
+        _rootUI.EscapeMenu.QuitRequired -= OnQuitRequired;
     }
 
     private void OnDestroy()
@@ -85,7 +88,7 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         IsAvailable = false;
     }
 
-    public void Init(Action<SceneExitData> callback)
+    public void Init(Action<SceneExitData> callback, IDictionary<string, float> loadData = null)
     {
         if (_conductor == null)
         {
@@ -98,6 +101,12 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         _mainUI.Init();
         _rootUI.AttachSceneUI(_mainUI, _operator.UI);
         RestartLevel();
+
+        if (loadData != null)
+        {
+            foreach (ILevelSaver saver in _savers)
+                saver.Load(loadData);
+        }
     }
 
     private void OnBallLeftGame()
@@ -107,8 +116,6 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
 
     private void RestartLevel()
     {
-        _gridSettings.ReloadSize();
-
         foreach (ILevelStarter starter in _starters)
             starter.StartLevel();
 
@@ -129,9 +136,9 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
         StartQuest(RestartQuestName, "Want one more game?");
     }
 
-    private void OnMenuQuitRequire(SceneExitData exitData)
+    private void OnQuitRequired(SceneExitData exitData)
     {
-        _quiteRequireData = exitData;
+        _exitData = exitData;
         StartQuest(QuitQuestName, "Really left dat the best run?");
     }
 
@@ -152,10 +159,27 @@ public class GameCycler: MonoBehaviour, ISceneEnterPoint
             else
                 _sceneCallBack.Invoke(new SceneExitData(ScenesNames.MAINMENU));
         }
-        else if (answer is {Name: QuitQuestName, IsPositiveAnswer: true})
+        else if (answer is { Name: QuitQuestName, IsPositiveAnswer: true })
         {
             _userQuestioner.Answer -= OnUserAnswer;
-            _sceneCallBack.Invoke(_quiteRequireData);
+
+            if (_exitData.TargetScene == ScenesNames.GAMEPLAY)
+            {
+                _sceneCallBack.Invoke(_exitData);
+            }
+            else
+            {
+                StartQuest(SaveQuestName, "Do you want yo save your progress?");
+            }
+        }
+        else if (answer.Name == SaveQuestName)
+        {
+            _userQuestioner.Answer -= OnUserAnswer;
+
+            if (answer.IsPositiveAnswer)
+                _exitData.ConnectSavers(_savers);
+
+            _sceneCallBack.Invoke(_exitData);
         }
     }
 }

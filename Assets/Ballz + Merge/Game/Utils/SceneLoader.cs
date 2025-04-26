@@ -2,6 +2,7 @@ using BallzMerge.Root.Settings;
 using BallzMerge.ScreenOrientations;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -14,6 +15,8 @@ namespace BallzMerge.Root
         private const float SecondsCheckTime = 0.05f;
 
         [Inject] private TargetSceneEntryPointContainer _targetSceneEntryPoint;
+
+        private Dictionary<string, float> _loadData;
 
         private readonly GameSettings _settings;
         private readonly WaitForSeconds _checkTime;
@@ -29,6 +32,11 @@ namespace BallzMerge.Root
             _settings = settings;
             _orientationObserver = orientationObserver;
             ProjectContext.Instance.Container.Inject(this);
+        }
+
+        public void AddLoadData(IDictionary<string, float> loadData)
+        {
+            _loadData = new Dictionary<string, float>(loadData);
         }
 
         public IEnumerator LoadScene(string name)
@@ -84,10 +92,11 @@ namespace BallzMerge.Root
             foreach (IDependentScreenOrientation orientator in _targetSceneEntryPoint.Current.Orientators)
                 _orientationObserver.CheckInSceneElements(orientator);
 
-            _targetSceneEntryPoint.Current.Init(_sceneExit);
+            _targetSceneEntryPoint.Current.Init(_sceneExit, _loadData);
             _loadView.MoveProgress(1, 1);
             yield return null;
             _loadView.Hide();
+            _loadData = null;
         }
     }
 }

@@ -30,12 +30,12 @@ namespace BallzMerge.Achievement
 
         public void AddPoints(AchievementsTypes internalKey, int points)
         {
-            _db.Achievement.AddPoints(internalKey, points);
+            _db.Achievements.AddPoints(internalKey, points);
         }
 
         public void AddSteps(AchievementsTypes internalKey, AchievementPointsStep data)
         {
-            if (_db.Achievement.TryWrite(internalKey, data))
+            if (_db.Achievements.TryWrite(internalKey, data))
             {
                 if (_isUsingGoogle)
                     Debug.Log("Google got achievement");
@@ -55,7 +55,7 @@ namespace BallzMerge.Achievement
 
         public IDictionary<AchievementSettings, AchievementPointsStep> GetSettings() =>
             _settings
-            .GroupJoin(_db.Achievement.GetAll(), d1 => d1.ID.Internal, d2 => d2.Key, (d1, d2) => new { settings = d1, pointStep = d2.FirstOrDefault().Value })
+            .GroupJoin(_db.Achievements.GetAll(), d1 => d1.ID.Internal, d2 => d2.Key, (d1, d2) => new { settings = d1, pointStep = d2.FirstOrDefault().Value })
             .ToDictionary(x=> x.settings, x=>x.pointStep);
         
     }
