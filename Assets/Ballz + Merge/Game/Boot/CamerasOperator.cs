@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BallzMerge.Gameplay
 {
-    public class CamerasOperator : CyclicBehavior, IDependentScreenOrientation, IInitializable, ILevelStarter
+    public class CamerasOperator : CyclicBehavior, IDependentScreenOrientation, IInitializable
     {
         private const float LandscapeSize = 12f;
         private const float PortraitSize = 20f;
@@ -52,7 +52,7 @@ namespace BallzMerge.Gameplay
             camera.transform.position = Position(camera, _values[camera].Position);
         }
 
-        public void StartLevel()
+        public void SetDefault()
         {
             foreach (var item in _values.Keys.ToList())
             {

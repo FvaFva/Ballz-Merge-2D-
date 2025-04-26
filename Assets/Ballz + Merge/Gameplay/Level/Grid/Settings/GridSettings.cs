@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,15 +20,9 @@ namespace BallzMerge.Gameplay.Level
         public float CellSize => _cellSize;
         public Vector2Int Size => _gridSize + _additionalGridSize;
         public Vector2 ViewPosition => _viewPosition;
-        public float CellSpacing => _cellSpacing;
         public int FirstRowIndex => Size.y - 1;
         public int LastRowIndex => 0;
         public float MoveTime => _moveTime;
-
-        public void ReloadSize()
-        {
-            _additionalGridSize = Vector2Int.zero;
-        }
 
         public void AddSize(Vector2Int additionalSize)
         {
