@@ -8,7 +8,8 @@ namespace BallzMerge.Gameplay
     {
         private const float LandscapeSize = 12f;
         private const float PortraitSize = 20f;
-        private const float LandscapeXDelta = 1.4f;
+        private const float LandscapeXDelta = 1.2f;
+        private const float LandscapeYDelta = 0.7f;
 
         [SerializeField] private Vector2 _portraitAvailableSpacePrecent;
         [SerializeField] private Vector2 _landscapeAvailableSpacePrecent;
@@ -71,7 +72,7 @@ namespace BallzMerge.Gameplay
             }
             else
             {
-                _uIDelta = new Vector2(LandscapeXDelta, 0);
+                _uIDelta = new Vector2(LandscapeXDelta, LandscapeYDelta);
                 _currentSize = LandscapeSize;
                 _currentAvailableSpacePrecent = _landscapeAvailableSpacePrecent;
                 UpdateGameplaySize();
