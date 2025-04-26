@@ -97,16 +97,16 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             return;
         }
 
-        if(loadData != null)
-        {
-            foreach (ILevelSaver saver in _savers)
-                saver.Load(loadData);
-        }
-
         _sceneCallBack = callback;
         _mainUI.Init();
         _rootUI.AttachSceneUI(_mainUI, _operator.UI);
         RestartLevel();
+
+        if (loadData != null)
+        {
+            foreach (ILevelSaver saver in _savers)
+                saver.Load(loadData);
+        }
     }
 
     private void OnBallLeftGame()
