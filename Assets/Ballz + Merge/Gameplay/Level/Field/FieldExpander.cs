@@ -1,7 +1,6 @@
 using BallzMerge.Gameplay;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -9,12 +8,7 @@ using Zenject;
 public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevelFinisher, ILevelSaver
 {
     private const string FieldEffectPositionX = "FieldEffectPositionX";
-    private const string FieldEffectPositionY = "FieldEffectPositionY";
-    private const string FieldEffectScaleX = "FieldEffectScaleX";
-    private const string FieldEffectScaleY = "FieldEffectScaleY";
-    private const string CameraOrthographicSize = "CameraOrthographicSize";
-    private const string CameraPositionX = "CameraPositionX";
-    private const string CameraPositionY = "CameraPositionY";
+    private const float FrameSize = 3.8f;
 
     [SerializeField] private PlayZoneBoards _boards;
     [SerializeField] private FieldExpanderSettings _fieldExpanderSettings;
@@ -31,12 +25,11 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     private int _extraRows;
     private int _currentWave;
     private float _halfSize;
+    private float _sizeWithSpace;
 
     private ParticleSystem.ShapeModule _fieldShape;
     private Vector2 _fieldPosition;
     private Vector2 _fieldScale;
-    private float _startCameraOrthographicSize;
-    private Vector2 _startCameraPosition;
     private PositionScaleProperty _propertyColumn;
     private PositionScaleProperty _propertyRow;
 
@@ -46,8 +39,9 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
         _fieldPosition = _fieldEffect.transform.position;
         _fieldScale = _fieldEffect.shape.scale;
         _halfSize = _gridSettings.CellSize / 2;
-        _propertyRow = new PositionScaleProperty(new Vector2(0, _halfSize), new Vector2(0, _gridSettings.CellSize));
-        _propertyColumn = new PositionScaleProperty(new Vector2(_halfSize, 0), new Vector2(_gridSettings.CellSize, 0));
+        _sizeWithSpace = _gridSettings.CellSize + _gridSettings.CellSpacing;
+        _propertyRow = new PositionScaleProperty(0, _halfSize, 0, _gridSettings.CellSize);
+        _propertyColumn = new PositionScaleProperty(_halfSize, 0 , _gridSettings.CellSize, 0);
     }
 
     public void UpdateWave()
@@ -61,11 +55,20 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     public void StartLevel()
     {
+        _gridSettings.ReloadSize();
         _ballWaveVolume.Bag.Added += OnAbilityAdd;
+        _fieldEffect.transform.position = _fieldPosition;
+        _fieldShape.scale = _fieldScale;
+        _currentWave = 0;
+        _count = _fieldExpanderSettings.Count;
+        _extraColumns = _gridSettings.Size.x;
+        _extraRows = _gridSettings.Size.y;
+        _cameras.SetGameplayBoardSize(BoardSize());
     }
 
     public void FinishLevel()
     {
+        _gridSettings.ReloadSize();
         _ballWaveVolume.Bag.Added -= OnAbilityAdd;
         SetDefault();
     }
@@ -98,7 +101,13 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     {
         _fieldEffect.transform.position += property.Position;
         _fieldShape.scale += property.Scale;
-        _cameras.AddValue(_cameras.Gameplay, 0.2f, property.Position);
+        _cameras.AddValue(_cameras.Gameplay, position : property.Position);
+        _cameras.SetGameplayBoardSize(BoardSize());
+    }
+
+    private Vector2 BoardSize()
+    {
+        return new Vector2(_sizeWithSpace * _extraColumns + FrameSize, _sizeWithSpace * _extraRows + FrameSize);
     }
 
     private void SetDefault()

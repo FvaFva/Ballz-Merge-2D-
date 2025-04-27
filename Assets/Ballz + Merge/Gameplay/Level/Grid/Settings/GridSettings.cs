@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +17,7 @@ namespace BallzMerge.Gameplay.Level
         private Vector2Int _additionalGridSize;
 
         public float CellSize => _cellSize;
+        public float CellSpacing => _cellSpacing;
         public Vector2Int Size => _gridSize + _additionalGridSize;
         public Vector2 ViewPosition => _viewPosition;
         public int FirstRowIndex => Size.y - 1;
@@ -40,5 +40,10 @@ namespace BallzMerge.Gameplay.Level
         }
 
         public bool IsOutside(Vector2Int point) => point.x < ZeroBoard || point.y > FirstRowIndex || point.x >= Size.x;
+
+        public void ReloadSize()
+        {
+            _additionalGridSize = Vector2Int.zero;
+        }
     }
 }

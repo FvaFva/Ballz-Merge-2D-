@@ -23,6 +23,7 @@ public class AdaptiveLayoutGroup : LayoutGroup
     private float _totalChildrenCrossSize;
 
     public RectTransform Transform { get; private set; }
+    public bool IsInverse => _isInversive;
 
     public AdaptiveLayoutGroup Init()
     {

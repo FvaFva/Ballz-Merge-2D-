@@ -59,7 +59,7 @@ namespace BallzMerge.Gameplay.Level
         private GridCell GetCell()
         {
             if (_cellsPool.TryDequeue(out GridCell cell) == false)
-                cell = Instantiate(_prefab, _cellParent); ;
+                cell = Instantiate(_prefab, _cellParent);
 
             return cell;
         }
