@@ -1,21 +1,14 @@
 using BallzMerge.Gameplay;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
 public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevelFinisher, ILevelSaver
 {
-    private const float FrameSize = 3.8f;
     private const string FieldEffectPositionX = "FieldEffectPositionX";
-    private const string FieldEffectPositionY = "FieldEffectPositionY";
-    private const string FieldEffectScaleX = "FieldEffectScaleX";
-    private const string FieldEffectScaleY = "FieldEffectScaleY";
-    private const string CameraOrthographicSize = "CameraOrthographicSize";
-    private const string CameraPositionX = "CameraPositionX";
-    private const string CameraPositionY = "CameraPositionY";
+    private const float FrameSize = 3.8f;
 
     [SerializeField] private PlayZoneBoards _boards;
     [SerializeField] private FieldExpanderSettings _fieldExpanderSettings;
@@ -37,8 +30,6 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
     private ParticleSystem.ShapeModule _fieldShape;
     private Vector2 _fieldPosition;
     private Vector2 _fieldScale;
-    private float _startCameraOrthographicSize;
-    private Vector2 _startCameraPosition;
     private PositionScaleProperty _propertyColumn;
     private PositionScaleProperty _propertyRow;
 
@@ -64,6 +55,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     public void StartLevel()
     {
+        _gridSettings.ReloadSize();
         _ballWaveVolume.Bag.Added += OnAbilityAdd;
         _fieldEffect.transform.position = _fieldPosition;
         _fieldShape.scale = _fieldScale;
@@ -76,6 +68,7 @@ public class FieldExpander : CyclicBehavior, IWaveUpdater, ILevelStarter, ILevel
 
     public void FinishLevel()
     {
+        _gridSettings.ReloadSize();
         _ballWaveVolume.Bag.Added -= OnAbilityAdd;
         SetDefault();
     }

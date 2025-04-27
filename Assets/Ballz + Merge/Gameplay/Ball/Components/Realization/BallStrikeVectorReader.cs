@@ -17,9 +17,11 @@ public class BallStrikeVectorReader : BallComponent
     [SerializeField] private ImageAnimator _cancelZoneAnimator;
 
     [Inject] private MainInputMap _userInput;
+    [Inject] private CamerasOperator _cameras;
 
     private Vector3 _vector;
     private Vector2 _touchPoint;
+    private Vector2 _inputCentre;
     private Vector2 _startStickAnchorPosition;
     private bool _isHighlightInputZone;
     private bool _isPressInputZone;
@@ -64,12 +66,13 @@ public class BallStrikeVectorReader : BallComponent
     private IEnumerator HandleEndOfFrame(Action action)
     {
         yield return new WaitForEndOfFrame();
-
         action.Invoke();
     }
 
     private void EndFrameShotStarted()
     {
+        var temp = _inputZone.TransformPoint(_inputZone.rect.center);
+        _inputCentre = RectTransformUtility.WorldToScreenPoint(_cameras.UI, temp);
         _touchPoint = _userInput.MainInput.StrikePosition.ReadValue<Vector2>();
 
         if (IsCursorIn(_touchPoint, _inputZone))
@@ -130,7 +133,7 @@ public class BallStrikeVectorReader : BallComponent
 
         if (direction.Equals(_vector) == false)
         {
-            _vector = direction - _touchPoint;
+            _vector = direction - _inputCentre;
             Changed?.Invoke(GetVector());
         }
 
@@ -150,24 +153,23 @@ public class BallStrikeVectorReader : BallComponent
 
     private void CheckGetOutFromCancelZone(InputAction.CallbackContext context)
     {
-        Vector2 position = context.ReadValue<Vector2>();
-        CheckCursorInZone(position, _cancelZone, ref _isHighlightCancelZone, false, ResetCancelZone);
+        CheckCursorInZone(context, _cancelZone, ref _isHighlightCancelZone, false, ResetCancelZone);
     }
 
     private void CheckGetEnterInInputZone(InputAction.CallbackContext context)
     {
-        Vector2 position = context.ReadValue<Vector2>();
-        CheckCursorInZone(position, _inputZone, ref _isHighlightInputZone, true, HighlightInputZone);
+        CheckCursorInZone(context, _inputZone, ref _isHighlightInputZone, true, HighlightInputZone);
     }
 
     private void CheckGetOutFromInputZone(InputAction.CallbackContext context)
     {
-        Vector2 position = context.ReadValue<Vector2>();
-        CheckCursorInZone(position, _inputZone, ref _isHighlightInputZone, false, ResetInputZone);
+        CheckCursorInZone(context, _inputZone, ref _isHighlightInputZone, false, ResetInputZone);
     }
 
-    private void CheckCursorInZone(Vector2 position, RectTransform zone, ref bool state, bool waitingState, Action action)
+    private void CheckCursorInZone(InputAction.CallbackContext context, RectTransform zone, ref bool state, bool waitingState, Action action)
     {
+        Vector2 position = context.ReadValue<Vector2>();
+
         if (IsCursorIn(position, zone) == waitingState)
         {
             if (state != waitingState)

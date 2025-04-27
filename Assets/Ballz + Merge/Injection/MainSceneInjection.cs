@@ -5,6 +5,7 @@ using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.Level;
 using BallzMerge.Root;
 using BallzMerge.Achievement;
+using BallzMerge.Gameplay;
 
 public class MainSceneInjection : MonoInstaller
 {
@@ -23,6 +24,7 @@ public class MainSceneInjection : MonoInstaller
     [SerializeField] private PlayerScore _score;
     [SerializeField] private GameAnimationSkipper _animationSkipper;
     [SerializeField] private AchievementSettingsGameBinder _achievementSource;
+    [SerializeField] private CamerasOperator _operator;
 
     [Inject] private TargetSceneEntryPointContainer _entryPointBinder;
 
@@ -33,7 +35,8 @@ public class MainSceneInjection : MonoInstaller
         Container.Bind<BlocksBinder>().FromInstance(_blocksBus).AsSingle().NonLazy();
         Container.Bind<BallWaveVolume>().FromInstance(_ballLevelVolume).AsSingle().NonLazy();
         Container.Bind<AchievementSettingsGameBinder>().FromInstance(_achievementSource).AsSingle().NonLazy();
- 
+        Container.Bind<CamerasOperator>().FromInstance(_operator).AsSingle().NonLazy();
+
         Container.Bind<BlocksInGame>().FromNew().AsSingle().NonLazy();
         Container.Bind<BlocksMover>().FromNew().AsSingle().NonLazy();
         Container.Bind<ISceneEnterPoint>().To<GameCycler>().FromInstance(_loader).AsSingle().NonLazy();

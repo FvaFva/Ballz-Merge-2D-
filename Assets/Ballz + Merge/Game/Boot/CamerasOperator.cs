@@ -8,11 +8,11 @@ namespace BallzMerge.Gameplay
     {
         private const float LandscapeSize = 12f;
         private const float PortraitSize = 20f;
-        private const float LandscapeXDelta = 1.2f;
-        private const float LandscapeYDelta = 0.7f;
 
         [SerializeField] private Vector2 _portraitAvailableSpacePrecent;
         [SerializeField] private Vector2 _landscapeAvailableSpacePrecent;
+        [SerializeField] private Vector2 _portraitOffset;
+        [SerializeField] private Vector2 _landscapeOffset;
         [SerializeField] private Camera _main;
         [SerializeField] private Camera _gameplay;
         [SerializeField] private Camera _effects;
@@ -22,9 +22,8 @@ namespace BallzMerge.Gameplay
         private Dictionary<Camera, Vector3> _startPositions;
         private float _currentSize;
         private Vector2 _currentAvailableSpacePrecent;
-        private float _aspect;
         private Vector2 _boardSize = Vector2.one;
-        private Vector3 _uIDelta;
+        private Vector3 _offset;
 
         public Camera Effects { get { return _effects; } }
         public Camera Gameplay {  get { return _gameplay; } }
@@ -35,7 +34,6 @@ namespace BallzMerge.Gameplay
             _values = new Dictionary<Camera, PositionScaleProperty>();
             _startPositions = new Dictionary<Camera, Vector3>();
             _currentSize = _currentSize == 0 ? LandscapeSize : _currentSize;
-            _aspect = _gameplay.aspect;
 
             TryAddCamera(_main);
             TryAddCamera(_gameplay);
@@ -63,16 +61,16 @@ namespace BallzMerge.Gameplay
 
         public void UpdateScreenOrientation(ScreenOrientation orientation)
         {
-            if (orientation == ScreenOrientation.Portrait)
+            if (orientation == ScreenOrientation.Portrait || orientation == ScreenOrientation.PortraitUpsideDown)
             {
                 _currentSize = PortraitSize;
                 _currentAvailableSpacePrecent = _portraitAvailableSpacePrecent;
-                _uIDelta = Vector2.zero;
+                _offset = _portraitOffset;
                 UpdateGameplaySize();
             }
             else
             {
-                _uIDelta = new Vector2(LandscapeXDelta, LandscapeYDelta);
+                _offset = _landscapeOffset;
                 _currentSize = LandscapeSize;
                 _currentAvailableSpacePrecent = _landscapeAvailableSpacePrecent;
                 UpdateGameplaySize();
@@ -106,12 +104,12 @@ namespace BallzMerge.Gameplay
         }
 
         private float OrthographicSize(float coefficient) => coefficient * _currentSize;
-        private Vector3 Position(Camera camera, Vector3 additional) => _startPositions[camera] + additional + _uIDelta;
+        private Vector3 Position(Camera camera, Vector3 additional) => _startPositions[camera] + additional + _offset;
 
         private void UpdateGameplaySize()
         {
             float height = _currentSize * 2f;
-            float width = height * _aspect;
+            float width = height * _gameplay.aspect;
             var availableSpace = Vector2.Scale(new Vector2(width, height), _currentAvailableSpacePrecent);
             float maxDelta = Mathf.Max(_boardSize.x / availableSpace.x, _boardSize.y / availableSpace.y);
             _gameplay.orthographicSize = OrthographicSize(maxDelta);
