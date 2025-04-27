@@ -18663,6 +18663,7 @@ MonoBehaviour:
   _score: {fileID: 4898098869132901201}
   _animationSkipper: {fileID: 3727757515357393128}
   _achievementSource: {fileID: 1473422073910594557}
+  _operator: {fileID: 8427693446239190018}
 --- !u!224 &4991371861274782459
 RectTransform:
   m_ObjectHideFlags: 0
@@ -37139,6 +37140,8 @@ MonoBehaviour:
   _initOrder: 0
   _portraitAvailableSpacePrecent: {x: 1, y: 0.7}
   _landscapeAvailableSpacePrecent: {x: 0.7, y: 0.85}
+  _portraitOffset: {x: 0, y: -1.2}
+  _landscapeOffset: {x: 1.2, y: 0.75}
   _main: {fileID: 5861595793454543064}
   _gameplay: {fileID: 6383732304970293113}
   _effects: {fileID: 3102068462393723306}
