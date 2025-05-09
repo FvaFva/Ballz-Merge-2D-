@@ -261,7 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: ce657a44faf8d444a9465f5582a15a79, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39607844}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -744,7 +744,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 1094842287}
   _pumper: {fileID: 1229472958}
-  _description: {fileID: 0}
+  _header: {fileID: 527691625}
 --- !u!114 &1229472960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -757,6 +757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 385be51e441c024419cd8b98459328bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _initOrder: 0
   _volumes: {fileID: 3895819656212432924}
   _volumesView: {fileID: 6180643790877347566}
   _cage: {fileID: 1941457512255070044}
@@ -981,7 +982,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
+  m_fontSize: 19.5
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7739,6 +7740,7 @@ MonoBehaviour:
   - {fileID: 452273683249452768}
   - {fileID: 6180643790877347566}
   - {fileID: 8544411800205043347}
+  - {fileID: 1229472960}
 --- !u!1 &2246057347856880590
 GameObject:
   m_ObjectHideFlags: 0
@@ -9316,7 +9318,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 5964920330214975851}
   _pumper: {fileID: 0}
-  _description: {fileID: 0}
+  _header: {fileID: 0}
 --- !u!1 &4367276759412440715
 GameObject:
   m_ObjectHideFlags: 0

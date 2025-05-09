@@ -55,14 +55,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _BlendAmount: 1
     - _ColorMask: 15
-    - _FlashDelay: 4
+    - _FlashDelay: 3.59
     - _IsMask: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _ShinyCycleTime: 5
-    - _ShinyRotate: -3.36
-    - _ShinyWaveSpeed: 3.36
+    - _ShinyCycleTime: 2
+    - _ShinyRotate: 2
+    - _ShinyWaveSpeed: 2.81
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -73,6 +74,6 @@ Material:
     m_Colors:
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ShinyColor: {r: 0.032796368, g: 0.41714415, b: 0.6320754, a: 1}
+    - _ShinyColor: {r: 0.18552427, g: 2.3597236, b: 3.5755584, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
