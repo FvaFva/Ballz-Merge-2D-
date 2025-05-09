@@ -1,0 +1,1328 @@
+fileFormatVersion: 2
+guid: b244b82d93385b94fa225cf4ebf39901
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2167391706712443831
+    second: "\u0421hip_0"
+  - first:
+      213: -5591051006661905077
+    second: "\u0421hip_1"
+  - first:
+      213: -6203663245915244676
+    second: "\u0421hip_2"
+  - first:
+      213: 8165472968564004900
+    second: "\u0421hip_3"
+  - first:
+      213: 6729762674789110261
+    second: "\u0421hip_4"
+  - first:
+      213: -6060723410846986224
+    second: "\u0421hip_5"
+  - first:
+      213: 84914656709434786
+    second: "\u0421hip_6"
+  - first:
+      213: -1707248083073773268
+    second: "\u0421hip_7"
+  - first:
+      213: 8919091237827961089
+    second: "\u0421hip_8"
+  - first:
+      213: -4987524758373381118
+    second: "\u0421hip_9"
+  - first:
+      213: -2134637987398320552
+    second: "\u0421hip_10"
+  - first:
+      213: -698553831880648256
+    second: "\u0421hip_11"
+  - first:
+      213: 615497991007806174
+    second: "\u0421hip_12"
+  - first:
+      213: -7510882564883056591
+    second: "\u0421hip_13"
+  - first:
+      213: -9127764012539426386
+    second: "\u0421hip_14"
+  - first:
+      213: -827615185356768884
+    second: "\u0421hip_15"
+  - first:
+      213: -4794747231344697372
+    second: "\u0421hip_16"
+  - first:
+      213: -1920358160418239750
+    second: "\u0421hip_17"
+  - first:
+      213: -7228568106452613029
+    second: "\u0421hip_18"
+  - first:
+      213: 5929059141838372874
+    second: "\u0421hip_19"
+  - first:
+      213: -766634270691250390
+    second: "\u0421hip_20"
+  - first:
+      213: -3307066155445076215
+    second: "\u0421hip_21"
+  - first:
+      213: 4907973737401169868
+    second: "\u0421hip_22"
+  - first:
+      213: -3138008251184206720
+    second: "\u0421hip_23"
+  - first:
+      213: -6808931603790068158
+    second: "\u0421hip_24"
+  - first:
+      213: -5062889027186812272
+    second: "\u0421hip_25"
+  - first:
+      213: 2298291544184356445
+    second: "\u0421hip_26"
+  - first:
+      213: -7056295439984927414
+    second: "\u0421hip_27"
+  - first:
+      213: -3883638331093965177
+    second: "\u0421hip_28"
+  - first:
+      213: 6799207680560152791
+    second: "\u0421hip_29"
+  - first:
+      213: 4648229853462875567
+    second: "\u0421hip_30"
+  - first:
+      213: 4498360561033567251
+    second: "\u0421hip_31"
+  - first:
+      213: -5485737868989077296
+    second: "\u0421hip_32"
+  - first:
+      213: -8453650372183382055
+    second: "\u0421hip_33"
+  - first:
+      213: -6523255418283684200
+    second: "\u0421hip_34"
+  - first:
+      213: 4812204292108026997
+    second: "\u0421hip_35"
+  - first:
+      213: -2752955071671975614
+    second: "\u0421hip_36"
+  - first:
+      213: 3495070751191748783
+    second: "\u0421hip_37"
+  - first:
+      213: 9012442942804411512
+    second: "\u0421hip_38"
+  - first:
+      213: 1697007846754438113
+    second: "\u0421hip_39"
+  - first:
+      213: -9049774879460951215
+    second: "\u0421hip_40"
+  - first:
+      213: -1441937735154151204
+    second: "\u0421hip_41"
+  - first:
+      213: 3099144083776564086
+    second: "\u0421hip_42"
+  - first:
+      213: 7542298435216303738
+    second: "\u0421hip_43"
+  - first:
+      213: -1010410664864261770
+    second: "\u0421hip_44"
+  - first:
+      213: 4686355509416805237
+    second: "\u0421hip_45"
+  - first:
+      213: -6986186071804212868
+    second: "\u0421hip_46"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "\u0421hip_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 825
+        width: 202
+        height: 199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bb09bf164f141e10800000000000000
+      internalID: 2167391706712443831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_1"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 972
+        width: 52
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b45b3da6bb89862b0800000000000000
+      internalID: -5591051006661905077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_2"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 790
+        width: 354
+        height: 211
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c773311752928e9a0800000000000000
+      internalID: -6203663245915244676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_3"
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 891
+        width: 233
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 428df420766915170800000000000000
+      internalID: 8165472968564004900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_4"
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 872
+        width: 204
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f1dc753f7be46d50800000000000000
+      internalID: 6729762674789110261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_5"
+      rect:
+        serializedVersion: 2
+        x: 795
+        y: 785
+        width: 229
+        height: 209
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 010529e3b2cf3eba0800000000000000
+      internalID: -6060723410846986224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_6"
+      rect:
+        serializedVersion: 2
+        x: 190
+        y: 786
+        width: 245
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2add36d2e6dad2100800000000000000
+      internalID: 84914656709434786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_7"
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 899
+        width: 205
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c21dbe0f9e2ae48e0800000000000000
+      internalID: -1707248083073773268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_8"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 709
+        width: 547
+        height: 165
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 101e806b93af6cb70800000000000000
+      internalID: 8919091237827961089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_9"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 651
+        width: 499
+        height: 172
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20c40b448a0c8cab0800000000000000
+      internalID: -4987524758373381118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_10"
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 679
+        width: 210
+        height: 156
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85e711d6f0e3062e0800000000000000
+      internalID: -2134637987398320552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_11"
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 719
+        width: 105
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c91442bdfc3e46f0800000000000000
+      internalID: -698553831880648256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_12"
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 777
+        width: 81
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed2acf96920ba8800800000000000000
+      internalID: 615497991007806174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_13"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 576
+        width: 624
+        height: 129
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13878720a1cf3c790800000000000000
+      internalID: -7510882564883056591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_14"
+      rect:
+        serializedVersion: 2
+        x: 441
+        y: 667
+        width: 128
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea94ef6ddfaa35180800000000000000
+      internalID: -9127764012539426386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_15"
+      rect:
+        serializedVersion: 2
+        x: 573
+        y: 690
+        width: 100
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c893712bf58b384f0800000000000000
+      internalID: -827615185356768884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_16"
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 593
+        width: 85
+        height: 176
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ef59e7fbc2a57db0800000000000000
+      internalID: -4794747231344697372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_17"
+      rect:
+        serializedVersion: 2
+        x: 803
+        y: 640
+        width: 221
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afa8fb67d648955e0800000000000000
+      internalID: -1920358160418239750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_18"
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 603
+        width: 153
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b588c241b97feab90800000000000000
+      internalID: -7228568106452613029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_19"
+      rect:
+        serializedVersion: 2
+        x: 881
+        y: 691
+        width: 143
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a000f8140ef384250800000000000000
+      internalID: 5929059141838372874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_20"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 545
+        width: 597
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2faece413e5c55f0800000000000000
+      internalID: -766634270691250390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_21"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 438
+        width: 753
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90fbafb6ad0fa12d0800000000000000
+      internalID: -3307066155445076215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_22"
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 592
+        width: 174
+        height: 87
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc73eb05c10ac1440800000000000000
+      internalID: 4907973737401169868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_23"
+      rect:
+        serializedVersion: 2
+        x: 859
+        y: 463
+        width: 165
+        height: 154
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08cabe51f1e8374d0800000000000000
+      internalID: -3138008251184206720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_24"
+      rect:
+        serializedVersion: 2
+        x: 885
+        y: 535
+        width: 139
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 246892818c0d181a0800000000000000
+      internalID: -6808931603790068158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_25"
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 433
+        width: 150
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09a9e4d01410db9b0800000000000000
+      internalID: -5062889027186812272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_26"
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 327
+        width: 515
+        height: 195
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5e74698bfb25ef10800000000000000
+      internalID: 2298291544184356445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_27"
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 401
+        width: 331
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4d5d75eea0031e90800000000000000
+      internalID: -7056295439984927414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_28"
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 393
+        width: 197
+        height: 77
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 786ad07a38b8a1ac0800000000000000
+      internalID: -3883638331093965177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_29"
+      rect:
+        serializedVersion: 2
+        x: 636
+        y: 274
+        width: 219
+        height: 210
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d045e99c53ab5e50800000000000000
+      internalID: 6799207680560152791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_30"
+      rect:
+        serializedVersion: 2
+        x: 928
+        y: 416
+        width: 96
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fad4502ac64d18040800000000000000
+      internalID: 4648229853462875567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_31"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 399
+        width: 69
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31c5800d8136d6e30800000000000000
+      internalID: 4498360561033567251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_32"
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 283
+        width: 178
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d86ffb097ebed3b0800000000000000
+      internalID: -5485737868989077296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_33"
+      rect:
+        serializedVersion: 2
+        x: 843
+        y: 253
+        width: 181
+        height: 165
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d729ae96c99eaa80800000000000000
+      internalID: -8453650372183382055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_34"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 39
+        width: 266
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89e0f0e32cdb875a0800000000000000
+      internalID: -6523255418283684200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_35"
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 48
+        width: 519
+        height: 339
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57485b9be4268c240800000000000000
+      internalID: 4812204292108026997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_36"
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 205
+        width: 33
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 241c166b2f98bc9d0800000000000000
+      internalID: -2752955071671975614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_37"
+      rect:
+        serializedVersion: 2
+        x: 1018
+        y: 239
+        width: 6
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa054ad945cf08030800000000000000
+      internalID: 3495070751191748783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_38"
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 116
+        width: 124
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87445544b11a21d70800000000000000
+      internalID: 9012442942804411512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_39"
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 64
+        width: 295
+        height: 129
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1eb49de35abfc8710800000000000000
+      internalID: 1697007846754438113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_40"
+      rect:
+        serializedVersion: 2
+        x: 571
+        y: 73
+        width: 103
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15bf974e1bdb86280800000000000000
+      internalID: -9049774879460951215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_41"
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 141
+        width: 61
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd0d7e305453dfbe0800000000000000
+      internalID: -1441937735154151204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_42"
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 0
+        width: 105
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67b614dcf1f520b20800000000000000
+      internalID: 3099144083776564086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_43"
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 46
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a766d0d4770aba860800000000000000
+      internalID: 7542298435216303738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_44"
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 34
+        width: 117
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 679df7b8adc4af1f0800000000000000
+      internalID: -1010410664864261770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_45"
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 0
+        width: 191
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 573cbf5a187490140800000000000000
+      internalID: 4686355509416805237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u0421hip_46"
+      rect:
+        serializedVersion: 2
+        x: 921
+        y: 0
+        width: 103
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c79045738c41c0f90800000000000000
+      internalID: -6986186071804212868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      "\u0421hip_0": 2167391706712443831
+      "\u0421hip_1": -5591051006661905077
+      "\u0421hip_10": -2134637987398320552
+      "\u0421hip_11": -698553831880648256
+      "\u0421hip_12": 615497991007806174
+      "\u0421hip_13": -7510882564883056591
+      "\u0421hip_14": -9127764012539426386
+      "\u0421hip_15": -827615185356768884
+      "\u0421hip_16": -4794747231344697372
+      "\u0421hip_17": -1920358160418239750
+      "\u0421hip_18": -7228568106452613029
+      "\u0421hip_19": 5929059141838372874
+      "\u0421hip_2": -6203663245915244676
+      "\u0421hip_20": -766634270691250390
+      "\u0421hip_21": -3307066155445076215
+      "\u0421hip_22": 4907973737401169868
+      "\u0421hip_23": -3138008251184206720
+      "\u0421hip_24": -6808931603790068158
+      "\u0421hip_25": -5062889027186812272
+      "\u0421hip_26": 2298291544184356445
+      "\u0421hip_27": -7056295439984927414
+      "\u0421hip_28": -3883638331093965177
+      "\u0421hip_29": 6799207680560152791
+      "\u0421hip_3": 8165472968564004900
+      "\u0421hip_30": 4648229853462875567
+      "\u0421hip_31": 4498360561033567251
+      "\u0421hip_32": -5485737868989077296
+      "\u0421hip_33": -8453650372183382055
+      "\u0421hip_34": -6523255418283684200
+      "\u0421hip_35": 4812204292108026997
+      "\u0421hip_36": -2752955071671975614
+      "\u0421hip_37": 3495070751191748783
+      "\u0421hip_38": 9012442942804411512
+      "\u0421hip_39": 1697007846754438113
+      "\u0421hip_4": 6729762674789110261
+      "\u0421hip_40": -9049774879460951215
+      "\u0421hip_41": -1441937735154151204
+      "\u0421hip_42": 3099144083776564086
+      "\u0421hip_43": 7542298435216303738
+      "\u0421hip_44": -1010410664864261770
+      "\u0421hip_45": 4686355509416805237
+      "\u0421hip_46": -6986186071804212868
+      "\u0421hip_5": -6060723410846986224
+      "\u0421hip_6": 84914656709434786
+      "\u0421hip_7": -1707248083073773268
+      "\u0421hip_8": 8919091237827961089
+      "\u0421hip_9": -4987524758373381118
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

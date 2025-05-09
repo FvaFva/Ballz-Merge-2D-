@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 4f1fe58ff1a314246890e481da4b75cd
+guid: 6c9f4cab8c46e21429e090ffbc93b31d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -836681465535764483
-    second: Aim_3_0
-  - first:
-      213: -603761415797197440
-    second: Aim_3_1
+      213: 5890271583650849315
+    second: Blur_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -142,43 +139,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Aim_3_0
+      name: Blur_0
       rect:
         serializedVersion: 2
-        x: 87
-        y: 85
-        width: 850
-        height: 860
+        x: 0
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: df76698d3a28364f0800000000000000
-      internalID: -836681465535764483
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Aim_3_1
-      rect:
-        serializedVersion: 2
-        x: 506
-        y: 43
-        width: 9
-        height: 8
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0853252f0320f97f0800000000000000
-      internalID: -603761415797197440
+      spriteID: 322261e1cc27eb150800000000000000
+      internalID: 5890271583650849315
       vertices: []
       indices: 
       edges: []
@@ -186,16 +162,15 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: d3cbd15cd8bed384e981a67fe72f5bcb
-    internalID: 322560172
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Aim_3_0: -836681465535764483
-      Aim_3_1: -603761415797197440
+      Blur_0: 5890271583650849315
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

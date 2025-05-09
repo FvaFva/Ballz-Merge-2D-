@@ -1,4 +1,5 @@
 ﻿using BallzMerge.Root.Audio;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,7 @@ public class BallVolumeCageContainer : MonoBehaviour
     private Vector2 _lastLocalPosition;
 
     public ParticleSystemForceField Field => _field;
+    public event Action<bool> Changed;
 
     private void Awake()
     {
@@ -34,6 +36,8 @@ public class BallVolumeCageContainer : MonoBehaviour
             _audio.Play(AudioEffectsTypes.Hit);
             _disabledElements.SetActive(false);
         }
+
+        Changed?.Invoke(false);
     }
 
     public void Put(BallVolumeCageElement cell, Vector2 position, Vector2 tupPoint)
@@ -48,22 +52,25 @@ public class BallVolumeCageContainer : MonoBehaviour
         _descriptionText.text = cell.Current.Volume.GetDescription(cell.Current.Rarity);
         _starter = cell;
         _transform.position = position;
+
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             _transform.parent as RectTransform,
             tupPoint,
             _mainCanvas.worldCamera,
             out _lastLocalPosition);
+
+        Changed?.Invoke(true);
     }
 
-    public void Swap(BallVolumeCageElement finisher)
+    public BallVolumesBagCell Swap(BallVolumesBagCell finisher)
     {
         if (_starter == default)
-            return;
+            return default;
 
         var startValue = _starter.Current;
-        _starter.Apply(finisher.Current);
-        finisher.Apply(startValue);
+        _starter.Apply(finisher);
         Disable();
+        return startValue;
     }
 
     public void ApplyDelta(Vector2 position)

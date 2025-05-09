@@ -39,7 +39,7 @@ public class BallShooter : BallComponent
         if (_isOverUI)
             return;
 
-        Shot(_vectorReader.GetVector());
+        Shot(_vectorReader.GetDirection());
     }
 
     private void OnInputVectorDrop(Vector3 dropVector)

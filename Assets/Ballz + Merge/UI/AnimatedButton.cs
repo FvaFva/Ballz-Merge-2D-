@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler, IDisposable
+public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private const float Duration = 0.125f;
     private const float PressedStateScale = 0.9f;
@@ -11,36 +11,42 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private const float StartScale = 1f;
 
     [SerializeField] private ButtonView _buttonView;
+    [SerializeField] private RectPumper _pumper;
+    [SerializeField] private RectTransform _header;
 
     private bool _isPointerDown;
     private bool _isPointerEnter;
     private Transform _transform;
+    private Action<bool> _viewChanger = (bool state) => { };
 
     private void Awake()
     {
         _transform = transform;
-    }
-
-    private void Start()
-    {
-        _buttonView.Initialized += () => _buttonView.SetDefault();
         _isPointerDown = false;
         _isPointerEnter = false;
+        _buttonView.Init();
+        _buttonView.SetDefault();
+
+        if (_pumper != null && _header != null)
+            _viewChanger = (bool state) => { _pumper.enabled = state; _header.gameObject.SetActive(state); };
+        else if(_pumper != null)
+            _viewChanger = (bool state) => { _pumper.enabled = state; };
+        else if (_header != null)
+            _viewChanger = (bool state) => { _header.gameObject.SetActive(state); };
     }
 
     private void OnEnable()
     {
         _transform.localScale = Vector3.one * StartScale;
+        _viewChanger(true);
+        _buttonView.enabled = true;
     }
 
     private void OnDisable()
     {
         DOTween.Kill(_transform);
-    }
-
-    public void Dispose()
-    {
-        _buttonView.Initialized -= () => _buttonView.SetDefault();
+        _viewChanger(false);
+        _buttonView.enabled = false;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -78,6 +84,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         _transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
         _buttonView.ChangeBlendMaterial(1f, Duration);
         _buttonView.ChangeParameters(StartScale, ColorType.TargetColor, Duration);
+        _viewChanger(false);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -90,5 +97,6 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         _transform.DOScale(StartScale, Duration).SetEase(Ease.InOutQuad);
         _buttonView.ChangeBlendMaterial(0f, Duration);
         _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
+        _viewChanger(true);
     }
 }

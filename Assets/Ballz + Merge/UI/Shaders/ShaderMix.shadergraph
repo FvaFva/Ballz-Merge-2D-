@@ -92,6 +92,9 @@
         },
         {
             "m_Id": "3052c5a386194e8cb136922ffada2358"
+        },
+        {
+            "m_Id": "68a9341a657f44d4a750a351feef41f2"
         }
     ],
     "m_GroupDatas": [],
@@ -413,6 +416,9 @@
             },
             {
                 "m_Id": "33d52ab4aa4943d1902f9370fc2945d1"
+            },
+            {
+                "m_Id": "68a9341a657f44d4a750a351feef41f2"
             }
         ]
     },
@@ -1641,6 +1647,21 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "65e6f466ee48468abb32ab468510ee1e",
+    "m_Id": 0,
+    "m_DisplayName": "Alpha Clip Threshold",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "AlphaClipThreshold",
+    "m_StageCapability": 2,
+    "m_Value": 0.5,
+    "m_DefaultValue": 0.5,
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.TilingAndOffsetNode",
     "m_ObjectId": "66b8d042c9094a0e9c7f1851201fe0db",
     "m_Group": {
@@ -1697,6 +1718,40 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
+    "m_ObjectId": "68a9341a657f44d4a750a351feef41f2",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "SurfaceDescription.AlphaClipThreshold",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "65e6f466ee48468abb32ab468510ee1e"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_SerializedDescriptor": "SurfaceDescription.AlphaClipThreshold"
 }
 
 {
@@ -2201,7 +2256,7 @@
     "m_Type": "UnityEditor.Rendering.Canvas.ShaderGraph.CanvasData",
     "m_ObjectId": "a42abcc2509f4195ba0fbc9e22bcdb88",
     "m_Version": 0,
-    "m_AlphaClip": false
+    "m_AlphaClip": true
 }
 
 {

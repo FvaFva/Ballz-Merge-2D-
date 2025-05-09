@@ -25,6 +25,7 @@ public class BallVolumesBag : IDisposable
 
     public event Action Changed;
     public event Action<BallVolumesBagCell> Added;
+    public event Action<BallVolumesBagCell> Removed;
 
     public void Dispose()
     {
@@ -39,7 +40,15 @@ public class BallVolumesBag : IDisposable
         Changed?.Invoke();
     }
 
-    private void ApplyVolume(BallVolume volume, DropRarity rarity)
+    public void DropVolume(BallVolumesBagCell volume)
+    {
+        _hit.Remove(volume);
+        _all.Remove(volume);
+        _passive.Remove(volume);
+        Removed?.Invoke(volume);
+    }
+
+    public void ApplyVolume(BallVolume volume, DropRarity rarity)
     {
         BallVolumesBagCell newCell = new BallVolumesBagCell(volume, rarity);
         _all.Add(newCell);

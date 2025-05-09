@@ -28,4 +28,5 @@ public class BallVolume : ScriptableObject
     public string GetSuffix(DropRarity rarity) => _suffixes.Where(s => s.Rarity == rarity).FirstOrDefault().Suffix;
 
     public string GetDescription(DropRarity rarity) => _description.Replace(RarityWightKey, rarity.Weight.ToString());
+    public string GetDescription(int rarity) => _description.Replace(RarityWightKey, rarity.ToString());
 }

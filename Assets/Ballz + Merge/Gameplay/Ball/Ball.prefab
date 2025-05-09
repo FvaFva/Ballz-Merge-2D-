@@ -44549,6 +44549,7 @@ GameObject:
   - component: {fileID: 7104849489398635184}
   - component: {fileID: 7278417036924050444}
   - component: {fileID: 6108565124518385327}
+  - component: {fileID: 1756509784341857213}
   - component: {fileID: 2779917784018971148}
   m_Layer: 0
   m_Name: Ball
@@ -44662,6 +44663,7 @@ MonoBehaviour:
     - {fileID: 795454625157134704}
     - {fileID: 6230197133853658513}
     - {fileID: 7278417036924050444}
+    - {fileID: 1756509784341857213}
     _triggers:
     - {fileID: 795454625157134704}
   _inGame:
@@ -44727,12 +44729,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ba90a2dfdc34c47814c62bda23e881, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _operator: {fileID: 0}
-  _inputZone: {fileID: 0}
-  _stickZone: {fileID: 0}
-  _cancelZone: {fileID: 0}
-  _inputZoneAnimator: {fileID: 0}
-  _cancelZoneAnimator: {fileID: 0}
+  _view: {fileID: 0}
 --- !u!114 &7792643679984454126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44855,6 +44852,21 @@ MonoBehaviour:
     Type: 2
   - Particles: {fileID: 7197171089717906199}
     Type: 4
+--- !u!114 &1756509784341857213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8005674341214584351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1afe1e01900fb634db030f3311bc8f03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cage: {fileID: 0}
+  _carrier: {fileID: 0}
+  _bag: {fileID: 0}
 --- !u!114 &2779917784018971148
 MonoBehaviour:
   m_ObjectHideFlags: 0
