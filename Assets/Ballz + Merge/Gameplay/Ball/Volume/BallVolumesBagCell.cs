@@ -29,8 +29,16 @@ public struct BallVolumesBagCell
         return IsInited && Volume.Species.Equals(species);
     }
 
-    public bool IsEqual(BallVolumesBagCell bagCell)
+    public override bool Equals(object bagCell)
     {
-        return IsInited && Volume == bagCell.Volume && Rarity == bagCell.Rarity;
+        if (bagCell is not BallVolumesBagCell other)
+            return false;
+
+        return IsInited && Volume == other.Volume && Rarity == other.Rarity;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Volume, Rarity);
     }
 }

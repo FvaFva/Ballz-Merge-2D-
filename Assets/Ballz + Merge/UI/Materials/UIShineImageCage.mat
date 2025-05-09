@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: UIShineImage
+  m_Name: UIShineImageCage
   m_Shader: {fileID: -6465566751694194690, guid: e059286206aef7f4f9bf69d07dbc6bce, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -56,13 +56,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorMask: 15
-    - _FlashDelay: 2
-    - _IsMask: 1
+    - _FlashDelay: 4
+    - _IsMask: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _ShinyCycleTime: 3.5
-    - _ShinyRotate: -3.18
-    - _ShinyWaveSpeed: 5.3
+    - _ShinyCycleTime: 5
+    - _ShinyRotate: -3.36
+    - _ShinyWaveSpeed: 3.36
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -73,6 +73,6 @@ Material:
     m_Colors:
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ShinyColor: {r: 0.31626022, g: 0.6278463, b: 0.9716981, a: 1}
+    - _ShinyColor: {r: 0.032796368, g: 0.41714415, b: 0.6320754, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

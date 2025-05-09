@@ -9,7 +9,7 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
     [SerializeField] private DropSelector _dropSelector;
     [SerializeField] private BallVolumesCageView _cage;
 
-    private Func<IEnumerable<BallVolumesBagCell>> _getActiveVolumesGenerator = () => (Enumerable.Empty<BallVolumesBagCell>());
+    private Func<IEnumerable<BallVolumesBagCell>> _allVolumesGenerator = () => (Enumerable.Empty<BallVolumesBagCell>());
 
     public BallVolumesBag Bag {  get; private set; }
     public BallVolumesCageView Cage => _cage;
@@ -30,8 +30,9 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
     {
         Bag = new BallVolumesBag(_dropSelector);
         Bag.Added += OnBagChanged;
+        Bag.Removed += OnBagChanged;
         _cage.Init();
-        _getActiveVolumesGenerator = () => Bag.Passive.Concat(_cage.ActiveVolumes);
+        _allVolumesGenerator = () => Bag.Passive.Concat(_cage.ActiveVolumes).Concat(Bag.Hit);
     }
 
     public void UpdateWave()
@@ -40,7 +41,7 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
         Changed?.Invoke();
     }
 
-    public IEnumerable<BallVolumesBagCell> GetActiveVolumes() => _getActiveVolumesGenerator();
+    public IEnumerable<BallVolumesBagCell> GetAllVolumes() => _allVolumesGenerator();
 
     public int GetPassiveValue(BallVolumesTypes type) => Bag.Passive.Where(cell => cell.IsEqual(type)).Sum(cell => cell.Value);
 
@@ -51,11 +52,8 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
         Changed?.Invoke();
     }
 
-    private void OnBagChanged(BallVolumesBagCell cell)
+    private void OnBagChanged(BallVolumesBagCell value)
     {
-        if(cell.IsEqual(BallVolumesSpecies.Hit))
-            _cage.AddVolume(cell);
-
         Changed?.Invoke();
     }
 

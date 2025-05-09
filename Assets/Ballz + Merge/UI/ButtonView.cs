@@ -18,9 +18,12 @@ public class ButtonView : MonoBehaviour
     private Shadow _shadow;
     private Dictionary<ColorType, Color> _colors;
 
-    public event Action Initialized;
+    private void OnDisable()
+    {
+        SetDefault();
+    }
 
-    private void Awake()
+    public void Init()
     {
         _colors = new Dictionary<ColorType, Color>();
         _transform = (RectTransform)transform;
@@ -32,16 +35,6 @@ public class ButtonView : MonoBehaviour
         Color targetColor = _shadow.effectColor;
         targetColor.a = 1f;
         _colors.Add(ColorType.TargetColor, targetColor);
-    }
-
-    private void OnEnable()
-    {
-        Initialized?.Invoke();
-    }
-
-    private void OnDisable()
-    {
-        StopAllAnimations();
     }
 
     public void SetDefault()
