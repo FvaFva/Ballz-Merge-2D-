@@ -604,7 +604,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d7f3c56da4e644abe9526a7f8e39bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isShadowChanged: 1
 --- !u!114 &1094842288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -757,7 +756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 385be51e441c024419cd8b98459328bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 7
   _volumes: {fileID: 3895819656212432924}
   _volumesView: {fileID: 6180643790877347566}
   _cage: {fileID: 1941457512255070044}
@@ -982,7 +981,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 19.5
+  m_fontSize: 17.6
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1272,7 +1271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 926b4a5f895e3534eaacdf4bca663085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: -1
+  _initOrder: 1
   _boards: {fileID: 8463822361797210563}
   _prefab: {fileID: 8476835912495725215, guid: 4abda6609e5d8fc4183bcf68b5e6f08f, type: 3}
   _boxParentForeMoveToVirtual: {fileID: 6072782823881557346}
@@ -1644,7 +1643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e71565aff787c14c9b8c2600415960b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
   _puck:
   - {fileID: 29521537627760863}
   - {fileID: 8668816808392478658}
@@ -1779,7 +1778,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00048828125}
+  m_AnchoredPosition: {x: 0, y: -0.00012207031}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &654301789767118303
@@ -7084,7 +7083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1990e6005178304459121e906461fee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
   _prefabs:
   - {fileID: -7271298243295093197, guid: 830bb1149c946bb4187d04f905a728c4, type: 3}
   - {fileID: 900858455280368239, guid: ffbe112c7d2513d4b9d5f0140b6dc884, type: 3}
@@ -7127,7 +7126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e72c357f5c637642b1b17ac1b317ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
   _canvasGroup: {fileID: 7745315123889124804}
   _firstSlot: {fileID: 1545568061}
   _secondSlot: {fileID: 1894545339}
@@ -7143,7 +7142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2124ad897031cb0448b30a55951dc373, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
 --- !u!114 &1572765402450665650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7553,7 +7552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b04513c8f7d68a44093abe4ae5a36403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
   _settings: {fileID: 11400000, guid: 746bbce98a003ac44a228caaebe7ddae, type: 2}
   _effectsPool: {fileID: 1338660776033463251}
   _parent: {fileID: 2201241273183966194}
@@ -7720,21 +7719,21 @@ MonoBehaviour:
   _mainUI: {fileID: 1064647649095533680}
   _operator: {fileID: 8427693446239190018}
   _components:
+  - {fileID: 157933916506220290}
   - {fileID: 2090727811}
   - {fileID: 5924025669930554985}
   - {fileID: 1338660776033463251}
   - {fileID: 1859102016579739000}
-  - {fileID: 7987047365824961655}
   - {fileID: 3439707134182389780}
   - {fileID: 4898098869132901201}
-  - {fileID: 7643977174484492128}
   - {fileID: 3895819656212432924}
-  - {fileID: 157933916506220290}
   - {fileID: 6705783293454554603}
   - {fileID: 1414648494770224759}
   - {fileID: 9008989539260397293}
-  - {fileID: 2760620804743944596}
   - {fileID: 8463822361797210563}
+  - {fileID: 7987047365824961655}
+  - {fileID: 7643977174484492128}
+  - {fileID: 2760620804743944596}
   - {fileID: 1473422073910594557}
   - {fileID: 8427693446239190018}
   - {fileID: 452273683249452768}
@@ -8242,7 +8241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaf5c6514c990e94bb75b6db617c2eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: -2
+  _initOrder: 3
   _boards: {fileID: 8463822361797210563}
   _fieldExpanderSettings: {fileID: 11400000, guid: dc1cb636655819f48a06144bac1967c8, type: 2}
   _fieldEffect: {fileID: 8395251450457018000}
@@ -8801,7 +8800,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacd8899386491d4094bbb77548928a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
   _factory: {fileID: 157933916506220290}
 --- !u!224 &3539992375907539988
 RectTransform:
@@ -9002,7 +9001,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e299208449ec8e46b3b0e02bab80995, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 4
+  _initOrder: 3
   _dropSelector: {fileID: 1414648494770224759}
   _cage: {fileID: 1941457512255070044}
 --- !u!114 &3957915039564890465
@@ -14804,7 +14803,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebe671ee6392a4046a114ece0c5ba5a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
 --- !u!222 &4944995570192423788
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -19607,9 +19606,6 @@ MonoBehaviour:
   _physicsGrid: {fileID: 7987047365824961655}
   _blocksBus: {fileID: 7643977174484492128}
   _ballLevelVolume: {fileID: 3895819656212432924}
-  _blocksSpawner: {fileID: 5924025669930554985}
-  _score: {fileID: 4898098869132901201}
-  _animationSkipper: {fileID: 3727757515357393128}
   _achievementSource: {fileID: 1473422073910594557}
   _operator: {fileID: 8427693446239190018}
 --- !u!224 &4991371861274782459
@@ -25547,7 +25543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a572d76aec3df894a9542b42776bf12b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
   _countPreload: 35
   _blockParent: {fileID: 2654770365443575043}
   _numbersProperties: {fileID: 11400000, guid: c816a30a9fe7eb249b716c54cf096edc, type: 2}
@@ -25606,7 +25602,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d7f3c56da4e644abe9526a7f8e39bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isShadowChanged: 1
 --- !u!1 &5966878929185279886
 GameObject:
   m_ObjectHideFlags: 0
@@ -26527,7 +26522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 824439a2e4a5ab345a8edbdda625508c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
   _wavesToDrop: 1
   _selector: {fileID: 1414648494770224759}
   _rar: {fileID: 11400000, guid: de1bfb22cde269241bb3c06c6f4ae76d, type: 2}
@@ -27266,6 +27261,10 @@ PrefabInstance:
       propertyPath: _carrier
       value: 
       objectReference: {fileID: 1229472960}
+    - target: {fileID: 3420952979989523706, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
+      propertyPath: _initOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4397546227461154052, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -27779,7 +27778,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c58855377b56f364a8c0415bd3a99679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 1
+  _initOrder: 4
   _spawner: {fileID: 5924025669930554985}
   _effectsPool: {fileID: 1338660776033463251}
   _mergeImpact: {fileID: 2221692931396970640}
@@ -28050,7 +28049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da78ce81f3408854e8313a02b0a04657, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: -1
+  _initOrder: 1
   _prefab: {fileID: 7619593642170739322, guid: 938bd4bcdd3e4de439dcb7c9bb82a4d4, type: 3}
   _cellParent: {fileID: 1167614197825869736}
 --- !u!114 &8051730447515821250
@@ -37995,7 +37994,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45dfce1c4b70176498ef0f33d0931ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
   _portraitAvailableSpacePrecent: {x: 1, y: 0.7}
   _landscapeAvailableSpacePrecent: {x: 0.7, y: 0.85}
   _portraitOffset: {x: 0, y: -1.2}
@@ -38048,7 +38047,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8eb07282e9585045aa77f68888ecc67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
   _leftBorder: {fileID: 231400584893063229}
   _rightBorder: {fileID: 1111481662212120083}
   _topBorder: {fileID: 7627652397489583533}
@@ -38218,7 +38217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a91adf6e337cc54bae14bc2b87e4f19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 5
+  _initOrder: 6
   _showOnlyBag: 0
   _source: {fileID: 3895819656212432924}
   _viewPort: {fileID: 4129914122132948264}
@@ -38465,7 +38464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6489a426d632274b8ab64c81848c122, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
   _field: {fileID: 8395251450457018000}
   _particlesForLevel: 1
 --- !u!224 &9040392883744251247

@@ -41,8 +41,12 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     private void Awake()
     {
+        int i = 0;
+
         foreach (var cyclical in _components.OrderBy(item => item.Order))
         {
+            Debug.Log($"{++i} {cyclical.gameObject.name} {cyclical.Order}");
+
             if (cyclical is IInitializable initializeComponent)
                 _initializedComponents.Add(initializeComponent);
 

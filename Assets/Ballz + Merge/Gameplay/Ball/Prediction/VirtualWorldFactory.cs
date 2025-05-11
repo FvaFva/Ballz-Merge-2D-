@@ -12,8 +12,6 @@ namespace BallzMerge.Gameplay.BallSpace
         [SerializeField] private Transform _boxParentForeMoveToVirtual;
 
         private Scene _scene;
-        private Queue<BoxCollider2D> _collidersPool = new Queue<BoxCollider2D>();
-        private List<BoxCollider2D> _colliders = new List<BoxCollider2D>();
 
         public PhysicsScene2D GetPhysicScene() => _scene.GetPhysicsScene2D();
 
