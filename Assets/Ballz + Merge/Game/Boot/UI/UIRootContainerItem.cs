@@ -52,7 +52,9 @@ namespace BallzMerge.Root
         public void UnpackUp()
         {
             Group = null;
-            _transform.SetParent(_parent);
+
+            if (_transform != null)
+                _transform.SetParent(_parent);
         }
 
         private IEnumerator UpdatePosition()

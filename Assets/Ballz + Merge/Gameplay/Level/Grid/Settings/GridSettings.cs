@@ -14,11 +14,11 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private Vector2 _viewPosition;
         [SerializeField] private float _moveTime = 0.3f;
 
-        private Vector2Int _additionalGridSize;
+        private Vector2Int _extraSize;
 
         public float CellSize => _cellSize;
         public float CellSpacing => _cellSpacing;
-        public Vector2Int Size => _gridSize + _additionalGridSize;
+        public Vector2Int Size => _gridSize + _extraSize;
         public Vector2 ViewPosition => _viewPosition;
         public int FirstRowIndex => Size.y - 1;
         public int LastRowIndex => 0;
@@ -26,14 +26,14 @@ namespace BallzMerge.Gameplay.Level
 
         public void AddSize(Vector2Int additionalSize)
         {
-            _additionalGridSize += additionalSize;
+            _extraSize += additionalSize;
         }
 
         public List<int> GetPositionsInRow()
         {
             List<int> positions = new List<int>();
 
-            for (int i = 0; i < _gridSize.x + _additionalGridSize.x; i++)
+            for (int i = 0; i < _gridSize.x + _extraSize.x; i++)
                 positions.Add(i);
 
             return positions;
@@ -43,7 +43,7 @@ namespace BallzMerge.Gameplay.Level
 
         public void ReloadSize()
         {
-            _additionalGridSize = Vector2Int.zero;
+            _extraSize = Vector2Int.zero;
         }
     }
 }

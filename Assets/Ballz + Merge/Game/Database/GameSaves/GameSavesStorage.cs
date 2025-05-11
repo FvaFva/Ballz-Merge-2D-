@@ -1,4 +1,5 @@
 using Mono.Data.Sqlite;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -26,7 +27,7 @@ public class GameSavesStorage
             {
                 command.CommandText = $@"CREATE TABLE IF NOT EXISTS {GameSavesTable}
                                             ({Key} TEXT PRIMARY KEY,
-                                            {Value} REAL)";
+                                            {Value} TEXT)";
 
                 command.ExecuteNonQuery();
             }
@@ -35,7 +36,7 @@ public class GameSavesStorage
         }
     }
 
-    public void Save(IDictionary<string, float> data)
+    public void Save(IDictionary<string, object> data)
     {
         using (var connection = new SqliteConnection(_dbPath))
         {
@@ -47,7 +48,7 @@ public class GameSavesStorage
                 {
                     command.CommandText = $"INSERT OR REPLACE INTO {GameSavesTable} ({Key}, {Value}) VALUES (@{Key}, @{Value})";
                     command.Parameters.AddWithValue(Key, item.Key);
-                    command.Parameters.AddWithValue(Value, item.Value);
+                    command.Parameters.AddWithValue(Value, JsonConvert.SerializeObject(item.Value));
                     command.ExecuteNonQuery();
                 }
             }
@@ -56,9 +57,9 @@ public class GameSavesStorage
         }
     }
 
-    public IDictionary<string, float> Get()
+    public IDictionary<string, object> Get()
     {
-        Dictionary<string, float> data = new Dictionary<string, float>();
+        Dictionary<string, object> data = new Dictionary<string, object>();
 
         using (var connection = new SqliteConnection(_dbPath))
         {
@@ -70,7 +71,7 @@ public class GameSavesStorage
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
-                        data.Add(reader[Key].ToString(), Convert.ToSingle(reader[Value]));
+                        data.Add(reader[Key].ToString(), reader[Value]);
                 }
             }
 

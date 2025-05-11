@@ -16,7 +16,7 @@ namespace BallzMerge.Root
 
         [Inject] private TargetSceneEntryPointContainer _targetSceneEntryPoint;
 
-        private Dictionary<string, float> _loadData;
+        private Dictionary<string, object> _loadData;
 
         private readonly GameSettings _settings;
         private readonly WaitForSeconds _checkTime;
@@ -34,9 +34,9 @@ namespace BallzMerge.Root
             ProjectContext.Instance.Container.Inject(this);
         }
 
-        public void AddLoadData(IDictionary<string, float> loadData)
+        public void AddLoadData(IDictionary<string, object> loadData)
         {
-            _loadData = new Dictionary<string, float>(loadData);
+            _loadData = new Dictionary<string, object>(loadData);
         }
 
         public IEnumerator LoadScene(string name)

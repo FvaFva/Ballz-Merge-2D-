@@ -9,9 +9,6 @@ namespace BallzMerge.Gameplay.BlockSpace
 {
     public class Block : MonoBehaviour
     {
-        private static int _id = 0;
-        static public int ID { get { return ++_id; } }
-
         private const int OutBoardPosition = int.MaxValue;
 
         [SerializeField] private BlockViewModel _view;
@@ -26,6 +23,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         public bool IsAlive { get; private set; }
         public Vector2Int GridPosition { get; private set; }
         public Vector2 WorldPosition => _transform.position;
+        public int ID { get; private set; }
         public int Number { get; private set; }
         public bool IsWithEffect { get; private set; }
 
@@ -40,6 +38,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private void Awake()
         {
             _transform = transform;
+            ID = 0;
         }
 
         private void OnEnable()
@@ -52,10 +51,16 @@ namespace BallzMerge.Gameplay.BlockSpace
             _physic.Hit -= OnHit;
         }
 
-        public Block Initialize(Transform parent, GridVirtualCell virtualBox)
+        public void ChangeID(int id)
+        {
+            ID = id;
+            name = $"Block {ID}";
+        }
+
+        public Block Initialize(int id, Transform parent, GridVirtualCell virtualBox)
         {
             Debug.Add("init");
-            name = $"Block {ID}";
+            ChangeID(id);
             _transform.parent = parent;
             _view.Init(_gridSettings.MoveTime, _gridSettings.CellSize);
             _physic.Init(virtualBox);
@@ -63,9 +68,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             return this;
         }
 
-        public void Activate(int number, Vector2Int gridPosition, Color color)
+        public void Activate(int id, int number, Vector2Int gridPosition, Color color)
         {
             Debug.Add("Activate");
+            ChangeID(id);
             _transform.localPosition = (Vector2)gridPosition * _gridSettings.CellSize;
             IsWithEffect = false;
             IsAlive = true;
@@ -83,10 +89,10 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public bool Move(Vector2Int step, bool isMoveDown = false)
         {
-            if(IsAlive == false)
+            if (IsAlive == false)
                 return false;
 
-            if(CantMove(step, isMoveDown))
+            if (CantMove(step, isMoveDown))
             {
                 PlayBounceAnimation(step);
                 return false;
@@ -134,7 +140,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             Number += count;
             _view.ChangeNumber(Number);
 
-            if(Number <= 0)
+            if (Number <= 0)
                 Destroy();
             else
                 NumberChanged?.Invoke(this, count);
@@ -174,7 +180,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             Debug.Add($"OnComeToNewCell");
             CameToNewCell?.Invoke(this);
 
-            if(IsAlive)
+            if (IsAlive)
                 _physic.Activate();
         }
 

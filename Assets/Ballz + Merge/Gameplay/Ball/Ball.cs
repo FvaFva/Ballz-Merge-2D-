@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BallzMerge.Gameplay.BallSpace
 {
-    public class Ball : CyclicBehavior, ILevelStarter, IInitializable
+    public class Ball : CyclicBehavior, ILevelLoader, IInitializable
     {
         [SerializeField] private BallState _simulation;
         [SerializeField] private BallState _aim;

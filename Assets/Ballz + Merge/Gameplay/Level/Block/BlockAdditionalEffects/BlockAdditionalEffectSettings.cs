@@ -12,8 +12,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         [SerializeField] private BlockAdditionalEffectProperty[] _properties;
         [SerializeField, Range(0, 1)] private float _spawnChance;
 
-        public BlockAdditionalEffectProperty[] Properties => _properties;
-
         private void OnValidate()
         {
             _spawnChance = (float)System.Math.Round(_spawnChance, DecimalPlaces);
@@ -35,7 +33,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             float scale = TargetChance / sum;
 
             for (int i = 0; i < _properties.Length; i++)
+            {
                 _properties[i].ChanceToPerform = (float)System.Math.Round(_properties[i].ChanceToPerform * scale, DecimalPlaces);
+                _properties[i].ID = i + 1;
+            }
 
             // Проверяем результат
             float newSum = 0f;
@@ -44,7 +45,9 @@ namespace BallzMerge.Gameplay.BlockSpace
                 newSum += value.ChanceToPerform;
         }
 
-        public BlockAdditionalEffectBase GetPrefab()
+        public int GetPropertiesCount() => _properties.Length;
+
+        public BlockAdditionalEffectProperty GetProperty()
         {
             // Генерируем случайное число от 0 до общей суммы весов
             float randomValue = Random.Range(0, TargetChance * NormalizationFactor);
@@ -56,11 +59,20 @@ namespace BallzMerge.Gameplay.BlockSpace
                 sum += property.ChanceToPerform * NormalizationFactor;
 
                 if (randomValue < sum)
-                    return property.Prefab;
+                    return property;
             }
 
             // На случай ошибки, возвращаем первый объект
-            return _properties[0].Prefab;
+            return _properties[0];
+        }
+
+        public BlockAdditionalEffectProperty GetProperty(int id)
+        {
+            for (int i = 0; i < _properties.Length; i++)
+                if (_properties[i].ID == id)
+                    return _properties[i];
+
+            return _properties[0];
         }
 
         public bool ChanceToGetPrefab()

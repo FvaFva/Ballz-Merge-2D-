@@ -1,5 +1,6 @@
 ﻿using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.Level;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,8 +8,10 @@ using Zenject;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlocksSpawner : CyclicBehavior, ILevelStarter, IInitializable
+    public class BlocksSpawner : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader
     {
+        private const string CurrentWave = "CurrentWave";
+
         [SerializeField] private int _countPreload;
         [SerializeField] private Transform _blockParent;
         [SerializeField] private MoveSettingsNumbers _numbersProperties;
@@ -23,6 +26,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private Queue<Block> _blocks = new Queue<Block>();
         private int _currentWave;
+        private int _blockID;
 
         private void OnEnable()
         {
@@ -31,18 +35,29 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void OnDisable()
         {
-            _activeBlocks.BlockRemoved += OnBlockFree;
+            _activeBlocks.BlockRemoved -= OnBlockFree;
         }
 
         public void Init()
         {
+            _currentWave = 0;
+            _blockID = 0;
+
             for (int i = 0; i < _countPreload; i++)
-                _blocks.Enqueue(Generate());
+                _blocks.Enqueue(Generate(++_blockID));
         }
 
-        public void StartLevel()
+        public IDictionary<string, object> GetSavingData()
         {
-            _currentWave = 0;
+            return new Dictionary<string, object>()
+            {
+                { CurrentWave,  _currentWave }
+            };
+        }
+
+        public void Load(IDictionary<string, object> data)
+        {
+            _currentWave = JsonConvert.DeserializeObject<int>(data[CurrentWave].ToString());
         }
 
         public IEnumerable<Block> SpawnWave()
@@ -53,15 +68,39 @@ namespace BallzMerge.Gameplay.BlockSpace
 
             for (int i = 0; i < count; i++)
             {
-                if (_blocks.TryDequeue(out Block temp) == false)
-                    temp = Generate();
-
                 int number = GetBlockNumber();
                 Vector2Int gridPosition = new Vector2Int(positions.TakeRandom(), _gridSettings.FirstRowIndex);
-                temp.Activate(number, gridPosition, _colorMap.GetColor(number));
-                _activeBlocks.AddBlocks(temp);
-                yield return temp;
+                yield return SpawnBlock(number, gridPosition);
             }
+        }
+
+        public Block SpawnBlock(int number, Vector2Int gridPosition, int? id = null)
+        {
+            int blockID;
+
+            if (_blocks.TryDequeue(out Block temp) == false)
+            {
+                blockID = id == null ? ++_blockID : (int)id;
+                temp = Generate(blockID);
+            }
+
+            blockID = id == null ? temp.ID : (int)id;
+            ActivateBlock(blockID, temp, number, gridPosition);
+            return temp;
+        }
+
+        public void ResetBlocksID()
+        {
+            int newID = 0;
+
+            foreach(Block block in _activeBlocks.Blocks)
+                block.ChangeID(++newID);
+        }
+
+        private void ActivateBlock(int id, Block block, int number, Vector2Int gridPosition)
+        {
+            block.Activate(id, number, gridPosition, _colorMap.GetColor(number));
+            _activeBlocks.AddBlocks(block);
         }
 
         private int GetBlockCount()
@@ -101,7 +140,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             return property.NumbersToSpawn[Random.Range(0, property.NumbersToSpawn.Length)];
         }
 
-        private Block Generate() => _container.InstantiatePrefabForComponent<Block>(_prefab).Initialize(_blockParent, _factory.GenerateBoxForBlock());
+        private Block Generate(int id) => _container.InstantiatePrefabForComponent<Block>(_prefab).Initialize(id, _blockParent, _factory.GenerateBoxForBlock());
 
         private void OnBlockFree(Block block) => _blocks.Enqueue(block);
     }

@@ -19,7 +19,7 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation
     {
         _source.Changed += OnSourceUpdate;
 
-        if(_isLoadGlobalVolumesOnEnable)
+        if (_isLoadGlobalVolumesOnEnable)
             ShowVolumes(_source.Bag.All);
         else
             ShowVolumes(_source.GetActiveVolumes());
@@ -27,7 +27,8 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation
 
     private void OnDisable()
     {
-        _source.Changed -= OnSourceUpdate;
+        if (_source != null)
+            _source.Changed -= OnSourceUpdate;
     }
 
     public void UpdateScreenOrientation(ScreenOrientation orientation)

@@ -9,8 +9,6 @@ public class ButtonView : MonoBehaviour
 {
     private const string BLEND_PROPERTY = "_BlendAmount";
 
-    [SerializeField] private bool _isShadowChanged = true;
-
     private RectTransform _transform;
     private Tween _shadowTween;
     private Image _image;
@@ -47,24 +45,24 @@ public class ButtonView : MonoBehaviour
     public void SetDefault()
     {
         StopAllAnimations();
-        _imageMaterial.SetFloat(BLEND_PROPERTY, 0);
-        _transform.localScale = Vector3.one;
 
-        if (_isShadowChanged)
-            _shadow.effectColor = _colors[ColorType.StartColor];
+        if (_imageMaterial.HasProperty(BLEND_PROPERTY))
+            _imageMaterial.SetFloat(BLEND_PROPERTY, 0);
+
+        _transform.localScale = Vector3.one;
+        _shadow.effectColor = _colors[ColorType.StartColor];
     }
 
     public void ChangeParameters(float newScale, ColorType colorType, float duration)
     {
         _transform.DOScale(newScale, duration);
-
-        if (_isShadowChanged)
-            ChangeShadowColor(_colors[colorType], duration);
+        ChangeShadowColor(_colors[colorType], duration);
     }
 
     public void ChangeBlendMaterial(float newValue, float duration)
     {
-        _imageMaterial.DOFloat(newValue, BLEND_PROPERTY, duration).SetEase(Ease.InOutQuad);
+        if (_imageMaterial.HasProperty(BLEND_PROPERTY))
+            _imageMaterial.DOFloat(newValue, BLEND_PROPERTY, duration).SetEase(Ease.InOutQuad);
     }
 
     private void ChangeShadowColor(Color newColor, float duration)

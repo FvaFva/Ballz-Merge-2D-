@@ -23,17 +23,12 @@ namespace BallzMerge.Gameplay.Level
 
         public void Start()
         {
-            ProcessBinder();
+            _binder.StartSpawnWave(() => { return; });
         }
 
-        private void ProcessDropper() 
+        public void Continue()
         {
-            _dropper.UpdateWave();
-
-            if (_dropper.IsReadyToDrop)
-                _dropper.ShowDrop(ProcessBall);
-            else
-                ProcessBall();
+            ProcessBinder();
         }
 
         private void ProcessBinder()
@@ -49,7 +44,17 @@ namespace BallzMerge.Gameplay.Level
 
         private void AfterMoveBlock() => _binder.StartSpawnWave(ProcessDropper);
 
-        private void ProcessBall()
+        private void ProcessDropper()
+        {
+            _dropper.UpdateWave();
+
+            if (_dropper.IsReadyToDrop)
+                _dropper.ShowDrop(ProcessBall);
+            else
+                ProcessBall();
+        }
+
+        public void ProcessBall()
         {
             _awaitBreaker.Break();
             WaveLoaded?.Invoke();

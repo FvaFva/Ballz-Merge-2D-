@@ -4,11 +4,13 @@ using Zenject;
 using BallzMerge.Gameplay.Level;
 using System;
 using System.Collections;
+using Newtonsoft.Json;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlocksBinder : CyclicBehavior, IInitializable
+    public class BlocksBinder : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader
     {
+        private const string SavedBlocks = "Blocks";
         private const float AnimationDelay = 0.1f;
 
         [SerializeField] private BlocksSpawner _spawner;
@@ -52,9 +54,33 @@ namespace BallzMerge.Gameplay.BlockSpace
             _sleep = new WaitForSeconds(AnimationDelay);
         }
 
+        public IDictionary<string, object> GetSavingData()
+        {
+            List<SavedBlock> savedBlocks = new List<SavedBlock>();
+
+            foreach (Block block in _activeBlocks.Blocks)
+                savedBlocks.Add(new SavedBlock(block.ID, block.Number, block.GridPosition.x, block.GridPosition.y));
+
+            return new Dictionary<string, object>()
+            {
+                { SavedBlocks, savedBlocks }
+            };
+        }
+
+        public void Load(IDictionary<string, object> data)
+        {
+            List<SavedBlock> savedBlocks = new List<SavedBlock>(JsonConvert.DeserializeObject<List<SavedBlock>>(data[SavedBlocks].ToString()));
+
+            foreach (SavedBlock savedBlock in savedBlocks)
+                _spawner.SpawnBlock(savedBlock.Number, new Vector2Int(savedBlock.GridPositionX, savedBlock.GridPositionY), savedBlock.ID);
+
+            _additionalEffectHandler.LoadEffects(_activeBlocks.Blocks);
+            _spawner.ResetBlocksID();
+        }
+
         public bool TryFinish()
         {
-            if(_activeBlocks.TryDeactivateUnderLine(_gridSettings.LastRowIndex))
+            if (_activeBlocks.TryDeactivateUnderLine(_gridSettings.LastRowIndex))
             {
                 _activeBlocks.Clear();
                 return true;
@@ -69,7 +95,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private IEnumerator BlocksMoving(Vector2Int direction, Action callBack)
         {
-            foreach(var _ in _mover.MoveAll(_activeBlocks.Blocks, direction, callBack))
+            foreach (var _ in _mover.MoveAll(_activeBlocks.Blocks, direction, callBack))
                 yield return _sleep;
         }
 

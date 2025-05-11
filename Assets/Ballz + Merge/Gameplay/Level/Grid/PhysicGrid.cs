@@ -4,7 +4,7 @@ using Zenject;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class PhysicGrid : CyclicBehavior, ILevelStarter, ILevelFinisher
+    public class PhysicGrid : CyclicBehavior, ILevelFinisher
     {
         [SerializeField] private GridCell _prefab;
         [SerializeField] private Transform _cellParent;
@@ -14,9 +14,11 @@ namespace BallzMerge.Gameplay.Level
         private Dictionary<Vector2Int, GridCell> _grid = new Dictionary<Vector2Int, GridCell>();
         private Queue<GridCell> _cellsPool = new Queue<GridCell>();
 
-        public void StartLevel()
+        public void InitGrid()
         {
-            SpawnColumn(true);
+            for (int i = 0; i < _settings.Size.x; i++)
+                for (int j = 0; j < _settings.Size.y; j++)
+                    InitCell(i, j);
         }
 
         public void FinishLevel()
@@ -30,22 +32,20 @@ namespace BallzMerge.Gameplay.Level
             _grid.Clear();
         }
 
-        public void SpawnColumn(bool isStart, int column = 1)
+        public void SpawnColumn()
         {
-            for (int i = column - 1; i < _settings.Size.x; i++)
-            {
-                for (int j = 0; j < _settings.Size.y; j++)
-                    InitCell(i, j);
-            }
+            _settings.AddSize(Vector2Int.right);
+
+            for (int i = 0; i < _settings.Size.y; i++)
+                InitCell(_settings.Size.x - 1, i);
         }
 
-        public void SpawnRow(int row)
+        public void SpawnRow()
         {
+            _settings.AddSize(Vector2Int.up);
+
             for (int i = 0; i < _settings.Size.x; i++)
-            {
-                for (int j = row - 1; j < _settings.Size.y; j++)
-                    InitCell(i, j);
-            }
+                InitCell(i, _settings.Size.y - 1);
         }
 
         private void InitCell(int x, int y)

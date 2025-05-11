@@ -65,7 +65,7 @@ namespace BallzMerge.MainMenu
             IsAvailable = false;
         }
 
-        public void Init(Action<SceneExitData> callback, IDictionary<string, float> loadData)
+        public void Init(Action<SceneExitData> callback, IDictionary<string, object> loadData)
         {
             _view.Init();
             _rootUI.AttachSceneUI(_view);

@@ -49,8 +49,19 @@ public class BallStrikeVectorReader : BallComponent
     private void OnDisable()
     {
         _userInput.MainInput.StrikeVector.performed -= CheckGetEnterInInputZone;
-        _inputZone.gameObject.SetActive(false);
-        _cancelZone.gameObject.SetActive(false);
+        _userInput.MainInput.StrikeVector.performed -= CheckGetOutFromInputZone;
+        _userInput.MainInput.StrikeVector.performed -= CheckGetOutFromCancelZone;
+        _userInput.MainInput.StrikeVector.performed -= OnStrikeVectorPerformed;
+        _userInput.MainInput.Shot.started -= OnShotStarted;
+        _userInput.MainInput.Shot.canceled -= OnShotCancelled;
+        SetActive(_inputZone, false);
+        SetActive(_cancelZone, false);
+    }
+
+    private static void SetActive(Component zone, bool state)
+    {
+        if (zone != null)
+            zone.gameObject.SetActive(state);
     }
 
     public Vector3 GetVector()

@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level.Field
 {
-    public class Field : CyclicBehavior, IWaveUpdater, ILevelStarter, IInitializable
+    public class Field : CyclicBehavior, IWaveUpdater, ILevelLoader, IInitializable
     {
         [SerializeField] private ParticleSystem _field;
         [SerializeField] private int _particlesForLevel;
@@ -19,10 +20,9 @@ namespace BallzMerge.Gameplay.Level.Field
             _curve = _emission.rateOverTime;
         }
 
-        public void UpdateWave()
+        public void Init()
         {
-            _curve = new ParticleSystem.MinMaxCurve(_curve.constant += _particlesForLevel);
-            _emission.rateOverTime = _curve;
+            _baseParticles = _curve.constant;
         }
 
         public void StartLevel()
@@ -30,9 +30,10 @@ namespace BallzMerge.Gameplay.Level.Field
             SetRate(_baseParticles);
         }
 
-        public void Init()
+        public void UpdateWave()
         {
-            _baseParticles = _curve.constant;
+            _curve = new ParticleSystem.MinMaxCurve(_curve.constant += _particlesForLevel);
+            _emission.rateOverTime = _curve;
         }
 
         private void SetRate(float newRate)

@@ -1,7 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public interface ILevelSaver
 {
-    public IDictionary<string, float> GetSavingData();
-    public void Load(IDictionary<string, float> data);
+    public IDictionary<string, object> GetSavingData();
 }

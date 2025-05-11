@@ -20,9 +20,6 @@ public class MainSceneInjection : MonoInstaller
     [SerializeField] private BallWaveVolume _ballLevelVolume;
 
     [Header("Inject")]
-    [SerializeField] private BlocksSpawner _blocksSpawner;
-    [SerializeField] private PlayerScore _score;
-    [SerializeField] private GameAnimationSkipper _animationSkipper;
     [SerializeField] private AchievementSettingsGameBinder _achievementSource;
     [SerializeField] private CamerasOperator _operator;
 
@@ -40,10 +37,6 @@ public class MainSceneInjection : MonoInstaller
         Container.Bind<BlocksInGame>().FromNew().AsSingle().NonLazy();
         Container.Bind<BlocksMover>().FromNew().AsSingle().NonLazy();
         Container.Bind<ISceneEnterPoint>().To<GameCycler>().FromInstance(_loader).AsSingle().NonLazy();
-
-        Container.Inject(_blocksSpawner);
-        Container.Inject(_score);
-        Container.Inject(_animationSkipper);
         
         ProjectContext.Instance.Container.Inject(_ballVolumesCageView);
         _entryPointBinder.Set(_loader);
