@@ -16,5 +16,11 @@ MonoBehaviour:
   _species: 1
   _icon: {fileID: 21300000, guid: 9f52384938bbcb04f955eeb31cbdf309, type: 3}
   _name: Field Expander
-  _description: ' Expands the field horizontally'
-  _suffixes: []
+  _description: Add extra row
+  _suffixes:
+  - Rarity: {fileID: 11400000, guid: a3ee3d68bf5a68a47b9136ccd18ae439, type: 2}
+    Suffix: move all blocks up
+  - Rarity: {fileID: 11400000, guid: de1bfb22cde269241bb3c06c6f4ae76d, type: 2}
+    Suffix: move all blocks up
+  - Rarity: {fileID: 11400000, guid: 0cf2a46033e6a4e41980736da5596fbd, type: 2}
+    Suffix: move all blocks up

@@ -1,18 +1,22 @@
+using BallzMerge.Gameplay.Level;
 using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BallVolumesMap", menuName = "Bellz+Merge/Drop/BallVolumeMap", order = 51)]
-public class BallVolumesMap :ScriptableObject
+public class BallVolumesMap : ScriptableObject
 {
-    [SerializeField] private List<BallVolume> _ballVolumes = new List<BallVolume>();
+    [SerializeField] private List<BallVolume> _ballVolumes;
+    [SerializeField] private List<DropRarity> _rarities;
 
     private Dictionary<BallVolumesTypes, BallVolume> _volumesByType;
     private Dictionary<string, BallVolume> _volumesByString;
+    private Dictionary<int, DropRarity> _raritiesWeights;
 
     public void ReBuild()
     {
         _volumesByType = new Dictionary<BallVolumesTypes, BallVolume>();
         _volumesByString = new Dictionary<string, BallVolume>();
+        _raritiesWeights = new Dictionary<int, DropRarity>();
 
         foreach (BallVolume volume in _ballVolumes)
         {
@@ -22,19 +26,20 @@ public class BallVolumesMap :ScriptableObject
                 _volumesByString.Add(volume.Type.ToString(), volume);
             }
         }
+
+        foreach(DropRarity rarity in _rarities)
+        {
+            if (rarity != null)
+                _raritiesWeights.Add(rarity.Weight, rarity);
+        }
     }
 
-    public string GetTypifiedChance(BallVolumesTypes type, float value)
+    public DropRarity GetRarity(int weight)
     {
-        return GetTypifiedChance(GetVolume(type), value);
-    }
+        if (_raritiesWeights.ContainsKey(weight))
+            return _raritiesWeights[weight];
 
-    public string GetTypifiedChance(BallVolume volume, float value)
-    {
-        if (volume == null || volume.Species == BallVolumesSpecies.Hit)
-            return $"{(int)(value * 100)}%";
-        else
-            return $"{(int)value}";
+        return null;
     }
 
     public BallVolume GetVolume(BallVolumesTypes type)

@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation
+public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, IInitializable
 {
-    [SerializeField] private bool _isLoadGlobalVolumesOnEnable;
+    [SerializeField] private bool _showOnlyBag;
     [SerializeField] private BallWaveVolume _source;
     [SerializeField] private RectTransform _viewPort;
     [SerializeField] private GameDataVolumeMicView _viewPrefab;
@@ -14,21 +15,50 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation
 
     private Queue<GameDataVolumeMicView> _free = new Queue<GameDataVolumeMicView>();
     private Queue<GameDataVolumeMicView> _busy = new Queue<GameDataVolumeMicView>();
+    private Action _update = () => { };
+    private Func<IEnumerable<BallVolumesBagCell>> _getter = () => { return default; };
+    private GameDataVolumeMicView _currentView;
+
+    public BallVolumesBagCell CurrentData {  get; private set; }
+
+    public event Action<bool> ActiveVolumePerformed;
 
     private void OnEnable()
     {
-        _source.Changed += OnSourceUpdate;
+        _update();
+        _source.Changed += ShowVolumes;
 
-        if (_isLoadGlobalVolumesOnEnable)
-            ShowVolumes(_source.Bag.All);
-        else
-            ShowVolumes(_source.GetActiveVolumes());
+        foreach(GameDataVolumeMicView cell in _busy)
+            cell.Performed += ChangeCurrent;
     }
 
     private void OnDisable()
     {
-        if (_source != null)
-            _source.Changed -= OnSourceUpdate;
+        _source.Changed -= ShowVolumes;
+
+        foreach (GameDataVolumeMicView cell in _busy)
+            cell.Performed -= ChangeCurrent;
+    }
+
+    public void HidePerformed()
+    {
+        if (_currentView == null)
+            return;
+
+        _currentView.Unperformed();
+        _currentView = null;
+    }
+
+    public void Init()
+    {
+        _update = ShowVolumes;
+
+        if (_showOnlyBag)
+            _getter = () => _source.Bag.All;
+        else
+            _getter = () => _source.GetAllVolumes();
+
+        _update();
     }
 
     public void UpdateScreenOrientation(ScreenOrientation orientation)
@@ -51,30 +81,65 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation
         _viewPort.sizeDelta = Vector2.zero;
     }
 
-    private void OnSourceUpdate()
-    {
-        ShowVolumes(_source.GetActiveVolumes());
-    }
-
-    private void ShowVolumes(IEnumerable<BallVolumesBagCell> volumes)
+    private void ShowVolumes()
     {
         HideAll();
 
-        foreach (var newValue in _source.GetActiveVolumes())
+        foreach (var newValue in _getter())
         {
-            GameDataVolumeMicView tempView;
-
-            if (_free.TryDequeue(out tempView) == false)
+            if (_free.TryDequeue(out var tempView) == false)
                 tempView = Instantiate(_viewPrefab, _viewPort).Init();
 
-            tempView.Show(newValue.Volume, newValue.Value);
+            tempView.Show(newValue);
+            tempView.Performed += ChangeCurrent;
             _busy.Enqueue(tempView);
         }
     }
 
     private void HideAll()
     {
-        while (_busy.TryDequeue(out GameDataVolumeMicView tempView))
+        ChangeCurrent(null);
+
+        while (_busy.TryDequeue(out var tempView))
+        {
+            tempView.Performed -= ChangeCurrent;
             _free.Enqueue(tempView.Hide());
+        }
+    }
+
+    private void ChangeCurrent(GameDataVolumeMicView view)
+    {
+        bool isHaveCurrent = _currentView != null;
+        bool wasActive = false;
+
+        if (isHaveCurrent)
+        {
+            if (_currentView == view)
+            {
+                ActiveVolumePerformed?.Invoke(_currentView.IsActive);
+                return;
+            }
+            else
+            {
+                wasActive = IsCurrentGonnaActive();
+                _currentView.Unperformed();
+            }
+        }
+        
+        _currentView = view;
+        bool gonnaActive = IsCurrentGonnaActive();
+
+        if (gonnaActive)
+            CurrentData = _currentView.Data;
+        else
+            CurrentData = default;
+
+        if (wasActive != gonnaActive)
+            ActiveVolumePerformed?.Invoke(gonnaActive);
+    }
+
+    private bool IsCurrentGonnaActive()
+    {
+        return _currentView != null && _currentView.IsActive && _currentView.Data.Volume.Species == BallVolumesSpecies.Hit;
     }
 }

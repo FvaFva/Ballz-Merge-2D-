@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 public class BallVolumesCageView : MonoBehaviour, IInitializable
 {
     private const float SlowMoTime = 1.7f;
 
+    [SerializeField] private Image _block;
     [SerializeField] private BallVolumeCageElement _prefab;
     [SerializeField] private BallVolumeCageContainer _container;
     [SerializeField] private int _countPreload;
+    [SerializeField] private RectTransform _box;
 
     private List<BallVolumeCageElement> _elements = new List<BallVolumeCageElement>();
     private Queue<BallVolumeCageElement> _cage;
@@ -31,6 +34,8 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         foreach (var element in _elements)
             element.RequiredSlowMo -= OnRequiredSlowMo;
     }
+
+    public void SetOnlyView(bool isOnlyView) => _block.enabled = isOnlyView;
 
     public void Clear()
     {
@@ -107,7 +112,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
 
     private BallVolumeCageElement GenerateElement()
     {
-        var newElement = Instantiate(_prefab, transform).Init(_container).Clear();
+        var newElement = Instantiate(_prefab, _box).Init(_container).Clear();
         newElement.RequiredSlowMo += OnRequiredSlowMo;
         return newElement;
     }
