@@ -8,15 +8,27 @@ public class BallVolumesComposer : BallComponent
 
     private void OnEnable()
     {
-        _carrier?.gameObject.SetActive(true);
-        _bag?.gameObject.SetActive(true);
-        _cage?.SetOnlyView(false);
+        SetActive(_carrier, true);
+        SetActive(_bag, true);
+        SetOnlyView(_cage, false);
     }
 
     private void OnDisable()
     {
-        _carrier?.gameObject.SetActive(false);
-        _bag?.gameObject.SetActive(false);
-        _cage?.SetOnlyView(true);
+        SetActive(_carrier, false);
+        SetActive(_bag, false);
+        SetOnlyView(_cage, true);
+    }
+
+    private void SetActive(Component component, bool state)
+    {
+        if (component != null)
+            component.gameObject.SetActive(state);
+    }
+
+    private void SetOnlyView(BallVolumesCageView component, bool state)
+    {
+        if (component != null)
+            component.SetOnlyView(state);
     }
 }

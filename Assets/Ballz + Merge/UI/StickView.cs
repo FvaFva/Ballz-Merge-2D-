@@ -51,8 +51,14 @@ public class StickView : MonoBehaviour
         for (int i = _backMoves.Count - 1; i >= 0; i--)
             StopCoroutine(_backMoves.Dequeue());
 
-        _inputZone.gameObject.SetActive(false);
-        _cancelZone.gameObject.SetActive(false);
+        SetActive(_inputZone, false);
+        SetActive(_cancelZone, false);
+    }
+
+    private void SetActive(Component component, bool state)
+    {
+        if (component != null)
+            component.gameObject.SetActive(state);
     }
 
     public void EnterAim()

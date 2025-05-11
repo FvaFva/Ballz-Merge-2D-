@@ -13,6 +13,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         protected BlocksInGame ActiveBlocks { get; private set; }
 
         private Action UpdateHandler = () => { };
+        private Block _connectBlock;
 
         public event Action<BlockAdditionalEffectBase> Removed;
 
@@ -45,13 +46,14 @@ namespace BallzMerge.Gameplay.BlockSpace
             Current.Deactivated += OnBlockDestroy;
 
             if (connectBlock != null)
-                SetConnectBlock(connectBlock);
+                _connectBlock = connectBlock;
 
             if (TryActivate())
             {
                 gameObject.SetActive(true);
                 HandleUpdate();
                 UpdateHandler = HandleUpdate;
+                _connectBlock = null;
             }
             else
             {
@@ -76,12 +78,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         protected void SetConnectBlock()
         {
-            ConnectBlock = ConnectBlock != null ? ConnectBlock : ActiveBlocks.GetRandomBlock(Current);
-        }
-
-        private void SetConnectBlock(Block block)
-        {
-            ConnectBlock = block;
+            ConnectBlock = _connectBlock != null ? _connectBlock : ActiveBlocks.GetRandomBlock(Current);
         }
 
         private void OnBlockDestroy(Block block)
