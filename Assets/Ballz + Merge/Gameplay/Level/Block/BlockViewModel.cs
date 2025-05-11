@@ -28,6 +28,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         private float _moveTime;
         private float _cellSize;
 
+        public SpriteRenderer Skin => _skin;
+
         private void Awake()
         {
             _transform = transform;

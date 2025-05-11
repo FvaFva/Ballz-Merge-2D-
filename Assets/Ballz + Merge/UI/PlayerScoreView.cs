@@ -5,11 +5,6 @@ public class PlayerScoreView : MonoBehaviour
     [SerializeField] private ValueView _score;
     [SerializeField] private PlayerScore _playerScore;
 
-    private void Awake()
-    {
-        UpdateScore();
-    }
-
     private void OnEnable()
     {
         _playerScore.ScoreChanged += UpdateScore;
@@ -17,11 +12,12 @@ public class PlayerScoreView : MonoBehaviour
 
     private void OnDisable()
     {
-        _playerScore.ScoreChanged += UpdateScore;
+        if (_playerScore != null)
+            _playerScore.ScoreChanged -= UpdateScore;
     }
 
-    private void UpdateScore()
+    private void UpdateScore(int score)
     {
-        _score.Show(_playerScore.Score);
+        _score.Show(score);
     }
 }

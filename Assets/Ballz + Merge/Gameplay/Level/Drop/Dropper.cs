@@ -5,7 +5,7 @@ using System;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class Dropper : CyclicBehavior, IInitializable, ILevelStarter
+    public class Dropper : CyclicBehavior, IInitializable, ILevelLoader
     {
         [SerializeField] private int _wavesToDrop;
         [SerializeField] private DropSelector _selector;

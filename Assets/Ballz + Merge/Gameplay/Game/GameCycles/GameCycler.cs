@@ -3,6 +3,7 @@ using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
 using BallzMerge.Root;
+using ModestTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +22,9 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     private List<ILevelFinisher> _finishers = new List<ILevelFinisher>();
     private List<IInitializable> _initializedComponents = new List<IInitializable>();
-    private List<ILevelStarter> _starters = new List<ILevelStarter>();
     private List<IWaveUpdater> _wavers = new List<IWaveUpdater>();
     private List<IDependentScreenOrientation> _orientators = new List<IDependentScreenOrientation>();
+    private List<ILevelLoader> _loaders = new List<ILevelLoader>();
     private List<ILevelSaver> _savers = new List<ILevelSaver>();
     private Action<SceneExitData> _sceneCallBack;
     private SceneExitData _exitData;
@@ -48,14 +49,14 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             if (cyclical is ILevelFinisher finisher)
                 _finishers.Add(finisher);
 
-            if (cyclical is ILevelStarter starter)
-                _starters.Add(starter);
-
             if (cyclical is IWaveUpdater waver)
                 _wavers.Add(waver);
 
             if (cyclical is IDependentScreenOrientation orientator)
                 _orientators.Add(orientator);
+
+            if (cyclical is ILevelLoader loader)
+                _loaders.Add(loader);
 
             if (cyclical is ILevelSaver saver)
                 _savers.Add(saver);
@@ -88,7 +89,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         IsAvailable = false;
     }
 
-    public void Init(Action<SceneExitData> callback, IDictionary<string, float> loadData = null)
+    public void Init(Action<SceneExitData> callback, IDictionary<string, object> loadData = null)
     {
         if (_conductor == null)
         {
@@ -100,26 +101,49 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         _sceneCallBack = callback;
         _mainUI.Init();
         _rootUI.AttachSceneUI(_mainUI, _operator.UI);
-        RestartLevel();
-
-        if (loadData != null)
-        {
-            foreach (ILevelSaver saver in _savers)
-                saver.Load(loadData);
-        }
+        RestartLevel(loadData);
+        _orientators.Clear();
     }
 
     private void OnBallLeftGame()
     {
-        _conductor.Start();
+        _conductor.Continue();
     }
 
-    private void RestartLevel()
+    private void RestartLevel(IDictionary<string, object> loadData = null)
     {
-        foreach (ILevelStarter starter in _starters)
-            starter.StartLevel();
+        if (loadData == null || ContainsEmptyValue(loadData))
+        {
+            LoadLevel();
+            _conductor.Start();
+        }
+        else
+        {
+            LoadLevel(loadData);
+        }
+    }
 
-        _conductor.Start();
+    private bool ContainsEmptyValue(IDictionary<string, object> data)
+    {
+        foreach (KeyValuePair<string, object> pair in data)
+        {
+            if (string.IsNullOrEmpty(pair.Value?.ToString()))
+                return true;
+        }
+
+        return false;
+    }
+
+    private void LoadLevel()
+    {
+        foreach (ILevelLoader loader in _loaders)
+            loader.StartLevel();
+    }
+
+    private void LoadLevel(IDictionary<string, object> loadData)
+    {
+        foreach (ILevelLoader loader in _loaders)
+            loader.Load(loadData);
     }
 
     private void OnWaveLoaded()

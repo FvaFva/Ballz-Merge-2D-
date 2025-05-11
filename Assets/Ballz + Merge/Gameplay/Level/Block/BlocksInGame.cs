@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlocksInGame: IDisposable
+    public class BlocksInGame : IDisposable
     {
-        private readonly List<Block> _blocks = new List<Block>();
+        private List<Block> _blocks = new List<Block>();
         private readonly Vector2Int[] AllSides = new Vector2Int[4] { Vector2Int.right, Vector2Int.left, Vector2Int.down, Vector2Int.up };
 
         public IEnumerable<Block> Blocks => _blocks;
@@ -59,10 +60,10 @@ namespace BallzMerge.Gameplay.BlockSpace
                 _blocks[i].Deactivate();
         }
 
-        public Block GetRandomBlock(Block selfExcluding = null, bool isWithoutEffectSelection = false)
+        public Block GetRandomBlock(Block selfExcluding = null, bool isIgnoreExistingEffect = false)
         {
             var otherBlocks = _blocks
-                .Where(block => block != selfExcluding && (isWithoutEffectSelection || block.IsWithEffect == false));
+                .Where(block => block != selfExcluding && (isIgnoreExistingEffect || block.IsWithEffect == false));
 
             if (otherBlocks.Any())
                 return otherBlocks.ToArray()[UnityEngine.Random.Range(0, otherBlocks.Count())];
@@ -81,7 +82,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void OnBlockHit(Block block, Vector2Int direction)
         {
-            if(TryMergeCell(block, direction) == false)
+            if (TryMergeCell(block, direction) == false)
                 BlockHit?.Invoke(block, direction);
         }
 

@@ -1,43 +1,45 @@
 ﻿using BallzMerge.Data;
 using System;
+using System.Collections.Generic;
 using Zenject;
 
-public class PlayerScore : CyclicBehavior, ILevelStarter, ILevelFinisher, IInitializable, IWaveUpdater
+public class PlayerScore : CyclicBehavior, ILevelLoader, ILevelFinisher, IInitializable, IWaveUpdater
 {
     [Inject] private DataBaseSource _data;
     [Inject] private BallWaveVolume _waveVolume;
 
-    public int Score { get; private set; }
-    public int BestScore { get; private set; }
-    public event Action ScoreChanged;
+    private int _bestScore;
+
+    private int _score;
+    public event Action<int> ScoreChanged;
 
     public void Init()
     {
-        BestScore = _data.History.GetBestScore();
-        ScoreChanged?.Invoke();
+        _bestScore = _data.History.GetBestScore();
+        ScoreChanged?.Invoke(_score);
     }
 
     public void StartLevel()
     {
-        Score = 0;
+        _score = 0;
     }
 
     public void FinishLevel()
     {
-        if (Score == 0)
+        if (_score == 0)
             return;
 
-        _data.History.SaveResult(Score, _waveVolume.Bag);
+        _data.History.SaveResult(_score, _waveVolume.Bag);
 
-        if (Score > BestScore)
-            BestScore = Score;
+        if (_score > _bestScore)
+            _bestScore = _score;
 
-        ScoreChanged?.Invoke();
+        ScoreChanged?.Invoke(_score);
     }
 
     public void UpdateWave()
     {
-        Score++;
-        ScoreChanged?.Invoke();
+        _score++;
+        ScoreChanged?.Invoke(_score);
     }
 }

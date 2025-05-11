@@ -5,7 +5,9 @@ namespace BallzMerge.Gameplay.BlockSpace
 {
     public abstract class BlockAdditionalEffectBase : MonoBehaviour
     {
-        protected Block Current { get; private set; }
+        public int ID {get; private set;}
+        public Block Current { get; private set; }
+        public Block ConnectBlock { get; private set; }
         protected bool IsActive { get; private set; }
         protected AdditionalEffectsPool EffectsPool { get; private set; }
         protected BlocksInGame ActiveBlocks { get; private set; }
@@ -24,8 +26,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             UpdateHandler();
         }
 
-        public BlockAdditionalEffectBase Init(BlocksInGame blocks, AdditionalEffectsPool effectsPool)
+        public BlockAdditionalEffectBase Init(int id, BlocksInGame blocks, AdditionalEffectsPool effectsPool)
         {
+            ID = id;
+            name = $"Effect {ID}";
             EffectsPool = effectsPool;
             ActiveBlocks = blocks;
             Init();
@@ -34,17 +38,20 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public abstract void HandleWave();
 
-        public void Activate(Block targetBlock)
+        public void Activate(Block targetBlock, Block connectBlock = null)
         {
             Current = targetBlock;
             IsActive = true;
             Current.Deactivated += OnBlockDestroy;
 
+            if (connectBlock != null)
+                SetConnectBlock(connectBlock);
+
             if (TryActivate())
             {
+                gameObject.SetActive(true);
                 HandleUpdate();
                 UpdateHandler = HandleUpdate;
-                gameObject.SetActive(true);
             }
             else
             {
@@ -66,6 +73,16 @@ namespace BallzMerge.Gameplay.BlockSpace
         protected abstract void HandleUpdate();
         protected abstract void Init();
         protected abstract void HandleDeactivate();
+
+        protected void SetConnectBlock()
+        {
+            ConnectBlock = ConnectBlock != null ? ConnectBlock : ActiveBlocks.GetRandomBlock(Current);
+        }
+
+        private void SetConnectBlock(Block block)
+        {
+            ConnectBlock = block;
+        }
 
         private void OnBlockDestroy(Block block)
         {

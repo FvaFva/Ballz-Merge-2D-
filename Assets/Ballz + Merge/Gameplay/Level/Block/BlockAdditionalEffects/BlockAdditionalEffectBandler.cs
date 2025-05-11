@@ -12,7 +12,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         [SerializeField] private ParticleSystem _particleFirst;
         [SerializeField] private ParticleSystem _particleLast;
 
-        private Block _connectBlock;
         private Transform _particleFirstTransform;
         private Transform _particleLastTransform;
         private Dictionary<Block, bool> _blocksSubscriptionStates = new Dictionary<Block, bool>();
@@ -20,35 +19,35 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public override void HandleWave()
         {
-            if (_connectBlock == null || Current == null)
+            if (ConnectBlock == null || Current == null)
                 Deactivate();
         }
 
         protected override bool TryActivate()
         {
-            _connectBlock = ActiveBlocks.GetRandomBlock(Current);
+            SetConnectBlock();
             _blocksSubscriptionStates.Add(Current, false);
 
-            if (_connectBlock == null)
+            if (ConnectBlock == null)
                 return false;
 
             _isActive = true;
             ChangeViewActivity(true);
             Current.ConnectEffect();
-            _connectBlock.ConnectEffect();
-            _connectBlock.Deactivated += HandleDeactivateBlock;
-            _blocksSubscriptionStates.Add(_connectBlock, false);
+            ConnectBlock.ConnectEffect();
+            ConnectBlock.Deactivated += HandleDeactivateBlock;
+            _blocksSubscriptionStates.Add(ConnectBlock, false);
             UpdateSubscription(Current, true);
-            UpdateSubscription(_connectBlock, true);
+            UpdateSubscription(ConnectBlock, true);
             return true;
         }
 
         protected override void HandleUpdate()
         {
             _renderer.SetPosition(FirstIndex, Current.WorldPosition);
-            _renderer.SetPosition(SecondIndex, _connectBlock.WorldPosition);
+            _renderer.SetPosition(SecondIndex, ConnectBlock.WorldPosition);
             _particleFirstTransform.position = Current.WorldPosition;
-            _particleLastTransform.position = _connectBlock.WorldPosition;
+            _particleLastTransform.position = ConnectBlock.WorldPosition;
         }
 
         protected override void Init()
@@ -65,11 +64,11 @@ namespace BallzMerge.Gameplay.BlockSpace
             {
                 _isActive = false;
                 ChangeViewActivity(false);
-                UpdateSubscription(_connectBlock, false);
+                UpdateSubscription(ConnectBlock, false);
                 UpdateSubscription(Current, false);
-                _connectBlock.Deactivated -= HandleDeactivateBlock;
+                ConnectBlock.Deactivated -= HandleDeactivateBlock;
                 _blocksSubscriptionStates.Clear();
-                Another(block).Destroy();
+                GetOppositeCurrentOrConnection(block).Destroy();
             }
         }
 
@@ -97,15 +96,15 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void OnNumberChanged(Block block, int Count)
         {
-            var another = Another(block);
+            var another = GetOppositeCurrentOrConnection(block);
             block.NumberChanged -= OnNumberChanged;
             another.ChangeNumber(Count);
             block.NumberChanged += OnNumberChanged;
         }
 
-        private void OnHit(Block block, Vector2Int step) => Another(block).Move(step);
+        private void OnHit(Block block, Vector2Int step) => GetOppositeCurrentOrConnection(block).Move(step);
 
-        private Block Another(Block block) => block == Current ? _connectBlock : Current;
+        private Block GetOppositeCurrentOrConnection(Block block) => block == Current ? ConnectBlock : Current;
 
         private void ChangeViewActivity(bool isActive)
         {
