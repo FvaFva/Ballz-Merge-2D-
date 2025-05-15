@@ -27,7 +27,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _onComeAllBlocks = callBack;
 
-            foreach (var block in blocks.ToArray())
+            foreach (var block in blocks.OrderByDescending(block => block.ID))
             {
                 if(block.Move(direction, true))
                 {

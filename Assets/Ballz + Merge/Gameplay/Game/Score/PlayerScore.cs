@@ -1,10 +1,13 @@
 ﻿using BallzMerge.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using Zenject;
 
-public class PlayerScore : CyclicBehavior, ILevelLoader, ILevelFinisher, IInitializable, IWaveUpdater
+public class PlayerScore : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader, IWaveUpdater, ILevelFinisher
 {
+    private const string Score = "PlayerScore";
+
     [Inject] private DataBaseSource _data;
     [Inject] private BallWaveVolume _waveVolume;
 
@@ -16,12 +19,26 @@ public class PlayerScore : CyclicBehavior, ILevelLoader, ILevelFinisher, IInitia
     public void Init()
     {
         _bestScore = _data.History.GetBestScore();
-        ScoreChanged?.Invoke(_score);
     }
 
     public void StartLevel()
     {
         _score = 0;
+        ScoreChanged?.Invoke(_score);
+    }
+
+    public void Load(IDictionary<string, object> data)
+    {
+        _score = JsonConvert.DeserializeObject<int>(data[Score].ToString());
+        ScoreChanged?.Invoke(_score);
+    }
+
+    public IDictionary<string, object> GetSavingData()
+    {
+        return new Dictionary<string, object>
+        {
+            { Score, _score }
+        };
     }
 
     public void FinishLevel()

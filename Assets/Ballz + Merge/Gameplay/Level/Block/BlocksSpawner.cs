@@ -40,11 +40,15 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Init()
         {
-            _currentWave = 0;
             _blockID = 0;
 
             for (int i = 0; i < _countPreload; i++)
                 _blocks.Enqueue(Generate(++_blockID));
+        }
+
+        public void StartLevel()
+        {
+            _currentWave = 0;
         }
 
         public IDictionary<string, object> GetSavingData()

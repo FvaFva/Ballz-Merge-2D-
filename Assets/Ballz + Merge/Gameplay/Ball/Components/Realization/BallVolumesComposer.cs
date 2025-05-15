@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BallVolumesComposer : BallComponent
@@ -8,27 +9,15 @@ public class BallVolumesComposer : BallComponent
 
     private void OnEnable()
     {
-        SetActive(_carrier, true);
-        SetActive(_bag, true);
-        SetOnlyView(_cage, false);
+        _carrier.SetActive(true);
+        _bag.SetActive(true);
+        _cage.PerformIfNotNull(cage => cage.SetOnlyView(false));
     }
 
     private void OnDisable()
     {
-        SetActive(_carrier, false);
-        SetActive(_bag, false);
-        SetOnlyView(_cage, true);
-    }
-
-    private void SetActive(Component component, bool state)
-    {
-        if (component != null)
-            component.gameObject.SetActive(state);
-    }
-
-    private void SetOnlyView(BallVolumesCageView component, bool state)
-    {
-        if (component != null)
-            component.SetOnlyView(state);
+        _carrier.SetActive(false);
+        _bag.SetActive(false);
+        _cage.PerformIfNotNull(cage => cage.SetOnlyView(true));
     }
 }

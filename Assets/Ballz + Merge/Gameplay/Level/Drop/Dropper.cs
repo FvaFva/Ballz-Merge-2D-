@@ -2,11 +2,15 @@
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using Newtonsoft.Json;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class Dropper : CyclicBehavior, IInitializable, ILevelLoader
+    public class Dropper : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader
     {
+        private const string WavesToDrop = "WavesToDrop";
+        private const string SavedVolumes = "SavedVolumes";
+
         [SerializeField] private int _wavesToDrop;
         [SerializeField] private DropSelector _selector;
         [SerializeField] private DropRarity _rar;
@@ -34,6 +38,45 @@ namespace BallzMerge.Gameplay.Level
         public void StartLevel()
         {
             _waveCount = _wavesToDrop;
+            _view.Show(_waveCount);
+        }
+
+        public IDictionary<string, object> GetSavingData()
+        {
+            List<SavedVolume> savedVolumes = new List<SavedVolume>();
+
+            foreach (var drop in _selector.DropsMap)
+                savedVolumes.Add(new SavedVolume(drop.Volume.Type.ToString(), drop.Volume.Species.ToString(), drop.Rarity.Weight));
+
+            return new Dictionary<string, object>()
+            {
+                { SavedVolumes, savedVolumes },
+                { WavesToDrop, _waveCount }
+            };
+        }
+
+        public void Load(IDictionary<string, object> data)
+        {
+            _waveCount = JsonConvert.DeserializeObject<int>(data[WavesToDrop].ToString());
+            _view.Show(_waveCount);
+
+            List<SavedVolume> savedVolumes = JsonConvert.DeserializeObject<List<SavedVolume>>(data[SavedVolumes].ToString());
+
+            foreach (var savedVolume in savedVolumes)
+            {
+                for (int i = 0; i < _pool.Count; i++)
+                {
+                    var drop = _pool[i];
+
+                    if (drop.Volume.Type.ToString() == savedVolume.Name &&
+                        drop.Rarity.Weight == savedVolume.Weight &&
+                        drop.Volume.Species.ToString() == savedVolume.Species)
+                    {
+                        _selector.SelectDrop(new Drop(drop.Volume, drop.Rarity));
+                        break;
+                    }
+                }
+            }
         }
 
         public void ShowDrop(Action callback)
@@ -56,7 +99,7 @@ namespace BallzMerge.Gameplay.Level
 
         private void InitRarity(DropRarity rarity, List<BallVolume> volumes)
         {
-            foreach (BallVolume volume in _rarities)
+            foreach (BallVolume volume in volumes)
             {
                 for (int i = 0; i < rarity.CountInPool; i++)
                     _pool.Add(new Drop(volume, rarity));
