@@ -22,10 +22,10 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
     [Inject] private BlocksBinder _blocksBinder;
     [Inject] private BallWaveVolume _ballWaveVolume;
 
-    private int _countWavesUntilSpawn;
+    private int _remainingCountSpawn;
     private int _currentColumns;
     private int _currentRows;
-    private int _currentWave;
+    private int _countUntilSpawn;
     private float _halfSize;
     private float _sizeWithSpace;
 
@@ -48,7 +48,7 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
 
     public void UpdateWave()
     {
-        if (++_currentWave == _fieldExpanderSettings.WaveCount)
+        if (++_countUntilSpawn == _fieldExpanderSettings.CountUntilSpawn)
         {
             if (_fieldExpanderSettings.IsLoop)
             {
@@ -56,8 +56,11 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
             }
             else
             {
-                _countWavesUntilSpawn--;
-                SpawnColumn();
+                if (_remainingCountSpawn > 0)
+                {
+                    _remainingCountSpawn--;
+                    SpawnColumn();
+                }
             }
         }
     }
@@ -69,8 +72,8 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
         _ballWaveVolume.Bag.Added += OnAbilityAdd;
         _fieldEffect.transform.position = _fieldPosition;
         _fieldShape.scale = _fieldScale;
-        _currentWave = 0;
-        _countWavesUntilSpawn = _fieldExpanderSettings.Count;
+        _countUntilSpawn = 0;
+        _remainingCountSpawn = _fieldExpanderSettings.CountOfSpawn;
         _currentColumns = _gridSettings.Size.x;
         _currentRows = _gridSettings.Size.y;
         _cameras.SetGameplayBoardSize(BoardSize());
@@ -113,7 +116,7 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
 
     private void SpawnColumn()
     {
-        _currentWave = 0;
+        _countUntilSpawn = 0;
         _currentColumns++;
         AddColumn();
     }
@@ -151,8 +154,8 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
         _fieldEffect.transform.position = _fieldPosition;
         _fieldShape.scale = _fieldScale;
         _cameras.SetDefault();
-        _currentWave = 0;
-        _countWavesUntilSpawn = _fieldExpanderSettings.Count;
+        _countUntilSpawn = 0;
+        _remainingCountSpawn = _fieldExpanderSettings.CountOfSpawn;
         _currentColumns = _gridSettings.Size.x;
         _currentRows = _gridSettings.Size.y;
     }

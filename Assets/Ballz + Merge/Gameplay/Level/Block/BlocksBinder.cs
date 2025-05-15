@@ -69,7 +69,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Load(IDictionary<string, object> data)
         {
-            List<SavedBlock> savedBlocks = new List<SavedBlock>(JsonConvert.DeserializeObject<List<SavedBlock>>(data[SavedBlocks].ToString()));
+            List<SavedBlock> savedBlocks = JsonConvert.DeserializeObject<List<SavedBlock>>(data[SavedBlocks].ToString());
 
             foreach (SavedBlock savedBlock in savedBlocks)
                 _spawner.SpawnBlock(savedBlock.Number, new Vector2Int(savedBlock.GridPositionX, savedBlock.GridPositionY), savedBlock.ID);

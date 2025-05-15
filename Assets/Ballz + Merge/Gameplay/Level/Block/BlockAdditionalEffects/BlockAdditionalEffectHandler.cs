@@ -56,7 +56,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Load(IDictionary<string, object> data)
         {
-            _savedEffects = new List<SavedEffect>(JsonConvert.DeserializeObject<List<SavedEffect>>(data[SavedEffects].ToString()));
+            _savedEffects = JsonConvert.DeserializeObject<List<SavedEffect>>(data[SavedEffects].ToString());
         }
 
         public void FinishLevel()
