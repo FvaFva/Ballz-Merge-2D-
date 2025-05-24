@@ -27,7 +27,7 @@ public class BallVolumeHitInspector
     {
         var nextVolume = _ballWaveVolume.Cage.CheckNext();
 
-        if (nextVolume.IsInited)
+        if (nextVolume != null)
             _map[nextVolume.Volume.Type].Invoke(data, nextVolume.Rarity, nextVolume.ViewCallback);
     }
 

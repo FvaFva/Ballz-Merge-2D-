@@ -13,8 +13,9 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
     private BallVolumeCageContainer _container;
     private RectTransform _transform;
 
-    public BallVolumesBagCell Current {  get; private set; }
-    public bool IsFree => !Current.IsInited;
+    public int ID { get; private set; }
+    public BallVolumesBagCell Current { get; private set; }
+    public bool IsFree => Current == null;
 
     public event Action RequiredSlowMo;
 
@@ -26,16 +27,17 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
 
     public BallVolumeCageElement Apply(BallVolumesBagCell volume)
     {
-        if (Current.Equals(volume))
+        if (Current == volume)
             return this;
 
-        if(!volume.IsInited)
+        if (volume == null)
         {
             Clear();
             return this;
         }
 
-        volume.ViewCallback = ShowEffect;
+        volume.SetCallback(ShowEffect);
+        volume.SetID(ID);
         Current = volume;
         ShowCurrent();
         return this;
@@ -52,7 +54,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
 
     public void ChangeHighlight(bool isActive)
     {
-        if(isActive)
+        if (isActive)
             _highlight.Play();
         else
             _highlight.Stop();
@@ -76,10 +78,11 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
     public void Show()
     {
         ShowCurrent();
-    }   
-    
-    public BallVolumeCageElement Init(BallVolumeCageContainer container)
+    }
+
+    public BallVolumeCageElement Init(int id, BallVolumeCageContainer container)
     {
+        ID = id;
         _container = container;
         _backlight.Init();
         _highlight.Init();
@@ -91,7 +94,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (Current.IsInited == false)
+        if (Current == null)
             return;
 
         _container.Put(this, _transform.position, eventData.position);
@@ -106,7 +109,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (Current.IsInited)
+        if (Current != null)
             _container.ApplyDelta(eventData.position);
     }
 
@@ -115,7 +118,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
         _container.Disable();
         _backlight.Stop();
 
-        if (Current.IsInited)
+        if (Current != null)
             ShowCurrent();
     }
 

@@ -45,8 +45,8 @@ namespace BallzMerge.Gameplay.Level
         {
             List<SavedVolume> savedVolumes = new List<SavedVolume>();
 
-            foreach (var drop in _selector.DropsMap)
-                savedVolumes.Add(new SavedVolume(drop.Volume.Type.ToString(), drop.Volume.Species.ToString(), drop.Rarity.Weight));
+            foreach (var bagCell in _selector.DropsMap)
+                savedVolumes.Add(new SavedVolume(bagCell.ID, bagCell.Volume.Type.ToString(), bagCell.Volume.Species.ToString(), bagCell.Rarity.Weight));
 
             return new Dictionary<string, object>()
             {
@@ -72,7 +72,7 @@ namespace BallzMerge.Gameplay.Level
                         drop.Rarity.Weight == savedVolume.Weight &&
                         drop.Volume.Species.ToString() == savedVolume.Species)
                     {
-                        _selector.SelectDrop(new Drop(drop.Volume, drop.Rarity));
+                        _selector.SelectDrop(new Drop(drop.Volume, drop.Rarity), savedVolume.ID);
                         break;
                     }
                 }

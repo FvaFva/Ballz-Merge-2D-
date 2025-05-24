@@ -87,6 +87,9 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
 
         foreach (var newValue in _getter())
         {
+            if (newValue == null)
+                continue;
+
             if (_free.TryDequeue(out var tempView) == false)
                 tempView = Instantiate(_viewPrefab, _viewPort).Init();
 
