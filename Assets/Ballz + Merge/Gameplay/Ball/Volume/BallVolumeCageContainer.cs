@@ -42,7 +42,7 @@ public class BallVolumeCageContainer : MonoBehaviour
 
     public void Put(BallVolumeCageElement cell, Vector2 position, Vector2 tupPoint)
     {
-        _icon.enabled = cell.Current.IsInited;
+        _icon.enabled = cell.Current != null;
         _audio.Play(AudioEffectsTypes.Hit);
 
         if (_icon.enabled)

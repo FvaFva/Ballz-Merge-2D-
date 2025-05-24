@@ -48,22 +48,21 @@ public class BallVolumesBag : IDisposable
         Removed?.Invoke(volume);
     }
 
-    public void ApplyVolume(BallVolume volume, DropRarity rarity)
+    public void ApplyVolume(BallVolumesBagCell bagCell)
     {
-        BallVolumesBagCell newCell = new BallVolumesBagCell(volume, rarity);
-        _all.Add(newCell);
+        _all.Add(bagCell);
 
-        switch (volume.Species)
+        switch (bagCell.Volume.Species)
         {
             case BallVolumesSpecies.Passive:
-                _passive.Add(newCell);
+                _passive.Add(bagCell);
                 break;
             case BallVolumesSpecies.Hit:
-                _hit.Add(newCell);
+                _hit.Add(bagCell);
                 break;
         }
 
         Changed?.Invoke();
-        Added?.Invoke(newCell);
+        Added?.Invoke(bagCell);
     }
 }

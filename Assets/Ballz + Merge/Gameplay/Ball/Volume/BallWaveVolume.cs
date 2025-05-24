@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILevelFinisher
+public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILevelLoader, ILevelFinisher
 {
     [SerializeField] private DropSelector _dropSelector;
     [SerializeField] private BallVolumesCageView _cage;
 
     private Func<IEnumerable<BallVolumesBagCell>> _allVolumesGenerator = () => (Enumerable.Empty<BallVolumesBagCell>());
-
     public BallVolumesBag Bag {  get; private set; }
     public BallVolumesCageView Cage => _cage;
+    public DropSelector DropSelector => _dropSelector;
 
     public event Action Changed;
 
