@@ -4,13 +4,13 @@ using Zenject;
 using BallzMerge.Gameplay.Level;
 using System;
 using System.Collections;
-using Newtonsoft.Json;
+using BallzMerge.Data;
+using System.Linq;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
     public class BlocksBinder : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader
     {
-        private const string SavedBlocks = "Blocks";
         private const float AnimationDelay = 0.1f;
 
         [SerializeField] private BlocksSpawner _spawner;
@@ -19,6 +19,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         [SerializeField] private BlocksDestroyImpact _destroyImpact;
         [SerializeField] private BlockAdditionalEffectHandler _additionalEffectHandler;
 
+        [Inject] private DataBaseSource _data;
         [Inject] private GridSettings _gridSettings;
         [Inject] private BlocksInGame _activeBlocks;
         [Inject] private DiContainer _diContainer;
@@ -54,22 +55,19 @@ namespace BallzMerge.Gameplay.BlockSpace
             _sleep = new WaitForSeconds(AnimationDelay);
         }
 
-        public IDictionary<string, object> GetSavingData()
+        public void GetSavingData()
         {
             List<SavedBlock> savedBlocks = new List<SavedBlock>();
 
             foreach (Block block in _activeBlocks.Blocks)
                 savedBlocks.Add(new SavedBlock(block.ID, block.Number, block.GridPosition.x, block.GridPosition.y));
 
-            return new Dictionary<string, object>()
-            {
-                { SavedBlocks, savedBlocks }
-            };
+            _data.Saves.SaveBlocks(savedBlocks);
         }
 
-        public void Load(IDictionary<string, object> data)
+        public void Load()
         {
-            List<SavedBlock> savedBlocks = JsonConvert.DeserializeObject<List<SavedBlock>>(data[SavedBlocks].ToString());
+            IEnumerable<SavedBlock> savedBlocks = _data.Saves.GetSavedBlocks();
 
             foreach (SavedBlock savedBlock in savedBlocks)
                 _spawner.SpawnBlock(savedBlock.Number, new Vector2Int(savedBlock.GridPositionX, savedBlock.GridPositionY), savedBlock.ID);

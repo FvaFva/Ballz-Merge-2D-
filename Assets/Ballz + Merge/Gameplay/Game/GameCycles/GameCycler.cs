@@ -93,7 +93,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         IsAvailable = false;
     }
 
-    public void Init(Action<SceneExitData> callback, IDictionary<string, object> loadData = null)
+    public void Init(Action<SceneExitData> callback, bool isLoad)
     {
         if (_conductor == null)
         {
@@ -105,7 +105,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         _sceneCallBack = callback;
         _mainUI.Init();
         _rootUI.AttachSceneUI(_mainUI, _operator.UI);
-        RestartLevel(loadData);
+        RestartLevel(isLoad);
         _orientators.Clear();
     }
 
@@ -114,40 +114,29 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         _conductor.Continue();
     }
 
-    private void RestartLevel(IDictionary<string, object> loadData = null)
+    private void RestartLevel(bool isLoad = false)
     {
-        if (loadData == null || ContainsEmptyValue(loadData))
+        if (isLoad)
         {
             LoadLevel();
-            _conductor.Start();
         }
         else
         {
-            LoadLevel(loadData);
+            StartLevel();
+            _conductor.Start();
         }
     }
 
-    private bool ContainsEmptyValue(IDictionary<string, object> data)
-    {
-        foreach (KeyValuePair<string, object> pair in data)
-        {
-            if (string.IsNullOrEmpty(pair.Value?.ToString()))
-                return true;
-        }
-
-        return false;
-    }
-
-    private void LoadLevel()
+    private void StartLevel()
     {
         foreach (ILevelLoader loader in _loaders)
             loader.StartLevel();
     }
 
-    private void LoadLevel(IDictionary<string, object> loadData)
+    private void LoadLevel()
     {
         foreach (ILevelLoader loader in _loaders)
-            loader.Load(loadData);
+            loader.Load();
     }
 
     private void OnWaveLoaded()

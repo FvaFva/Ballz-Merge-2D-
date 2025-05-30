@@ -2,14 +2,16 @@
 using System.Linq;
 using System.Collections.Generic;
 using System;
-using Newtonsoft.Json;
+using BallzMerge.Data;
+using Zenject;
 
 namespace BallzMerge.Gameplay.Level
 {
     public class Dropper : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader
     {
         private const string WavesToDrop = "WavesToDrop";
-        private const string SavedVolumes = "SavedVolumes";
+
+        [Inject] private DataBaseSource _data;
 
         [SerializeField] private int _wavesToDrop;
         [SerializeField] private DropSelector _selector;
@@ -41,26 +43,23 @@ namespace BallzMerge.Gameplay.Level
             _view.Show(_waveCount);
         }
 
-        public IDictionary<string, object> GetSavingData()
+        public void GetSavingData()
         {
             List<SavedVolume> savedVolumes = new List<SavedVolume>();
 
             foreach (var bagCell in _selector.DropsMap)
                 savedVolumes.Add(new SavedVolume(bagCell.ID, bagCell.Volume.Type.ToString(), bagCell.Volume.Species.ToString(), bagCell.Rarity.Weight));
 
-            return new Dictionary<string, object>()
-            {
-                { SavedVolumes, savedVolumes },
-                { WavesToDrop, _waveCount }
-            };
+            _data.Saves.Save(new KeyValuePair<string, float>(WavesToDrop, _waveCount));
+            _data.Saves.SaveVolumes(savedVolumes);
         }
 
-        public void Load(IDictionary<string, object> data)
+        public void Load()
         {
-            _waveCount = JsonConvert.DeserializeObject<int>(data[WavesToDrop].ToString());
+            _waveCount = Mathf.RoundToInt(_data.Saves.Get(WavesToDrop));
             _view.Show(_waveCount);
 
-            List<SavedVolume> savedVolumes = JsonConvert.DeserializeObject<List<SavedVolume>>(data[SavedVolumes].ToString());
+            IEnumerable<SavedVolume> savedVolumes = _data.Saves.GetSavedVolumes();
 
             foreach (var savedVolume in savedVolumes)
             {
@@ -72,7 +71,7 @@ namespace BallzMerge.Gameplay.Level
                         drop.Rarity.Weight == savedVolume.Weight &&
                         drop.Volume.Species.ToString() == savedVolume.Species)
                     {
-                        _selector.SelectDrop(new Drop(drop.Volume, drop.Rarity), savedVolume.ID);
+                        _selector.LoadDrop(new Drop(drop.Volume, drop.Rarity), savedVolume.ID);
                         break;
                     }
                 }

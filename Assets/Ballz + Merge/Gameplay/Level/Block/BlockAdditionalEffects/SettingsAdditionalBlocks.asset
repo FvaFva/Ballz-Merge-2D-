@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: SettingsAdditionalBlocks
   m_EditorClassIdentifier: 
   _properties:
-  - ID: 1
+  - Type: 1
     Prefab: {fileID: 5710768022605253989, guid: c3effd708bbdd5542a5a7f8db01a2272, type: 3}
     ChanceToPerform: 0.5
-  - ID: 2
+  - Type: 2
     Prefab: {fileID: 1957824631771879560, guid: 83f995ed1495db049b9a5fc2f06509a0, type: 3}
     ChanceToPerform: 0.5
   _spawnChance: 1

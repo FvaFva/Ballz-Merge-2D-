@@ -1,7 +1,6 @@
 using Mono.Data.Sqlite;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 public class GameSavesStorage
 {
@@ -10,6 +9,9 @@ public class GameSavesStorage
     private const string Value = "Value";
 
     private string _dbPath;
+    private GameSavedBlocksStorage _blocksStorage;
+    private GameSavedVolumesStorage _volumesStorage;
+    private GameSavedBlocksEffectsStorage _blockEffectsStorage;
 
     public GameSavesStorage(string dbPath)
     {
@@ -25,10 +27,36 @@ public class GameSavesStorage
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $@"CREATE TABLE IF NOT EXISTS {GameSavesTable}
-                                            ({Key} TEXT PRIMARY KEY,
-                                            {Value} TEXT)";
+                command.CommandText =   $@"CREATE TABLE IF NOT EXISTS {GameSavesTable}
+                                        ({Key} TEXT PRIMARY KEY,
+                                        {Value} REAL)";
 
+                command.ExecuteNonQuery();
+            }
+
+            _blocksStorage = new GameSavedBlocksStorage(connection);
+            _volumesStorage = new GameSavedVolumesStorage(connection);
+            _blockEffectsStorage = new GameSavedBlocksEffectsStorage(connection);
+
+            connection.Close();
+        }
+    }
+
+    public void Save(KeyValuePair<string, float> data)
+    {
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText =   $@"INSERT OR REPLACE INTO {GameSavesTable}
+                                        ({Key}, {Value})
+                                        VALUES
+                                        (@{Key}, @{Value})";
+
+                command.Parameters.AddWithValue(Key, data.Key);
+                command.Parameters.AddWithValue(Value, data.Value);
                 command.ExecuteNonQuery();
             }
 
@@ -36,30 +64,39 @@ public class GameSavesStorage
         }
     }
 
-    public void Save(IDictionary<string, object> data)
+    public void SaveBlocks(IEnumerable<SavedBlock> savedBlocks)
     {
         using (var connection = new SqliteConnection(_dbPath))
         {
             connection.Open();
-
-            using (var command = connection.CreateCommand())
-            {
-                foreach (var item in data)
-                {
-                    command.CommandText = $"INSERT OR REPLACE INTO {GameSavesTable} ({Key}, {Value}) VALUES (@{Key}, @{Value})";
-                    command.Parameters.AddWithValue(Key, item.Key);
-                    command.Parameters.AddWithValue(Value, JsonConvert.SerializeObject(item.Value));
-                    command.ExecuteNonQuery();
-                }
-            }
-
+            _blocksStorage.Set(connection, savedBlocks);
             connection.Close();
         }
     }
 
-    public IDictionary<string, object> Get()
+    public void SaveVolumes(IEnumerable<SavedVolume> savedVolumes)
     {
-        Dictionary<string, object> data = new Dictionary<string, object>();
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+            _volumesStorage.Set(connection, savedVolumes);
+            connection.Close();
+        }
+    }
+
+    public void SaveBlocksEffects(IEnumerable<SavedBlockEffect> savedBlocksEffects)
+    {
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+            _blockEffectsStorage.Set(connection, savedBlocksEffects);
+            connection.Close();
+        }
+    }
+
+    public float Get(string key)
+    {
+        float value = 0;
 
         using (var connection = new SqliteConnection(_dbPath))
         {
@@ -67,17 +104,58 @@ public class GameSavesStorage
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT * FROM {GameSavesTable}";
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                        data.Add(reader[Key].ToString(), reader[Value]);
-                }
+                command.CommandText = $"SELECT {Value} FROM {GameSavesTable} WHERE {Key} = @{Key}";
+                command.Parameters.AddWithValue(Key, key);
+                object result = command.ExecuteScalar();
+
+                value = float.Parse(result.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture);
             }
 
             connection.Close();
         }
 
-        return data;
+        return value;
+    }
+
+    public IEnumerable<SavedBlock> GetSavedBlocks()
+    {
+        IEnumerable<SavedBlock> savedBlocks;
+
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+            savedBlocks = _blocksStorage.Get(connection);
+            connection.Close();
+        }
+
+        return savedBlocks;
+    }
+
+    public IEnumerable<SavedVolume> GetSavedVolumes()
+    {
+        IEnumerable<SavedVolume> savedVolumes;
+
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+            savedVolumes = _volumesStorage.Get(connection);
+            connection.Close();
+        }
+
+        return savedVolumes;
+    }
+
+    public IEnumerable<SavedBlockEffect> GetSavedBlocksEffects()
+    {
+        IEnumerable<SavedBlockEffect> savedEffects;
+
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+            savedEffects = _blockEffectsStorage.Get(connection);
+            connection.Close();
+        }
+
+        return savedEffects;
     }
 }

@@ -7,7 +7,7 @@ public interface ILevelLoader
 
     }
 
-    public void Load(IDictionary<string, object> data)
+    public void Load()
     {
         StartLevel();
     }
