@@ -1,7 +1,7 @@
 ﻿using BallzMerge.Data;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Zenject;
 
 public class PlayerScore : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader, IWaveUpdater, ILevelFinisher
@@ -27,18 +27,15 @@ public class PlayerScore : CyclicBehavior, IInitializable, ILevelSaver, ILevelLo
         ScoreChanged?.Invoke(_score);
     }
 
-    public void Load(IDictionary<string, object> data)
+    public void Load()
     {
-        _score = JsonConvert.DeserializeObject<int>(data[Score].ToString());
+        _score = Mathf.RoundToInt(_data.Saves.Get(Score));
         ScoreChanged?.Invoke(_score);
     }
 
-    public IDictionary<string, object> GetSavingData()
+    public void GetSavingData()
     {
-        return new Dictionary<string, object>
-        {
-            { Score, _score }
-        };
+        _data.Saves.Save(new KeyValuePair<string, float>(Score, _score));
     }
 
     public void FinishLevel()

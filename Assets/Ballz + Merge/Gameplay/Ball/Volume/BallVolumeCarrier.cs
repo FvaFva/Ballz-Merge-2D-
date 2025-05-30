@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BallVolumeCarrier : CyclicBehavior , IInitializable, ILevelLoader, IDropHandler
+public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
 {
     private const float AnimationTime = 0.15f;
     private const string ToBagHeader = "Drop here for bag";
@@ -24,7 +24,6 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, ILevelLoader, 
     [SerializeField] private Image _headerParent;
     [SerializeField] private Image _lock;
 
-    private int _loadedVolumesCount = 0;
     private Tween _lockAnimation;
     private float _lockBaseFade;
 
@@ -48,11 +47,6 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, ILevelLoader, 
         _volumesView.ActiveVolumePerformed -= OnBagSpellActivate;
     }
 
-    public void Load(IDictionary<string, object> data)
-    {
-        _volumes.Bag.Added += OnLoad;
-    }
-
     public void OnDrop(PointerEventData eventData)
     {
         var ability = _container.Swap(default);
@@ -65,20 +59,6 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, ILevelLoader, 
         var ability = _volumesView.CurrentData;
         _cage.AddVolume(ability);
         _volumes.Bag.DropVolume(ability);
-    }
-
-    private void OnLoad(BallVolumesBagCell volumeBagCell)
-    {
-        ++_loadedVolumesCount;
-
-        if (volumeBagCell.Volume.Species == BallVolumesSpecies.Passive)
-            return;
-
-        _cage.AddSavedVolume(volumeBagCell);
-        _volumes.Bag.DropVolume(volumeBagCell);
-
-        if (_loadedVolumesCount == _volumes.DropSelector.CountOfVolumes)
-            _volumes.Bag.Added -= OnLoad;
     }
 
     private void OnContainerActivate(bool state)

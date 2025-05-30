@@ -1,6 +1,6 @@
-﻿using BallzMerge.Gameplay.BallSpace;
+﻿using BallzMerge.Data;
+using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.Level;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,6 +21,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         [SerializeField] private VirtualWorldFactory _factory;
 
         [Inject] private DiContainer _container;
+        [Inject] private DataBaseSource _data;
         [Inject] private GridSettings _gridSettings;
         [Inject] private BlocksInGame _activeBlocks;
 
@@ -51,17 +52,14 @@ namespace BallzMerge.Gameplay.BlockSpace
             _currentWave = 0;
         }
 
-        public IDictionary<string, object> GetSavingData()
+        public void GetSavingData()
         {
-            return new Dictionary<string, object>()
-            {
-                { CurrentWave,  _currentWave }
-            };
+            _data.Saves.Save(new KeyValuePair<string, float>(CurrentWave, _currentWave));
         }
 
-        public void Load(IDictionary<string, object> data)
+        public void Load()
         {
-            _currentWave = JsonConvert.DeserializeObject<int>(data[CurrentWave].ToString());
+            _currentWave = Mathf.RoundToInt(_data.Saves.Get(CurrentWave));
         }
 
         public IEnumerable<Block> SpawnWave()

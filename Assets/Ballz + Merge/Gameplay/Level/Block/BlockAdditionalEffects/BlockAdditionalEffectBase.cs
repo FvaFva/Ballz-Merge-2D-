@@ -5,7 +5,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 {
     public abstract class BlockAdditionalEffectBase : MonoBehaviour
     {
-        public int ID {get; private set;}
+        public BlockAdditionalEffectType Type {get; private set;}
         public Block Current { get; private set; }
         public Block ConnectBlock { get; private set; }
         protected bool IsActive { get; private set; }
@@ -27,10 +27,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             UpdateHandler();
         }
 
-        public BlockAdditionalEffectBase Init(int id, BlocksInGame blocks, AdditionalEffectsPool effectsPool)
+        public BlockAdditionalEffectBase Init(BlockAdditionalEffectType type, BlocksInGame blocks, AdditionalEffectsPool effectsPool)
         {
-            ID = id;
-            name = $"Effect {ID}";
+            Type = type;
+            name = $"Effect {Type}";
             EffectsPool = effectsPool;
             ActiveBlocks = blocks;
             Init();

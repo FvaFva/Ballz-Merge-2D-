@@ -21,7 +21,7 @@ public class TesterUI : MonoBehaviour
         foreach (IInitializable initializable in _loader.InitializedComponents)
             initializable.Init();
         
-        _loader.Init(SceneExitCallBack);
+        _loader.Init(SceneExitCallBack, false);
     }
 
     private void SceneExitCallBack(SceneExitData exitData)

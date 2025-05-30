@@ -1,62 +1,61 @@
-using Newtonsoft.Json;
+using BallzMerge.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zenject;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
     public class BlockAdditionalEffectHandler : CyclicBehavior, ILevelSaver, ILevelLoader, ILevelFinisher, IWaveUpdater
     {
-        private const string SavedEffects = "SavedEffects";
-
         [SerializeField] private BlockAdditionalEffectSettings _settings;
         [SerializeField] private AdditionalEffectsPool _effectsPool;
         [SerializeField] private Transform _parent;
         [SerializeField] private int _countOfPreload;
 
+        [Inject] private DataBaseSource _data;
+
         private BlocksInGame _activeBlocks;
-        private Dictionary<int, Queue<BlockAdditionalEffectBase>> _effects;
+        private Dictionary<BlockAdditionalEffectType, Queue<BlockAdditionalEffectBase>> _effects;
         private List<BlockAdditionalEffectBase> _activeEffects;
-        private List<SavedEffect> _savedEffects;
+        private List<SavedBlockEffect> _savedEffects;
 
         public void Init(BlocksInGame activeBlocks)
         {
             _activeBlocks = activeBlocks;
-            _effects = new Dictionary<int, Queue<BlockAdditionalEffectBase>>();
+            _effects = new Dictionary<BlockAdditionalEffectType, Queue<BlockAdditionalEffectBase>>();
             _activeEffects = new List<BlockAdditionalEffectBase>();
             BlockAdditionalEffectProperty property;
 
             for (int i = 1; i <= _settings.GetPropertiesCount(); i++)
             {
-                _effects.Add(i, new Queue<BlockAdditionalEffectBase>());
                 property = _settings.GetProperty(i);
+                _effects.Add(property.Type, new Queue<BlockAdditionalEffectBase>());
 
                 for (int j = 1; j <= _countOfPreload; j++)
-                    _effects[property.ID].Enqueue(Instantiate(property.Prefab, transform).Init(property.ID, _activeBlocks, _effectsPool));
+                    _effects[property.Type].Enqueue(Instantiate(property.Prefab, transform).Init(property.Type, _activeBlocks, _effectsPool));
             }
         }
 
-        public IDictionary<string, object> GetSavingData()
+        public void GetSavingData()
         {
-            List<SavedEffect> savedEffects = new List<SavedEffect>();
+            List<SavedBlockEffect> savedEffects = new List<SavedBlockEffect>();
 
             foreach (var effect in _activeEffects)
             {
                 if (effect.ConnectBlock == null)
-                    savedEffects.Add(new SavedEffect(effect.ID, effect.Current.ID, 0));
+                    savedEffects.Add(new SavedBlockEffect(effect.Type.ToString(), effect.Current.ID, 0));
                 else
-                    savedEffects.Add(new SavedEffect(effect.ID, effect.Current.ID, effect.ConnectBlock.ID));
+                    savedEffects.Add(new SavedBlockEffect(effect.Type.ToString(), effect.Current.ID, effect.ConnectBlock.ID));
             }
 
-            return new Dictionary<string, object>
-            {
-                { SavedEffects, savedEffects }
-            };
+            _data.Saves.SaveBlocksEffects(savedEffects);
         }
 
-        public void Load(IDictionary<string, object> data)
+        public void Load()
         {
-            _savedEffects = JsonConvert.DeserializeObject<List<SavedEffect>>(data[SavedEffects].ToString());
+            _savedEffects = _data.Saves.GetSavedBlocksEffects().ToList();
         }
 
         public void FinishLevel()
@@ -82,20 +81,20 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void LoadEffects(IEnumerable<Block> blocks)
         {
-            var blocksDictionary = blocks.ToDictionary(block => block.ID);
+            Dictionary<int, Block> blocksDictionary = blocks.ToDictionary(block => block.ID);
 
-            foreach (var effect in _savedEffects)
+            foreach (SavedBlockEffect effect in _savedEffects)
             {
-                if (!blocksDictionary.TryGetValue(effect.CurrentBlock, out var effectBlock))
+                if (!blocksDictionary.TryGetValue(effect.EffectBlock, out Block effectBlock))
                     continue;
 
-                if (blocksDictionary.TryGetValue(effect.ConnectBlock, out var connectBlock))
+                if (blocksDictionary.TryGetValue(effect.ConnectBlock, out Block connectBlock))
                 {
-                    SpawnEffect(effectBlock, effect.ID, connectBlock);
+                    SpawnEffect(effectBlock, (int)Enum.Parse<BlockAdditionalEffectType>(effect.Name), connectBlock);
                     continue;
                 }
 
-                SpawnEffect(effectBlock, effect.ID);
+                SpawnEffect(effectBlock, (int)Enum.Parse<BlockAdditionalEffectType>(effect.Name));
             }
         }
 
@@ -104,8 +103,8 @@ namespace BallzMerge.Gameplay.BlockSpace
             BlockAdditionalEffectProperty effectProperty;
             effectProperty = id == null ? _settings.GetProperty() : _settings.GetProperty((int)id);
 
-            if (_effects[effectProperty.ID].TryDequeue(out BlockAdditionalEffectBase effect) == false)
-                effect = Instantiate(effectProperty.Prefab, transform).Init(effectProperty.ID, _activeBlocks, _effectsPool);
+            if (_effects[effectProperty.Type].TryDequeue(out BlockAdditionalEffectBase effect) == false)
+                effect = Instantiate(effectProperty.Prefab, transform).Init(effectProperty.Type, _activeBlocks, _effectsPool);
 
             _activeEffects.Add(effect);
             UpdateEffectSubscription(effect, true);
@@ -125,7 +124,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void OnAdditionalEffectDeactivate(BlockAdditionalEffectBase blockAdditionalEffect)
         {
-            _effects[blockAdditionalEffect.ID].Enqueue(blockAdditionalEffect);
+            _effects[blockAdditionalEffect.Type].Enqueue(blockAdditionalEffect);
             _activeEffects.Remove(blockAdditionalEffect);
             UpdateEffectSubscription(blockAdditionalEffect, false);
         }

@@ -1,5 +1,6 @@
 using BallzMerge.Gameplay.BlockSpace;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockAdditionalEffectIncreaser : BlockAdditionalEffectBase
@@ -11,6 +12,7 @@ public class BlockAdditionalEffectIncreaser : BlockAdditionalEffectBase
 
     private Transform _particleTransform;
     private Transform _hitImpactTransform;
+    public List<string> Debug = new List<string>();
 
     public override void HandleWave()
     {
@@ -23,6 +25,7 @@ public class BlockAdditionalEffectIncreaser : BlockAdditionalEffectBase
         _hitImpactTransform.LookAt(block.transform);
         _hitImpact.Play();
         StartCoroutine(DelayedActionNumberChanged(block));
+        Debug.Add($"Increase Block {block.ID}");
     }
 
     protected override bool TryActivate()
