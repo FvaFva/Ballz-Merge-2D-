@@ -1,4 +1,5 @@
 using Mono.Data.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -27,7 +28,7 @@ public class GameSavesStorage
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText =   $@"CREATE TABLE IF NOT EXISTS {GameSavesTable}
+                command.CommandText = $@"CREATE TABLE IF NOT EXISTS {GameSavesTable}
                                         ({Key} TEXT PRIMARY KEY,
                                         {Value} REAL)";
 
@@ -36,7 +37,7 @@ public class GameSavesStorage
 
             _blocksStorage = new GameSavedBlocksStorage(connection);
             _volumesStorage = new GameSavedVolumesStorage(connection);
-            _blockEffectsStorage = new GameSavedBlocksEffectsStorage(connection);
+            _blockEffectsStorage = new GameSavedBlocksEffectsStorage(connection, _blocksStorage.GetTableName(), _blocksStorage.GetIDName());
 
             connection.Close();
         }
@@ -50,7 +51,7 @@ public class GameSavesStorage
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText =   $@"INSERT OR REPLACE INTO {GameSavesTable}
+                command.CommandText = $@"INSERT OR REPLACE INTO {GameSavesTable}
                                         ({Key}, {Value})
                                         VALUES
                                         (@{Key}, @{Value})";
@@ -108,7 +109,8 @@ public class GameSavesStorage
                 command.Parameters.AddWithValue(Key, key);
                 object result = command.ExecuteScalar();
 
-                value = float.Parse(result.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture);
+                if (result != null)
+                    value = float.Parse(result.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture);
             }
 
             connection.Close();
@@ -157,5 +159,54 @@ public class GameSavesStorage
         }
 
         return savedEffects;
+    }
+
+    public void EraseAllData()
+    {
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+            Delete(connection);
+            _blockEffectsStorage.Delete(connection);
+            _blocksStorage.Delete(connection);
+            _volumesStorage.Delete(connection);
+            connection.Close();
+        }
+    }
+
+    public bool CheckSaves()
+    {
+        bool isSaved = false;
+
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+
+            if (IsExist(connection) || _blockEffectsStorage.IsExist(connection) || _blocksStorage.IsExist(connection) || _volumesStorage.IsExist(connection))
+                isSaved = true;
+
+            connection.Close();
+        }
+
+        return isSaved;
+    }
+
+    private void Delete(SqliteConnection connection)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.CommandText = $"DELETE FROM {GameSavesTable}";
+            command.ExecuteNonQuery();
+        }
+    }
+
+    private bool IsExist(SqliteConnection connection)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.CommandText = $"SELECT EXISTS(SELECT 1 FROM {GameSavesTable})";
+            object result = command.ExecuteScalar();
+            return Convert.ToBoolean(result);
+        }
     }
 }

@@ -15,6 +15,10 @@ public class GameSavedBlocksStorage
         CreateTable(connectionForInit);
     }
 
+    public string GetTableName() => TableName;
+
+    public string GetIDName() => ID;
+
     public void Set(SqliteConnection connection, IEnumerable<SavedBlock> savedBlocks)
     {
         using (var command = connection.CreateCommand())
@@ -61,6 +65,16 @@ public class GameSavedBlocksStorage
         }
 
         return savedBlocks;
+    }
+
+    public bool IsExist(SqliteConnection connection)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.CommandText = $"SELECT EXISTS(SELECT 1 FROM {TableName})";
+            object result = command.ExecuteScalar();
+            return Convert.ToBoolean(result);
+        }
     }
 
     private void CreateTable(SqliteConnection connectionForInit)

@@ -110,7 +110,7 @@ namespace BallzMerge.Root
                 _primary.Saver.SaveGame(exitData.Savers);
 
             if (exitData.IsLoad)
-                _sceneLoader.SetLoad();
+                _sceneLoader.SetLoad(_primary.Data.Saves.CheckSaves());
 
             if (exitData.IsGameQuit)
                 QuitGame();

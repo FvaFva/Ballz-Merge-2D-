@@ -10,7 +10,7 @@ namespace BallzMerge.Root
         public OwnerPrimaryComponents()
         {
             Data = new DataBaseSource();
-            Saver = new GameSaves(Data);
+            Saver = new GameSaves();
             TimeScaler = new TimeScaler();
             UserInput = new MainInputMap();
             UserInput.Enable();
