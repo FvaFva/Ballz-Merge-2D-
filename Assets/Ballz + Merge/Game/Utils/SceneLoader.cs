@@ -34,9 +34,9 @@ namespace BallzMerge.Root
             ProjectContext.Instance.Container.Inject(this);
         }
 
-        public void SetLoad()
+        public void SetLoad(bool state)
         {
-            _isLoad = true;
+            _isLoad = state;
         }
 
         public IEnumerator LoadScene(string name)

@@ -9,9 +9,9 @@ public class GameSavedBlocksEffectsStorage
     private const string EffectBlock = "EffectBlock";
     private const string ConnectBlock = "ConnectBlock";
 
-    public GameSavedBlocksEffectsStorage(SqliteConnection connection)
+    public GameSavedBlocksEffectsStorage(SqliteConnection connection, string connectTable, string connectField)
     {
-        CreateTable(connection);
+        CreateTable(connection, connectTable, connectField);
     }
 
     public void Set(SqliteConnection connection, IEnumerable<SavedBlockEffect> savedEffects)
@@ -61,14 +61,26 @@ public class GameSavedBlocksEffectsStorage
         return savedEffects;
     }
 
-    private void CreateTable(SqliteConnection connection)
+    public bool IsExist(SqliteConnection connection)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.CommandText = $"SELECT EXISTS(SELECT 1 FROM {TableName})";
+            object result = command.ExecuteScalar();
+            return Convert.ToBoolean(result);
+        }
+    }
+
+    private void CreateTable(SqliteConnection connection, string connectTable, string connectField)
     {
         using (var command = connection.CreateCommand())
         {
             command.CommandText = $@"   CREATE TABLE IF NOT EXISTS {TableName}
                                             ({Name} TEXT,
                                             {EffectBlock} INTEGER,
-                                            {ConnectBlock} INTEGER)";
+                                            {ConnectBlock} INTEGER,
+                                            FOREIGN KEY ({EffectBlock}) REFERENCES {connectTable}({connectField}) ON DELETE CASCADE,
+                                            FOREIGN KEY ({ConnectBlock}) REFERENCES {connectTable}({connectField}) ON DELETE CASCADE)";
 
             command.ExecuteNonQuery();
         }

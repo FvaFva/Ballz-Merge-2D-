@@ -7,9 +7,8 @@ using Zenject;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class DropSelector : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader, ILevelFinisher
+    public class DropSelector : CyclicBehavior, IInitializable, ILevelLoader, ILevelFinisher
     {
-        private const string CountOfSavedVolumes = "CountOfVolumes";
         private const float AnimationTime = 0.8f;
 
         [SerializeField] private CanvasGroup _canvasGroup;
@@ -50,11 +49,6 @@ namespace BallzMerge.Gameplay.Level
             _dropsMap.Clear();
         }
 
-        public void GetSavingData()
-        {
-            _data.Saves.Save(new KeyValuePair<string, float>(CountOfSavedVolumes, _dropsMap.Count));
-        }
-
         public void Show(Drop first, Drop second, Action callback)
         {
             _firstSlot.Show(first);
@@ -72,7 +66,7 @@ namespace BallzMerge.Gameplay.Level
             gameObject.SetActive(false);
         }
 
-        public void LoadDrop(Drop drop, int? id = null)
+        public void LoadDrop(Drop drop, int id)
         {
             SelectDrop(drop, DropLoaded, id);
         }

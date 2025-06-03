@@ -63,6 +63,16 @@ public class GameSavedVolumesStorage
         return savedVolumes;
     }
 
+    public bool IsExist(SqliteConnection connection)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.CommandText = $"SELECT EXISTS(SELECT 1 FROM {TableName})";
+            object result = command.ExecuteScalar();
+            return Convert.ToBoolean(result);
+        }
+    }
+
     private void CreateTable(SqliteConnection connection)
     {
         using (var command = connection.CreateCommand())

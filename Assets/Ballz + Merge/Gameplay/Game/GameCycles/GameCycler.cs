@@ -1,9 +1,9 @@
-﻿using BallzMerge.Gameplay;
+﻿using BallzMerge.Data;
+using BallzMerge.Gameplay;
 using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
 using BallzMerge.Root;
-using ModestTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +34,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     [Inject] private UserQuestioner _userQuestioner;
     [Inject] private Ball _ball;
     [Inject] private UIRootView _rootUI;
+    [Inject] private DataBaseSource _data;
 
     public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
     public IEnumerable<IDependentScreenOrientation> Orientators => _orientators;
@@ -137,6 +138,8 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     {
         foreach (ILevelLoader loader in _loaders)
             loader.Load();
+
+        _data.Saves.EraseAllData();
     }
 
     private void OnWaveLoaded()
