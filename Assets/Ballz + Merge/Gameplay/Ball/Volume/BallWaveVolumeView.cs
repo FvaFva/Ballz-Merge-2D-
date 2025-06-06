@@ -27,17 +27,12 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
     {
         _update();
         _source.Changed += ShowVolumes;
-
-        foreach(GameDataVolumeMicView cell in _busy)
-            cell.Performed += ChangeCurrent;
     }
 
     private void OnDisable()
     {
         _source.Changed -= ShowVolumes;
-
-        foreach (GameDataVolumeMicView cell in _busy)
-            cell.Performed -= ChangeCurrent;
+        HideAll();
     }
 
     public void HidePerformed()
@@ -119,7 +114,8 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
         {
             if (_currentView == view)
             {
-                ActiveVolumePerformed?.Invoke(_currentView.IsActive);
+                _currentView = null;
+                ActiveVolumePerformed?.Invoke(false);
                 return;
             }
             else

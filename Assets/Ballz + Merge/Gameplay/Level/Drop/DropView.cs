@@ -74,6 +74,7 @@ namespace BallzMerge.Gameplay.Level
 
         private void Activate()
         {
+            _selector.enabled = true;
             _suffix.UpdateView(_current.Suffix);
             _name.text = _current.Name;
             _description.text = _current.Description;
@@ -97,7 +98,8 @@ namespace BallzMerge.Gameplay.Level
         {
             if (_current.IsEmpty)
                 return;
-
+            
+            _selector.enabled = false;
             Selected?.Invoke(_current);
         }
     }

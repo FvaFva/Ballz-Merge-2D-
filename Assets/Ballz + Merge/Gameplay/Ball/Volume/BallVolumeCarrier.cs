@@ -1,9 +1,12 @@
+using System;
+using BallzMerge.Root;
 using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zenject;
 
 public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
 {
@@ -11,7 +14,8 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
     private const string ToBagHeader = "Drop here for bag";
     private const string ToCageHeader = "Click here for cage";
 
-    [Header("Logic")]
+    [Header("Logic")] 
+    [SerializeField] private UIRootContainerItem _containerItem;
     [SerializeField] private BallWaveVolume _volumes;
     [SerializeField] private BallWaveVolumeView _volumesView;
     [SerializeField] private BallVolumesCageView _cage;
@@ -24,12 +28,20 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
     [SerializeField] private Image _headerParent;
     [SerializeField] private Image _lock;
 
+    [Inject] private UIRootView  _rootView;
+
     private Tween _lockAnimation;
     private float _lockBaseFade;
+    private Action<BallVolumesBagCell> _bagConnector = (BallVolumesBagCell ability) => {};
 
     private void Awake()
     {
         _lockBaseFade = _lock.color.a;
+        _bagConnector = (BallVolumesBagCell ability) =>
+        {
+            ability.SetID(0);
+            _volumes.Bag.ApplyVolume(ability);
+        };
     }
 
     private void OnEnable()
@@ -49,9 +61,7 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        var ability = _container.Swap(default);
-        ability.SetID(0);
-        _volumes.Bag.ApplyVolume(ability);
+        _container.Swap(default, _bagConnector);
     }
 
     private void OnTrigger()
@@ -83,6 +93,11 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
         float targetFade = state ? 0 : _lockBaseFade;
         float targetScale = state ? 2 : 1;
         _headerParent.gameObject.SetActive(state);
+        
+        if (state)
+            _rootView.Containers.ShowInMid(_containerItem);
+        else
+            _rootView.Containers.HideMid();
 
         _lockAnimation = DOTween.Sequence()
             .Join(_lock.DOFade(targetFade, AnimationTime))
