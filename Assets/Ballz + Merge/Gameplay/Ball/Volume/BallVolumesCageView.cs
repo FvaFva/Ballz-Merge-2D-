@@ -64,8 +64,6 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         }
         
         RebuildCage();
-        _elements.Add(GenerateElement());
-        AddVolume(ballVolume);
     }
 
     public void AddSavedVolume(BallVolumesBagCell savedVolume)
