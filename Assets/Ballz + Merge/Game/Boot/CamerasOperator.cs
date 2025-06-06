@@ -57,6 +57,8 @@ namespace BallzMerge.Gameplay
                 _values[item] = new PositionScaleProperty(1);
                 item.orthographicSize = OrthographicSize(1);
             }
+
+            UpdateValues();
         }
 
         public void UpdateScreenOrientation(ScreenOrientation orientation)

@@ -5,7 +5,6 @@ using BallzMerge.Gameplay.Level;
 using System;
 using System.Collections;
 using BallzMerge.Data;
-using System.Linq;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
@@ -120,7 +119,9 @@ namespace BallzMerge.Gameplay.BlockSpace
             data.Direction = direction;
             data.Block = block;
             _hitInspector.Explore(data);
-            block.Move(direction);
+
+            if (block.CanMove(direction))
+                block.Move(direction);
         }
 
         private void OnDestroyBlock(Block block)

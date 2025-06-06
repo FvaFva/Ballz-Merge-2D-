@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -73,9 +72,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void Remove(Block block)
         {
-            if (_blocks.Contains(block))
-                _blocks.Remove(block);
-
+            _blocks.TryRemove(block);
             UpdateSubscribeForBlock(block, false);
             BlockRemoved?.Invoke(block);
         }
