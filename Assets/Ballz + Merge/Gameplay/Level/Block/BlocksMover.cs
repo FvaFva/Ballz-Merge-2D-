@@ -27,30 +27,33 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _onComeAllBlocks = callBack;
 
-            foreach (var block in blocks.OrderByDescending(block => block.ID))
+            if (direction == Vector2Int.up)
+                blocks = blocks.OrderByDescending(block => block.ID);
+
+            foreach (var block in blocks)
             {
-                if(block.Move(direction, true))
+                if (block.CanMove(direction, true))
                 {
                     block.CameToNewCell += OnCome;
                     block.Deactivated += OnCome;
                     _blocksInMove.Add(block);
                 }
-
-                yield return null;
             }
 
-            if (_blocksInMove.Count == 0)
-                _onComeAllBlocks();
+            foreach (Block block in _blocksInMove.ToList())
+            {
+                block.Move(direction);
+                yield return null;
+            }
         }
 
         public bool IsFree(Vector2Int position)
         {
-            if(_grid.IsOutside(position) || IsCollisionBlock(position))
+            if (_grid.IsOutside(position) || IsCollisionBlock(position))
                 return false;
+
             return true;
         }
-
-        private bool IsWrongDirection(Vector2Int direction) => direction == WrongDirection;
 
         private bool IsCollisionBlock(Vector2Int nextPosition) => _activeBlocks.HaveAtPosition(nextPosition);
 

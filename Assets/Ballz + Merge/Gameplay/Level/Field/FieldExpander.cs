@@ -78,6 +78,7 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
         _currentColumns = _gridSettings.Size.x;
         _currentRows = _gridSettings.Size.y;
         _cameras.SetGameplayBoardSize(BoardSize());
+        SetDefault();
     }
 
     public void GetSavingData()
@@ -98,9 +99,7 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
 
     public void FinishLevel()
     {
-        _gridSettings.ReloadSize();
         _ballWaveVolume.Bag.Added -= OnAbilityAdd;
-        SetDefault();
     }
 
     private void OnAbilityAdd(BallVolumesBagCell volume)

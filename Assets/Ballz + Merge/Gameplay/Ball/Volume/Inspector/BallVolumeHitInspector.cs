@@ -76,8 +76,11 @@ public class BallVolumeHitInspector
             Vector2Int extraBlockPosition = data.Block.GridPosition + data.Direction * i;
             var extraBlock = _blocks.GetAtPosition(extraBlockPosition);
 
-            if (extraBlock != null && extraBlock.Move(data.Direction))
+            if (extraBlock != null && extraBlock.CanMove(data.Direction))
+            {
+                extraBlock.Move(data.Direction);
                 isExtraWent = true;
+            }
         }
 
         callback(isExtraWent);

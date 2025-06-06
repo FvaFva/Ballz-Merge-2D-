@@ -19,7 +19,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private Transform _transform;
         private Tweener _moveTween;
-
+        private TweenCallback _currentAction;
         public bool IsAlive { get; private set; }
         public Vector2Int GridPosition { get; private set; }
         public Vector2 WorldPosition => _transform.position;
@@ -64,6 +64,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _transform.parent = parent;
             _view.Init(_gridSettings.MoveTime, _gridSettings.CellSize);
             _physic.Init(virtualBox);
+            IsAlive = true;
             Deactivate();
             return this;
         }
@@ -87,7 +88,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             IsWithEffect = true;
         }
 
-        public bool Move(Vector2Int step, bool isMoveDown = false)
+        public bool CanMove(Vector2Int step, bool isMoveDown = false)
         {
             if (IsAlive == false)
                 return false;
@@ -98,38 +99,44 @@ namespace BallzMerge.Gameplay.BlockSpace
                 return false;
             }
 
+            return true;
+        }
+
+        public void Move(Vector2Int step)
+        {
+            if (IsAlive == false)
+                return;
+
             Debug.Add($"Move {step}");
             StopCurrentMoveTween();
             GridPosition += step;
             var newPosition = (Vector2)GridPosition * _gridSettings.CellSize;
-            _moveTween = _transform
-                .DOLocalMove(newPosition, _gridSettings.MoveTime)
-                .OnComplete(OnComeToNewCell);
+            Tweener tweener = _transform.DOLocalMove(newPosition, _gridSettings.MoveTime).SetAutoKill(true).Pause();
+            PlayTween(tweener, () => ExecuteAction(OnComeToNewCell));
 
             _view.AnimationMove(step);
             _physic.Deactivate();
-            return true;
         }
 
         public void Merge(Vector3 worldPositionMergedBlock)
         {
-            IsAlive = false;
+            if (IsAlive == false)
+                return;
+
             Debug.Add($"Merge {worldPositionMergedBlock}");
-            GridPosition = Vector2Int.zero;
             StopCurrentMoveTween();
             Vector3 midpoint = Vector3.Lerp(WorldPosition, worldPositionMergedBlock, 0.5f);
-            _transform.DOMove(midpoint, _gridSettings.MoveTime).OnComplete(Deactivate);
+            Tweener tweener = _transform.DOMove(midpoint, _gridSettings.MoveTime).SetAutoKill(true).Pause();
+            PlayTween(tweener, () => ExecuteAction(Deactivate));
             _view.PlayMerge();
             _physic.Deactivate();
         }
 
         public void Destroy()
         {
-            IsAlive = false;
             Debug.Add($"Destroy");
             Destroyed?.Invoke(this);
             StopCurrentMoveTween();
-            Number = 0;
             _view.PlayDestroy(Deactivate);
             _physic.Deactivate();
         }
@@ -158,15 +165,33 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Deactivate()
         {
+            if (IsAlive == false)
+                return;
+
             Debug.Add($"Deactivate");
-            DOTween.Kill(_transform);
+            Deactivated?.Invoke(this);
+            IsAlive = false;
+            StopCurrentMoveTween();
             _view.Deactivate();
             _physic.Deactivate();
             Number = 0;
+            GridPosition = Vector2Int.zero;
             _transform.localPosition = Vector2.one * OutBoardPosition;
             _transform.rotation = Quaternion.identity;
-            StopCurrentMoveTween();
-            Deactivated?.Invoke(this);
+        }
+
+        private void ExecuteAction(Action action)
+        {
+            _currentAction = null;
+            action.Invoke();
+        }
+
+        private void PlayTween(Tweener tweener, TweenCallback action)
+        {
+            _currentAction?.Invoke();
+
+            _currentAction = action;
+            _moveTween = tweener.OnComplete(_currentAction).Play();
         }
 
         private void StopCurrentMoveTween()

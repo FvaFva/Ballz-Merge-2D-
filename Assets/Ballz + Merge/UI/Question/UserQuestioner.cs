@@ -65,7 +65,7 @@ public class UserQuestioner : MonoBehaviour
     {
         _current = default;
         _pauseController.SetRegular();
-        _label.text = String.Empty;
+        _label.text = string.Empty;
         gameObject.SetActive(false);
     }
 

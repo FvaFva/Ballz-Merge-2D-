@@ -19,6 +19,7 @@ namespace BallzMerge.Root.Settings
         private const float Shift = 1f;
 
         private Tween _currentSlowMoTween;
+        private bool _isTimeScaled = false;
 
         public float Value { get; private set; }
         public string Name { get { return "Time"; } }
@@ -30,6 +31,7 @@ namespace BallzMerge.Root.Settings
         public void Stop()
         {
             Time.timeScale = PauseScale;
+            _isTimeScaled = true;
         }
 
         public void SetRegular()
@@ -49,18 +51,25 @@ namespace BallzMerge.Root.Settings
             Value = value;
             Label = (_labelMultiplier * value + Shift).ToString($"F{PointsAfterDot}") + Suffix;
             Time.timeScale = Mathf.Lerp(MinScale, MaxScale, Value);
+            _isTimeScaled = false;
         }
 
         public void SpeedUp()
         {
+            KillAvailableSlowMo();
             Time.timeScale = SpeedUpScale;
+            _isTimeScaled = true;
         }
 
         public void PlaySlowMo(float time)
         {
+            if (_isTimeScaled)
+                return;
+
             KillAvailableSlowMo();
 
             Time.timeScale = SlowMoScale;
+            _isTimeScaled = true;
 
             _currentSlowMoTween = DOTween.To(() => Time.timeScale, x => Time.timeScale = x, MinScale, time)
                 .SetEase(Ease.InSine)

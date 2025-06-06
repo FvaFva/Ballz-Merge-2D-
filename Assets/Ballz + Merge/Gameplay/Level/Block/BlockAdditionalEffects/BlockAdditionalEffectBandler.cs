@@ -102,7 +102,13 @@ namespace BallzMerge.Gameplay.BlockSpace
             block.NumberChanged += OnNumberChanged;
         }
 
-        private void OnHit(Block block, Vector2Int step) => GetOppositeCurrentOrConnection(block).Move(step);
+        private void OnHit(Block block, Vector2Int step)
+        {
+            Block currentOrConnectionBlock = GetOppositeCurrentOrConnection(block);
+
+            if (currentOrConnectionBlock.CanMove(step))
+                currentOrConnectionBlock.Move(step);
+        }
 
         private Block GetOppositeCurrentOrConnection(Block block) => block == Current ? ConnectBlock : Current;
 
