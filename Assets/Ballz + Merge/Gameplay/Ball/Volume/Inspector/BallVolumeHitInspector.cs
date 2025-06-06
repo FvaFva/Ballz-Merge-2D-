@@ -27,7 +27,7 @@ public class BallVolumeHitInspector
     {
         var nextVolume = _ballWaveVolume.Cage.CheckNext();
 
-        if (nextVolume.IsInited)
+        if (nextVolume != null)
             _map[nextVolume.Volume.Type].Invoke(data, nextVolume.Rarity, nextVolume.ViewCallback);
     }
 
@@ -76,8 +76,11 @@ public class BallVolumeHitInspector
             Vector2Int extraBlockPosition = data.Block.GridPosition + data.Direction * i;
             var extraBlock = _blocks.GetAtPosition(extraBlockPosition);
 
-            if (extraBlock != null && extraBlock.Move(data.Direction))
+            if (extraBlock != null && extraBlock.CanMove(data.Direction))
+            {
+                extraBlock.Move(data.Direction);
                 isExtraWent = true;
+            }
         }
 
         callback(isExtraWent);

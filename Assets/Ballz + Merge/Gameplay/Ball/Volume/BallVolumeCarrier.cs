@@ -1,13 +1,14 @@
 using System;
 using BallzMerge.Root;
 using DG.Tweening;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zenject;
 
-public class BallVolumeCarrier : CyclicBehavior, IDropHandler, IInitializable
+public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
 {
     private const float AnimationTime = 0.15f;
     private const string ToBagHeader = "Drop here for bag";
@@ -36,7 +37,11 @@ public class BallVolumeCarrier : CyclicBehavior, IDropHandler, IInitializable
     private void Awake()
     {
         _lockBaseFade = _lock.color.a;
-        _bagConnector = (BallVolumesBagCell ability) => _volumes.Bag.ApplyVolume(ability.Volume, ability.Rarity);
+        _bagConnector = (BallVolumesBagCell ability) =>
+        {
+            ability.SetID(0);
+            _volumes.Bag.ApplyVolume(ability);
+        };
     }
 
     private void OnEnable()

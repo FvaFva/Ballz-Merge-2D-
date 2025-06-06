@@ -1,13 +1,13 @@
-﻿using DG.Tweening;
-using Newtonsoft.Json;
+﻿using BallzMerge.Data;
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
+using Zenject;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class DropSelector : CyclicBehavior, IInitializable, ILevelFinisher
+    public class DropSelector : CyclicBehavior, IInitializable, ILevelLoader, ILevelFinisher
     {
         private const float AnimationTime = 0.8f;
 
@@ -15,12 +15,15 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private DropView _firstSlot;
         [SerializeField] private DropView _secondSlot;
 
-        private List<Drop> _dropsMap = new List<Drop>();
+        [Inject] private DataBaseSource _data;
+
+        private List<BallVolumesBagCell> _dropsMap = new List<BallVolumesBagCell>();
         private Action _callback;
 
-        public IReadOnlyList<Drop> DropsMap => _dropsMap;
+        public IReadOnlyList<BallVolumesBagCell> DropsMap => _dropsMap;
 
-        public event Action<BallVolume, DropRarity> DropSelected;
+        public event Action<BallVolumesBagCell> DropSelected;
+        public event Action<BallVolumesBagCell> DropLoaded;
         public event Action Opened;
 
         private void OnEnable()
@@ -41,6 +44,11 @@ namespace BallzMerge.Gameplay.Level
             _secondSlot.CashMaterials();
         }
 
+        public void StartLevel()
+        {
+            _dropsMap.Clear();
+        }
+
         public void Show(Drop first, Drop second, Action callback)
         {
             _firstSlot.Show(first);
@@ -54,19 +62,26 @@ namespace BallzMerge.Gameplay.Level
         public void FinishLevel()
         {
             _canvasGroup.alpha = 0;
+            _dropsMap.Clear();
             gameObject.SetActive(false);
         }
 
-        public void SelectDrop(Drop drop)
+        public void LoadDrop(Drop drop, int id)
         {
-            DropSelected?.Invoke(drop.Volume, drop.Rarity);
-            _dropsMap.Add(drop);
+            SelectDrop(drop, DropLoaded, id);
+        }
+
+        private void SelectDrop(Drop drop, Action<BallVolumesBagCell> action, int? id = null)
+        {
+            BallVolumesBagCell newCell = new BallVolumesBagCell(drop.Volume, drop.Rarity, id);
+            action?.Invoke(newCell);
+            _dropsMap.Add(newCell);
         }
 
         private void OnSelect(Drop drop)
         {
             Hide();
-            SelectDrop(drop);
+            SelectDrop(drop, DropSelected);
         }
 
         private void Hide() => _canvasGroup.DOFade(0, AnimationTime).OnComplete(OnHideAnimationFinished);

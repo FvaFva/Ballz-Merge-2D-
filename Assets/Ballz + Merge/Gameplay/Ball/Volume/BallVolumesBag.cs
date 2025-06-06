@@ -17,19 +17,21 @@ public class BallVolumesBag : IDisposable
 
         _dropSelector = dropSelector;
         _dropSelector.DropSelected += ApplyVolume;
+        _dropSelector.DropLoaded += LoadVolume;
     }
 
     public IList<BallVolumesBagCell> Hit => _hit;
     public IList<BallVolumesBagCell> Passive => _passive;
     public IEnumerable<BallVolumesBagCell> All => _all;
 
-    public event Action Changed;
     public event Action<BallVolumesBagCell> Added;
     public event Action<BallVolumesBagCell> Removed;
+    public event Action<BallVolumesBagCell> Loaded;
 
     public void Dispose()
     {
         _dropSelector.DropSelected -= ApplyVolume;
+        _dropSelector.DropLoaded -= LoadVolume;
     }
 
     public void Clear()
@@ -37,7 +39,6 @@ public class BallVolumesBag : IDisposable
         _hit.Clear();
         _passive.Clear();
         _all.Clear();
-        Changed?.Invoke();
     }
 
     public void DropVolume(BallVolumesBagCell volume)
@@ -48,22 +49,26 @@ public class BallVolumesBag : IDisposable
         Removed?.Invoke(volume);
     }
 
-    public void ApplyVolume(BallVolume volume, DropRarity rarity)
+    public void ApplyVolume(BallVolumesBagCell bagCell)
     {
-        BallVolumesBagCell newCell = new BallVolumesBagCell(volume, rarity);
-        _all.Add(newCell);
+        _all.Add(bagCell);
 
-        switch (volume.Species)
+        switch (bagCell.Volume.Species)
         {
             case BallVolumesSpecies.Passive:
-                _passive.Add(newCell);
+                _passive.Add(bagCell);
                 break;
             case BallVolumesSpecies.Hit:
-                _hit.Add(newCell);
+                _hit.Add(bagCell);
                 break;
         }
 
-        Changed?.Invoke();
-        Added?.Invoke(newCell);
+        Added?.Invoke(bagCell);
+    }
+
+    private void LoadVolume(BallVolumesBagCell bagCell)
+    {
+        ApplyVolume(bagCell);
+        Loaded?.Invoke(bagCell);
     }
 }

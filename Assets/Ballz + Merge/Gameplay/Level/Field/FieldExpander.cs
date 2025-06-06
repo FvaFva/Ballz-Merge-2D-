@@ -1,7 +1,7 @@
+using BallzMerge.Data;
 using BallzMerge.Gameplay;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -18,6 +18,7 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
     [SerializeField] private CamerasOperator _cameras;
 
     [Inject] private PhysicGrid _physicGrid;
+    [Inject] private DataBaseSource _data;
     [Inject] private GridSettings _gridSettings;
     [Inject] private BlocksBinder _blocksBinder;
     [Inject] private BallWaveVolume _ballWaveVolume;
@@ -77,22 +78,20 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
         _currentColumns = _gridSettings.Size.x;
         _currentRows = _gridSettings.Size.y;
         _cameras.SetGameplayBoardSize(BoardSize());
+        SetDefault();
     }
 
-    public IDictionary<string, object> GetSavingData()
+    public void GetSavingData()
     {
-        return new Dictionary<string, object>()
-        {
-            { FieldSizeX,  _currentColumns },
-            { FieldSizeY, _currentRows }
-        };
+        _data.Saves.Save(new KeyValuePair<string, float>(FieldSizeX, _currentColumns));
+        _data.Saves.Save(new KeyValuePair<string, float>(FieldSizeY, _currentRows));
     }
 
-    public void Load(IDictionary<string, object> data)
+    public void Load()
     {
         StartLevel();
 
-        _currentColumns = JsonConvert.DeserializeObject<int>(data[FieldSizeX].ToString());
+        _currentColumns = Mathf.RoundToInt(_data.Saves.Get(FieldSizeX));
 
         for (int i = _gridSettings.Size.x; i < _currentColumns; i++)
             AddColumn();
@@ -100,9 +99,7 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
 
     public void FinishLevel()
     {
-        _gridSettings.ReloadSize();
         _ballWaveVolume.Bag.Added -= OnAbilityAdd;
-        SetDefault();
     }
 
     private void OnAbilityAdd(BallVolumesBagCell volume)

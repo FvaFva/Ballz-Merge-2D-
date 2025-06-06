@@ -109,6 +109,7 @@ public class InfoPanelShowcase : MonoBehaviour
         _panels.Clear();
         _content.SetActive(false);
         _openDefaultButton.gameObject.SetActive(true);
+        _closeButton.gameObject.SetActive(false);
         _closeArea.gameObject.SetActive(false);
         CloseTriggered?.Invoke();
     }
@@ -121,6 +122,7 @@ public class InfoPanelShowcase : MonoBehaviour
             UIViewStateChanged?.Invoke(false);
             _content.SetActive(true);
             _openDefaultButton.gameObject.SetActive(false);
+            _closeButton.gameObject.SetActive(true);
             _closeArea.gameObject.SetActive(true);
             return true;
         }

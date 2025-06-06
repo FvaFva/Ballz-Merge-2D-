@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILevelFinisher
+public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILevelFinisher, IDisposable
 {
     [SerializeField] private DropSelector _dropSelector;
     [SerializeField] private BallVolumesCageView _cage;
 
     private Func<IEnumerable<BallVolumesBagCell>> _allVolumesGenerator = () => (Enumerable.Empty<BallVolumesBagCell>());
-
     public BallVolumesBag Bag {  get; private set; }
     public BallVolumesCageView Cage => _cage;
 
@@ -26,11 +25,19 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
         _dropSelector.Opened -= OnDropOpened;
     }
 
+    public void Dispose()
+    {
+        Bag.Added -= OnBagChanged;
+        Bag.Removed -= OnBagChanged;
+        Bag.Loaded -= OnVolumeBagLoaded;
+    }
+
     public void Init()
     {
         Bag = new BallVolumesBag(_dropSelector);
         Bag.Added += OnBagChanged;
         Bag.Removed += OnBagChanged;
+        Bag.Loaded += OnVolumeBagLoaded;
         _cage.Init();
         _allVolumesGenerator = () => Bag.Passive.Concat(_cage.ActiveVolumes).Concat(Bag.Hit);
     }
@@ -52,9 +59,18 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
         Changed?.Invoke();
     }
 
-    private void OnBagChanged(BallVolumesBagCell value)
+    private void OnBagChanged(BallVolumesBagCell volumeBagCell)
     {
         Changed?.Invoke();
+    }
+
+    private void OnVolumeBagLoaded(BallVolumesBagCell volumeBagCell)
+    {
+        if (volumeBagCell.ID == 0)
+            return;
+
+        _cage.AddSavedVolume(volumeBagCell);
+        Bag.DropVolume(volumeBagCell);
     }
 
     private void OnDropOpened()

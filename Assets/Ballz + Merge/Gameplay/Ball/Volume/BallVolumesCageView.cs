@@ -17,6 +17,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
     [SerializeField] private int _countPreload;
     [SerializeField] private RectTransform _box;
 
+    private int _cageID;
     private List<BallVolumeCageElement> _elements = new List<BallVolumeCageElement>();
     private Queue<BallVolumeCageElement> _cage;
     private bool _isInited;
@@ -61,8 +62,16 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
                 break;
             }
         }
-
+        
         RebuildCage();
+        _elements.Add(GenerateElement());
+        AddVolume(ballVolume);
+    }
+
+    public void AddSavedVolume(BallVolumesBagCell savedVolume)
+    {
+        BallVolumeCageElement cageElement = _elements.Where(element => element.ID == savedVolume.ID).FirstOrDefault();
+        cageElement.PerformIfNotNull(cageElement => cageElement.Apply(savedVolume));
     }
 
     public void HideAllHightLights()
@@ -123,6 +132,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
             return;
 
         _isInited = true;
+        _cageID = 0;
         _cage = new Queue<BallVolumeCageElement>();
 
         for (int i = 0; i < _countPreload; i++)
@@ -139,7 +149,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
 
     private BallVolumeCageElement GenerateElement()
     {
-        var newElement = Instantiate(_prefab, _box).Init(_container).Clear();
+        var newElement = Instantiate(_prefab, _box).Init(++_cageID, _container).Clear();
         newElement.RequiredSlowMo += OnRequiredSlowMo;
         return newElement;
     }

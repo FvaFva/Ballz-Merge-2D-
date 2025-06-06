@@ -36,9 +36,13 @@ namespace BallzMerge.Gameplay.BallSpace
         {
             bool isBlocksCorrect = _lastBlock != null && _lastBlock != hitBlock;
             bool isWent = false;
+            Vector2Int moveDirection = hitBlock.GridPosition - direction - _lastBlock.GridPosition;
 
             if (isBlocksCorrect && IsDifferenceNumberLessRarity(hitBlock))
-                isWent = _lastBlock.Move(hitBlock.GridPosition - direction - _lastBlock.GridPosition);
+                isWent = _lastBlock.CanMove(moveDirection);
+
+            if (isWent)
+                _lastBlock.Move(moveDirection);
 
             Clear(isWent);
         }

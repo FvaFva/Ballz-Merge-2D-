@@ -35,7 +35,6 @@ namespace BallzMerge.Gameplay.BlockSpace
             for (int i = 0; i < _properties.Length; i++)
             {
                 _properties[i].ChanceToPerform = (float)System.Math.Round(_properties[i].ChanceToPerform * scale, DecimalPlaces);
-                _properties[i].ID = i + 1;
             }
 
             // Проверяем результат
@@ -69,7 +68,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         public BlockAdditionalEffectProperty GetProperty(int id)
         {
             for (int i = 0; i < _properties.Length; i++)
-                if (_properties[i].ID == id)
+                if ((int)_properties[i].Type == id)
                     return _properties[i];
 
             return _properties[0];

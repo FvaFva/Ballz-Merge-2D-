@@ -7,7 +7,7 @@ namespace BallzMerge.Root
     {
         public IEnumerable<IInitializable> InitializedComponents { get; }
         public IEnumerable<IDependentScreenOrientation> Orientators { get; }
-        public void Init(Action<SceneExitData> callback, IDictionary<string, object> loadData);
+        public void Init(Action<SceneExitData> callback, bool isLoad);
         public bool IsAvailable { get; }
     }
 }
