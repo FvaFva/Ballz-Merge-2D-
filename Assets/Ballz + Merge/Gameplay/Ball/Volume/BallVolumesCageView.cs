@@ -1,13 +1,15 @@
 ﻿using BallzMerge.Root;
+using ModestTree;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Android.Gradle;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
 public class BallVolumesCageView : MonoBehaviour, IInitializable
 {
-    private const float SlowMoTime = 1.7f;
+    private const float SlowMoTime = 0.7f;
 
     [SerializeField] private Image _block;
     [SerializeField] private BallVolumeCageElement _prefab;
@@ -21,18 +23,22 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
 
     [Inject] private IGameTimeOwner _timeScaler;
 
-    public IEnumerable<BallVolumesBagCell> ActiveVolumes => _elements.Where(x=>x.IsFree == false).Select(x => x.Current);
+    public IEnumerable<BallVolumesBagCell> ActiveVolumes => _elements.Where(x => x.IsFree == false).Select(x => x.Current);
 
     private void OnEnable()
     {
         foreach (var element in _elements)
             element.RequiredSlowMo += OnRequiredSlowMo;
+
+        _container.Swaped += OnCellSwap;
     }
 
     private void OnDisable()
     {
         foreach (var element in _elements)
             element.RequiredSlowMo -= OnRequiredSlowMo;
+
+        _container.Swaped -= OnCellSwap;
     }
 
     public void SetOnlyView(bool isOnlyView) => _block.enabled = isOnlyView;
@@ -49,14 +55,14 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
     {
         foreach (BallVolumeCageElement cageElement in _elements)
         {
-            if(cageElement.IsFree)
+            if (cageElement.IsFree)
             {
                 cageElement.Apply(ballVolume);
-                return;
+                break;
             }
         }
 
-        _elements.Add(GenerateElement());
+        RebuildCage();
     }
 
     public void HideAllHightLights()
@@ -68,12 +74,33 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
     public void RebuildCage()
     {
         _cage.Clear();
+        var activeElements = _elements.Where(element => !element.IsFree).Select(element => element.Current);
 
-        foreach (BallVolumeCageElement cageElement in _elements.Where(element => !element.IsFree))
+        Queue<BallVolumeCageElement> free = new Queue<BallVolumeCageElement>();
+
+        foreach (BallVolumeCageElement element in _elements)
         {
-            cageElement.Show();
-            cageElement.ChangeHighlight(false);
-            _cage.Enqueue(cageElement);
+            if (element.IsFree)
+            {
+                free.Enqueue(element);
+            }
+            else
+            {
+                element.ChangeHighlight(false);
+
+                if (free.TryDequeue(out var lastFree))
+                {
+                    lastFree.Apply(element.Current);
+                    element.Apply(default);
+                    _cage.Enqueue(lastFree);
+                    free.Enqueue(element);
+                }
+                else
+                {
+                    element.Show();
+                    _cage.Enqueue(element);
+                }
+            }
         }
 
         HighlightNext();
@@ -81,7 +108,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
 
     public BallVolumesBagCell CheckNext()
     {
-        if(_cage.Count == 0)
+        if (_cage.Count == 0)
             return default;
 
         var last = _cage.Dequeue();
@@ -92,7 +119,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
 
     public void Init()
     {
-        if(_isInited) 
+        if (_isInited)
             return;
 
         _isInited = true;
@@ -118,4 +145,9 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
     }
 
     private void OnRequiredSlowMo() => _timeScaler.PlaySlowMo(SlowMoTime);
+
+    private void OnCellSwap()
+    {
+        RebuildCage();
+    }
 }

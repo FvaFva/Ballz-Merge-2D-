@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +12,7 @@ public class VolumeMicAdditionalView : MonoBehaviour
     private const float WriteTime = 0.75f;
     private const float PumpScale = 1.25f;
 
-    [SerializeField] private Button _trigger;
+    [SerializeField] private List<Button> _triggers;
     [SerializeField] private TMP_Text _descriptionView;
     [SerializeField] private RectPumper _pumper;
 
@@ -39,20 +40,23 @@ public class VolumeMicAdditionalView : MonoBehaviour
 
     private void OnEnable()
     {
-        _trigger.AddListener(ChangeVew);
+        foreach(var trigger in _triggers)
+            trigger.AddListener(ChangeVew);
+
         SetBaseView();
     }
 
     private void OnDisable()
     {
-        _trigger.RemoveListener(ChangeVew);
+        foreach (var trigger in _triggers)
+            trigger.RemoveListener(ChangeVew);
+
         SetBaseView();
     }
 
     public void Show(string description)
     {
         _descriptionView.text = description;
-        _trigger.enabled = !description.Equals("");
         _isNeedCallback = true;
     }
 

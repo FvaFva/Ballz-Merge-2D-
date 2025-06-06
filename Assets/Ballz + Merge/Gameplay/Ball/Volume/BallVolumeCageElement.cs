@@ -29,7 +29,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
         if (Current.Equals(volume))
             return this;
 
-        if(!volume.IsInited)
+        if (!volume.IsInited)
         {
             Clear();
             return this;
@@ -101,7 +101,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
 
     public void OnDrop(PointerEventData eventData)
     {
-        Apply(_container.Swap(Current));
+        _container.Swap(Current, ApplyHidden);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -122,5 +122,10 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
     private void ShowCurrent()
     {
         _view.Show(Current);
+    }
+
+    private void ApplyHidden(BallVolumesBagCell volume)
+    {
+        Apply(volume);
     }
 }

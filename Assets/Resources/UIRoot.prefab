@@ -135,6 +135,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 8643618226590617207}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!1 &225360723277114517
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,7 +344,7 @@ MonoBehaviour:
     m_Bottom: 5
   m_ChildAlignment: 4
   _spacing: 5
-  _isInversive: 0
+  _isInversive: 1
   _isUseAspectForMainAxis: 1
   _isVertical: 1
   _alignment: 2
@@ -481,6 +483,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 796798814637495436}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!1 &564124869709312926
 GameObject:
   m_ObjectHideFlags: 0
@@ -643,6 +647,65 @@ MonoBehaviour:
   _content: {fileID: 6831989487265293457}
   _escapeMenu: {fileID: 2772632440533154457}
   _settingsPanel: {fileID: 2814658365248518064}
+--- !u!1 &690847742652390895
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5620323229092487663}
+  - component: {fileID: 4480243841927647955}
+  m_Layer: 5
+  m_Name: Mid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5620323229092487663
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 690847742652390895}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9202346471564787010}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.15, y: 0.25}
+  m_AnchorMax: {x: 0.83, y: 0.8}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4480243841927647955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 690847742652390895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99ede625562d253418ef62ece43974b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  _spacing: 0
+  _isInversive: 0
+  _isUseAspectForMainAxis: 1
+  _isVertical: 0
+  _alignment: 1
 --- !u!1 &825870199816272836
 GameObject:
   m_ObjectHideFlags: 0
@@ -1142,6 +1205,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 8663903485665771334}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!1 &1372321400457431043
 GameObject:
   m_ObjectHideFlags: 0
@@ -1760,6 +1825,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 6770229595248876067}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!1 &1832180351454352053
 GameObject:
   m_ObjectHideFlags: 0
@@ -2909,6 +2976,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 7004739109922032671}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!1 &2882886802496538935
 GameObject:
   m_ObjectHideFlags: 0
@@ -3153,6 +3222,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 4282209846463239731}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!1 &3430941770836271752
 GameObject:
   m_ObjectHideFlags: 0
@@ -4507,6 +4578,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 4966623340618931307}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!1 &5440172007955805503
 GameObject:
   m_ObjectHideFlags: 0
@@ -4542,6 +4615,7 @@ RectTransform:
   - {fileID: 3218370388321411774}
   - {fileID: 3553836683775009328}
   - {fileID: 7286045193971325642}
+  - {fileID: 5620323229092487663}
   m_Father: {fileID: 7666653069693521189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4567,6 +4641,7 @@ MonoBehaviour:
   _top: {fileID: 5542510307503276390}
   _bottomRight: {fileID: 6322119236937020870}
   _bottomCentre: {fileID: 4105535585498463521}
+  _mid: {fileID: 4480243841927647955}
 --- !u!1 &5608588670101405371
 GameObject:
   m_ObjectHideFlags: 0
@@ -4625,7 +4700,7 @@ MonoBehaviour:
   _isInversive: 0
   _isUseAspectForMainAxis: 1
   _isVertical: 0
-  _alignment: 0
+  _alignment: 2
 --- !u!1 &6048795902863571164
 GameObject:
   m_ObjectHideFlags: 0
@@ -5124,6 +5199,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 4325887856289299430}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!1 &6493526477989450354
 GameObject:
   m_ObjectHideFlags: 0
@@ -5259,6 +5336,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 1552521202017441658}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!1 &6505087300012015887
 GameObject:
   m_ObjectHideFlags: 0
@@ -6532,6 +6611,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 7908718222128423675}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!114 &9113772576862336264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7171,6 +7252,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 4711853278777118202}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!1 &8724788749655094867
 GameObject:
   m_ObjectHideFlags: 0
@@ -7402,6 +7485,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 4681836659757056850}
+  _pumper: {fileID: 0}
+  _hiddenField: {fileID: 0}
 --- !u!1 &8788090309415664374
 GameObject:
   m_ObjectHideFlags: 0

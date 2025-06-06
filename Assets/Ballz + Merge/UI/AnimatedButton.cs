@@ -12,7 +12,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     [SerializeField] private ButtonView _buttonView;
     [SerializeField] private RectPumper _pumper;
-    [SerializeField] private RectTransform _header;
+    [SerializeField] private RectTransform _hiddenField;
 
     private bool _isPointerDown;
     private bool _isPointerEnter;
@@ -27,12 +27,12 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         _buttonView.Init();
         _buttonView.SetDefault();
 
-        if (_pumper != null && _header != null)
-            _viewChanger = (bool state) => { _pumper.enabled = state; _header.gameObject.SetActive(state); };
+        if (_pumper != null && _hiddenField != null)
+            _viewChanger = (bool state) => { _pumper.enabled = state; _hiddenField.gameObject.SetActive(state); };
         else if(_pumper != null)
             _viewChanger = (bool state) => { _pumper.enabled = state; };
-        else if (_header != null)
-            _viewChanger = (bool state) => { _header.gameObject.SetActive(state); };
+        else if (_hiddenField != null)
+            _viewChanger = (bool state) => { _hiddenField.gameObject.SetActive(state); };
     }
 
     private void OnEnable()

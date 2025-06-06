@@ -53,7 +53,7 @@ namespace BallzMerge.Root
         {
             Group = null;
 
-            if (_transform != null)
+            if (_transform is not null)
                 _transform.SetParent(_parent);
         }
 
