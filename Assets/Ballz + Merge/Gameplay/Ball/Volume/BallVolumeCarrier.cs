@@ -1,14 +1,13 @@
 using System;
 using BallzMerge.Root;
 using DG.Tweening;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zenject;
 
-public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
+public class BallVolumeCarrier : CyclicBehavior, IDropHandler, IInfoPanelView
 {
     private const float AnimationTime = 0.15f;
     private const string ToBagHeader = "Drop here for bag";
@@ -27,9 +26,12 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
     [SerializeField] private TMP_Text _header;
     [SerializeField] private Image _headerParent;
     [SerializeField] private Image _lock;
+    [SerializeField] private BallVolumeView _volumeView;
 
     [Inject] private UIRootView  _rootView;
 
+    private RectTransform _transform;
+    private bool _isOpen;
     private Tween _lockAnimation;
     private float _lockBaseFade;
     private Action<BallVolumesBagCell> _bagConnector = (BallVolumesBagCell ability) => {};
@@ -37,6 +39,7 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
     private void Awake()
     {
         _lockBaseFade = _lock.color.a;
+        _transform = (RectTransform)transform;
         _bagConnector = (BallVolumesBagCell ability) =>
         {
             ability.SetID(0);
@@ -58,10 +61,28 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
         _container.Changed -= OnContainerActivate;
         _volumesView.ActiveVolumePerformed -= OnBagSpellActivate;
     }
-
+    
     public void OnDrop(PointerEventData eventData)
     {
         _container.Swap(default, _bagConnector);
+    }
+
+    public void Show(RectTransform showcase)
+    {
+        _transform.SetParent(showcase);
+        _transform.anchorMin = new Vector2(0.15f, 0.15f);
+        _transform.anchorMax = new Vector2(0.85f, 0.85f);
+        _transform.anchoredPosition = Vector2.zero;
+        _transform.sizeDelta = Vector2.zero;
+    }
+
+    public void Hide()
+    {
+        _transform.SetParent(null);
+        StartCoroutine(_containerItem.UpdatePosition());
+        _volumesView.HidePerformed();
+        _isOpen = false;
+        ChangeActive(false);
     }
 
     private void OnTrigger()
@@ -82,6 +103,9 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
     {
         _header.text = ToCageHeader;
         ChangeActive(state);
+
+        if (state)
+            _volumeView.Show(_volumesView.CurrentData);
     }
 
     private void ChangeActive(bool state)
@@ -90,15 +114,21 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
         _pumper.enabled = state;
         _button.enabled = state;
         _trigger.enabled = state;
+        _volumeView.Deactivate();
+        _headerParent.gameObject.SetActive(state);
+
+        if (_isOpen != state)
+        {
+            _isOpen = state;
+
+            if (state)
+                _rootView.InfoPanelShowcase.Show(this);
+            else
+                _rootView.InfoPanelShowcase.Close();
+        }
+
         float targetFade = state ? 0 : _lockBaseFade;
         float targetScale = state ? 2 : 1;
-        _headerParent.gameObject.SetActive(state);
-        
-        if (state)
-            _rootView.Containers.ShowInMid(_containerItem);
-        else
-            _rootView.Containers.HideMid();
-
         _lockAnimation = DOTween.Sequence()
             .Join(_lock.DOFade(targetFade, AnimationTime))
             .Join(_lock.transform.DOScale(targetScale, AnimationTime).SetEase(Ease.InOutBounce));
@@ -109,6 +139,4 @@ public class BallVolumeCarrier : CyclicBehavior , IInitializable, IDropHandler
         if(_lockAnimation != null && _lockAnimation.IsActive())
             _lockAnimation.Kill();
     }
-
-    public void Init() { }
 }

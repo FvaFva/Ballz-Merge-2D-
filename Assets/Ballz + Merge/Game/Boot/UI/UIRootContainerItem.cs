@@ -57,7 +57,7 @@ namespace BallzMerge.Root
                 _transform.SetParent(_parent);
         }
 
-        private IEnumerator UpdatePosition()
+        public IEnumerator UpdatePosition()
         {
             yield return new WaitForEndOfFrame();
             _transform.SetParent(Group.Transform);
