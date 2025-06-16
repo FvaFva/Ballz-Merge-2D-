@@ -9,6 +9,8 @@ public class BallVolumesBagCell
     public BallVolume Volume { get; private set; }
     public int Value => Rarity.Weight;
     public Action<bool> ViewCallback { get; private set; }
+    public string Description => Volume.GetDescription(Rarity);
+    public string Suffix => Volume.GetSuffix(Rarity);
 
     public BallVolumesBagCell(BallVolume volume, DropRarity rarity, int? id = null)
     {

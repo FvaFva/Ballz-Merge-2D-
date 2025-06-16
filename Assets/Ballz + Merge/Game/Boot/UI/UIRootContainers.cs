@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace BallzMerge.Root
@@ -12,16 +11,13 @@ namespace BallzMerge.Root
         [SerializeField] private AdaptiveLayoutGroup _top;
         [SerializeField] private AdaptiveLayoutGroup _bottomRight;
         [SerializeField] private AdaptiveLayoutGroup _bottomCentre;
-        [SerializeField] private AdaptiveLayoutGroup _mid;
 
         private Dictionary<CrossPosition, AdaptiveLayoutGroup> _groups;
         private List<UIRootContainerItem> _items;
         private ScreenOrientation _orientation;
-        private Dictionary<UIRootContainerItem, Action> _midItems;
 
         public void Init()
         {
-            _midItems = new Dictionary<UIRootContainerItem, Action>();
             _items = new List<UIRootContainerItem>();
             _groups = new Dictionary<CrossPosition, AdaptiveLayoutGroup>
             {
@@ -32,8 +28,6 @@ namespace BallzMerge.Root
                 { CrossPosition.BottomCentre, _bottomCentre.Init() },
                 { CrossPosition.BottomRight, _bottomRight.Init() }
             };
-
-            _mid.Init();
         }
 
         public void UpdateScreenOrientation(ScreenOrientation orientation)
@@ -43,8 +37,6 @@ namespace BallzMerge.Root
             _top.UpdateScreenOrientation(orientation);
             _bottomRight.UpdateScreenOrientation(orientation);
             _rightCentre.UpdateScreenOrientation(orientation);
-            _mid.UpdateScreenOrientation(orientation);
-
             UpdateItemsPositions();
         }
 
@@ -59,22 +51,6 @@ namespace BallzMerge.Root
                 _items.Add(item);
 
             UpdateItemsPositions();
-        }
-
-        public void ShowInMid(UIRootContainerItem item)
-        {
-            var groupSnapshot = item.Group;
-            Action callback = groupSnapshot is null ? item.UnpackUp : () => item.PackUp(groupSnapshot);
-            _midItems.Add(item, callback);
-            item.PackUp(_mid);
-        }
-
-        public void HideMid()
-        {
-            foreach (var callback in _midItems.Values)
-                callback();
-            
-            _midItems.Clear();
         }
 
         private void UpdateItemsPositions()

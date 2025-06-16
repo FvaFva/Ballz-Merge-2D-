@@ -11,10 +11,10 @@ public class StickView : MonoBehaviour
     private const float BackgroundMoveDelay = 0.06f;
     private const float MinRange = 10f;
 
-    [SerializeField] private RectTransform _inputZone;
+    [SerializeField] private UIZoneObserver _inputZone;
+    [SerializeField] private UIZoneObserver _cancelZone;
     [SerializeField] private RectTransform _stickZone;
     [SerializeField] private RectTransform _stickBackground;
-    [SerializeField] private RectTransform _cancelZone;
     [SerializeField] private ImageAnimator _inputZoneAnimator;
     [SerializeField] private ImageAnimator _cancelZoneAnimator;
 
@@ -27,7 +27,7 @@ public class StickView : MonoBehaviour
     private Vector2 _position;
     private Vector2 _stickPosition;
     private Vector2 _startStickAnchorPosition;
-    private RectTransform _monitoredZone;
+    private UIZoneObserver _monitoredZone;
     private bool _previousInZone;
 
     public bool IsInZone { get; private set; }
@@ -75,8 +75,7 @@ public class StickView : MonoBehaviour
 
     public Vector2 GetCenterPosition()
     {
-        var temp = _inputZone.TransformPoint(_inputZone.rect.center.x, _inputZone.rect.yMax, 0);
-        return RectTransformUtility.WorldToScreenPoint(_cameras.UI, temp);
+        return _inputZone.GetCenterInWorld(_cameras.UI);
     }
 
     private void TransitState(ImageAnimator monitored, bool cancelState)
@@ -92,7 +91,7 @@ public class StickView : MonoBehaviour
     {
         _position = position;
         _previousInZone = IsInZone;
-        CheckCursorIn();
+        IsInZone = _monitoredZone.IsIn;
         CheckAnimation();
         _action();
     }
@@ -118,12 +117,6 @@ public class StickView : MonoBehaviour
         }
     }
 
-    private void CheckCursorIn()
-    {
-        Vector3 localPoint = GetConvertToLocalVector(_position, _monitoredZone);
-        IsInZone = _monitoredZone.rect.Contains(localPoint);
-    }
-
     private Vector2 GetConvertToLocalVector(Vector2 point, RectTransform rectTransform)
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, point, _cameras.UI, out Vector2 localPoint);
@@ -142,8 +135,8 @@ public class StickView : MonoBehaviour
 
         if(isAimActive)
         {
-            Vector2 localPoint = GetConvertToLocalVector(_position, _inputZone);
-            Vector2 clampedPosition = ClampToRect(_inputZone, localPoint);
+            Vector2 localPoint = GetConvertToLocalVector(_position, _inputZone.Transform);
+            Vector2 clampedPosition = ClampToRect(_inputZone.Transform, localPoint);
             float range = Vector2.Distance(_stickPosition, clampedPosition);
 
             if (range > MinRange)

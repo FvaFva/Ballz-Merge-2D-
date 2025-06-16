@@ -21,9 +21,9 @@ public class InfoPanelShowcase : MonoBehaviour
     [Inject] private MainInputMap _userInput;
 
     private Queue<IInfoPanelView> _panels = new Queue<IInfoPanelView>();
-    public event Action<bool> UIViewStateChanged;
     private IInfoPanelView _current;
 
+    public event Action<bool> UIViewStateChanged;
     public event Action CloseTriggered;
 
     private void Start()
@@ -78,7 +78,7 @@ public class InfoPanelShowcase : MonoBehaviour
         }
     }
 
-    private void OnCloseClick()
+    public void Close()
     {
         if (TryActivate(_default))
             return;
@@ -94,6 +94,11 @@ public class InfoPanelShowcase : MonoBehaviour
         {
             Deactivate();
         }
+    }
+
+    private void OnCloseClick()
+    {
+        Close();
     }
 
     private void OpenDefault()
@@ -118,12 +123,12 @@ public class InfoPanelShowcase : MonoBehaviour
     {
         if (_current == null)
         {
-            ShowPanel(panelView);
-            UIViewStateChanged?.Invoke(false);
             _content.SetActive(true);
             _openDefaultButton.gameObject.SetActive(false);
             _closeButton.gameObject.SetActive(true);
             _closeArea.gameObject.SetActive(true);
+            ShowPanel(panelView);
+            UIViewStateChanged?.Invoke(false);
             return true;
         }
 
