@@ -452,7 +452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scrollRect: {fileID: 259342825}
-  scrollSpeed: 2.5
+  scrollSpeed: 0.1
 --- !u!1 &264256705
 GameObject:
   m_ObjectHideFlags: 0
