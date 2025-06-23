@@ -47,6 +47,7 @@ public class GameSavedBlocksEffectsStorage
     public IEnumerable<SavedBlockEffect> Get(SqliteConnection connection)
     {
         List<SavedBlockEffect> savedEffects = new List<SavedBlockEffect>();
+        int connectBlock = 0;
 
         using (var command = connection.CreateCommand())
         {
@@ -54,7 +55,10 @@ public class GameSavedBlocksEffectsStorage
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
-                    savedEffects.Add(new SavedBlockEffect(Convert.ToString(reader[Name]), Convert.ToInt32(reader[EffectBlock]), Convert.ToInt32(reader[ConnectBlock])));
+                {
+                    connectBlock = reader[ConnectBlock] == DBNull.Value ? 0 : Convert.ToInt32(reader[ConnectBlock]);
+                    savedEffects.Add(new SavedBlockEffect(Convert.ToString(reader[Name]), Convert.ToInt32(reader[EffectBlock]), connectBlock));
+                }
             }
         }
 

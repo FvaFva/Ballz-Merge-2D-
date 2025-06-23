@@ -126,6 +126,8 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             StartLevel();
             _conductor.Start();
         }
+
+        _data.Saves.EraseAllData();
     }
 
     private void StartLevel()
@@ -138,8 +140,6 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     {
         foreach (ILevelLoader loader in _loaders)
             loader.Load();
-
-        _data.Saves.EraseAllData();
     }
 
     private void OnWaveLoaded()

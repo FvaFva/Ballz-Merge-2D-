@@ -8,9 +8,9 @@ namespace BallzMerge.Root
         public bool IsItDebug(ref string sceneName, DevelopersScenes devScenes)
         {
             string activeScene = SceneManager.GetActiveScene().name;
-            bool isItGameplay = activeScene == ScenesNames.GAMEPLAY || devScenes.Scenes.Contains(activeScene);
+            bool isItGameplayOrMainMenu = activeScene == ScenesNames.GAMEPLAY || activeScene == ScenesNames.MAINMENU || devScenes.Scenes.Contains(activeScene);
 
-            if(isItGameplay)
+            if(isItGameplayOrMainMenu)
             {
                 sceneName = activeScene;
                 return false;

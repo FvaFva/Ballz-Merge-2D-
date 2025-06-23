@@ -23,13 +23,13 @@ namespace BallzMerge.Data
 
         public List<GameHistoryData> GetData()
         {
-            List <GameHistoryData> data = new List<GameHistoryData>();
+            List<GameHistoryData> data = new List<GameHistoryData>();
 
-            using(var connection = new SqliteConnection(_dbPath))
+            using (var connection = new SqliteConnection(_dbPath))
             {
                 connection.Open();
 
-                using(var command = connection.CreateCommand())
+                using (var command = connection.CreateCommand())
                 {
                     command.CommandText = @$"SELECT 
                                                game.{IDColumnName} as {IDColumnName},
@@ -57,7 +57,7 @@ namespace BallzMerge.Data
         {
             int bestScore = 0;
 
-            using(var connection =  new SqliteConnection(_dbPath))
+            using (var connection = new SqliteConnection(_dbPath))
             {
                 connection.Open();
 
@@ -66,7 +66,7 @@ namespace BallzMerge.Data
                     command.CommandText = $"SELECT MAX({ScoreColumnName}) FROM {TableName}";
                     var result = command.ExecuteScalar();
 
-                    if(result != DBNull.Value)
+                    if (result != DBNull.Value)
                         bestScore = Convert.ToInt32(result);
                 }
 
@@ -80,7 +80,7 @@ namespace BallzMerge.Data
         {
             string gameUUID = Guid.NewGuid().ToString();
 
-            using (var connection = new  SqliteConnection(_dbPath))
+            using (var connection = new SqliteConnection(_dbPath))
             {
                 connection.Open();
 
@@ -121,7 +121,7 @@ namespace BallzMerge.Data
                 connection.Close();
             }
         }
-        
+
         private void GenerateDataByReader(SqliteDataReader reader, List<GameHistoryData> data)
         {
             string lastGame = "";
@@ -141,11 +141,13 @@ namespace BallzMerge.Data
                     currentDataId = data.Count - 1;
                 }
 
-                object dbValue = reader[_volumeStorage.ValueColumName];
-                object dbVolume = reader[_volumeStorage.VolumeColumName];
-                string volume = dbVolume.ToString();
-                int value = Convert.IsDBNull(dbValue) ? 0 : Convert.ToInt32(dbValue);
-                data[currentDataId].Add(volume, value);
+                object value = reader[_volumeStorage.ValueColumName];
+                object volume = reader[_volumeStorage.VolumeColumName];
+
+                if (value == DBNull.Value || volume == DBNull.Value)
+                    continue;
+
+                data[currentDataId].Add(volume.ToString(), Convert.ToInt32(value));
             }
         }
     }

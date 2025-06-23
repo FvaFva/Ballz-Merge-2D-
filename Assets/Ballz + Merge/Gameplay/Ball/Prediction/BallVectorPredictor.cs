@@ -20,15 +20,6 @@ namespace BallzMerge.Gameplay.BallSpace
 
         public event Action<IEnumerable<Vector3>> Predicted;
 
-        private void OnEnable()
-        {
-            if (_vectorReader != null)
-            {
-                _vectorReader.Changed += Predict;
-                _vectorReader.Canceled += OnCanceled;
-            }
-        }
-
         private void OnDisable()
         {
             if (_vectorReader != null)

@@ -1,8 +1,6 @@
 ﻿using BallzMerge.Root;
-using ModestTree;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Android.Gradle;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -39,7 +37,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         foreach (var element in _elements)
             element.RequiredSlowMo -= OnRequiredSlowMo;
 
-        _container.Swaped -= OnCellSwap;
+        _container.PerformIfNotNull(container => container.Swaped -= OnCellSwap);
     }
 
     public void SetOnlyView(bool isOnlyView) => _block.enabled = isOnlyView;

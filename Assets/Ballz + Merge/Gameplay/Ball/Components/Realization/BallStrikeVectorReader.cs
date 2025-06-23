@@ -30,6 +30,7 @@ public class BallStrikeVectorReader : BallComponent
     {
         _userInput.MainInput.StrikeVector.performed -= VectorMoved;
         _userInput.MainInput.Shot.started -= OnShotStarted;
+        _userInput.MainInput.StrikeVector.performed -= OnStrikeVectorPerformed;
         _view.SetActive(false);
     }
 
