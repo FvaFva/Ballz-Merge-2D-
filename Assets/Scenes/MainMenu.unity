@@ -1044,6 +1044,7 @@ MonoBehaviour:
   _continueGameButtonView: {fileID: 953613259}
   _behaviors:
   - {fileID: 1110359833}
+  - {fileID: 1519739652}
   - {fileID: 1136817068}
   - {fileID: 1184844865}
 --- !u!1 &469295863
@@ -2491,7 +2492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bebf720e1429514a9109f566177763c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 1
   _dateID:
     _toggle: {fileID: 424543883}
     _label: {fileID: 7319816749315911823}
@@ -2586,7 +2587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9127cd659f3d4b74bbea79059372dfcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 3
   _achievementViewPrefab: {fileID: 8158375075602472419, guid: b46fce6cbbec40b45900093fd1251b3b, type: 3}
   _dataParent: {fileID: 382825962}
 --- !u!222 &1136817069
@@ -3137,7 +3138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45dfce1c4b70176498ef0f33d0931ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 0
+  _initOrder: 4
   _portraitAvailableSpacePrecent: {x: 1, y: 0.7}
   _landscapeAvailableSpacePrecent: {x: 0.7, y: 0.85}
   _portraitOffset: {x: 0, y: -1.2}
@@ -3891,6 +3892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a50a16179ee12a4caa79ac3436825b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _initOrder: 2
   _openButton: {fileID: 1178100961}
   _historyView: {fileID: 1110359833}
 --- !u!1 &1566617159

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [Serializable]
-public class ButtonToggle
+public class ButtonToggle : IDisposable
 {
     [SerializeField] private Button _toggle;
     [SerializeField] private TMP_Text _label;
@@ -30,7 +30,7 @@ public class ButtonToggle
         return this;
     }
 
-    public void Close()
+    public void Dispose()
     {
         if (_toggle != null)
             _toggle.onClick.RemoveListener(ChangeState);
@@ -38,8 +38,7 @@ public class ButtonToggle
 
     public void ResetLabel()
     {
-        if (_label != null)
-            _label.text = _originalLabel;
+        _label.text = _originalLabel;
     }
 
     public void ChangeState()
