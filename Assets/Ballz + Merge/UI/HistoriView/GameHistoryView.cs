@@ -27,6 +27,7 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     {
         gameObject.SetActive(true);
         _transform.SetParent(showcase, false);
+        Show();
     }
 
     public bool SetData(List<GameHistoryData> data)
@@ -54,9 +55,6 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
 
         _transform.SetParent(_rootParent, false);
         gameObject.SetActive(false);
-
-        foreach (var toggle in _toggles)
-            toggle.Close();
     }
 
     public void Init()

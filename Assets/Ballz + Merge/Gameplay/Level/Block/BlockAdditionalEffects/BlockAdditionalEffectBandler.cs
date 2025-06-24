@@ -97,9 +97,9 @@ namespace BallzMerge.Gameplay.BlockSpace
         private void OnNumberChanged(Block block, int Count)
         {
             var another = GetOppositeCurrentOrConnection(block);
-            block.NumberChanged -= OnNumberChanged;
+            another.NumberChanged -= OnNumberChanged;
             another.ChangeNumber(Count);
-            block.NumberChanged += OnNumberChanged;
+            another.NumberChanged += OnNumberChanged;
         }
 
         private void OnHit(Block block, Vector2Int step)

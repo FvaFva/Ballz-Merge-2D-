@@ -1,3 +1,4 @@
+using BallzMerge.Data;
 using BallzMerge.Root;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,11 @@ namespace BallzMerge.MainMenu
         [SerializeField] private UIView _view;
         [SerializeField] private Button _startGame;
         [SerializeField] private Button _continueGame;
+        [SerializeField] private AnimatedButton _continueGameButtonView;
         [SerializeField] private List<CyclicBehavior> _behaviors;
 
         [Inject] private UIRootView _rootUI;
+        [Inject] private DataBaseSource _db;
 
         private List<IInitializable> _initializedComponents;
         private List<IDependentScreenOrientation> _orientators;
@@ -23,12 +26,14 @@ namespace BallzMerge.MainMenu
         public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
         public IEnumerable<IDependentScreenOrientation> Orientators => _orientators;
 
-        public bool IsAvailable {  get; private set; }
+        public bool IsAvailable { get; private set; }
 
 
         private void Start()
         {
             IsAvailable = true;
+            _continueGame.interactable = _db.Saves.CheckSaves();
+            _continueGameButtonView.SetState(_continueGame.interactable);
         }
 
         private void Awake()
@@ -38,10 +43,10 @@ namespace BallzMerge.MainMenu
 
             foreach (var component in _behaviors)
             {
-                if(component is IInitializable componentInstance)
+                if (component is IInitializable componentInstance)
                     _initializedComponents.Add(componentInstance);
 
-                if(component is IDependentScreenOrientation orientator)
+                if (component is IDependentScreenOrientation orientator)
                     _orientators.Add(orientator);
             }
         }

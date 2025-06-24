@@ -45,7 +45,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             foreach (var effect in _activeEffects)
             {
                 if (effect.ConnectBlock == null)
-                    savedEffects.Add(new SavedBlockEffect(effect.Type.ToString(), effect.Current.ID, 0));
+                    savedEffects.Add(new SavedBlockEffect(effect.Type.ToString(), effect.Current.ID, null));
                 else
                     savedEffects.Add(new SavedBlockEffect(effect.Type.ToString(), effect.Current.ID, effect.ConnectBlock.ID));
             }
@@ -88,7 +88,7 @@ namespace BallzMerge.Gameplay.BlockSpace
                 if (!blocksDictionary.TryGetValue(effect.EffectBlock, out Block effectBlock))
                     continue;
 
-                if (blocksDictionary.TryGetValue(effect.ConnectBlock, out Block connectBlock))
+                if (blocksDictionary.TryGetValue((int)effect.ConnectBlock, out Block connectBlock))
                 {
                     SpawnEffect(effectBlock, (int)Enum.Parse<BlockAdditionalEffectType>(effect.Name), connectBlock);
                     continue;

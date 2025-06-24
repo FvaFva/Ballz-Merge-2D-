@@ -8,19 +8,21 @@ public class BallVectorPredictionView : BallComponent
 {
     [SerializeField] private BallVectorPredictor _predictor;
     [SerializeField] private LineRenderer _lineRenderer;
-    
+
     [Inject] private Ball _ball;
 
     private void OnEnable()
     {
         _predictor.Predicted += OnChangedPrediction;
-        _ball.EnterGame += HideVew;
+        _ball.EnterGame += HideView;
+        _ball.LeftGame += ShowView;
     }
 
     private void OnDisable()
     {
         _predictor.Predicted -= OnChangedPrediction;
-        _ball.EnterGame -= HideVew;
+        _ball.EnterGame -= HideView;
+        _ball.LeftGame -= ShowView;
     }
 
     private void OnChangedPrediction(IEnumerable<Vector3> positions)
@@ -30,5 +32,14 @@ public class BallVectorPredictionView : BallComponent
         _lineRenderer.SetPositions(positionsArray);
     }
 
-    private void HideVew() => _lineRenderer.positionCount = 0;
+    private void HideView()
+    {
+        _predictor.Predicted -= OnChangedPrediction;
+        _lineRenderer.positionCount = 0;
+    }
+
+    private void ShowView()
+    {
+        _predictor.Predicted += OnChangedPrediction;
+    }
 }

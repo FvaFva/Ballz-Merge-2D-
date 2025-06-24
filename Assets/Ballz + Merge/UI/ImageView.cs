@@ -2,10 +2,10 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Shadow))]
 public class ImageView : MonoBehaviour
 {
-    [SerializeField] private Shadow _shadow;
-
+    private Shadow _shadow;
     private Transform _transform;
     private Color _shadowColor;
     private Tween _shadowTween;
@@ -15,6 +15,7 @@ public class ImageView : MonoBehaviour
     private void Awake()
     {
         _transform = transform;
+        _shadow = GetComponent<Shadow>();
         _shadowColor = _shadow.effectColor;
         _startScale = _transform.localScale;
         _startAlpha = _shadow.effectColor.a;
