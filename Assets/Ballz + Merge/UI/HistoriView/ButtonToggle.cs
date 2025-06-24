@@ -16,7 +16,7 @@ public class ButtonToggle : IDisposable
 
     private Action<ButtonToggle> _triggered;
 
-    public ButtonToggle Initialize(string firstToggleLabel, string secondToggleLabel, Action<ButtonToggle> onTrigger)
+    public ButtonToggle Initialize(string firstToggleLabel, string secondToggleLabel)
     {
         if (_label != null)
             _originalLabel = _label.text;
@@ -24,11 +24,12 @@ public class ButtonToggle : IDisposable
         if (_toggle != null)
             _toggle.onClick.AddListener(ChangeState);
 
-        _triggered = onTrigger;
         _firstToggleLabel = firstToggleLabel;
         _secondToggleLabel = secondToggleLabel;
         return this;
     }
+
+    public void SetTrigger(Action<ButtonToggle> onTrigger) => _triggered = onTrigger;
 
     public void Dispose()
     {
