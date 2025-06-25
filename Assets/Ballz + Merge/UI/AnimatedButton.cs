@@ -42,7 +42,6 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void OnEnable()
     {
-        _transform.localScale = Vector3.one * StartScale;
         _viewChanger(true);
         _buttonView.enabled = true;
     }
@@ -50,6 +49,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private void OnDisable()
     {
         DOTween.Kill(_transform);
+        _transform.localScale = Vector3.one * StartScale;
         _viewChanger(false);
         _buttonView.enabled = false;
     }

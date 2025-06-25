@@ -53,6 +53,23 @@ namespace BallzMerge.Data
             return data;
         }
 
+        public void EraseData()
+        {
+            using (var connection = new SqliteConnection(_dbPath))
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = $"DELETE FROM {TableName}";
+                    command.ExecuteNonQuery();
+                }
+
+                _volumeStorage.Erase(connection);
+                connection.Close();
+            }
+        }
+
         public int GetBestScore()
         {
             int bestScore = 0;

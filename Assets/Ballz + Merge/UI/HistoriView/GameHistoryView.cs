@@ -1,49 +1,62 @@
 ﻿using BallzMerge.Data;
+using BallzMerge.Root;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
 {
-    private const int CountPreload = 20;
+    private const int CountOfIteration = 3;
 
     [SerializeField] private ButtonToggle _dateID;
     [SerializeField] private ButtonToggle _score;
     [SerializeField] private ButtonToggle _number;
     [SerializeField] private GameDataView _gameDataPrefab;
     [SerializeField] private RectTransform _dataParent;
+    [SerializeField] private UIRootContainerItem _eraseButtonItem;
+    [SerializeField] private Button _eraseButton;
 
     private readonly List<ButtonToggle> _toggles = new List<ButtonToggle>();
     private readonly string[] _toggleLabels = { "ID", "Date", "(↑)", "(↓)" };
     private readonly List<GameDataView> _allViews = new List<GameDataView>();
 
+    private LoadScreen _loadScreen;
     private ButtonToggle _currentToggle;
     private List<GameHistoryData> _data;
     private RectTransform _rootParent;
     private RectTransform _transform;
 
+    public UIRootContainerItem EraseButtonItem => _eraseButtonItem;
+    public Button EraseButton => _eraseButton;
+
     public void Show(RectTransform showcase)
     {
         gameObject.SetActive(true);
+        _loadScreen.Show();
         _transform.SetParent(showcase, false);
-        Show();
+        StartCoroutine(Show());
     }
 
-    public bool SetData(List<GameHistoryData> data)
+    public bool SetData(List<GameHistoryData> data, LoadScreen loadScreen)
     {
         if (data == null || data.Count == 0)
             return false;
 
         _data = data;
-        _toggles.Add(_dateID.Initialize(_toggleLabels[0], _toggleLabels[1], ChangeStateView));
-        _toggles.Add(_score.Initialize(_toggleLabels[2], _toggleLabels[3], OrderScore));
-        _toggles.Add(_number.Initialize(_toggleLabels[2], _toggleLabels[3], OrderNumber));
+        _loadScreen = loadScreen;
+        _toggles.Add(_dateID.Initialize(_toggleLabels[0], _toggleLabels[1]));
+        _toggles.Add(_score.Initialize(_toggleLabels[2], _toggleLabels[3]));
+        _toggles.Add(_number.Initialize(_toggleLabels[2], _toggleLabels[3]));
+        _dateID.ChangeState();
+        _dateID.SetTrigger(ChangeStateView);
+        _score.SetTrigger(OrderScore);
+        _number.SetTrigger(OrderNumber);
 
         if (_data.Count > _allViews.Count)
             GenerateViews(_data.Count - _allViews.Count);
-
-        _dateID.ChangeState();
 
         return true;
     }
@@ -61,14 +74,33 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     {
         _transform = (RectTransform)transform;
         _rootParent = (RectTransform)_transform.parent;
-        GenerateViews(CountPreload);
         Hide();
     }
 
-    private void Show()
+    private IEnumerator Show()
     {
-        for (int i = 0; i < _data.Count; i++)
-            _allViews[i].Show(_data[i].GetDateOrID(_dateID.State), _data[i].Score, _data[i].Number, _data[i].Volumes);
+        _loadScreen.MoveProgress(0f);
+        _loadScreen.Show();
+
+        int total = _data.Count;
+        double batchSize = Math.Ceiling((double)total / CountOfIteration);
+
+        for (int i = 0; i < total; i++)
+        {
+            _allViews[i].Show(_data[i].GetDateOrID(_dateID.State),
+                _data[i].Score,
+                _data[i].Number,
+                _data[i].Volumes);
+
+            if (i % batchSize == 0 || i == total - 1)
+            {
+                float progress = (float)(i + 1) / total;
+                _loadScreen.MoveProgress(progress);
+                yield return null;
+            }
+        }
+
+        _loadScreen.Hide();
     }
 
     private void GenerateViews(int count)
@@ -77,7 +109,7 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
             _allViews.Add(Instantiate(_gameDataPrefab, _dataParent).Init());
     }
 
-    private void ChangeStateView(ButtonToggle _) => Show();
+    private void ChangeStateView(ButtonToggle _) => StartCoroutine(Show());
 
     private void OrderScore(ButtonToggle toggle) => ToggleSort(toggle, x => x.Score);
 
@@ -86,7 +118,7 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     private void ToggleSort<T>(ButtonToggle toggle, Func<GameHistoryData, T> keySelector)
     {
         _data = toggle.State ? _data.OrderBy(keySelector).ToList() : _data.OrderByDescending(keySelector).ToList();
-        Show();
+        StartCoroutine(Show());
         ResetCurrentToggleLabel(toggle);
     }
 

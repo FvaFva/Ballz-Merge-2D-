@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 namespace BallzMerge.Root
 {
@@ -21,6 +22,11 @@ namespace BallzMerge.Root
         public void MoveProgress(float target, float step)
         {
             _progress.value = Mathf.Lerp(_progress.value, target, step);
+        }
+
+        public void MoveProgress(float target)
+        {
+            _progress.value = target;
         }
     }
 }

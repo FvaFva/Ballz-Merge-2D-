@@ -602,7 +602,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68d5f5deb88845347b5f353adcc02ca1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shadow: {fileID: 0}
 --- !u!1 &566113491905177762
 GameObject:
   m_ObjectHideFlags: 0
@@ -3957,7 +3956,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 97.55
+  m_fontSize: 93.95
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5254,8 +5253,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 135.23407, y: -214.37614}
-  m_SizeDelta: {x: 270.46814, y: 136.25076}
+  m_AnchoredPosition: {x: 140.12799, y: -206.84538}
+  m_SizeDelta: {x: 280.25598, y: 131.23026}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1696618635217812777
 CanvasRenderer:
@@ -7762,9 +7761,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6618307270981799245}
   - {fileID: 9202346471564787010}
   - {fileID: 6235884353394245953}
-  - {fileID: 6618307270981799245}
   - {fileID: 5781890369459117973}
   - {fileID: 2223948355185836963}
   - {fileID: 2016946363429799448}
