@@ -11,7 +11,7 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
     [SerializeField] private GameDataVolumeMicView _viewPrefab;
     [SerializeField] private ContentSizeFitter _fitter;
     [SerializeField] private ScrollRect _scroll;
-    [SerializeField] private AdaptiveLayoutGroup _layout;
+    [SerializeField] private AdaptiveLayoutGroupBase _layout;
 
     private Queue<GameDataVolumeMicView> _free = new Queue<GameDataVolumeMicView>();
     private Queue<GameDataVolumeMicView> _busy = new Queue<GameDataVolumeMicView>();

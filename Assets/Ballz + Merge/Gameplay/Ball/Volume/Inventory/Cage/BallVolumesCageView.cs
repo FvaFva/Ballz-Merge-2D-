@@ -18,7 +18,6 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
     private int _cageID;
     private List<BallVolumeCageElement> _elements = new List<BallVolumeCageElement>();
     private Queue<BallVolumeCageElement> _cage;
-    private bool _isInited;
 
     [Inject] private IGameTimeOwner _timeScaler;
 
@@ -29,7 +28,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         foreach (var element in _elements)
             element.RequiredSlowMo += OnRequiredSlowMo;
 
-        _container.Swaped += OnCellSwap;
+        _container.Swapped += OnCellSwap;
     }
 
     private void OnDisable()
@@ -124,10 +123,6 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
 
     public void Init()
     {
-        if (_isInited)
-            return;
-
-        _isInited = true;
         _cageID = 0;
         _cage = new Queue<BallVolumeCageElement>();
 
