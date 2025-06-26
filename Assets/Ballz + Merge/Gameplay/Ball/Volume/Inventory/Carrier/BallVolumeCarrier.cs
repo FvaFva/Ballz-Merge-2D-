@@ -13,7 +13,6 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
     private const string ToBagHeader = "Drop here for bag";
     private const string ToCageHeader = "Click here for cage";
 
-    [Header("Logic")]
     [SerializeField] private BallWaveVolume _volumes;
     [SerializeField] private BallWaveVolumeView _volumesView;
     [SerializeField] private RectTransform _cagePosition;
