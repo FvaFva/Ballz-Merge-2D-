@@ -11,18 +11,19 @@ namespace BallzMerge.Root
 
         private RectTransform _transform;
         private RectTransform _parent;
-        private Dictionary<ScreenOrientation, CrossPosition> _positions;
         private bool _updatePositionOnEnable;
+        private Coroutine _positionUpdater;
+        private Dictionary<ScreenOrientation, CrossPosition> _positions;
 
         public IDictionary<ScreenOrientation, CrossPosition> Positions => _positions;
-        public AdaptiveLayoutGroup Group { get; private set; }
+        public AdaptiveLayoutGroupBase Group { get; private set; }
 
         private void OnEnable()
         {
             if (_updatePositionOnEnable)
             {
                 _updatePositionOnEnable = false;
-                StartCoroutine(UpdatePosition());
+                UpdatePositionByGroup();
             }
         }
 
@@ -39,12 +40,18 @@ namespace BallzMerge.Root
             };
         }
 
-        public void PackUp(AdaptiveLayoutGroup root)
+        public void PuckUp(RectTransform transform)
+        {
+            _transform?.SetParent(transform);
+            _transform.position = _transform.position.DropZ();
+        }
+
+        public void PackUp(AdaptiveLayoutGroupBase root)
         {
             Group = root;
 
             if (isActiveAndEnabled)
-                StartCoroutine(UpdatePosition());
+                UpdatePositionByGroup();
             else
                 _updatePositionOnEnable = true;
         }
@@ -52,16 +59,23 @@ namespace BallzMerge.Root
         public void UnpackUp()
         {
             Group = null;
-
-            if (_transform is not null)
-                _transform.SetParent(_parent);
+            _transform?.SetParent(_parent);
         }
 
-        public IEnumerator UpdatePosition()
+        public void UpdatePositionByGroup()
+        {
+            if (_positionUpdater != null)
+                StopCoroutine(_positionUpdater);
+            
+            _positionUpdater = StartCoroutine(DelayedUpdatePositionByGroup());
+        }
+
+        private IEnumerator DelayedUpdatePositionByGroup()
         {
             yield return new WaitForEndOfFrame();
             _transform.SetParent(Group.Transform);
-            _transform.position = new Vector3(_transform.position.x, _transform.position.y, 0);
+            _transform.position = _transform.position.DropZ();
+            _positionUpdater = null;
         }
     }
 }

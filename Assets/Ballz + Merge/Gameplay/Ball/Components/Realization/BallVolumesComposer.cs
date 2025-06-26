@@ -9,15 +9,11 @@ public class BallVolumesComposer : BallComponent
 
     private void OnEnable()
     {
-        _carrier.SetActive(true);
-        _bag.SetActive(true);
         _cage.PerformIfNotNull(cage => cage.SetOnlyView(false));
     }
 
     private void OnDisable()
     {
-        _carrier.SetActive(false);
-        _bag.SetActive(false);
         _cage.PerformIfNotNull(cage => cage.SetOnlyView(true));
     }
 }

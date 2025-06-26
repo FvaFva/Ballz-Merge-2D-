@@ -5,21 +5,21 @@ namespace BallzMerge.Root
 {
     public class UIRootContainers : MonoBehaviour, IDependentScreenOrientation
     {
-        [SerializeField] private AdaptiveLayoutGroup _left;
-        [SerializeField] private AdaptiveLayoutGroup _rightTop;
-        [SerializeField] private AdaptiveLayoutGroup _rightCentre;
-        [SerializeField] private AdaptiveLayoutGroup _top;
-        [SerializeField] private AdaptiveLayoutGroup _bottomRight;
-        [SerializeField] private AdaptiveLayoutGroup _bottomCentre;
+        [SerializeField] private AdaptiveLayoutGroupBase _left;
+        [SerializeField] private AdaptiveLayoutGroupBase _rightTop;
+        [SerializeField] private AdaptiveLayoutGroupBase _rightCentre;
+        [SerializeField] private AdaptiveLayoutGroupBase _top;
+        [SerializeField] private AdaptiveLayoutGroupBase _bottomRight;
+        [SerializeField] private AdaptiveLayoutGroupBase _bottomCentre;
 
-        private Dictionary<CrossPosition, AdaptiveLayoutGroup> _groups;
+        private Dictionary<CrossPosition, AdaptiveLayoutGroupBase> _groups;
         private List<UIRootContainerItem> _items;
         private ScreenOrientation _orientation;
 
         public void Init()
         {
             _items = new List<UIRootContainerItem>();
-            _groups = new Dictionary<CrossPosition, AdaptiveLayoutGroup>
+            _groups = new Dictionary<CrossPosition, AdaptiveLayoutGroupBase>
             {
                 { CrossPosition.Left, _left.Init() },
                 { CrossPosition.RightTop, _rightTop.Init() },
