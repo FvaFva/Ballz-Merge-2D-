@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,13 +8,17 @@ using UnityEngine.UI;
 public class ButtonView : MonoBehaviour
 {
     private const string BLEND_PROPERTY = "_BlendAmount";
+    private const string COLOR_PROPERTY = "_Color";
 
     private RectTransform _transform;
     private Tween _shadowTween;
     private Image _image;
     private Material _imageMaterial;
     private Shadow _shadow;
-    private Dictionary<ColorType, Color> _colors;
+    private TMP_Text _label;
+    private Dictionary<ColorType, Color> _shadowColors;
+    private Color _startMaterialColor;
+    private Color _startLabelColor;
 
     private void OnDisable()
     {
@@ -22,16 +27,19 @@ public class ButtonView : MonoBehaviour
 
     public void Init()
     {
-        _colors = new Dictionary<ColorType, Color>();
+        _shadowColors = new Dictionary<ColorType, Color>();
         _transform = (RectTransform)transform;
         _shadow = GetComponent<Shadow>();
         _image = GetComponent<Image>();
         _imageMaterial = new Material(_image.material);
         _image.material = _imageMaterial;
-        _colors.Add(ColorType.StartColor, _shadow.effectColor);
-        Color targetColor = _shadow.effectColor;
-        targetColor.a = 1f;
-        _colors.Add(ColorType.TargetColor, targetColor);
+        _label = GetComponentInChildren<TMP_Text>();
+        _shadowColors.Add(ColorType.StartColor, _shadow.effectColor);
+        _startMaterialColor = _imageMaterial.GetColor(COLOR_PROPERTY);
+        _label.PerformIfNotNull(label => _startLabelColor = label.color);
+        Color targetShadowColor = _shadow.effectColor;
+        targetShadowColor.a = 1f;
+        _shadowColors.Add(ColorType.TargetColor, targetShadowColor);
     }
 
     public void SetDefault()
@@ -42,13 +50,13 @@ public class ButtonView : MonoBehaviour
             _imageMaterial.SetFloat(BLEND_PROPERTY, 0);
 
         _transform.localScale = Vector3.one;
-        _shadow.effectColor = _colors[ColorType.StartColor];
+        _shadow.effectColor = _shadowColors[ColorType.StartColor];
     }
 
     public void ChangeParameters(float newScale, ColorType colorType, float duration)
     {
         _transform.DOScale(newScale, duration);
-        ChangeShadowColor(_colors[colorType], duration);
+        ChangeShadowColor(_shadowColors[colorType], duration);
     }
 
     public void ChangeBlendMaterial(float newValue, float duration)
@@ -65,6 +73,22 @@ public class ButtonView : MonoBehaviour
                 newColor,
                 duration
             ).SetEase(Ease.InOutQuad);
+    }
+
+    public void ChangeMaterialColor(Color color)
+    {
+        _imageMaterial.color = color;
+    }
+
+    public void ChangeLabelColor(Color color)
+    {
+        _label.PerformIfNotNull(label => label.color = color);
+    }
+
+    public void SetDefaultColor()
+    {
+        _imageMaterial.color = _startMaterialColor;
+        _label.color = _startLabelColor;
     }
 
     private void StopAllAnimations()

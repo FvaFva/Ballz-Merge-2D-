@@ -39,6 +39,15 @@ namespace BallzMerge.Data
             }
         }
 
+        public void Erase(SqliteConnection connection)
+        {
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = $"DELETE FROM {TableName}";
+                command.ExecuteNonQuery();
+            }
+        }
+
         private void CreateSettingsTable(SqliteConnection connectionForInit)
         {
             using (var command = connectionForInit.CreateCommand())

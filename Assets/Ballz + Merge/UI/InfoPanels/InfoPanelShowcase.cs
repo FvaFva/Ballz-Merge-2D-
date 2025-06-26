@@ -24,6 +24,7 @@ public class InfoPanelShowcase : MonoBehaviour
     private IInfoPanelView _current;
 
     public event Action<bool> UIViewStateChanged;
+    public event Action<IInfoPanelView> ClosePanelTriggered;
     public event Action CloseTriggered;
 
     private void Start()
@@ -82,18 +83,15 @@ public class InfoPanelShowcase : MonoBehaviour
     {
         if (TryActivate(_default))
             return;
-        else
-            _current.Hide();
+
+        _current.Hide();
+        CloseTriggered?.Invoke();
+        ClosePanelTriggered?.Invoke(_current);
 
         if (_panels.TryDequeue(out IInfoPanelView temp))
-        {
             ShowPanel(temp);
-            CloseTriggered?.Invoke();
-        }
         else
-        {
             Deactivate();
-        }
     }
 
     private void OnCloseClick()
@@ -144,13 +142,17 @@ public class InfoPanelShowcase : MonoBehaviour
     private void HideAllPanels()
     {
         _current.Hide();
+        ClosePanelTriggered?.Invoke(_current);
 
         if (_panels.IsEmpty() == false)
         {
             int panelsCount = _panels.Count;
 
             for (int i = 0; i < panelsCount; i++)
+            {
+                ClosePanelTriggered?.Invoke(_panels.Peek());
                 _panels.Dequeue().Hide();
+            }
         }
     }
 }

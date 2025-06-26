@@ -1,11 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class GameDataView : MonoBehaviour
 {
-    private const int CountPreload = 4;
-
     [SerializeField] private TMP_Text _volumesLabel;
     [SerializeField] private TMP_Text _score;
     [SerializeField] private TMP_Text _number;
@@ -19,7 +18,6 @@ public class GameDataView : MonoBehaviour
     {
         _volumesLabel.gameObject.SetActive(false);
         _allViews = new List<GameDataVolumeMicView>();
-        GenerateViews(CountPreload);
         return this;
     }
 

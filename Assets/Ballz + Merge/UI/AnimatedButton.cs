@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,6 +19,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private bool _isPointerEnter;
     private Transform _transform;
     private Action<bool> _viewChanger = (bool state) => { };
+    private Dictionary<bool, Action> _buttonViewStateActions = new Dictionary<bool, Action>();
 
     private void Awake()
     {
@@ -29,15 +31,17 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         if (_pumper != null && _hiddenField != null)
             _viewChanger = (bool state) => { _pumper.enabled = state; _hiddenField.gameObject.SetActive(state); };
-        else if(_pumper != null)
+        else if (_pumper != null)
             _viewChanger = (bool state) => { _pumper.enabled = state; };
         else if (_hiddenField != null)
             _viewChanger = (bool state) => { _hiddenField.gameObject.SetActive(state); };
+
+        _buttonViewStateActions.Add(true, ActivateButtonView);
+        _buttonViewStateActions.Add(false, DeactivateButtonView);
     }
 
     private void OnEnable()
     {
-        _transform.localScale = Vector3.one * StartScale;
         _viewChanger(true);
         _buttonView.enabled = true;
     }
@@ -45,6 +49,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private void OnDisable()
     {
         DOTween.Kill(_transform);
+        _transform.localScale = Vector3.one * StartScale;
         _viewChanger(false);
         _buttonView.enabled = false;
     }
@@ -98,5 +103,22 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         _buttonView.ChangeBlendMaterial(0f, Duration);
         _buttonView.ChangeParameters(StartScale, ColorType.StartColor, Duration);
         _viewChanger(true);
+    }
+
+    public void SetState(bool state)
+    {
+        _buttonViewStateActions[state].Invoke();
+        enabled = state;
+    }
+
+    private void ActivateButtonView()
+    {
+        _buttonView.SetDefaultColor();
+    }
+
+    private void DeactivateButtonView()
+    {
+        _buttonView.ChangeMaterialColor(Color.white);
+        _buttonView.ChangeLabelColor(Color.black);
     }
 }
