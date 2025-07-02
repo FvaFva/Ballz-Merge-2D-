@@ -18,10 +18,16 @@ namespace BallzMerge.Gameplay.BallSpace
         private BallState _current;
         private Vector3 _start;
         private bool _loaded;
+        private Dictionary<BallState, Action> _enterStates;
+        private Dictionary<BallState, Action> _leftStates;
 
         public Vector2 Position => _transform.position;
-        public event Action LeftGame;
         public event Action EnterGame;
+        public event Action LeftGame;
+        public event Action EnterAIM;
+        public event Action LeftAIM;
+        public event Action EnterAwait;
+        public event Action LeftAwait;
 
         public Ball PreLoad()
         {
@@ -77,6 +83,22 @@ namespace BallzMerge.Gameplay.BallSpace
             _inAwait.SetTarget(_aim);
             _aim.SetTarget(_inGame);
             _inGame.SetTarget(_inAwait);
+
+            _enterStates = new Dictionary<BallState, Action>
+            {
+                {_inGame, ()=>{ EnterGame?.Invoke(); }},
+                {_aim, ()=>{ EnterAIM?.Invoke(); }},
+                {_inAwait, ()=>{ EnterAwait?.Invoke(); }},
+                {_simulation, ()=>{} }
+            };
+
+            _leftStates = new Dictionary<BallState, Action>
+            {
+                {_inGame, ()=>{ LeftGame?.Invoke(); }},
+                {_aim, ()=>{ LeftAIM?.Invoke(); }},
+                {_inAwait, ()=>{ LeftAwait?.Invoke(); }},
+                {_simulation, ()=>{ } }
+            };
         }
 
         private void BuildComponents()
@@ -100,20 +122,16 @@ namespace BallzMerge.Gameplay.BallSpace
             {
                 _current.TargetAchieved -= OnTargetStateReached;
                 _current.Exit();
+                _leftStates[_current]();
             }
 
-            if (_current == _inGame)
-                LeftGame?.Invoke();
-
             _current = newState;
-
-            if (_current == _inGame)
-                EnterGame?.Invoke();
 
             if (_current != null)
             {
                 _current.TargetAchieved += OnTargetStateReached;
                 _current.Enter();
+                _enterStates[_current]();
             }
         }
     }

@@ -12,7 +12,7 @@ public class MainSceneInjection : MonoInstaller
     [Header("Project context bind")]
     [SerializeField] private GameCycler _loader;
     [SerializeField] private BallVolumesCageView _ballVolumesCageView;
-    [SerializeField] private BallVolumeCarrier _ballVolumeCarrier;
+    [SerializeField] private BallVolumeInventoryActivator _ballVolumeCarrierActivator;
 
     [Header("Bind")]
     [SerializeField] private Ball _ball;
@@ -39,8 +39,9 @@ public class MainSceneInjection : MonoInstaller
         Container.Bind<BlocksMover>().FromNew().AsSingle().NonLazy();
         Container.Bind<ISceneEnterPoint>().To<GameCycler>().FromInstance(_loader).AsSingle().NonLazy();
         
+        Container.Inject(_ballVolumeCarrierActivator);
+
         ProjectContext.Instance.Container.Inject(_ballVolumesCageView);
-        ProjectContext.Instance.Container.Inject(_ballVolumeCarrier);
         _entryPointBinder.Set(_loader);
     }
 }

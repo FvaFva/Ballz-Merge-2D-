@@ -1,10 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private GameDataVolumeMicView _view;
+    [SerializeField] private RectPumper _viewPumper;
     [SerializeField] private UIParticle _backlight;
     [SerializeField] private UIParticle _highlight;
     [SerializeField] private UIParticle _positive;
@@ -29,7 +31,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
     {
         if (Current == volume)
             return this;
-        
+
         if (volume == null)
         {
             Clear();
@@ -39,7 +41,8 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
         volume.SetCallback(ShowEffect);
         volume.SetID(ID);
         Current = volume;
-        ShowCurrent();
+        Show();
+        _viewPumper.RerollRotation();
         return this;
     }
 
@@ -49,6 +52,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
         _view.Hide();
         _backlight.Stop();
         _highlight.Stop();
+        _viewPumper.RerollRotation();
         return this;
     }
 
@@ -73,11 +77,12 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
     public void Hide()
     {
         _view.Clear();
+        _viewPumper.RerollRotation();
     }
 
     public void Show()
     {
-        ShowCurrent();
+        _view.Show(Current);
     }
 
     public BallVolumeCageElement Init(int id, BallVolumeCageContainer container)
@@ -119,16 +124,8 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
         _backlight.Stop();
 
         if (Current != null)
-            ShowCurrent();
+            Show();
     }
 
-    private void ShowCurrent()
-    {
-        _view.Show(Current);
-    }
-
-    private void ApplyHidden(BallVolumesBagCell volume)
-    {
-        Apply(volume);
-    }
+    private void ApplyHidden(BallVolumesBagCell volume)=> Apply(volume);
 }

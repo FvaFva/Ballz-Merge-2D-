@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class OrientationDependentPuck : CyclicBehavior, IDependentScreenOrientation
 {
-    [SerializeField] private List<AdaptiveLayoutGroup> _puck;
+    [SerializeField] private List<AdaptiveLayoutGroupBase> _puck;
 
     public void UpdateScreenOrientation(ScreenOrientation orientation)
     {

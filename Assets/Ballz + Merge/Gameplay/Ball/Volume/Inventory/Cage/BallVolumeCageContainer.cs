@@ -21,7 +21,8 @@ public class BallVolumeCageContainer : MonoBehaviour
 
     public ParticleSystemForceField Field => _field;
     public event Action<bool> Changed;
-    public event Action Swaped;
+    public event Action Swapped;
+    public BallVolumesBagCell Current { get; private set; }
 
     private void Awake()
     {
@@ -38,6 +39,7 @@ public class BallVolumeCageContainer : MonoBehaviour
             _disabledElements.SetActive(false);
         }
 
+        Current = null;
         Changed?.Invoke(false);
     }
 
@@ -60,6 +62,7 @@ public class BallVolumeCageContainer : MonoBehaviour
             _mainCanvas.worldCamera,
             out _lastLocalPosition);
 
+        Current = cell.Current;
         Changed?.Invoke(true);
     }
 
@@ -72,7 +75,7 @@ public class BallVolumeCageContainer : MonoBehaviour
         _starter.Apply(finisher);
         startTarget(startValue);
         Disable();
-        Swaped?.Invoke();
+        Swapped?.Invoke();
     }
 
     public void ApplyDelta(Vector2 position)

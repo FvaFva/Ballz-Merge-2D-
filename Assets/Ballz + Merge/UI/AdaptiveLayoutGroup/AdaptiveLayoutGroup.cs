@@ -11,6 +11,7 @@ public class AdaptiveLayoutGroup : LayoutGroup
     private const float MinValue = 0.0001f;
     private const float Zero = 0f;
 
+    [SerializeField, Range(1, 100)] private int _separate = 1;
     [SerializeField] private float _spacing;
     [SerializeField] private bool _isInversive;
     [SerializeField] private bool _isUseAspectForMainAxis;
@@ -116,6 +117,7 @@ public class AdaptiveLayoutGroup : LayoutGroup
 
         float totalMainSize = rectTransform.rect.size[mainAxis];
         float totalSpacing = _spacing * (count - One);
+        float separate = _separate;
 
         if (_isUseAspectForMainAxis)
         {
@@ -144,16 +146,31 @@ public class AdaptiveLayoutGroup : LayoutGroup
 
             calculatorCoefficient = availableSize;
             calculator = CalculateByWeight;
+            separate = 1;
         }
+
+        float crossSize = totalCrossSize / separate;
+        int crossQueue = 0;
+        float crossPos = Zero;
 
         foreach (var child in _childrenCrossSizes)
         {
-            float mainSize = calculator(child.Value, calculatorCoefficient);
+            float mainSize = calculator(child.Value, calculatorCoefficient) / separate;
+            float step = mainSize + _spacing;
 
             SetChildAlongAxis(child.Key, mainAxis, pos, mainSize);
-            SetChildAlongAxis(child.Key, crossAxis, Zero, totalCrossSize);
+            SetChildAlongAxis(child.Key, crossAxis, crossPos, crossSize);
 
-            pos += mainSize + _spacing;
+            if (++crossQueue == separate)
+            {
+                crossQueue = 0;
+                crossPos = Zero;
+                pos += step;
+            }
+            else
+            {
+                crossPos += step;
+            }
         }
     }
 
