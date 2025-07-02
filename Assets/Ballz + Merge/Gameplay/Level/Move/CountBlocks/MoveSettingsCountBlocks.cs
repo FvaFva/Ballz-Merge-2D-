@@ -5,7 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New move numberSettings", menuName = "Bellz+Merge/Move/CountBlocks", order = 51)]
 public class MoveSettingsCountBlocks : ScriptableObject
 {
-    private const int FullChance = 100;
+    private const int TargetChance = 1;
+    private const int DecimalPlaces = 2;
 
     [SerializeField] private MoveSettingsCountBlocksProperties[] _properties;
 
@@ -13,17 +14,25 @@ public class MoveSettingsCountBlocks : ScriptableObject
 
     private void OnValidate()
     {
-        foreach(var prop in _properties)
+        if (_properties == null || _properties.Length == 0)
+            return;
+
+        // Суммируем все элементы массива
+        float sum = 0f;
+
+        foreach (MoveSettingsCountBlocksProperties property in _properties)
         {
-            if (prop.CountBlocks.Length == 0)
-                continue;
+            sum = property.BlocksProperties.Sum(property => property.Chance);
 
-            int overhead = prop.CountBlocks.Sum(chance => chance.Chance) - FullChance;
+            // Проверяем, что сумма не равна нулю, чтобы избежать деления на ноль
+            if (sum == 0f)
+                return;
 
-            if (overhead != 0)
-            {
-                prop.CountBlocks[prop.CountBlocks.Length - 1].Chance -= overhead;
-            }
+            // Масштабируем каждый элемент так, чтобы сумма была равна targetSum
+            float scale = TargetChance / sum;
+
+            for (int i = 0; i < property.BlocksProperties.Length; i++)
+                property.BlocksProperties[i].Chance = (float)System.Math.Round(property.BlocksProperties[i].Chance * scale, DecimalPlaces);
         }
     }
 }

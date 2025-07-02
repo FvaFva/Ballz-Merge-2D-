@@ -61,8 +61,8 @@ namespace BallzMerge.Gameplay.BlockSpace
                     return property;
             }
 
-            // На случай ошибки, возвращаем первый объект
-            return _properties[0];
+            // На случай ошибки
+            return default;
         }
 
         public BlockAdditionalEffectProperty GetProperty(int id)
@@ -71,7 +71,7 @@ namespace BallzMerge.Gameplay.BlockSpace
                 if ((int)_properties[i].Type == id)
                     return _properties[i];
 
-            return _properties[0];
+            return default;
         }
 
         public bool ChanceToGetPrefab()

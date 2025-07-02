@@ -78,7 +78,7 @@ public class BallVolumeHitInspector
 
             if (extraBlock != null && extraBlock.CanMove(data.Direction))
             {
-                extraBlock.Move(data.Direction);
+                extraBlock.Move(data.Direction, BlockMoveActionType.ChangePosition);
                 isExtraWent = true;
             }
         }

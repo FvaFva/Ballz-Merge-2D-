@@ -23,9 +23,15 @@ namespace BallzMerge.Gameplay.BlockSpace
             _blocksInMove = new List<Block>();
         }
 
-        public IEnumerable MoveAll(IEnumerable<Block> blocks, Vector2Int direction, Action callBack)
+        public IEnumerable MoveAll(IEnumerable<Block> blocks, Vector2Int direction, Action callback)
         {
-            _onComeAllBlocks = callBack;
+            _onComeAllBlocks = callback;
+
+            if (blocks.Count() == 0)
+            {
+                _onComeAllBlocks();
+                yield break;
+            }
 
             if (direction == Vector2Int.up)
                 blocks = blocks.OrderByDescending(block => block.ID);
@@ -34,15 +40,17 @@ namespace BallzMerge.Gameplay.BlockSpace
             {
                 if (block.CanMove(direction, true))
                 {
-                    block.CameToNewCell += OnCome;
-                    block.Deactivated += OnCome;
                     _blocksInMove.Add(block);
+                    block.Moved += OnCome;
+                    block.Deactivated += OnCome;
                 }
             }
 
+            yield return null;
+
             foreach (Block block in _blocksInMove.ToList())
             {
-                block.Move(direction);
+                block.Move(direction, BlockMoveActionType.Move);
                 yield return null;
             }
         }
@@ -59,9 +67,12 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void OnCome(Block block)
         {
-            block.CameToNewCell -= OnCome;
+            block.Moved -= OnCome;
             block.Deactivated -= OnCome;
-            _blocksInMove.TryRemove(block);
+            bool isFound = _blocksInMove.Remove(block);
+
+            if (isFound == false)
+                Debug.Log($"{block.name} was not present in blocksMoved list! Callback worked several times!");
 
             if (_blocksInMove.Count == 0)
                 _onComeAllBlocks();

@@ -53,34 +53,19 @@ namespace BallzMerge.Root
             UpdateItemsPositions();
         }
 
-        public void PackItem(UIRootContainerItem item)
-        {
-            if (_items.Contains(item) == false)
-                _items.Add(item);
-
-            var newItemPosition = item.Positions[_orientation];
-            var newItemGroup = _groups[newItemPosition];
-
-            if (newItemGroup != item.Group)
-            {
-                item.UnpackUp();
-                item.PackUp(newItemGroup);
-            }
-        }
-
-        public void UnpackItem(UIRootContainerItem item)
-        {
-            if (_items.Contains(item))
-            {
-                item.UnpackUp();
-                _items.Remove(item);
-            }
-        }
-
         private void UpdateItemsPositions()
         {
-            foreach(var item in _items)
-                PackItem(item);
+            foreach (var item in _items)
+            {
+                var newItemPosition = item.Positions[_orientation];
+                var newItemGroup = _groups[newItemPosition];
+
+                if (newItemGroup != item.Group)
+                {
+                    item.UnpackUp();
+                    item.PackUp(newItemGroup);
+                }
+            }
         }
     }
 }

@@ -65,8 +65,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         public IEnumerable<Block> SpawnWave()
         {
             _currentWave++;
-            int count = GetBlockCount();
             List<int> positions = _gridSettings.GetPositionsInRow();
+            int count = Mathf.Min(GetBlockCount(), positions.Count);
 
             for (int i = 0; i < count; i++)
             {
@@ -115,15 +115,15 @@ namespace BallzMerge.Gameplay.BlockSpace
             if (property.IsEmpty())
                 Debug.Log("No property");
 
-            int point = Random.Range(1, 101);
-            int previous = 0;
+            float point = Random.Range(0.01f, 1f);
+            float previous = 0;
 
-            foreach (var chancesToCount in property.CountBlocks)
+            foreach (var blockSpawnProperty in property.BlocksProperties)
             {
-                if (chancesToCount.Chance + previous > point)
-                    return chancesToCount.Count;
+                if (blockSpawnProperty.Chance + previous > point)
+                    return blockSpawnProperty.Count;
 
-                previous += chancesToCount.Chance;
+                previous += blockSpawnProperty.Chance;
             }
 
             return 0;
