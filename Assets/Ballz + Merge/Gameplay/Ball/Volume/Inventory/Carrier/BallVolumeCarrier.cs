@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using BallzMerge.Gameplay.Level;
 using BallzMerge.Root;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,10 +8,11 @@ using UnityEngine.UI;
 public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
 {
     private const float ShowDuration = 0.15f;
-    private const float BoardSize = 0.15f;
+    private const float BoardSize = 0.12f;
     private const string ToBagHeader = "Drop here for bag";
     private const string ToCageHeader = "Click here for cage";
 
+    [SerializeField] private BallVolumesPassiveView _passiveView;
     [SerializeField] private BallWaveVolume _volumes;
     [SerializeField] private BallWaveVolumeView _volumesView;
     [SerializeField] private RectTransform _cagePosition;
@@ -49,6 +49,7 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
         _cageContainer.Changed += OnContainerActivate;
         _volumesView.ActiveVolumePerformed += OnBagSpellActivate;
         _dropHandler.Dropped += OnDrop;
+        _passiveView.VolumeActivated += OnPassiveActivate;
     }
 
     private void OnDisable()
@@ -57,11 +58,12 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
         _cageContainer.Changed -= OnContainerActivate;
         _volumesView.ActiveVolumePerformed -= OnBagSpellActivate;
         _dropHandler.Dropped -= OnDrop;
+        _passiveView.VolumeActivated -= OnPassiveActivate;
     }
 
     public void OnDrop(PointerEventData _)
     {
-        if(_cageContainer.Current != null)
+        if (_cageContainer.Current != null)
             _cageContainer.Swap(default, _bagConnector);
     }
 
@@ -82,8 +84,18 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
         _transform.SetParent(_baseParent);
         _volumesView.HidePerformed();
         _volumeView.ChangeActive(false);
-        _cageContainerItem.UpdatePositionByGroup();
-        StartCoroutine(DelayedDeactivate());
+        _cageContainerItem.UpdatePositionByGroupDelayed();
+
+        if (gameObject.activeSelf)
+        {
+            _cageContainerItem.UpdatePositionByGroupDelayed();
+            StartCoroutine(DelayedDeactivate());
+        }
+        else
+        {
+            _cageContainerItem.UpdatePositionByGroup();
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnTrigger()
@@ -102,6 +114,12 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
     private void OnBagSpellActivate(bool state)
     {
         _volumeView.ChangeActive(state, _volumesView.CurrentData, ToCageHeader);
+    }
+
+    private void OnPassiveActivate(IBallVolumeViewData data)
+    {
+        _volumesView.HidePerformed();
+        _volumeView.ChangeActive(false, data);
     }
 
     private IEnumerator DelayedDeactivate()

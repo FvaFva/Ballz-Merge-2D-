@@ -1,5 +1,6 @@
 using BallzMerge.Gameplay.Level;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BallVolumesMap", menuName = "Bellz+Merge/Drop/BallVolumeMap", order = 51)]
@@ -27,7 +28,7 @@ public class BallVolumesMap : ScriptableObject
             }
         }
 
-        foreach(DropRarity rarity in _rarities)
+        foreach (DropRarity rarity in _rarities)
         {
             if (rarity != null)
                 _raritiesWeights.Add(rarity.Weight, rarity);
@@ -54,5 +55,10 @@ public class BallVolumesMap : ScriptableObject
         if (_volumesByString.ContainsKey(typeName))
             return _volumesByString[typeName];
         return null;
+    }
+
+    public IEnumerable<BallVolume> GetBySpecies(BallVolumesSpecies species)
+    {
+        return _ballVolumes.Where(volume => volume.Species == species);
     }
 }
