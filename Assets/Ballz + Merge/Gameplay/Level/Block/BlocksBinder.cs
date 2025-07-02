@@ -121,7 +121,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _hitInspector.Explore(data);
 
             if (block.CanMove(direction))
-                block.Move(direction);
+                block.Move(direction, BlockMoveActionType.ChangePosition);
         }
 
         private void OnDestroyBlock(Block block)

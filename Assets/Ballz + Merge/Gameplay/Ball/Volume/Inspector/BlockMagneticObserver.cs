@@ -42,7 +42,7 @@ namespace BallzMerge.Gameplay.BallSpace
                 isWent = _lastBlock.CanMove(moveDirection);
 
             if (isWent)
-                _lastBlock.Move(moveDirection);
+                _lastBlock.Move(moveDirection, BlockMoveActionType.ChangePosition);
 
             Clear(isWent);
         }

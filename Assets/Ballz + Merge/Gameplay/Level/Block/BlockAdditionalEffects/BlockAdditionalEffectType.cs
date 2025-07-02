@@ -1,5 +1,5 @@
 ﻿public enum BlockAdditionalEffectType : int
 {
-    BlockBinder = 1,
+    BlockBandler = 1,
     BlockIncreaser = 2
 }

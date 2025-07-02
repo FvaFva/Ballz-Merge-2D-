@@ -94,8 +94,8 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void MergeBlocks(Block firstBlock, Block secondBlock)
         {
-            firstBlock.Merge(secondBlock.WorldPosition);
-            secondBlock.Merge(firstBlock.WorldPosition);
+            firstBlock.Merge(secondBlock);
+            secondBlock.Merge(firstBlock);
             BlocksMerged?.Invoke(firstBlock, secondBlock);
         }
 
@@ -105,6 +105,8 @@ namespace BallzMerge.Gameplay.BlockSpace
 
             if (blockInNextCell != null && blockInNextCell.Number == block.Number)
             {
+                block.Debug.Add($"I Initialized merge with {blockInNextCell.name}");
+                blockInNextCell.Moved -= OnBlockCameNewPosition;
                 MergeBlocks(block, blockInNextCell);
                 return true;
             }
@@ -120,14 +122,14 @@ namespace BallzMerge.Gameplay.BlockSpace
             {
                 block.Hit += OnBlockHit;
                 block.Deactivated += Remove;
-                block.CameToNewCell += OnBlockCameNewPosition;
+                block.Moved += OnBlockCameNewPosition;
                 block.Destroyed += OnBlockDestroy;
             }
             else
             {
                 block.Hit -= OnBlockHit;
                 block.Deactivated -= Remove;
-                block.CameToNewCell -= OnBlockCameNewPosition;
+                block.Moved -= OnBlockCameNewPosition;
                 block.Destroyed -= OnBlockDestroy;
             }
         }

@@ -38,6 +38,11 @@ namespace BallzMerge.Gameplay.BlockSpace
             _skin.material = _material;
         }
 
+        private void OnEnable()
+        {
+            _transform.localScale = _baseScale;
+        }
+
         private void OnDisable()
         {
             DOTween.Kill(_transform);

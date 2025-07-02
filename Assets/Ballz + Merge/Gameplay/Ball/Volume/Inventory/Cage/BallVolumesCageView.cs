@@ -36,7 +36,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         foreach (var element in _elements)
             element.RequiredSlowMo -= OnRequiredSlowMo;
 
-        _container.Swapped -= OnCellSwap;
+        _container.PerformIfNotNull(container => container.Swapped -= OnCellSwap);
     }
 
     public void SetOnlyView(bool isOnlyView) => _block.enabled = isOnlyView;

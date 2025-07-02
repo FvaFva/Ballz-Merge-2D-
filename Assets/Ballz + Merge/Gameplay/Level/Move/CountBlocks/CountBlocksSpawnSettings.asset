@@ -15,19 +15,37 @@ MonoBehaviour:
   _properties:
   - Range:
       InitialWave: 1
-      TerminalWave: 2
-    CountBlocks:
+      TerminalWave: 5
+    BlocksProperties:
     - Count: 1
-      Chance: 53
+      Chance: 0.75
     - Count: 2
-      Chance: 33
+      Chance: 0.2
     - Count: 3
-      Chance: 14
+      Chance: 0.05
   - Range:
-      InitialWave: 3
-      TerminalWave: 10
-    CountBlocks:
+      InitialWave: 6
+      TerminalWave: 15
+    BlocksProperties:
+    - Count: 1
+      Chance: 0.21
     - Count: 2
-      Chance: 50
+      Chance: 0.39
     - Count: 3
-      Chance: 50
+      Chance: 0.24
+    - Count: 4
+      Chance: 0.15
+  - Range:
+      InitialWave: 16
+      TerminalWave: 17
+    BlocksProperties:
+    - Count: 1
+      Chance: 0.1
+    - Count: 2
+      Chance: 0.15
+    - Count: 3
+      Chance: 0.2
+    - Count: 4
+      Chance: 0.32
+    - Count: 5
+      Chance: 0.24

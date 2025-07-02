@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
@@ -28,25 +29,26 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     private List<GameHistoryData> _data;
     private RectTransform _rootParent;
     private RectTransform _transform;
-
-    public UIRootContainerItem EraseButtonItem => _eraseButtonItem;
-    public Button EraseButton => _eraseButton;
+    private UnityAction _action = () => { };
 
     public void Show(RectTransform showcase)
     {
         gameObject.SetActive(true);
+        _eraseButton.gameObject.SetActive(true);
+        _eraseButton.onClick.AddListener(_action);
         _loadScreen.Show();
         _transform.SetParent(showcase, false);
         StartCoroutine(Show());
     }
 
-    public bool SetData(List<GameHistoryData> data, LoadScreen loadScreen)
+    public bool SetData(List<GameHistoryData> data, LoadScreen loadScreen, UnityAction action)
     {
         if (data == null || data.Count == 0)
             return false;
 
         _data = data;
         _loadScreen = loadScreen;
+        _action = action;
         _toggles.Add(_dateID.Initialize(_toggleLabels[0], _toggleLabels[1]));
         _toggles.Add(_score.Initialize(_toggleLabels[2], _toggleLabels[3]));
         _toggles.Add(_number.Initialize(_toggleLabels[2], _toggleLabels[3]));
@@ -67,6 +69,8 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
             view.Hide();
 
         _transform.SetParent(_rootParent, false);
+        _eraseButton.onClick.RemoveListener(_action);
+        _eraseButton.gameObject.SetActive(false);
         gameObject.SetActive(false);
     }
 

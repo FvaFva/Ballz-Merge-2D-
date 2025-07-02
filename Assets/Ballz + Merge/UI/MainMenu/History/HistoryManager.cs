@@ -18,18 +18,16 @@ public class HistoryManager : CyclicBehavior, IInitializable
     private void OnEnable()
     {
         _openButton.AddListener(OpenView);
-        _historyView.EraseButton.AddListener(EraseData);
     }
 
     private void OnDisable()
     {
         _openButton.RemoveListener(OpenView);
-        _historyView.EraseButton.RemoveListener(EraseData);
     }
 
     public void Init()
     {
-        ChangeInit(_historyView.SetData(_source.History.GetData(), _uiRoot.LoadScreen));
+        ChangeInit(_historyView.SetData(_source.History.GetData(), _uiRoot.LoadScreen, EraseData));
     }
 
     private void ChangeInit(bool state)
@@ -42,8 +40,6 @@ public class HistoryManager : CyclicBehavior, IInitializable
     private void OpenView()
     {
         _uiRoot.InfoPanelShowcase.Show(_historyView);
-        _uiRoot.PackItemInContainer(_historyView.EraseButtonItem);
-        _uiRoot.PanelTriggered += CloseView;
     }
 
     private void EraseData()
@@ -51,13 +47,5 @@ public class HistoryManager : CyclicBehavior, IInitializable
         _source.History.EraseData();
         _uiRoot.InfoPanelShowcase.Close();
         ChangeInit(false);
-    }
-
-    private void CloseView(IInfoPanelView panelView)
-    {
-        _uiRoot.PanelTriggered -= CloseView;
-
-        if (panelView is GameHistoryView)
-            _uiRoot.UnpackItemFromContainer(_historyView.EraseButtonItem);
     }
 }
