@@ -67,7 +67,7 @@ Material:
     - _BaseColor: {r: 0.17254922, g: 0, b: 1, a: 1}
     - _BlendTextureColor: {r: 1, g: 1, b: 1, a: 1}
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 0.8113208, g: 0, b: 0, a: 1}
+    - _Color: {r: 0.509434, g: 0.0045082658, b: 0, a: 1}
     - _Texture1Color: {r: 0.8113208, g: 0, b: 0, a: 1}
     - _Texture2Color: {r: 5.041486, g: 5.041486, b: 5.041486, a: 1}
   m_BuildTextureStacks: []

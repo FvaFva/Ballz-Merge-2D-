@@ -31,6 +31,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             for (int i = 1; i <= _settings.GetPropertiesCount(); i++)
             {
                 property = _settings.GetProperty(i);
+
+                if (property.Equals(default(BlockAdditionalEffectProperty)))
+                    continue;
+
                 _effects.Add(property.Type, new Queue<BlockAdditionalEffectBase>());
 
                 for (int j = 1; j <= _countOfPreload; j++)
@@ -102,6 +106,9 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             BlockAdditionalEffectProperty effectProperty;
             effectProperty = id == null ? _settings.GetProperty() : _settings.GetProperty((int)id);
+
+            if (effectProperty.Equals(default(BlockAdditionalEffectProperty)))
+                return;
 
             if (_effects[effectProperty.Type].TryDequeue(out BlockAdditionalEffectBase effect) == false)
                 effect = Instantiate(effectProperty.Prefab, transform).Init(effectProperty.Type, _activeBlocks, _effectsPool);

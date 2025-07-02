@@ -29,8 +29,6 @@ namespace BallzMerge.Root
         public PopupDisplayer PopupsDisplayer => _popupDisplayer;
         public UIRootContainers Containers => _containers;
 
-        public event Action<IInfoPanelView> PanelTriggered;
-
         private void Awake()
         {
             _loadingScreen.Hide();
@@ -39,13 +37,11 @@ namespace BallzMerge.Root
         private void OnEnable()
         {
             _infoPanelShowcase.UIViewStateChanged += ChangeStateUIView;
-            _infoPanelShowcase.ClosePanelTriggered += OnClosePanelTriggered;
         }
 
         private void OnDisable()
         {
             _infoPanelShowcase.UIViewStateChanged -= ChangeStateUIView;
-            _infoPanelShowcase.ClosePanelTriggered -= OnClosePanelTriggered;
         }
 
         public void AttachSceneUI(UIView sceneUI, Camera uICamera = null)
@@ -64,16 +60,6 @@ namespace BallzMerge.Root
             _containers.TakeNewItems(sceneUI.Items);
         }
 
-        public void PackItemInContainer(UIRootContainerItem item)
-        {
-            _containers.PackItem(item);
-        }
-
-        public void UnpackItemFromContainer(UIRootContainerItem item)
-        {
-            _containers.UnpackItem(item);
-        }
-
         public void ClearSceneUI()
         {
             _mainCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -88,11 +74,6 @@ namespace BallzMerge.Root
         private void ChangeStateUIView(bool state)
         {
             _sceneUI.ChangeState(state);
-        }
-
-        private void OnClosePanelTriggered(IInfoPanelView panelView)
-        {
-            PanelTriggered?.Invoke(panelView);
         }
     }
 }

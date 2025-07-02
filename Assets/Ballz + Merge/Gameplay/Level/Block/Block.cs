@@ -18,8 +18,10 @@ namespace BallzMerge.Gameplay.BlockSpace
         [Inject] private BlocksMover _mover;
 
         private Transform _transform;
+        private Vector2 _newPosition;
         private Tweener _moveTween;
-        private TweenCallback _currentAction;
+        private TweenCallback _onCompleteTweenAction;
+        private Dictionary<BlockMoveActionType, Action> _blockMoveTypeActions;
         public bool IsAlive { get; private set; }
         public Vector2Int GridPosition { get; private set; }
         public Vector2 WorldPosition => _transform.position;
@@ -28,7 +30,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         public bool IsWithEffect { get; private set; }
 
         public event Action<Block, Vector2Int> Hit;
-        public event Action<Block> CameToNewCell;
+        public event Action<Block> ChangedPosition;
+        public event Action<Block> Moved;
         public event Action<Block> Deactivated;
         public event Action<Block> Destroyed;
         public event Action<Block, int> NumberChanged;
@@ -39,6 +42,11 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _transform = transform;
             ID = 0;
+            _blockMoveTypeActions = new Dictionary<BlockMoveActionType, Action>()
+            {
+                { BlockMoveActionType.ChangePosition, () => ChangedPosition?.Invoke(this) },
+                { BlockMoveActionType.Move, () => Moved?.Invoke(this) }
+            };
         }
 
         private void OnEnable()
@@ -74,6 +82,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             Debug.Add("Activate");
             ChangeID(id);
             _transform.localPosition = (Vector2)gridPosition * _gridSettings.CellSize;
+            _newPosition = _transform.localPosition;
             IsWithEffect = false;
             IsAlive = true;
             Number = number;
@@ -102,7 +111,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             return true;
         }
 
-        public void Move(Vector2Int step)
+        public void Move(Vector2Int step, BlockMoveActionType moveType)
         {
             if (IsAlive == false)
                 return;
@@ -110,24 +119,24 @@ namespace BallzMerge.Gameplay.BlockSpace
             Debug.Add($"Move {step}");
             StopCurrentMoveTween();
             GridPosition += step;
-            var newPosition = (Vector2)GridPosition * _gridSettings.CellSize;
-            Tweener tweener = _transform.DOLocalMove(newPosition, _gridSettings.MoveTime).SetAutoKill(true).Pause();
-            PlayTween(tweener, () => ExecuteAction(OnComeToNewCell));
+            _newPosition = (Vector2)GridPosition * _gridSettings.CellSize;
+            Tweener tweener = _transform.DOLocalMove(_newPosition, _gridSettings.MoveTime).Pause();
+            PlayTween(tweener, () => OnComeToNewCell(moveType, _blockMoveTypeActions[moveType]));
 
             _view.AnimationMove(step);
             _physic.Deactivate();
         }
 
-        public void Merge(Vector3 worldPositionMergedBlock)
+        public void Merge(Block mergedBlock)
         {
             if (IsAlive == false)
                 return;
 
-            Debug.Add($"Merge {worldPositionMergedBlock}");
+            Debug.Add($"Merge with {mergedBlock.name}");
             StopCurrentMoveTween();
-            Vector3 midpoint = Vector3.Lerp(WorldPosition, worldPositionMergedBlock, 0.5f);
-            Tweener tweener = _transform.DOMove(midpoint, _gridSettings.MoveTime).SetAutoKill(true).Pause();
-            PlayTween(tweener, () => ExecuteAction(Deactivate));
+            _newPosition = Vector2.Lerp(WorldPosition, mergedBlock.WorldPosition, 0.5f);
+            Tweener tweener = _transform.DOMove(_newPosition, _gridSettings.MoveTime).Pause();
+            PlayTween(tweener, Deactivate);
             _view.PlayMerge();
             _physic.Deactivate();
         }
@@ -169,47 +178,58 @@ namespace BallzMerge.Gameplay.BlockSpace
                 return;
 
             Debug.Add($"Deactivate");
-            Deactivated?.Invoke(this);
             IsAlive = false;
+            _transform.localPosition = Vector2.one * OutBoardPosition;
+            _transform.rotation = Quaternion.identity;
+            _newPosition = _transform.localPosition;
             StopCurrentMoveTween();
+            Deactivated?.Invoke(this);
             _view.Deactivate();
             _physic.Deactivate();
             Number = 0;
             GridPosition = Vector2Int.zero;
-            _transform.localPosition = Vector2.one * OutBoardPosition;
-            _transform.rotation = Quaternion.identity;
-        }
-
-        private void ExecuteAction(Action action)
-        {
-            _currentAction = null;
-            action.Invoke();
         }
 
         private void PlayTween(Tweener tweener, TweenCallback action)
         {
-            _currentAction?.Invoke();
+            if (_onCompleteTweenAction != action)
+            {
+                _onCompleteTweenAction = action;
+                _moveTween = tweener.OnComplete(ExecuteAction).Play();
+            }
+        }
 
-            _currentAction = action;
-            _moveTween = tweener.OnComplete(_currentAction).Play();
+        private void ExecuteAction()
+        {
+            TweenCallback callback = _onCompleteTweenAction;
+            _onCompleteTweenAction = null;
+            callback?.Invoke();
         }
 
         private void StopCurrentMoveTween()
         {
             if (_moveTween != null && _moveTween.IsActive())
+            {
                 _moveTween.Kill();
+                ExecuteAction();
+                _transform.localPosition = _newPosition;
+            }
         }
 
-        private void OnComeToNewCell()
+        private void OnComeToNewCell(BlockMoveActionType moveType, Action action)
         {
-            Debug.Add($"OnComeToNewCell");
-            CameToNewCell?.Invoke(this);
+            Debug.Add($"OnComeToNewCell: {moveType}");
+            action?.Invoke();
 
             if (IsAlive)
                 _physic.Activate();
         }
 
-        private void OnHit(Vector2Int direction) => Hit?.Invoke(this, direction);
+        private void OnHit(Vector2Int direction)
+        {
+            Hit?.Invoke(this, direction);
+            Debug.Add("OnBlockHit");
+        }
 
         private bool CantMove(Vector2Int step, bool isMoveDown)
         {

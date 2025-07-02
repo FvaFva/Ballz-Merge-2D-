@@ -5,10 +5,10 @@ using System;
 public struct MoveSettingsCountBlocksProperties
 {
     public MoveSettingsRange Range;
-    public MoveSettingsCountBlocksPropertiesCountChance[] CountBlocks;
+    public BlocksSpawnProperty[] BlocksProperties;
 
     public bool IsEmpty()
     {
-        return CountBlocks == null || CountBlocks.Length == 0;
+        return BlocksProperties == null || BlocksProperties.Length == 0;
     }
 }

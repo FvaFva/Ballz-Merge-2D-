@@ -26,7 +26,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         protected override bool TryActivate()
         {
             SetConnectBlock();
-            _blocksSubscriptionStates.Add(Current, false);
 
             if (ConnectBlock == null)
                 return false;
@@ -36,6 +35,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             Current.ConnectEffect();
             ConnectBlock.ConnectEffect();
             ConnectBlock.Deactivated += HandleDeactivateBlock;
+            _blocksSubscriptionStates.Add(Current, false);
             _blocksSubscriptionStates.Add(ConnectBlock, false);
             UpdateSubscription(Current, true);
             UpdateSubscription(ConnectBlock, true);
@@ -107,7 +107,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             Block currentOrConnectionBlock = GetOppositeCurrentOrConnection(block);
 
             if (currentOrConnectionBlock.CanMove(step))
-                currentOrConnectionBlock.Move(step);
+                currentOrConnectionBlock.Move(step, BlockMoveActionType.ChangePosition);
         }
 
         private Block GetOppositeCurrentOrConnection(Block block) => block == Current ? ConnectBlock : Current;
