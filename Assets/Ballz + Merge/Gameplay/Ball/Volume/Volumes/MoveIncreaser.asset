@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
   m_Name: MoveIncreaser
   m_EditorClassIdentifier: 
+  _isUseRarityWeight: 1
   _type: 5
   _species: 0
   _icon: {fileID: 21300000, guid: af7ec59840833464d9e58194e9b8bcea, type: 3}

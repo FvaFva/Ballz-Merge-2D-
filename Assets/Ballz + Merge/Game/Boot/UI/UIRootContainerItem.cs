@@ -23,7 +23,7 @@ namespace BallzMerge.Root
             if (_updatePositionOnEnable)
             {
                 _updatePositionOnEnable = false;
-                UpdatePositionByGroup();
+                UpdatePositionByGroupDelayed();
             }
         }
 
@@ -51,7 +51,7 @@ namespace BallzMerge.Root
             Group = root;
 
             if (isActiveAndEnabled)
-                UpdatePositionByGroup();
+                UpdatePositionByGroupDelayed();
             else
                 _updatePositionOnEnable = true;
         }
@@ -64,18 +64,24 @@ namespace BallzMerge.Root
 
         public void UpdatePositionByGroup()
         {
+
+            _transform.SetParent(Group.Transform);
+            _transform.position = _transform.position.DropZ();
+            _positionUpdater = null;
+        }
+
+        public void UpdatePositionByGroupDelayed()
+        {
             if (_positionUpdater != null)
                 StopCoroutine(_positionUpdater);
-            
+
             _positionUpdater = StartCoroutine(DelayedUpdatePositionByGroup());
         }
 
         private IEnumerator DelayedUpdatePositionByGroup()
         {
             yield return new WaitForEndOfFrame();
-            _transform.SetParent(Group.Transform);
-            _transform.position = _transform.position.DropZ();
-            _positionUpdater = null;
+            UpdatePositionByGroup();
         }
     }
 }

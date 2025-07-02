@@ -1,6 +1,5 @@
 using BallzMerge.Gameplay.Level;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -9,7 +8,6 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
     [SerializeField] private DropSelector _dropSelector;
     [SerializeField] private BallVolumesCageView _cage;
 
-    private Func<IEnumerable<BallVolumesBagCell>> _allVolumesGenerator = () => (Enumerable.Empty<BallVolumesBagCell>());
     public BallVolumesBag Bag {  get; private set; }
     public BallVolumesCageView Cage => _cage;
 
@@ -39,7 +37,6 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
         Bag.Removed += OnBagChanged;
         Bag.Loaded += OnVolumeBagLoaded;
         _cage.Init();
-        _allVolumesGenerator = () => Bag.Passive.Concat(_cage.ActiveVolumes).Concat(Bag.Hit);
     }
 
     public void UpdateWave()
@@ -48,9 +45,7 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
         Changed?.Invoke();
     }
 
-    public IEnumerable<BallVolumesBagCell> GetAllVolumes() => _allVolumesGenerator();
-
-    public int GetPassiveValue(BallVolumesTypes type) => Bag.Passive.Where(cell => cell.IsEqual(type)).Sum(cell => cell.Value);
+    public int GetPassiveValue(BallVolumesTypes type) => Bag.Passive.Where(cell => cell.IsEqual(type)).Count();
 
     public void FinishLevel()
     {
