@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
   m_Name: ExtraAimPoint
   m_EditorClassIdentifier: 
+  _isUseRarityWeight: 1
   _type: 3
   _species: 1
   _icon: {fileID: 21300000, guid: 1a862a305a44ca64e939c2b35b24e829, type: 3}
   _name: Extra AIM
-  _description: Add {WEIGHT} points for Aim
+  _description: Add {WEIGHT} extra points for Aim
   _suffixes: []

@@ -1,7 +1,8 @@
 ﻿using BallzMerge.Gameplay.Level;
 using System;
+using UnityEngine;
 
-public class BallVolumesBagCell
+public class BallVolumesBagCell : IBallVolumeViewData
 {
     public int ID { get; private set; }
     public string Name { get; private set; }
@@ -10,7 +11,7 @@ public class BallVolumesBagCell
     public int Value => Rarity.Weight;
     public Action<bool> ViewCallback { get; private set; }
     public string Description => Volume.GetDescription(Rarity);
-    public string Suffix => Volume.GetSuffix(Rarity);
+    public Sprite Icon => Volume.Icon;
 
     public BallVolumesBagCell(BallVolume volume, DropRarity rarity, int? id = null)
     {

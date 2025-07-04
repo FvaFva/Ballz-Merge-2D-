@@ -13,7 +13,6 @@ namespace BallzMerge.Gameplay.Level
 
         [SerializeField] private TMP_Text _name;
         [SerializeField] private TMP_Text _description;
-        [SerializeField] private DropViewSuffix _suffix;
         [SerializeField] private Image _icon;
         [SerializeField] private Image _colorView;
         [SerializeField] private Button _selector;
@@ -75,7 +74,6 @@ namespace BallzMerge.Gameplay.Level
         private void Activate()
         {
             _selector.enabled = true;
-            _suffix.UpdateView(_current.Suffix);
             _name.text = _current.Name;
             _description.text = _current.Description;
             _icon.sprite = _current.Icon;
@@ -91,7 +89,6 @@ namespace BallzMerge.Gameplay.Level
             _description.text = string.Empty;
             _colorView.color = Color.gray;
             _icon.sprite = _default;
-            _suffix.gameObject.SetActive(false);
         }
 
         private void OnSelect()

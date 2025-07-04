@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
   m_Name: NumberReductor
   m_EditorClassIdentifier: 
+  _isUseRarityWeight: 1
   _type: 2
   _species: 0
   _icon: {fileID: -8346272617545206613, guid: 239c67cac2d3a76488ef1edec1af1e59, type: 3}

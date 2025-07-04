@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, IInitializable
 {
-    [SerializeField] private bool _showOnlyBag;
+    [SerializeField] private bool _isShowPassive;
     [SerializeField] private BallWaveVolume _source;
     [SerializeField] private RectTransform _viewPort;
     [SerializeField] private GameDataVolumeMicView _viewPrefab;
@@ -48,10 +48,10 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
     {
         _update = ShowVolumes;
 
-        if (_showOnlyBag)
+        if (_isShowPassive)
             _getter = () => _source.Bag.All;
         else
-            _getter = () => _source.GetAllVolumes();
+            _getter = () => _source.Bag.Hit;
 
         _update();
     }

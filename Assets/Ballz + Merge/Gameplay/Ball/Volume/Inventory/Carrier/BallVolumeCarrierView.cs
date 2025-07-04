@@ -28,7 +28,7 @@ public class BallVolumeCarrierView : MonoBehaviour
         ChangeActive(false);
     }
     
-    public void ChangeActive(bool state, BallVolumesBagCell volume = default, string header = "")
+    public void ChangeActive(bool state, IBallVolumeViewData volume = default, string header = "")
     {
         _lockAnimation.Delete();
         _pumper.enabled = state;
