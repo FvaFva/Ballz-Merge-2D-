@@ -55,24 +55,29 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _BlendAmount: 10
     - _ColorMask: 15
-    - _FlashDelay: 2
-    - _IsMask: 1
+    - _FlashDelay: 1.5
+    - _IsMask: 0
+    - _MovementSpeed: 0.25
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _ShinyCycleTime: 3.5
-    - _ShinyRotate: -3.18
-    - _ShinyWaveSpeed: 5.3
+    - _ShinyBrightness: 10
+    - _ShinyCycleTime: 3
+    - _ShinyRotate: 3
+    - _ShinyWaveSpeed: 3
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
+    - _TextureAlpha: 1
     - _UIMaskSoftnessX: 1
     - _UIMaskSoftnessY: 1
     m_Colors:
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ShinyColor: {r: 0.31626022, g: 0.6278463, b: 0.9716981, a: 1}
+    - _ShinyColor: {r: 0.3176471, g: 0.627451, b: 0.9734455, a: 1}
+    - _TextureColor: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

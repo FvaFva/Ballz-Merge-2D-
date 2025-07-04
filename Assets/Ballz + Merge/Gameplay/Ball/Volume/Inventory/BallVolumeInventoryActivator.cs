@@ -28,6 +28,6 @@ public class BallVolumeInventoryActivator : MonoBehaviour
 
     private void Activate() => _rootView.InfoPanelShowcase.Show(_inventory);
 
-    private void ShowButton() => _trigger.SetActive(true);
-    private void HideButton() => _trigger.SetActive(false);
+    private void ShowButton() => _trigger.SetActiveIfNotNull(true);
+    private void HideButton() => _trigger.SetActiveIfNotNull(false);
 }

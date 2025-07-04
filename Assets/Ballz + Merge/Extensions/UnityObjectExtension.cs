@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class UnityObjectExtension
 {
-    public static void SetActive<T>(this T @object, bool state) where T : Component
+    public static void SetActiveIfNotNull<T>(this T @object, bool state) where T : Component
     {
         if (@object != null)
             @object.gameObject.SetActive(state);

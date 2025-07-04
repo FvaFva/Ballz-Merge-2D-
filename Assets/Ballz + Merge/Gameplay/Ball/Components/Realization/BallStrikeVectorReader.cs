@@ -23,7 +23,7 @@ public class BallStrikeVectorReader : BallComponent
     {
         _userInput.MainInput.StrikeVector.performed += VectorMoved;
         _userInput.MainInput.Shot.started += OnShotStarted;
-        _view.SetActive(true);
+        _view.SetActiveIfNotNull(true);
     }
 
     private void OnDisable()
@@ -31,7 +31,7 @@ public class BallStrikeVectorReader : BallComponent
         _userInput.MainInput.StrikeVector.performed -= VectorMoved;
         _userInput.MainInput.Shot.started -= OnShotStarted;
         _userInput.MainInput.StrikeVector.performed -= OnStrikeVectorPerformed;
-        _view.SetActive(false);
+        _view.SetActiveIfNotNull(false);
     }
 
     public Vector3 GetDirection()
