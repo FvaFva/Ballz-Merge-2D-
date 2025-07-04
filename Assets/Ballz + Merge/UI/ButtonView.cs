@@ -7,17 +7,14 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Shadow), typeof(Image))]
 public class ButtonView : MonoBehaviour
 {
-    private const string BLEND_PROPERTY = "_BlendAmount";
-    private const string COLOR_PROPERTY = "_Color";
-
     private RectTransform _transform;
     private Tween _shadowTween;
     private Image _image;
-    private Material _imageMaterial;
     private Shadow _shadow;
     private TMP_Text _label;
+    private ButtonShaderView _shaderView;
     private Dictionary<ColorType, Color> _shadowColors;
-    private Color _startMaterialColor;
+    private Color _startViewColor;
     private Color _startLabelColor;
 
     private void OnDisable()
@@ -31,23 +28,22 @@ public class ButtonView : MonoBehaviour
         _transform = (RectTransform)transform;
         _shadow = GetComponent<Shadow>();
         _image = GetComponent<Image>();
-        _imageMaterial = new Material(_image.material);
-        _image.material = _imageMaterial;
         _label = GetComponentInChildren<TMP_Text>();
+        _shaderView = GetComponentInChildren<ButtonShaderView>(true);
         _shadowColors.Add(ColorType.StartColor, _shadow.effectColor);
-        _startMaterialColor = _imageMaterial.GetColor(COLOR_PROPERTY);
+        _startViewColor = _image.color;
         _label.PerformIfNotNull(label => _startLabelColor = label.color);
         Color targetShadowColor = _shadow.effectColor;
         targetShadowColor.a = 1f;
         _shadowColors.Add(ColorType.TargetColor, targetShadowColor);
+        _shaderView.PerformIfNotNull(shaderView => shaderView.Init());
     }
 
     public void SetDefault()
     {
         StopAllAnimations();
 
-        if (_imageMaterial.HasProperty(BLEND_PROPERTY))
-            _imageMaterial.SetFloat(BLEND_PROPERTY, 0);
+        SetShaderView(false);
 
         _transform.localScale = Vector3.one;
         _shadow.effectColor = _shadowColors[ColorType.StartColor];
@@ -59,10 +55,9 @@ public class ButtonView : MonoBehaviour
         ChangeShadowColor(_shadowColors[colorType], duration);
     }
 
-    public void ChangeBlendMaterial(float newValue, float duration)
+    public void SetShaderView(bool state)
     {
-        if (_imageMaterial.HasProperty(BLEND_PROPERTY))
-            _imageMaterial.DOFloat(newValue, BLEND_PROPERTY, duration).SetEase(Ease.InOutQuad);
+        _shaderView.PerformIfNotNull(shaderView => shaderView.SetActive(state));
     }
 
     private void ChangeShadowColor(Color newColor, float duration)
@@ -75,9 +70,9 @@ public class ButtonView : MonoBehaviour
             ).SetEase(Ease.InOutQuad);
     }
 
-    public void ChangeMaterialColor(Color color)
+    public void ChangeViewColor(Color color)
     {
-        _imageMaterial.color = color;
+        _image.color = color;
     }
 
     public void ChangeLabelColor(Color color)
@@ -87,14 +82,13 @@ public class ButtonView : MonoBehaviour
 
     public void SetDefaultColor()
     {
-        _imageMaterial.color = _startMaterialColor;
-        _label.color = _startLabelColor;
+        _image.color = _startViewColor;
+        _label.PerformIfNotNull(label => label.color = _startLabelColor);
     }
 
     private void StopAllAnimations()
     {
         DOTween.Kill(_transform);
-        DOTween.Kill(_imageMaterial);
 
         if (_shadowTween != null && _shadowTween.IsActive())
         {

@@ -27,23 +27,23 @@ public class BallVolumeView : MonoBehaviour
         }
 
         if (_name != null)
-            _items.Add(((state) => { _name.SetActive(state); }, (data) => { _name.text = data.Name; }));
+            _items.Add(((state) => { _name.SetActiveIfNotNull(state); }, (data) => { _name.text = data.Name; }));
 
         if (_level != null)
-            _items.Add(((state) => { _level.SetActive(state); }, (data) => { _level.text = _level.text = data.Value.ToString(); }));
+            _items.Add(((state) => { _level.SetActiveIfNotNull(state); }, (data) => { _level.text = _level.text = data.Value.ToString(); }));
 
         if (_description != null)
-            _items.Add(((state) => { _description.SetActive(state); }, (data) => { _description.text = data.Description; }));
+            _items.Add(((state) => { _description.SetActiveIfNotNull(state); }, (data) => { _description.text = data.Description; }));
     }
 
     private void OnEnable()
     {
-        _trigger?.AddListener(OnTrigger);
+        _trigger.PerformIfNotNull(triggerButton => triggerButton.AddListener(OnTrigger));
     }
 
     private void OnDisable()
     {
-        _trigger?.RemoveListener(OnTrigger);
+        _trigger.PerformIfNotNull(triggerButton => triggerButton.RemoveListener(OnTrigger));
     }
 
     public BallVolumeView Deactivate()
