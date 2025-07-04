@@ -38,9 +38,9 @@ public class BallVolumeView : MonoBehaviour
 
     private void ChangeElementsActivity(bool state)
     {
-        _name.SetActive(state);
-        _description.SetActive(state);
-        _additionalInformation.SetActive(state);
-        _level.SetActive(state);
+        _name.SetActiveIfNotNull(state);
+        _description.SetActiveIfNotNull(state);
+        _additionalInformation.SetActiveIfNotNull(state);
+        _level.SetActiveIfNotNull(state);
     }
 }

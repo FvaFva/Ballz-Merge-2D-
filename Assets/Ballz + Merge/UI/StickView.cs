@@ -42,7 +42,7 @@ public class StickView : MonoBehaviour
 
     private void OnEnable()
     {
-        _inputZone.SetActive(true);
+        _inputZone.SetActiveIfNotNull(true);
         EnterMonitoring();
     }
 
@@ -51,8 +51,8 @@ public class StickView : MonoBehaviour
         for (int i = _backMoves.Count - 1; i >= 0; i--)
             StopCoroutine(_backMoves.Dequeue());
 
-        _inputZone.SetActive(false);
-        _cancelZone.SetActive(false);
+        _inputZone.SetActiveIfNotNull(false);
+        _cancelZone.SetActiveIfNotNull(false);
     }
 
     public void EnterAim()
