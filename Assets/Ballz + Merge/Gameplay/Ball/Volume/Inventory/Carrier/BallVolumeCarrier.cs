@@ -25,13 +25,13 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
 
     private RectTransform _transform;
     private Transform _baseParent;
-    private Action<BallVolumesBagCell> _bagConnector = (BallVolumesBagCell ability) => { };
+    private Action<BallVolumesBagCell<BallVolumeOnHit>> _bagConnector = (BallVolumesBagCell<BallVolumeOnHit> ability) => { };
 
     private void Awake()
     {
         _transform = (RectTransform)transform;
         _baseParent = _transform.parent;
-        _bagConnector = (BallVolumesBagCell ability) =>
+        _bagConnector = (BallVolumesBagCell<BallVolumeOnHit> ability) =>
         {
             ability?.SetID(0);
             _volumes.Bag.ApplyVolume(ability);
@@ -101,7 +101,7 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
     private void OnTrigger()
     {
         var ability = _volumesView.CurrentData;
-        _cage.AddVolume(ability);
+        _cage.AddVolume(ability as BallVolumesBagCell<BallVolumeOnHit>);
         _volumes.Bag.DropVolume(ability);
     }
 

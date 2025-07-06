@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHandler, IDragHandler, IEndDragHandler
 {
@@ -16,7 +15,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
     private RectTransform _transform;
 
     public int ID { get; private set; }
-    public BallVolumesBagCell Current { get; private set; }
+    public BallVolumesBagCell<BallVolumeOnHit> Current { get; private set; }
     public bool IsFree => Current == null;
 
     public event Action RequiredSlowMo;
@@ -27,7 +26,7 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
         _view.Init();
     }
 
-    public BallVolumeCageElement Apply(BallVolumesBagCell volume)
+    public BallVolumeCageElement Apply(BallVolumesBagCell<BallVolumeOnHit> volume)
     {
         if (Current == volume)
             return this;
@@ -127,5 +126,5 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
             Show();
     }
 
-    private void ApplyHidden(BallVolumesBagCell volume)=> Apply(volume);
+    private void ApplyHidden(BallVolumesBagCell<BallVolumeOnHit> volume)=> Apply(volume);
 }

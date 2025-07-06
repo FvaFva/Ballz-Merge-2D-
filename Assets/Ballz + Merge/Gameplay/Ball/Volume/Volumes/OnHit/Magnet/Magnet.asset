@@ -9,14 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
+  m_Script: {fileID: 11500000, guid: 96bc9feca0d04416d8f688bec6117ad1, type: 3}
   m_Name: Magnet
   m_EditorClassIdentifier: 
-  _isUseRarityWeight: 1
-  _type: 4
-  _species: 0
   _icon: {fileID: -2104634287030923273, guid: 20d18fb1f423a4747a855730c5913582, type: 3}
-  _name: Magnet
+  _name: Magnetic field
+  _effect: {fileID: 0}
   _description: When a block hits it magnetizes it and if the next touch is on another
     block, the first one will be moved if their difference in number is less than
     {WEIGHT}.

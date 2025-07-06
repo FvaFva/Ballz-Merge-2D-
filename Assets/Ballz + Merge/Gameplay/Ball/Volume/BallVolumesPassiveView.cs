@@ -9,7 +9,7 @@ public class BallVolumesPassiveView : CyclicBehavior, ILevelFinisher, IInitializ
     [SerializeField] private BallWaveVolume _volumes;
     [SerializeField] private BallVolumeView _prefab;
 
-    private readonly Dictionary<BallVolumesTypes, BallVolumeView> _volumesMap = new Dictionary<BallVolumesTypes, BallVolumeView>();
+    private readonly Dictionary<Type, BallVolumeView> _volumesMap = new Dictionary<Type, BallVolumeView>();
 
     public event Action<IBallVolumeViewData> VolumeActivated;
 
@@ -37,8 +37,8 @@ public class BallVolumesPassiveView : CyclicBehavior, ILevelFinisher, IInitializ
 
     public void Init()
     {
-        foreach (var volume in _map.GetBySpecies(BallVolumesSpecies.Passive))
-            _volumesMap.Add(volume.Type, Instantiate(_prefab, _content).Deactivate());
+        foreach (var volume in _map.GetAllByType<BallVolumePassive>())
+            _volumesMap.Add(volume.GetType(), Instantiate(_prefab, _content).Deactivate());
 
         gameObject.SetActive(true);
     }
@@ -49,12 +49,13 @@ public class BallVolumesPassiveView : CyclicBehavior, ILevelFinisher, IInitializ
             view.Show(null);
     }
 
-    private void ChangedInBag(BallVolumesBagCell ballVolume)
+    private void ChangedInBag(IBallVolumesBagCell<BallVolume> ballVolume)
     {
-        if (ballVolume.Volume.Species == BallVolumesSpecies.Passive)
+        if (ballVolume.Volume is BallVolumePassive passive)
         {
-            int value = _volumes.GetPassiveValue(ballVolume.Volume.Type);
-            _volumesMap[ballVolume.Volume.Type].Show(new BallVolumeViewData(ballVolume, value));
+            var type = ballVolume.Volume.GetType();
+            int value = _volumes.GetPassiveValue(type);
+            _volumesMap[type].Show(new BallVolumeViewData(passive, value));
         }
     }
 

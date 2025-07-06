@@ -17,13 +17,13 @@ namespace BallzMerge.Gameplay.Level
 
         [Inject] private DataBaseSource _data;
 
-        private List<BallVolumesBagCell> _dropsMap = new List<BallVolumesBagCell>();
+        private List<IBallVolumesBagCell<BallVolume>> _dropsMap = new List<IBallVolumesBagCell<BallVolume>>();
         private Action _callback;
 
-        public IReadOnlyList<BallVolumesBagCell> DropsMap => _dropsMap;
+        public IReadOnlyList<IBallVolumesBagCell<BallVolume>> DropsMap => _dropsMap;
 
-        public event Action<BallVolumesBagCell> DropSelected;
-        public event Action<BallVolumesBagCell> DropLoaded;
+        public event Action<IBallVolumesBagCell<BallVolume>> DropSelected;
+        public event Action<IBallVolumesBagCell<BallVolume>> DropLoaded;
         public event Action Opened;
 
         private void OnEnable()
@@ -71,9 +71,15 @@ namespace BallzMerge.Gameplay.Level
             SelectDrop(drop, DropLoaded, id);
         }
 
-        private void SelectDrop(Drop drop, Action<BallVolumesBagCell> action, int? id = null)
+        private void SelectDrop(Drop drop, Action<IBallVolumesBagCell<BallVolume>> action, int? id = null)
         {
-            BallVolumesBagCell newCell = new BallVolumesBagCell(drop.Volume, drop.Rarity, id);
+            IBallVolumesBagCell<BallVolume> newCell = null;
+            
+            if (drop.Volume is BallVolumePassive passive)
+                newCell = new BallVolumesBagCell<BallVolumePassive>(passive, drop.Rarity, id);
+            else if (drop.Volume is BallVolumeOnHit hit)
+                newCell = new BallVolumesBagCell<BallVolumeOnHit>(hit, drop.Rarity, id);
+
             action?.Invoke(newCell);
             _dropsMap.Add(newCell);
         }

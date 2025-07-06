@@ -1,9 +1,5 @@
-using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
 using Zenject;
 
 public class BallVolumeHitInspector
@@ -11,16 +7,20 @@ public class BallVolumeHitInspector
     [Inject] private readonly BlocksInGame _blocks;
     [Inject] private readonly BallWaveVolume _ballWaveVolume;
     [Inject] private readonly GridSettings _grid;
+    [Inject] private readonly BallVolumesMap _map;
 
-    private readonly BlockMagneticObserver _magneticObserver;
-    private readonly Dictionary<BallVolumesTypes, Action<BallVolumeHitData, DropRarity, Action<bool>>> _map;
-
+    private readonly DiContainer _container;
+    
     [Inject]
     public BallVolumeHitInspector(DiContainer diContainer)
     {
-        _map = new Dictionary<BallVolumesTypes, Action<BallVolumeHitData, DropRarity, Action<bool>>>();
-        _magneticObserver = diContainer.Instantiate<BlockMagneticObserver>();
-        Bind();
+        _container = diContainer;
+    }
+
+    public void Init()
+    {
+        foreach (var volume in _map.GetAllByType<BallVolumeOnHit>())
+            volume.Init(_blocks, _ballWaveVolume, _grid, _container);
     }
 
     public void Explore(BallVolumeHitData data)
@@ -28,61 +28,6 @@ public class BallVolumeHitInspector
         var nextVolume = _ballWaveVolume.Cage.CheckNext();
 
         if (nextVolume != null)
-            _map[nextVolume.Volume.Type].Invoke(data, nextVolume.Rarity, nextVolume.ViewCallback);
-    }
-
-    private void Bind()
-    {
-        _map.Add(BallVolumesTypes.Crush, Crush);
-        _map.Add(BallVolumesTypes.NumberReductor, NumberReductor);
-        _map.Add(BallVolumesTypes.MoveIncreaser, MoveIncreaser);
-        _map.Add(BallVolumesTypes.Magnet, _magneticObserver.Activate);
-    }
-
-    private void Crush(BallVolumeHitData data, DropRarity rarity, Action<bool> callback)
-    {
-        if(rarity.Weight >= 3)
-        {
-            data.Block.Destroy();
-            callback(true);
-            return;
-        }
-
-        var nextPosition = data.Block.GridPosition + data.Direction;
-        bool isOutside = _grid.IsOutside(nextPosition);
-
-        if (isOutside || (rarity.Weight == 2 && _blocks.HaveAtPosition(nextPosition)))
-        {
-            data.Block.Destroy();
-            callback(true);
-            return;
-        }
-        
-        callback(false);
-    }
-
-    private void NumberReductor(BallVolumeHitData data, DropRarity rarity, Action<bool> callback)
-    {
-        data.Block.ChangeNumber(-rarity.Weight);
-        callback(true);
-    }
-
-    private void MoveIncreaser(BallVolumeHitData data, DropRarity rarity, Action<bool> callback)
-    {
-        bool isExtraWent = false;
-
-        for (int i = rarity.Weight; i > 0; i--)
-        {
-            Vector2Int extraBlockPosition = data.Block.GridPosition + data.Direction * i;
-            var extraBlock = _blocks.GetAtPosition(extraBlockPosition);
-
-            if (extraBlock != null && extraBlock.CanMove(data.Direction))
-            {
-                extraBlock.Move(data.Direction, BlockMoveActionType.ChangePosition);
-                isExtraWent = true;
-            }
-        }
-
-        callback(isExtraWent);
+            nextVolume.Volume.Explore(data, nextVolume.Rarity, nextVolume.ViewCallback);
     }
 }

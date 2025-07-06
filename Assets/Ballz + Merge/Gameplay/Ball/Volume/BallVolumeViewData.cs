@@ -2,6 +2,15 @@ using UnityEngine;
 
 public struct BallVolumeViewData : IBallVolumeViewData
 {
+    public BallVolumeViewData(BallVolume volume, int value)
+    {
+        Name = volume.Name;
+        Description = volume.GetDescription(value);
+        Value = value;
+        Icon = volume.Icon;
+        Volume = volume;
+    }
+
     public string Name { get; private set; }
 
     public string Description { get; private set; }
@@ -10,18 +19,10 @@ public struct BallVolumeViewData : IBallVolumeViewData
 
     public Sprite Icon { get; private set; }
 
-    public BallVolumeViewData(BallVolumesBagCell bag, int value)
+    public BallVolume Volume { get; private set; }
+
+    public bool IsEqual<Type>() where Type : BallVolume
     {
-        Name = bag.Name;
-        Description = bag.Volume.GetDescription(value);
-        Value = value;
-        Icon = bag.Volume.Icon;
-    }
-    public BallVolumeViewData(BallVolume volume, int value)
-    {
-        Name = volume.Name;
-        Description = volume.GetDescription(value);
-        Value = value;
-        Icon = volume.Icon;
+        return Volume is Type;
     }
 }

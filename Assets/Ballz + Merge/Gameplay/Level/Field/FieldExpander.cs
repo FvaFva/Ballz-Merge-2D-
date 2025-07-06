@@ -102,9 +102,9 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
         _ballWaveVolume.Bag.Added -= OnAbilityAdd;
     }
 
-    private void OnAbilityAdd(BallVolumesBagCell volume)
+    private void OnAbilityAdd(IBallVolumesBagCell<BallVolume> cell)
     {
-        if (volume.IsEqual(BallVolumesTypes.FieldExpander))
+        if (cell.IsEqual<BallVolumeFieldExpander>())
         {
             _currentRows++;
             AddRow();

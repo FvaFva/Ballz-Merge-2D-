@@ -30,7 +30,7 @@ public class BallGameZoneLeaverHandler : BallComponent
         base.ChangeActivity(state);
 
         if (state)
-            _countBounce = _ballVolume.GetPassiveValue(BallVolumesTypes.BotBounce);
+            _countBounce = _ballVolume.GetPassiveValue<BallVolumeBotBounce>();
     }
 
     private void HandlePlayZoneLeaving()

@@ -5,28 +5,28 @@ using System.Collections.Generic;
 public class BallVolumesBag : IDisposable
 {
     private DropSelector _dropSelector;
-    private List<BallVolumesBagCell> _hit;
-    private List<BallVolumesBagCell> _passive;
-    private List<BallVolumesBagCell> _all;
+    private List<BallVolumesBagCell<BallVolumeOnHit>> _hit;
+    private List<BallVolumesBagCell<BallVolumePassive>> _passive;
+    private List<IBallVolumesBagCell<BallVolume>> _all;
 
     public BallVolumesBag(DropSelector dropSelector)
     {
-        _hit = new List<BallVolumesBagCell>();
-        _passive = new List<BallVolumesBagCell>();
-        _all = new List<BallVolumesBagCell>();
+        _hit = new List<BallVolumesBagCell<BallVolumeOnHit>>();
+        _passive = new List<BallVolumesBagCell<BallVolumePassive>>();
+        _all = new List<IBallVolumesBagCell<BallVolume>>();
 
         _dropSelector = dropSelector;
         _dropSelector.DropSelected += ApplyVolume;
         _dropSelector.DropLoaded += LoadVolume;
     }
 
-    public IList<BallVolumesBagCell> Hit => _hit;
-    public IList<BallVolumesBagCell> Passive => _passive;
-    public IEnumerable<BallVolumesBagCell> All => _all;
+    public IList<BallVolumesBagCell<BallVolumeOnHit>> Hit => _hit;
+    public IList<BallVolumesBagCell<BallVolumePassive>> Passive => _passive;
+    public IEnumerable<IBallVolumesBagCell<BallVolume>> All => _all;
 
-    public event Action<BallVolumesBagCell> Added;
-    public event Action<BallVolumesBagCell> Removed;
-    public event Action<BallVolumesBagCell> Loaded;
+    public event Action<IBallVolumesBagCell<BallVolume>> Added;
+    public event Action<IBallVolumesBagCell<BallVolume>> Removed;
+    public event Action<IBallVolumesBagCell<BallVolume>> Loaded;
 
     public void Dispose()
     {
@@ -41,32 +41,30 @@ public class BallVolumesBag : IDisposable
         _all.Clear();
     }
 
-    public void DropVolume(BallVolumesBagCell volume)
+    public void DropVolume(IBallVolumesBagCell<BallVolume> bagCell)
     {
-        _hit.Remove(volume);
-        _all.Remove(volume);
-        _passive.Remove(volume);
-        Removed?.Invoke(volume);
+        if(bagCell is BallVolumesBagCell<BallVolumeOnHit> hit)
+            _hit.Remove(hit);
+        else if(bagCell is BallVolumesBagCell<BallVolumePassive> passive)
+            _passive.Remove(passive);
+        
+        _all.Remove(bagCell);
+        Removed?.Invoke(bagCell);
     }
 
-    public void ApplyVolume(BallVolumesBagCell bagCell)
+    public void ApplyVolume(IBallVolumesBagCell<BallVolume> bagCell)
     {
         _all.Add(bagCell);
 
-        switch (bagCell.Volume.Species)
-        {
-            case BallVolumesSpecies.Passive:
-                _passive.Add(bagCell);
-                break;
-            case BallVolumesSpecies.Hit:
-                _hit.Add(bagCell);
-                break;
-        }
+        if(bagCell is BallVolumesBagCell<BallVolumeOnHit> hit)
+            _hit.Add(hit);
+        else if(bagCell is BallVolumesBagCell<BallVolumePassive> passive)
+            _passive.Add(passive);
 
         Added?.Invoke(bagCell);
     }
 
-    private void LoadVolume(BallVolumesBagCell bagCell)
+    private void LoadVolume(IBallVolumesBagCell<BallVolume> bagCell)
     {
         ApplyVolume(bagCell);
         Loaded?.Invoke(bagCell);

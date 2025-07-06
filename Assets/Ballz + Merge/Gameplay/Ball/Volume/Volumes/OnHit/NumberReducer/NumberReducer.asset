@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
-  m_Name: NumberReductor
+  m_Script: {fileID: 11500000, guid: be5e5aae7f093451d95b129361c98397, type: 3}
+  m_Name: NumberReducer
   m_EditorClassIdentifier: 
-  _isUseRarityWeight: 1
-  _type: 2
-  _species: 0
   _icon: {fileID: -8346272617545206613, guid: 239c67cac2d3a76488ef1edec1af1e59, type: 3}
-  _name: Number reductor
+  _name: Destructive shell
+  _effect: {fileID: 0}
   _description: When a block is hit, its number decreases by {WEIGHT}.
   _suffixes: []

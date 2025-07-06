@@ -21,8 +21,6 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
 
     [Inject] private IGameTimeOwner _timeScaler;
 
-    public IEnumerable<BallVolumesBagCell> ActiveVolumes => _elements.Where(x => x.IsFree == false).Select(x => x.Current);
-
     private void OnEnable()
     {
         foreach (var element in _elements)
@@ -49,21 +47,21 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
             cageElement.Clear();
     }
 
-    public void AddVolume(BallVolumesBagCell ballVolume)
+    public void AddVolume(BallVolumesBagCell<BallVolumeOnHit> ballVolume)
     {
         foreach (BallVolumeCageElement cageElement in _elements)
-        {
-            if (cageElement.IsFree)
             {
-                cageElement.Apply(ballVolume);
-                break;
+                if (cageElement.IsFree)
+                {
+                    cageElement.Apply(ballVolume);
+                    break;
+                }
             }
-        }
         
         RebuildCage();
     }
 
-    public void AddSavedVolume(BallVolumesBagCell savedVolume)
+    public void AddSavedVolume(BallVolumesBagCell<BallVolumeOnHit> savedVolume)
     {
         BallVolumeCageElement cageElement = _elements.Where(element => element.ID == savedVolume.ID).FirstOrDefault();
         cageElement.PerformIfNotNull(cageElement => cageElement.Apply(savedVolume));
@@ -110,7 +108,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
         HighlightNext();
     }
 
-    public BallVolumesBagCell CheckNext()
+    public BallVolumesBagCell<BallVolumeOnHit> CheckNext()
     {
         if (_cage.Count == 0)
             return default;

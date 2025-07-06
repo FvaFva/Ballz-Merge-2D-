@@ -7,7 +7,6 @@ public class GameSavedVolumesStorage
     private const string TableName = "GameSavedVolumes";
     private const string CageID = "CageID";
     private const string Name = "Name";
-    private const string Species = "Species";
     private const string Weight = "Weight";
 
     public GameSavedVolumesStorage(SqliteConnection connection)
@@ -24,13 +23,12 @@ public class GameSavedVolumesStorage
             foreach (SavedVolume savedVolume in savedVolumes)
             {
                 command.CommandText = $@"   INSERT INTO {TableName}
-                                            ({CageID}, {Name}, {Species}, {Weight})
+                                            ({CageID}, {Name}, {Weight})
                                             VALUES
-                                            (@{CageID}, @{Name}, @{Species}, @{Weight})";
+                                            (@{CageID}, @{Name} @{Weight})";
 
                 command.Parameters.AddWithValue(CageID, savedVolume.ID);
                 command.Parameters.AddWithValue(Name, savedVolume.Name);
-                command.Parameters.AddWithValue(Species, savedVolume.Species);
                 command.Parameters.AddWithValue(Weight, savedVolume.Weight);
                 command.ExecuteNonQuery();
             }
@@ -52,11 +50,11 @@ public class GameSavedVolumesStorage
 
         using (var command = connection.CreateCommand())
         {
-            command.CommandText = $"SELECT {CageID}, {Name}, {Species}, {Weight} FROM {TableName}";
+            command.CommandText = $"SELECT {CageID}, {Name}, {Weight} FROM {TableName}";
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
-                    savedVolumes.Add(new SavedVolume(Convert.ToInt32(reader[CageID]), Convert.ToString(reader[Name]), Convert.ToString(reader[Species]), Convert.ToInt32(reader[Weight])));
+                    savedVolumes.Add(new SavedVolume(Convert.ToInt32(reader[CageID]), Convert.ToString(reader[Name]), Convert.ToInt32(reader[Weight])));
             }
         }
 
@@ -80,7 +78,6 @@ public class GameSavedVolumesStorage
             command.CommandText = $@"   CREATE TABLE IF NOT EXISTS {TableName}
                                             ({CageID} INTEGER,
                                             {Name} TEXT,
-                                            {Species} TEXT,
                                             {Weight} INTEGER)";
 
             command.ExecuteNonQuery();
