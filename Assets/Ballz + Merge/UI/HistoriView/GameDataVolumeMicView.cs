@@ -15,7 +15,7 @@ public class GameDataVolumeMicView : MonoBehaviour
 
     private Sprite _sprite;
 
-    public BallVolumesBagCell Data {  get; private set; }
+    public IBallVolumesBagCell<BallVolume> Data {  get; private set; }
     public bool IsActive { get; private set; }
 
     public event Action<GameDataVolumeMicView> Performed;
@@ -68,14 +68,13 @@ public class GameDataVolumeMicView : MonoBehaviour
         if (rarity == null)
             Show(volume, level, volume.GetDescription(level));
         else
-            Show(new BallVolumesBagCell(volume, rarity));
+            Show(new BallVolumesBagCell<BallVolume>(volume, rarity));
     }
 
-    public void Show(BallVolumesBagCell data)
+    public void Show(IBallVolumesBagCell<BallVolume> data)
     {
         Data = data;
-        var description = Data.Volume.GetDescription(Data.Rarity);
-        Show(Data.Volume, Data.Rarity.Weight, description);
+        Show(Data.Volume, Data.Value, Data.Description);
     }
 
     private void Show(BallVolume volume, int level, string description)

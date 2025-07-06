@@ -52,6 +52,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         public void Init()
         {
             _sleep = new WaitForSeconds(AnimationDelay);
+            _hitInspector.Init();
         }
 
         public void GetSavingData()

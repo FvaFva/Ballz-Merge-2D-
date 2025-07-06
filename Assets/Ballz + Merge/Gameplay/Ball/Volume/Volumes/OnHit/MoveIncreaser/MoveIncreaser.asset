@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
+  m_Script: {fileID: 11500000, guid: fb0c24de25b784fb69e4100b26853a86, type: 3}
   m_Name: MoveIncreaser
   m_EditorClassIdentifier: 
-  _isUseRarityWeight: 1
-  _type: 5
-  _species: 0
   _icon: {fileID: 21300000, guid: af7ec59840833464d9e58194e9b8bcea, type: 3}
-  _name: Move Increaser
+  _name: Power impulse
+  _effect: {fileID: 0}
   _description: On hit, attempts to move {WEIGHT} blocks behind.
   _suffixes: []

@@ -1,7 +1,10 @@
+using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zenject;
 
 [CreateAssetMenu(fileName = "BallVolumesMap", menuName = "Bellz+Merge/Drop/BallVolumeMap", order = 51)]
 public class BallVolumesMap : ScriptableObject
@@ -9,29 +12,23 @@ public class BallVolumesMap : ScriptableObject
     [SerializeField] private List<BallVolume> _ballVolumes;
     [SerializeField] private List<DropRarity> _rarities;
 
-    private Dictionary<BallVolumesTypes, BallVolume> _volumesByType;
+    private Dictionary<Type, BallVolume> _volumesByType;
     private Dictionary<string, BallVolume> _volumesByString;
     private Dictionary<int, DropRarity> _raritiesWeights;
 
     public void ReBuild()
     {
-        _volumesByType = new Dictionary<BallVolumesTypes, BallVolume>();
-        _volumesByString = new Dictionary<string, BallVolume>();
-        _raritiesWeights = new Dictionary<int, DropRarity>();
+        _volumesByType = _ballVolumes.ToDictionary(v => v.GetType(), v => v);
+        _volumesByString = _ballVolumes.ToDictionary(v=> v.Name, v => v);
+        _raritiesWeights = _rarities.ToDictionary(r => r.Weight, r => r);
+    }
 
-        foreach (BallVolume volume in _ballVolumes)
+    public void InitOnHit(BlocksInGame blocks, BallWaveVolume waveVolume, GridSettings grid, DiContainer sceneContainer)
+    {
+        foreach (var volume in _ballVolumes)
         {
-            if (volume != null)
-            {
-                _volumesByType.Add(volume.Type, volume);
-                _volumesByString.Add(volume.Type.ToString(), volume);
-            }
-        }
-
-        foreach (DropRarity rarity in _rarities)
-        {
-            if (rarity != null)
-                _raritiesWeights.Add(rarity.Weight, rarity);
+            if (volume is BallVolumeOnHit hit)
+                hit.Init(blocks, waveVolume, grid, sceneContainer);
         }
     }
 
@@ -43,10 +40,17 @@ public class BallVolumesMap : ScriptableObject
         return null;
     }
 
-    public BallVolume GetVolume(BallVolumesTypes type)
+    public T GetVolume<T>() where T : BallVolume
+    {
+        var type = typeof(T);
+        return (T)GetVolume(type);
+    }
+
+    public BallVolume GetVolume(Type type)
     {
         if (_volumesByType.ContainsKey(type))
             return _volumesByType[type];
+
         return null;
     }
 
@@ -54,11 +58,12 @@ public class BallVolumesMap : ScriptableObject
     {
         if (_volumesByString.ContainsKey(typeName))
             return _volumesByString[typeName];
+
         return null;
     }
 
-    public IEnumerable<BallVolume> GetBySpecies(BallVolumesSpecies species)
+    public IEnumerable<T> GetAllByType <T>() where T : BallVolume
     {
-        return _ballVolumes.Where(volume => volume.Species == species);
+        return _ballVolumes.Where(v => v is T).Select(v => (T)v);
     }
 }

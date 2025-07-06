@@ -45,7 +45,9 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
         Changed?.Invoke();
     }
 
-    public int GetPassiveValue(BallVolumesTypes type) => Bag.Passive.Where(cell => cell.IsEqual(type)).Count();
+    public int GetPassiveValue(Type type)=> Bag.Passive.Where(c => c.IsEqual(type)).Sum(c=>c.Value);
+    
+    public int GetPassiveValue<T>() where T : BallVolumePassive => Bag.Passive.Where(c => c.IsEqual<T>()).Sum(c => c.Value); 
 
     public void FinishLevel()
     {
@@ -54,18 +56,18 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
         Changed?.Invoke();
     }
 
-    private void OnBagChanged(BallVolumesBagCell volumeBagCell)
+    private void OnBagChanged(IBallVolumesBagCell<BallVolume> _)
     {
         Changed?.Invoke();
     }
 
-    private void OnVolumeBagLoaded(BallVolumesBagCell volumeBagCell)
+    private void OnVolumeBagLoaded(IBallVolumesBagCell<BallVolume> volumeBagCell)
     {
-        if (volumeBagCell.ID == 0)
-            return;
-
-        _cage.AddSavedVolume(volumeBagCell);
-        Bag.DropVolume(volumeBagCell);
+        if (volumeBagCell is BallVolumesBagCell<BallVolumeOnHit> onHit && onHit.ID != 0)
+        {
+            _cage.AddSavedVolume(onHit);
+            Bag.DropVolume(onHit);
+        }
     }
 
     private void OnDropOpened()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,8 +26,8 @@ public class BallLevelView : BallComponent
     {
         if(isActive)
         {
-            foreach (var effect in _effects)
-                effect.HandleVolumeChanges(_volume.GetPassiveValue(effect.Type));
+            // foreach (var effect in _effects)
+            //     effect.HandleVolumeChanges(_volume.GetPassiveValue(effect.Type));
         }
         else
         {
@@ -35,13 +36,13 @@ public class BallLevelView : BallComponent
         }
     }
 
-    private void OnValueChanged(BallVolumesTypes type, float value)
+    private void OnValueChanged(Type type, float value)
     {
-        BallVolumeEffectHandler currentEffect = _effects.Where(effect => effect.Type == type).FirstOrDefault();
+        // BallVolumeEffectHandler currentEffect = _effects.Where(effect => effect.Type == type).FirstOrDefault();
 
-        if (currentEffect.IsEmpty())
-            return;
-        else
-            currentEffect.HandleVolumeChanges(value);
+        // if (currentEffect.IsEmpty())
+        //     return;
+        // else
+        //     currentEffect.HandleVolumeChanges(value);
     }
 }

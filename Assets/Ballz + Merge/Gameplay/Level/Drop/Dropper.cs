@@ -47,8 +47,8 @@ namespace BallzMerge.Gameplay.Level
         {
             List<SavedVolume> savedVolumes = new List<SavedVolume>();
 
-            foreach (var bagCell in _selector.DropsMap)
-                savedVolumes.Add(new SavedVolume(bagCell.ID, bagCell.Volume.Type.ToString(), bagCell.Volume.Species.ToString(), bagCell.Rarity.Weight));
+            foreach (BallVolumesBagCell<BallVolume> bagCell in _selector.DropsMap)
+                savedVolumes.Add(new SavedVolume(bagCell.ID, bagCell.Name, bagCell.Rarity.Weight));
 
             _data.Saves.Save(new KeyValuePair<string, float>(WavesToDrop, _waveCount));
             _data.Saves.SaveVolumes(savedVolumes);
@@ -67,9 +67,8 @@ namespace BallzMerge.Gameplay.Level
                 {
                     var drop = _pool[i];
 
-                    if (drop.Volume.Type.ToString() == savedVolume.Name &&
-                        drop.Rarity.Weight == savedVolume.Weight &&
-                        drop.Volume.Species.ToString() == savedVolume.Species)
+                    if (drop.Volume.Name == savedVolume.Name &&
+                        drop.Rarity.Weight == savedVolume.Weight)
                     {
                         _selector.LoadDrop(new Drop(drop.Volume, drop.Rarity), savedVolume.ID);
                         break;

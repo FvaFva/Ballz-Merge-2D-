@@ -5,7 +5,6 @@ using UnityEngine;
 public struct BallVolumeEffectHandler
 {
     public ParticleSystem Particles;
-    public BallVolumesTypes Type;
 
     public void HandleVolumeChanges(float value)
     {

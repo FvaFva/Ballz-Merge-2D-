@@ -16,10 +16,10 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
     private Queue<GameDataVolumeMicView> _free = new Queue<GameDataVolumeMicView>();
     private Queue<GameDataVolumeMicView> _busy = new Queue<GameDataVolumeMicView>();
     private Action _update = () => { };
-    private Func<IEnumerable<BallVolumesBagCell>> _getter = () => { return default; };
+    private Func<IEnumerable<IBallVolumesBagCell<BallVolume>>> _getter = () => { return default; };
     private GameDataVolumeMicView _currentView;
 
-    public BallVolumesBagCell CurrentData {  get; private set; }
+    public IBallVolumesBagCell<BallVolume> CurrentData {  get; private set; }
 
     public event Action<bool> ActiveVolumePerformed;
 
@@ -139,6 +139,6 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
 
     private bool IsCurrentGonnaActive()
     {
-        return _currentView != null && _currentView.IsActive && _currentView.Data.Volume.Species == BallVolumesSpecies.Hit;
+        return _currentView != null && _currentView.IsActive && _currentView.Data.IsEqual<BallVolumeOnHit>();
     }
 }

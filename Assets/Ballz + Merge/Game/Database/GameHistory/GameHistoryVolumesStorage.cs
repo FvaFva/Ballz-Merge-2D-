@@ -27,7 +27,7 @@ namespace BallzMerge.Data
 
                 command.Parameters.AddWithValue($"@{IDColumName}", gameID);
 
-                foreach (BallVolumesBagCell cell in volumes.All)
+                foreach (BallVolumesBagCell<BallVolume> cell in volumes.All)
                 {
                     if (cell.Value.Equals(0))
                         continue;

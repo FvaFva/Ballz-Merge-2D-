@@ -9,14 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 626ef2573da9cbc4aa8726cfc1943506, type: 3}
+  m_Script: {fileID: 11500000, guid: 202ea621a2fb44c24a4e4639cca89499, type: 3}
   m_Name: Crusher
   m_EditorClassIdentifier: 
-  _isUseRarityWeight: 1
-  _type: 0
-  _species: 0
   _icon: {fileID: 21300000, guid: 4fea7209b87bf684698342b7de78e2d0, type: 3}
-  _name: Crusher
+  _name: Extreme pressure
+  _effect: {fileID: 0}
   _description: When you hit a block you will destroy it {SUFFIX}
   _suffixes:
   - Weight: 1
