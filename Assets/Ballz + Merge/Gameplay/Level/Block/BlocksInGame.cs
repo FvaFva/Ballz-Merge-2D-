@@ -107,6 +107,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             {
                 block.Debug.Add($"I Initialized merge with {blockInNextCell.name}");
                 blockInNextCell.Moved -= OnBlockCameNewPosition;
+                blockInNextCell.ChangedPosition -= OnBlockCameNewPosition;
                 MergeBlocks(block, blockInNextCell);
                 return true;
             }
@@ -122,6 +123,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             {
                 block.Hit += OnBlockHit;
                 block.Deactivated += Remove;
+                block.ChangedPosition += OnBlockCameNewPosition;
                 block.Moved += OnBlockCameNewPosition;
                 block.Destroyed += OnBlockDestroy;
             }
@@ -129,6 +131,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             {
                 block.Hit -= OnBlockHit;
                 block.Deactivated -= Remove;
+                block.ChangedPosition -= OnBlockCameNewPosition;
                 block.Moved -= OnBlockCameNewPosition;
                 block.Destroyed -= OnBlockDestroy;
             }

@@ -5,5 +5,6 @@
     RightTop,
     RightCentre,
     BottomCentre,
-    BottomRight
+    BottomRight,
+    RootRightTop
 }

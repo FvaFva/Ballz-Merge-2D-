@@ -17,7 +17,7 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private Image _colorView;
         [SerializeField] private Button _selector;
         [SerializeField] private ParticleSystem _particles;
-        [SerializeField] private List<Image> _shineMasks;
+        [SerializeField] private ButtonShaderView _shaderView;
 
         private Drop _current;
         private Sprite _default;
@@ -49,16 +49,9 @@ namespace BallzMerge.Gameplay.Level
             _selector.RemoveListener(OnSelect);
         }
 
-        public void CashMaterials()
+        public void InitMaterial()
         {
-            _shineMaterials = new List<Material>();
-
-            foreach (Image shineMask in _shineMasks)
-            {
-                Material material = new Material(shineMask.material);
-                shineMask.material = material;
-                _shineMaterials.Add(material);
-            }
+            _shaderView.Init();
         }
 
         public void Show(Drop drop)
@@ -78,9 +71,7 @@ namespace BallzMerge.Gameplay.Level
             _description.text = _current.Description;
             _icon.sprite = _current.Icon;
             _colorView.color = _current.Color;
-
-            foreach (Material shineMaterial in _shineMaterials)
-                shineMaterial.SetColor(ShineColorProperty, _current.Color);
+            _shaderView.SetShinyColor(_current.Color);
         }
 
         private void Hide()
