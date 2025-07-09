@@ -65,6 +65,9 @@ public class GameDataVolumeMicView : MonoBehaviour
         var volume = _map.GetVolume(volumeName);
         var rarity = _map.GetRarity(level);
 
+        if (volume == null)
+            return;
+
         if (rarity == null)
             Show(volume, level, volume.GetDescription(level));
         else
@@ -89,8 +92,8 @@ public class GameDataVolumeMicView : MonoBehaviour
 
         _additional.Show(description);
         _level.text = level.ToString();
-        _header.text = volume?.Name;
-        _icon.sprite = volume?.Icon;
+        _header.text = volume.Name;
+        _icon.sprite = volume.Icon;
     }
 
     private void OnPerform(bool isActive)

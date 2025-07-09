@@ -11,6 +11,7 @@ namespace BallzMerge.Root
         [SerializeField] private AdaptiveLayoutGroupBase _top;
         [SerializeField] private AdaptiveLayoutGroupBase _bottomRight;
         [SerializeField] private AdaptiveLayoutGroupBase _bottomCentre;
+        [SerializeField] private AdaptiveLayoutGroupBase _rootRightTop;
 
         private Dictionary<CrossPosition, AdaptiveLayoutGroupBase> _groups;
         private List<UIRootContainerItem> _items;
@@ -26,7 +27,8 @@ namespace BallzMerge.Root
                 { CrossPosition.RightCentre, _rightCentre.Init() },
                 { CrossPosition.Top, _top.Init() },
                 { CrossPosition.BottomCentre, _bottomCentre.Init() },
-                { CrossPosition.BottomRight, _bottomRight.Init() }
+                { CrossPosition.BottomRight, _bottomRight.Init() },
+                { CrossPosition.RootRightTop, _rootRightTop.Init() }
             };
         }
 

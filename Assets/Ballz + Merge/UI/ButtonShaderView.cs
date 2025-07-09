@@ -33,4 +33,9 @@ public class ButtonShaderView : MonoBehaviour
     {
         gameObject.SetActive(state);
     }
+
+    public void SetShinyColor(Color color)
+    {
+        _imageMaterial.PerformIfPropertyExist(SHINY_COLOR_PROPERTY, material => material.SetColor(SHINY_COLOR_PROPERTY, color));
+    }
 }

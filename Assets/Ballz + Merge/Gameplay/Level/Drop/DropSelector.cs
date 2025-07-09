@@ -40,8 +40,8 @@ namespace BallzMerge.Gameplay.Level
 
         public void Init()
         {
-            _firstSlot.CashMaterials();
-            _secondSlot.CashMaterials();
+            _firstSlot.InitMaterial();
+            _secondSlot.InitMaterial();
         }
 
         public void StartLevel()
