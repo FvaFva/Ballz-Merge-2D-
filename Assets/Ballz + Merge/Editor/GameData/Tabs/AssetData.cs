@@ -13,20 +13,6 @@ namespace BallzMerge.Editor
         public readonly SerializedObject SerializedObject;
         public readonly bool IsLoaded;
 
-        public AssetData(T so)
-        {
-            ScriptableObject = so;
-            IsLoaded = ScriptableObject != null;
-
-            if (!IsLoaded)
-                return;
-
-            _cashedProperty = new Dictionary<string, SerializedProperty>();
-            SerializedObject = new SerializedObject(ScriptableObject);
-            SerializedObject.Update();
-            Type = ScriptableObject.GetType().ToString();
-        }
-
         public AssetData(string guid)
         {
             var path = AssetDatabase.GUIDToAssetPath(guid);
