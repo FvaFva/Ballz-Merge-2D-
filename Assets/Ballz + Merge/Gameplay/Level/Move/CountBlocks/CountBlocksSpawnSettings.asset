@@ -13,39 +13,35 @@ MonoBehaviour:
   m_Name: CountBlocksSpawnSettings
   m_EditorClassIdentifier: 
   _properties:
-  - Range:
-      InitialWave: 1
-      TerminalWave: 5
-    BlocksProperties:
-    - Count: 1
-      Chance: 0.75
-    - Count: 2
-      Chance: 0.2
-    - Count: 3
-      Chance: 0.05
-  - Range:
-      InitialWave: 6
-      TerminalWave: 15
-    BlocksProperties:
-    - Count: 1
-      Chance: 0.21
-    - Count: 2
-      Chance: 0.39
-    - Count: 3
-      Chance: 0.24
-    - Count: 4
-      Chance: 0.15
-  - Range:
-      InitialWave: 16
-      TerminalWave: 17
-    BlocksProperties:
-    - Count: 1
-      Chance: 0.1
-    - Count: 2
-      Chance: 0.15
-    - Count: 3
-      Chance: 0.2
-    - Count: 4
-      Chance: 0.32
-    - Count: 5
-      Chance: 0.24
+  - Count:
+    - Value: 1
+      Weight: 3
+    - Value: 2
+      Weight: 1
+    Number:
+    - Value: 1
+      Weight: 1
+    - Value: 2
+      Weight: 1
+  - Count:
+    - Value: 1
+      Weight: 3
+    - Value: 2
+      Weight: 1
+    - Value: 3
+      Weight: 1
+    Number:
+    - Value: 1
+      Weight: 1
+    - Value: 2
+      Weight: 2
+  - Count:
+    - Value: 2
+      Weight: 1
+    - Value: 3
+      Weight: 1
+    Number:
+    - Value: 3
+      Weight: 1
+    - Value: 2
+      Weight: 2

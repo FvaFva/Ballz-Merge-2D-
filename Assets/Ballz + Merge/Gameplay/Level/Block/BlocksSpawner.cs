@@ -14,8 +14,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         [SerializeField] private int _countPreload;
         [SerializeField] private Transform _blockParent;
-        [SerializeField] private MoveSettingsNumbers _numbersProperties;
-        [SerializeField] private MoveSettingsCountBlocks _countProperties;
+        [SerializeField] private MoveSettingsCountBlocks _settings;
         [SerializeField] private MoveColorMap _colorMap;
         [SerializeField] private Block _prefab;
         [SerializeField] private VirtualWorldFactory _factory;
@@ -66,13 +65,23 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _currentWave++;
             List<int> positions = _gridSettings.GetPositionsInRow();
-            int count = Mathf.Min(GetBlockCount(), positions.Count);
+            var current = GetCurrent();
 
-            for (int i = 0; i < count; i++)
+            if (current.IsEmpty())
             {
-                int number = GetBlockNumber();
                 Vector2Int gridPosition = new Vector2Int(positions.TakeRandom(), _gridSettings.FirstRowIndex);
-                yield return SpawnBlock(number, gridPosition);
+                yield return SpawnBlock(1, gridPosition);
+            }
+            else
+            {
+                int count = Mathf.Min(GetValue(current.Count), positions.Count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    int number = GetValue(current.Number);
+                    Vector2Int gridPosition = new Vector2Int(positions.TakeRandom(), _gridSettings.FirstRowIndex);
+                    yield return SpawnBlock(number, gridPosition);
+                }
             }
         }
 
@@ -105,41 +114,26 @@ namespace BallzMerge.Gameplay.BlockSpace
             _activeBlocks.AddBlocks(block);
         }
 
-        private int GetBlockCount()
+        private WaveSpawnProperty GetCurrent()
         {
-            var property = _countProperties.Properties.Where(prop => prop.Range.IsInRange(_currentWave)).FirstOrDefault();
+            int set = Mathf.Min(_currentWave, _settings.Properties.Count() - 1);
+            return _settings.Properties[set];
+        }
 
-            if (property.IsEmpty())
-                property = _countProperties.Properties.Where(item => item.Range.TerminalWave == _countProperties.Properties.Max(item => item.Range.TerminalWave)).FirstOrDefault();
-
-            if (property.IsEmpty())
-                Debug.Log("No property");
-
-            float point = Random.Range(0.01f, 1f);
+        private int GetValue(IEnumerable<BlocksSpawnProperty> prop)
+        {
+            float point = Random.Range(0, prop.Sum(c => c.Weight));
             float previous = 0;
 
-            foreach (var blockSpawnProperty in property.BlocksProperties)
+            foreach (var blockSpawnProperty in prop)
             {
-                if (blockSpawnProperty.Chance + previous > point)
-                    return blockSpawnProperty.Count;
+                if (blockSpawnProperty.Weight + previous > point)
+                    return blockSpawnProperty.Value;
 
-                previous += blockSpawnProperty.Chance;
+                previous += blockSpawnProperty.Weight;
             }
 
             return 0;
-        }
-
-        private int GetBlockNumber()
-        {
-            var property = _numbersProperties.Properties.Where(prop => prop.Range.IsInRange(_currentWave)).FirstOrDefault();
-
-            if (property.IsEmpty())
-                property = _numbersProperties.Properties.Where(item => item.Range.TerminalWave == _numbersProperties.Properties.Max(item => item.Range.TerminalWave)).FirstOrDefault();
-
-            if (property.IsEmpty())
-                return 0;
-
-            return property.NumbersToSpawn[Random.Range(0, property.NumbersToSpawn.Length)];
         }
 
         private Block Generate(int id) => _container.InstantiatePrefabForComponent<Block>(_prefab).Initialize(id, _blockParent, _factory.GenerateBoxForBlock());

@@ -5,6 +5,10 @@ using Zenject;
 
 public abstract class BallVolumeOnHit : BallVolume
 {
+    protected const int Common = 1;
+    protected const int Rar = 2;
+    protected const int Legendary = 3;
+
     protected BlocksInGame Blocks { get; private set; }
     protected BallWaveVolume BallWaveVolume { get; private set; }
     protected GridSettings Grid { get; private set; }
@@ -23,7 +27,7 @@ public abstract class BallVolumeOnHit : BallVolume
         Init();
     }
 
-    public abstract void Explore(BallVolumeHitData data, DropRarity rarity, Action<bool> callback);
+    public abstract void Explore(BallVolumeHitData data, int value, Action<bool> callback);
 
     protected virtual void Init() { }
 }
