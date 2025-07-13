@@ -6,18 +6,21 @@ namespace BallzMerge.Gameplay.Level
     public class MoveColorMap : ScriptableObject
     {
         [SerializeField] private Color _base;
+        [SerializeField] private Gradient _color;
+        [SerializeField] private MoveSettingsCountBlocks _settings;
 
-        [Header("Index + 1 = Number")]
-        [SerializeField] Color[] _colors;
-
+        private Vector2Int _minMax;
         public Color Base => _base;
 
+        void OnEnable()
+        {
+            _minMax = _settings.GetNumberRange();
+        }
+        
         public Color GetColor(int blockNumber)
         {
-            if (--blockNumber < 0 || blockNumber >= _colors.Length)
-                return Color.white;
-
-            return _colors[blockNumber];
+            var pos = Mathf.InverseLerp(_minMax.x, _minMax.y, blockNumber);
+            return _color.Evaluate(pos);
         }
     }
 }

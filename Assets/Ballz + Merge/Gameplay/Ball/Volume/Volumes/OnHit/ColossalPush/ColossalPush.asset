@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0f0e5f76cbe04765ad70f5104080aa6, type: 3}
+  m_Name: ColossalPush
+  m_EditorClassIdentifier: 
+  _icon: {fileID: 21300000, guid: bc8ec71c28c18457a80822331f500912, type: 3}
+  _name: Colossal push
+  _effect: {fileID: 0}
+  _description: if there are empty cells behind the block, it additionally moves
+    it by {WEIGHT} cell.
+  _suffixes: []

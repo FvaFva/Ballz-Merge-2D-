@@ -28,6 +28,6 @@ public class BallVolumeHitInspector
         var nextVolume = _ballWaveVolume.Cage.CheckNext();
 
         if (nextVolume != null)
-            nextVolume.Volume.Explore(data, nextVolume.Rarity, nextVolume.ViewCallback);
+            nextVolume.Volume.Explore(data, nextVolume.Value, nextVolume.ViewCallback);
     }
 }

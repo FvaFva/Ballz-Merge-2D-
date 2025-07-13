@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Linq;
 using System.Collections.Generic;
 using System;
 using BallzMerge.Data;
@@ -7,7 +6,7 @@ using Zenject;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class Dropper : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader
+    public class Dropper : CyclicBehavior, ILevelSaver, ILevelLoader
     {
         private const string WavesToDrop = "WavesToDrop";
 
@@ -15,27 +14,12 @@ namespace BallzMerge.Gameplay.Level
 
         [SerializeField] private int _wavesToDrop;
         [SerializeField] private DropSelector _selector;
-        [SerializeField] private DropRarity _rar;
-        [SerializeField] private DropRarity _legendary;
-        [SerializeField] private DropRarity _common;
-        [SerializeField] private List<BallVolume> _commons;
-        [SerializeField] private List<BallVolume> _rarities;
-        [SerializeField] private List<BallVolume> _legends;
+        [SerializeField] private DropList _drop;
         [SerializeField] private ValueView _view;
 
-        private List<Drop> _pool;
         private int _waveCount;
 
         public bool IsReadyToDrop { get; private set; }
-
-        public void Init()
-        {
-            _pool = new List<Drop>();
-
-            InitRarity(_rar, _rarities);
-            InitRarity(_common, _commons);
-            InitRarity(_legendary, _legends);
-        }
 
         public void StartLevel()
         {
@@ -60,12 +44,13 @@ namespace BallzMerge.Gameplay.Level
             _view.Show(_waveCount);
 
             IEnumerable<SavedVolume> savedVolumes = _data.Saves.GetSavedVolumes();
+            List<Drop> temp = _drop.GetPool();
 
             foreach (var savedVolume in savedVolumes)
             {
-                for (int i = 0; i < _pool.Count; i++)
+                for (int i = 0; i < temp.Count; i++)
                 {
-                    var drop = _pool[i];
+                    var drop = temp[i];
 
                     if (drop.Volume.Name == savedVolume.Name &&
                         drop.Rarity.Weight == savedVolume.Weight)
@@ -83,7 +68,7 @@ namespace BallzMerge.Gameplay.Level
                 return;
 
             IsReadyToDrop = false;
-            List<Drop> temp = _pool.ToList();
+            List<Drop> temp = _drop.GetPool();
             _waveCount = _wavesToDrop;
             _view.Show(_waveCount);
             _selector.Show(temp.TakeRandom(), temp.TakeRandom(), callback);
@@ -93,15 +78,6 @@ namespace BallzMerge.Gameplay.Level
         {
             IsReadyToDrop = --_waveCount <= 0;
             _view.Show(_waveCount);
-        }
-
-        private void InitRarity(DropRarity rarity, List<BallVolume> volumes)
-        {
-            foreach (BallVolume volume in volumes)
-            {
-                for (int i = 0; i < rarity.CountInPool; i++)
-                    _pool.Add(new Drop(volume, rarity));
-            }
         }
     }
 }

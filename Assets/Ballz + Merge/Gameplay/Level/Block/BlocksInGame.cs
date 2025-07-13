@@ -70,6 +70,20 @@ namespace BallzMerge.Gameplay.BlockSpace
                 return null;
         }
 
+        public bool TryMergeBlocks(Block firstBlock, Block secondBlock)
+        {
+            if (firstBlock != null && secondBlock != null && secondBlock.Number == firstBlock.Number)
+            {
+                firstBlock.Debug.Add($"I Initialized merge with {secondBlock.name}");
+                MergeBlocks(firstBlock, secondBlock);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private void Remove(Block block)
         {
             _blocks.TryRemove(block);
@@ -102,18 +116,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private bool TryMergeCell(Block block, Vector2Int direction)
         {
             Block blockInNextCell = GetAtPosition(block.GridPosition + direction);
-
-            if (blockInNextCell != null && blockInNextCell.Number == block.Number)
-            {
-                block.Debug.Add($"I Initialized merge with {blockInNextCell.name}");
-                blockInNextCell.Moved -= OnBlockCameNewPosition;
-                MergeBlocks(block, blockInNextCell);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return TryMergeBlocks(block, blockInNextCell);
         }
 
         private void UpdateSubscribeForBlock(Block block, bool subscribe)

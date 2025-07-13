@@ -1,5 +1,4 @@
 using BallzMerge.Gameplay.BlockSpace;
-using BallzMerge.Gameplay.Level;
 using System;
 using UnityEngine;
 using Zenject;
@@ -11,7 +10,7 @@ namespace BallzMerge.Gameplay.BallSpace
         private Block _lastBlock;
         private BallCollisionHandler _collisionHandler;
         private BlocksInGame _blocks;
-        private DropRarity _rarity;
+        private int _value;
         private Action<bool> _callback;
 
         [Inject]
@@ -23,9 +22,9 @@ namespace BallzMerge.Gameplay.BallSpace
 
         public void Dispose() => Clear();
 
-        public void Activate(BallVolumeHitData hitData, DropRarity rarity, Action<bool> callback)
+        public void Activate(BallVolumeHitData hitData, int value, Action<bool> callback)
         {
-            _rarity = rarity;
+            _value = value;
             _lastBlock = hitData.Block;
             _collisionHandler.NonBlockHit += OnNonBlockHit;
             _blocks.BlockHit += OnBlockHit;
@@ -51,7 +50,7 @@ namespace BallzMerge.Gameplay.BallSpace
 
         private void Clear(bool isWent = false)
         {
-            _rarity = default;
+            _value = 0;
             _lastBlock = default;
             _callback?.Invoke(isWent);
             _callback = null;
@@ -59,6 +58,6 @@ namespace BallzMerge.Gameplay.BallSpace
             _blocks.BlockHit -= OnBlockHit;
         }
 
-        private bool IsDifferenceNumberLessRarity(Block hitBlock) => hitBlock.Number - _lastBlock.Number <= _rarity.Weight;
+        private bool IsDifferenceNumberLessRarity(Block hitBlock) => hitBlock.Number - _lastBlock.Number <= _value;
     }
 }

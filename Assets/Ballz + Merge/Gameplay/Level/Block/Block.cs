@@ -111,6 +111,19 @@ namespace BallzMerge.Gameplay.BlockSpace
             return true;
         }
 
+        public void MoveTo(Vector2Int position, BlockMoveActionType moveType)
+        {
+            if (IsAlive == false)
+                return;
+
+            Debug.Add($"Move to {position}");
+            StopCurrentMoveTween();
+            GridPosition = position;
+            _newPosition = (Vector2)GridPosition * _gridSettings.CellSize;
+            _transform.localPosition = _newPosition;
+            _blockMoveTypeActions[moveType]?.Invoke();
+        }
+
         public void Move(Vector2Int step, BlockMoveActionType moveType)
         {
             if (IsAlive == false)
