@@ -99,6 +99,8 @@ namespace BallzMerge.Gameplay.BlockSpace
             var another = GetOppositeCurrentOrConnection(block);
             another.NumberChanged -= OnNumberChanged;
             another.ChangeNumber(Count);
+            another.PlayShakeAnimation();
+            EffectsPool.SpawnEffect(BlockAdditionalEffectEvents.Increase, another.WorldPosition);
             another.NumberChanged += OnNumberChanged;
         }
 

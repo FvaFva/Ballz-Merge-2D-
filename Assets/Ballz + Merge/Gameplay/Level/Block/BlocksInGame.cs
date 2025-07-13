@@ -125,6 +125,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             {
                 block.Hit += OnBlockHit;
                 block.Deactivated += Remove;
+                block.ChangedPosition += OnBlockCameNewPosition;
                 block.Moved += OnBlockCameNewPosition;
                 block.Destroyed += OnBlockDestroy;
             }
@@ -132,6 +133,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             {
                 block.Hit -= OnBlockHit;
                 block.Deactivated -= Remove;
+                block.ChangedPosition -= OnBlockCameNewPosition;
                 block.Moved -= OnBlockCameNewPosition;
                 block.Destroyed -= OnBlockDestroy;
             }
