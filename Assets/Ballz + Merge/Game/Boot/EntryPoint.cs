@@ -38,7 +38,7 @@ namespace BallzMerge.Root
 
         private void RunGame()
         {
-            string sceneName = ScenesNames.MAINMENU;
+            string sceneName = ScenesNames.MAIN_MENU;
 #if UNITY_EDITOR
             DebugScenesChecker checker = new DebugScenesChecker();
 
@@ -72,6 +72,9 @@ namespace BallzMerge.Root
             GenerateDontDestroyFromHub<GlobalEffects>();
             _gameSettings = new GameSettings(_rootView.SettingsMenu, _primary, _rootView.InfoPanelShowcase);
             _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack, _gameSettings, _primary.OrientationObserver);
+            var volumeMap = _primary.Hub.Get<BallVolumesMap>();
+            volumeMap.ReBuild();
+            BindSingleton(volumeMap);
         }
 
         private void BindToContainerPrimaryComponents()

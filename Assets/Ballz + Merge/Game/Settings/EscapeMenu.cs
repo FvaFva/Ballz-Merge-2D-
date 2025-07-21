@@ -34,7 +34,7 @@ namespace BallzMerge.Root.Settings
             _leftGame.gameObject.SetActive(isActiveQuite);
         }
 
-        private void LeftToMainMenu() => RequireQuite(new SceneExitData(ScenesNames.MAINMENU));
+        private void LeftToMainMenu() => RequireQuite(new SceneExitData(ScenesNames.MAIN_MENU));
 
         private void OpenSettings() => SettingsRequired?.Invoke();
 

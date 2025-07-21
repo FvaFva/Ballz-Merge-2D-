@@ -65,12 +65,12 @@ namespace BallzMerge.Gameplay.BlockSpace
             name = $"Block {ID}";
         }
 
-        public Block Initialize(int id, Transform parent, GridVirtualCell virtualBox)
+        public Block Initialize(int id, Transform parent, GridVirtualCell virtualBox, BlocksSettings settings)
         {
             Debug.Add("init");
             ChangeID(id);
             _transform.parent = parent;
-            _view.Init(_gridSettings.MoveTime, _gridSettings.CellSize);
+            _view.Init(_gridSettings.MoveTime, settings);
             _physic.Init(virtualBox);
             IsAlive = true;
             Deactivate();

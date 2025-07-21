@@ -8,14 +8,12 @@ using Zenject;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlocksSpawner : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader
+    public class BlocksSpawner : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader, IDependentSettings
     {
         private const string CurrentWave = "CurrentWave";
 
         [SerializeField] private int _countPreload;
         [SerializeField] private Transform _blockParent;
-        [SerializeField] private MoveSettingsCountBlocks _settings;
-        [SerializeField] private MoveColorMap _colorMap;
         [SerializeField] private Block _prefab;
         [SerializeField] private VirtualWorldFactory _factory;
 
@@ -24,6 +22,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         [Inject] private GridSettings _gridSettings;
         [Inject] private BlocksInGame _activeBlocks;
 
+        private BlocksSettings _settings;
         private Queue<Block> _blocks = new Queue<Block>();
         private int _currentWave;
         private int _blockID;
@@ -59,6 +58,11 @@ namespace BallzMerge.Gameplay.BlockSpace
         public void Load()
         {
             _currentWave = Mathf.RoundToInt(_data.Saves.Get(CurrentWave));
+        }
+
+        public void ApplySettings(LevelSettings settings)
+        {
+            _settings = settings.BlocksSettings;
         }
 
         public IEnumerable<Block> SpawnWave()
@@ -110,14 +114,14 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private void ActivateBlock(int id, Block block, int number, Vector2Int gridPosition)
         {
-            block.Activate(id, number, gridPosition, _colorMap.GetColor(number));
+            block.Activate(id, number, gridPosition, _settings.GetColor(number));
             _activeBlocks.AddBlocks(block);
         }
 
         private WaveSpawnProperty GetCurrent()
         {
-            int set = Mathf.Min(_currentWave, _settings.Properties.Count() - 1);
-            return _settings.Properties[set];
+            int set = Mathf.Min(_currentWave, _settings.SpawnProperties.Count() - 1);
+            return _settings.SpawnProperties[set];
         }
 
         private int GetValue(IEnumerable<BlocksSpawnProperty> prop)
@@ -136,7 +140,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             return 0;
         }
 
-        private Block Generate(int id) => _container.InstantiatePrefabForComponent<Block>(_prefab).Initialize(id, _blockParent, _factory.GenerateBoxForBlock());
+        private Block Generate(int id) => _container.InstantiatePrefabForComponent<Block>(_prefab).Initialize(id, _blockParent, _factory.GenerateBoxForBlock(), _settings);
 
         private void OnBlockFree(Block block) => _blocks.Enqueue(block);
     }
