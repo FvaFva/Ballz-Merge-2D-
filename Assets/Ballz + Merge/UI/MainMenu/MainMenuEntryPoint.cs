@@ -11,7 +11,7 @@ namespace BallzMerge.MainMenu
     public class MainMenuEntryPoint : MonoBehaviour, ISceneEnterPoint
     {
         [SerializeField] private UIView _view;
-        [SerializeField] private Button _startGame;
+        [SerializeField] private LevelSelectorOperator _levelSelector;
         [SerializeField] private Button _continueGame;
         [SerializeField] private AnimatedButton _continueGameButtonView;
         [SerializeField] private List<CyclicBehavior> _behaviors;
@@ -54,14 +54,14 @@ namespace BallzMerge.MainMenu
         private void OnEnable()
         {
             _rootUI.EscapeMenu.QuitRequired += LeftScene;
-            _startGame.AddListener(OnStartRequire);
+            _levelSelector.Selected += OnStartRequire;
             _continueGame.AddListener(OnContinueRequire);
         }
 
         private void OnDisable()
         {
             _rootUI.EscapeMenu.QuitRequired -= LeftScene;
-            _startGame.RemoveListener(OnStartRequire);
+            _levelSelector.Selected -= OnStartRequire;
             _continueGame.RemoveListener(OnContinueRequire);
         }
 

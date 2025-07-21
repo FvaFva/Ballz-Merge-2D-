@@ -6,7 +6,7 @@ using Zenject;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class Dropper : CyclicBehavior, ILevelSaver, ILevelLoader
+    public class Dropper : CyclicBehavior, ILevelSaver, ILevelLoader, IDependentSettings
     {
         private const string WavesToDrop = "WavesToDrop";
 
@@ -14,9 +14,9 @@ namespace BallzMerge.Gameplay.Level
 
         [SerializeField] private int _wavesToDrop;
         [SerializeField] private DropSelector _selector;
-        [SerializeField] private DropList _drop;
         [SerializeField] private ValueView _view;
 
+        private DropSettings _drop;
         private int _waveCount;
 
         public bool IsReadyToDrop { get; private set; }
@@ -78,6 +78,11 @@ namespace BallzMerge.Gameplay.Level
         {
             IsReadyToDrop = --_waveCount <= 0;
             _view.Show(_waveCount);
+        }
+
+        public void ApplySettings(LevelSettings settings)
+        {
+            _drop = settings.DropSettings;
         }
     }
 }

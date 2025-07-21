@@ -35,6 +35,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     [Inject] private Ball _ball;
     [Inject] private UIRootView _rootUI;
     [Inject] private DataBaseSource _data;
+    [Inject] private LevelSettingsContainer _levelSettings;
 
     public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
     public IEnumerable<IDependentScreenOrientation> Orientators => _orientators;
@@ -43,6 +44,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     private void Awake()
     {
         int i = 0;
+        var settings = _levelSettings.Get();
 
         foreach (var cyclical in _components.OrderBy(item => item.Order))
         {
@@ -65,6 +67,9 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
             if (cyclical is ILevelSaver saver)
                 _savers.Add(saver);
+
+            if (cyclical is IDependentSettings settingsDependent)
+                settingsDependent.ApplySettings(settings);
 
             if (cyclical is Dropper dropper)
                 _conductor = new ConductorBetweenWaves(_ball.GetBallComponent<BallAwaitBreaker>(), dropper, _blocksBus);
@@ -99,7 +104,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         if (_conductor == null)
         {
             Debug.LogError("WARNING!! CONDUCTOR WAS FIRED!");
-            callback.Invoke(new SceneExitData(ScenesNames.MAINMENU));
+            callback.Invoke(new SceneExitData(ScenesNames.MAIN_MENU));
             return;
         }
 
@@ -177,7 +182,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             if (answer.IsPositiveAnswer)
                 RestartLevel();
             else
-                _sceneCallBack.Invoke(new SceneExitData(ScenesNames.MAINMENU));
+                _sceneCallBack.Invoke(new SceneExitData(ScenesNames.MAIN_MENU));
         }
         else if (answer is { Name: QuitQuestName, IsPositiveAnswer: true })
         {

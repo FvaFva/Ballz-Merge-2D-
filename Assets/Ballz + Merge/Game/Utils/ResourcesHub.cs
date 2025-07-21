@@ -13,6 +13,7 @@ namespace BallzMerge.Root
         private const string GLOBAL_EFFECTS = "[Effects]";
         private const string ACHIEVEMENT = "AchievementsBus";
         private const string AUDIO = "AudioMixer";
+        private const string VOLUMES_MAP = "BallVolumesMap";
 
         private Dictionary<Type, UnityEngine.Object> _loadedResources;
         private Dictionary<Type, string> _resourceNames;
@@ -27,7 +28,8 @@ namespace BallzMerge.Root
                 { typeof(DevelopersScenes), DEVELOPERS_SCENES },
                 { typeof(GlobalEffects), GLOBAL_EFFECTS },
                 { typeof(AchievementsBus), ACHIEVEMENT },
-                { typeof(AudioMixer), AUDIO }
+                { typeof(AudioMixer), AUDIO },
+                { typeof(BallVolumesMap), VOLUMES_MAP }
             };
         }
 
