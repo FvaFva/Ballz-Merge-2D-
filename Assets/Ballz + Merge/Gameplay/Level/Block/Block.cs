@@ -65,12 +65,12 @@ namespace BallzMerge.Gameplay.BlockSpace
             name = $"Block {ID}";
         }
 
-        public Block Initialize(int id, Transform parent, GridVirtualCell virtualBox)
+        public Block Initialize(int id, Transform parent, GridVirtualCell virtualBox, BlocksSettings settings)
         {
             Debug.Add("init");
             ChangeID(id);
             _transform.parent = parent;
-            _view.Init(_gridSettings.MoveTime, _gridSettings.CellSize);
+            _view.Init(_gridSettings.MoveTime, settings);
             _physic.Init(virtualBox);
             IsAlive = true;
             Deactivate();
@@ -109,6 +109,19 @@ namespace BallzMerge.Gameplay.BlockSpace
             }
 
             return true;
+        }
+
+        public void MoveTo(Vector2Int position, BlockMoveActionType moveType)
+        {
+            if (IsAlive == false)
+                return;
+
+            Debug.Add($"Move to {position}");
+            StopCurrentMoveTween();
+            GridPosition = position;
+            _newPosition = (Vector2)GridPosition * _gridSettings.CellSize;
+            _transform.localPosition = _newPosition;
+            _blockMoveTypeActions[moveType]?.Invoke();
         }
 
         public void Move(Vector2Int step, BlockMoveActionType moveType)

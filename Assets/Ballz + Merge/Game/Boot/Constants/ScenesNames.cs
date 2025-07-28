@@ -4,6 +4,6 @@
     {
         public const string GAMEPLAY = "Gameplay";
         public const string BOOT = "BOOT";
-        public const string MAINMENU = "MainMenu";
+        public const string MAIN_MENU = "MainMenu";
     }
 }

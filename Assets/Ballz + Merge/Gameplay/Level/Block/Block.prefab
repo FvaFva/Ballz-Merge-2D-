@@ -270,7 +270,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _skin: {fileID: 2270483506801229240}
   _number: {fileID: 8197381173803674294}
-  _colorMap: {fileID: 11400000, guid: 08e5dfa7b504e9e40bc38346faa55387, type: 2}
+  _colorMap: {fileID: 11400000, guid: b5d37b6d6d28f436d8a81e0387c4dce9, type: 2}
 --- !u!1 &4003988595427686634
 GameObject:
   m_ObjectHideFlags: 0

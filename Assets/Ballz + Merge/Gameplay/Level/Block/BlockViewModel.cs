@@ -1,5 +1,4 @@
-﻿using BallzMerge.Gameplay.Level;
-using DG.Tweening;
+﻿using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -20,15 +19,12 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         [SerializeField] private SpriteRenderer _skin;
         [SerializeField] private TMP_Text _number;
-        [SerializeField] private MoveColorMap _colorMap;
 
+        private BlocksSettings _colorMap;
         private Transform _transform;
         private Vector3 _baseScale;
         private Material _material;
         private float _moveTime;
-        private float _cellSize;
-
-        public SpriteRenderer Skin => _skin;
 
         private void Awake()
         {
@@ -50,10 +46,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             DOTween.Kill(_material);
         }
 
-        public void Init(float moveTime, float cellSize)
+        public void Init(float moveTime, BlocksSettings settings)
         {
             _moveTime = moveTime;
-            _cellSize = cellSize;
+            _colorMap = settings;
         }
 
         public void Deactivate()
@@ -75,7 +71,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         public void PlayDestroy(TweenCallback onDestroyed)
         {
             _number.text = "";
-            _skin.color = _colorMap.Base;
+            _skin.color = new Color();
             Sequence sequence = DOTween.Sequence();
             var downScale = _baseScale * DownscaleModifier;
             var upScale = _baseScale * UpscaleModifier;
