@@ -63,7 +63,7 @@ public class BallVolumesPassiveView : CyclicBehavior, ILevelFinisher, IInitializ
     {
         foreach (var volumeView in _volumesMap)
         {
-            var volume = _map.GetVolume(volumeView.Key);
+            var volume = _map.GetVolumeByType(volumeView.Key);
             int value = _volumes.GetPassiveValue(volumeView.Key);
             volumeView.Value.Show(new BallVolumeViewData(volume, value));
         }

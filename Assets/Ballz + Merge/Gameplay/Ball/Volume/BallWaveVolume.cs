@@ -1,9 +1,10 @@
+using BallzMerge.Data;
 using BallzMerge.Gameplay.Level;
 using System;
 using System.Linq;
 using UnityEngine;
 
-public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILevelFinisher, IDisposable
+public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILevelFinisher, IDisposable, IHistorical
 {
     [SerializeField] private DropSelector _dropSelector;
     [SerializeField] private BallVolumesCageView _cage;
@@ -28,6 +29,12 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
         Bag.Added -= OnBagChanged;
         Bag.Removed -= OnBagChanged;
         Bag.Loaded -= OnVolumeBagLoaded;
+    }
+
+    public GameHistoryData Write(GameHistoryData data)
+    {
+        data.Volumes = Bag.All.GroupBy(v => v.Name).ToDictionary(g => g.Key, g => g.Sum(v => v.Value));
+        return data;
     }
 
     public void Init()

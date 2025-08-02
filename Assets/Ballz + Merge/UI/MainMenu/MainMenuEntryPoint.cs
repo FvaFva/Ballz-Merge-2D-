@@ -24,7 +24,7 @@ namespace BallzMerge.MainMenu
         private Action<SceneExitData> _callback;
 
         public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
-        public IEnumerable<IDependentScreenOrientation> Orientators => _orientators;
+        public IEnumerable<IDependentScreenOrientation> OrientationDepends => _orientators;
 
         public bool IsAvailable { get; private set; }
 

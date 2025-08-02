@@ -14,14 +14,15 @@ public class GameSavedBlocksEffectsStorage
         CreateTable(connection, connectTable, connectField);
     }
 
-    public void Set(SqliteConnection connection, IEnumerable<SavedBlockEffect> savedEffects)
+    public void Set(SqliteConnection connection, IEnumerable<SavedBlockEffect> savedEffects, SqliteTransaction transaction)
     {
         using (var command = connection.CreateCommand())
         {
-            Delete(connection);
+            Delete(connection, transaction);
 
             foreach (SavedBlockEffect savedEffect in savedEffects)
             {
+                command.Transaction = transaction;
                 command.CommandText = $@"   INSERT INTO {TableName}
                                             ({Name}, {EffectBlock}, {ConnectBlock})
                                             VALUES
@@ -35,10 +36,11 @@ public class GameSavedBlocksEffectsStorage
         }
     }
 
-    public void Delete(SqliteConnection connection)
+    public void Delete(SqliteConnection connection, SqliteTransaction transaction)
     {
         using (var command = connection.CreateCommand())
         {
+            command.Transaction = transaction;
             command.CommandText = $"DELETE FROM {TableName}";
             command.ExecuteNonQuery();
         }

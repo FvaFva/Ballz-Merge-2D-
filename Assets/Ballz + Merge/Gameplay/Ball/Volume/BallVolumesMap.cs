@@ -13,13 +13,13 @@ public class BallVolumesMap : ScriptableObject
     [SerializeField] private List<DropRarity> _rarities;
 
     private Dictionary<Type, BallVolume> _volumesByType;
-    private Dictionary<string, BallVolume> _volumesByString;
+    private Dictionary<string, BallVolume> _volumesByName;
     private Dictionary<int, DropRarity> _raritiesWeights;
 
     public void ReBuild()
     {
         _volumesByType = _ballVolumes.ToDictionary(v => v.GetType(), v => v);
-        _volumesByString = _ballVolumes.ToDictionary(v=> v.Name, v => v);
+        _volumesByName = _ballVolumes.ToDictionary(v=> v.Name, v => v);
         _raritiesWeights = _rarities.ToDictionary(r => r.Weight, r => r);
     }
 
@@ -43,10 +43,10 @@ public class BallVolumesMap : ScriptableObject
     public T GetVolume<T>() where T : BallVolume
     {
         var type = typeof(T);
-        return (T)GetVolume(type);
+        return (T)GetVolumeByType(type);
     }
 
-    public BallVolume GetVolume(Type type)
+    public BallVolume GetVolumeByType(Type type)
     {
         if (_volumesByType.ContainsKey(type))
             return _volumesByType[type];
@@ -54,10 +54,10 @@ public class BallVolumesMap : ScriptableObject
         return null;
     }
 
-    public BallVolume GetVolume(string typeName)
+    public BallVolume GetVolumeByName(string name)
     {
-        if (_volumesByString.ContainsKey(typeName))
-            return _volumesByString[typeName];
+        if (_volumesByName.ContainsKey(name))
+            return _volumesByName[name];
 
         return null;
     }

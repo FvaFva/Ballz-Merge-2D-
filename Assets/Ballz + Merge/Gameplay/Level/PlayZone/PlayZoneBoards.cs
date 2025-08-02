@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class PlayZoneBoards : CyclicBehavior, ILevelLoader, IInitializable
+    public class PlayZoneBoards : CyclicBehavior, ILevelStarter, IInitializable
     {
         [SerializeField] private PlayZoneBoard _leftBorder;
         [SerializeField] private PlayZoneBoard _rightBorder;
@@ -26,7 +26,7 @@ namespace BallzMerge.Gameplay.Level
             };
         }
 
-        public void StartLevel()
+        public void StartLevel(bool _)
         {
             ResetPositionScaleBorder();
         }

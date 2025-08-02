@@ -89,7 +89,7 @@ namespace BallzMerge.Root
                 yield return null;
             }
 
-            foreach (IDependentScreenOrientation orientator in _targetSceneEntryPoint.Current.Orientators)
+            foreach (IDependentScreenOrientation orientator in _targetSceneEntryPoint.Current.OrientationDepends)
                 _orientationObserver.CheckInSceneElements(orientator);
 
             _targetSceneEntryPoint.Current.Init(_sceneExit, _isLoad);

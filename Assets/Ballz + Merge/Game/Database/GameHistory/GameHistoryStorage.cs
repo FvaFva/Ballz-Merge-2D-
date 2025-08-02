@@ -11,6 +11,7 @@ namespace BallzMerge.Data
         private const string IDColumnName = "GameID";
         private const string DateColumnName = "Date";
         private const string NumberColumnName = "Number";
+        private const string LevelColumnName = "Level";
 
         private string _dbPath;
         private GameHistoryVolumesStorage _volumeStorage;
@@ -35,6 +36,7 @@ namespace BallzMerge.Data
                                                game.{IDColumnName} as {IDColumnName},
                                                game.{ScoreColumnName} as {ScoreColumnName},
                                                game.{NumberColumnName} as {NumberColumnName},
+                                               game.{LevelColumnName} as {LevelColumnName},
                                                strftime('%d.%m.', game.{DateColumnName}) || substr(strftime('%Y', game.{DateColumnName}), 3, 2) || strftime(' %H:', game.{DateColumnName}) || strftime('%M', game.{DateColumnName}) as {DateColumnName},
                                                volumes.{_volumeStorage.ValueColumName} as {_volumeStorage.ValueColumName},
                                                volumes.{_volumeStorage.VolumeColumName} as {_volumeStorage.VolumeColumName}
@@ -93,7 +95,7 @@ namespace BallzMerge.Data
             return bestScore;
         }
 
-        public void SaveResult(int score, BallVolumesBag volumes)
+        public void SaveResult(GameHistoryData data)
         {
             string gameUUID = Guid.NewGuid().ToString();
 
@@ -103,15 +105,16 @@ namespace BallzMerge.Data
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = $"INSERT INTO {TableName} ({ScoreColumnName}, {IDColumnName}, {DateColumnName}) VALUES (@{ScoreColumnName}, @{IDColumnName}, @{DateColumnName})";
-                    command.Parameters.AddWithValue(ScoreColumnName, score);
+                    command.CommandText = $"INSERT INTO {TableName} ({ScoreColumnName}, {IDColumnName}, {DateColumnName}, {LevelColumnName}) VALUES (@{ScoreColumnName}, @{IDColumnName}, @{DateColumnName}, @{LevelColumnName})";
+                    command.Parameters.AddWithValue(ScoreColumnName, data.Score);
                     command.Parameters.AddWithValue(IDColumnName, gameUUID);
                     command.Parameters.AddWithValue(DateColumnName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    command.Parameters.AddWithValue(LevelColumnName, data.Level);
 
                     command.ExecuteNonQuery();
                 }
 
-                _volumeStorage.Set(connection, gameUUID, volumes);
+                _volumeStorage.Set(connection, gameUUID, data.Volumes);
                 connection.Close();
             }
         }
@@ -128,6 +131,7 @@ namespace BallzMerge.Data
                                             ({NumberColumnName} INTEGER PRIMARY KEY,
                                             {ScoreColumnName} INTEGER,
                                             {DateColumnName} TEXT,
+                                            {LevelColumnName} INTEGER,
                                             {IDColumnName} TEXT NOT NULL UNIQUE)";
 
                     command.ExecuteNonQuery();
@@ -153,8 +157,9 @@ namespace BallzMerge.Data
                     lastGame = currentGame;
                     int score = Convert.ToInt32(reader[ScoreColumnName]);
                     int number = Convert.ToInt32(reader[NumberColumnName]);
+                    int level = Convert.ToInt32(reader[LevelColumnName]);
                     string date = reader[DateColumnName].ToString();
-                    data.Add(new GameHistoryData(lastGame, score, date, number));
+                    data.Add(new GameHistoryData(lastGame, score, date, number, level));
                     currentDataId = data.Count - 1;
                 }
 

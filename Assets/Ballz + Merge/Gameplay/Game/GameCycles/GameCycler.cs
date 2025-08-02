@@ -18,15 +18,13 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     [SerializeField] private UIView _mainUI;
     [SerializeField] private CamerasOperator _operator;
+    [SerializeField] private Dropper _dropper;
+    [SerializeField] private LevelInGame _level;
     [SerializeField] private List<CyclicBehavior> _components;
 
-    private List<ILevelFinisher> _finishers = new List<ILevelFinisher>();
-    private List<IInitializable> _initializedComponents = new List<IInitializable>();
-    private List<IWaveUpdater> _wavers = new List<IWaveUpdater>();
-    private List<IDependentScreenOrientation> _orientators = new List<IDependentScreenOrientation>();
-    private List<ILevelLoader> _loaders = new List<ILevelLoader>();
-    private List<ILevelSaver> _savers = new List<ILevelSaver>();
+    private Dictionary<Type, object> _behaviourMap;
     private Action<SceneExitData> _sceneCallBack;
+    private SaveDataContainer _save;
     private SceneExitData _exitData;
     private ConductorBetweenWaves _conductor;
 
@@ -35,46 +33,23 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     [Inject] private Ball _ball;
     [Inject] private UIRootView _rootUI;
     [Inject] private DataBaseSource _data;
-    [Inject] private LevelSettingsContainer _levelSettings;
 
-    public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
-    public IEnumerable<IDependentScreenOrientation> Orientators => _orientators;
+    public IEnumerable<IInitializable> InitializedComponents => GetFromMap<IInitializable>();
+    public IEnumerable<IDependentScreenOrientation> OrientationDepends => GetFromMap<IDependentScreenOrientation>();
     public bool IsAvailable { get; private set; }
 
     private void Awake()
     {
-        int i = 0;
-        var settings = _levelSettings.Get();
+        BuildBehaviourMap();
+        _conductor = new ConductorBetweenWaves(_ball.GetBallComponent<BallAwaitBreaker>(), _dropper, _blocksBus);
+        _save = _data.Saves.Get();
 
-        foreach (var cyclical in _components.OrderBy(item => item.Order))
-        {
-            Debug.Log($"{++i} {cyclical.gameObject.name} {cyclical.Order}");
+        if (_save.IsLoaded)
+            _level.Load(_save);
+        else
+            _level.Init();
 
-            if (cyclical is IInitializable initializeComponent)
-                _initializedComponents.Add(initializeComponent);
-
-            if (cyclical is ILevelFinisher finisher)
-                _finishers.Add(finisher);
-
-            if (cyclical is IWaveUpdater waver)
-                _wavers.Add(waver);
-
-            if (cyclical is IDependentScreenOrientation orientator)
-                _orientators.Add(orientator);
-
-            if (cyclical is ILevelLoader loader)
-                _loaders.Add(loader);
-
-            if (cyclical is ILevelSaver saver)
-                _savers.Add(saver);
-
-            if (cyclical is IDependentSettings settingsDependent)
-                settingsDependent.ApplySettings(settings);
-
-            if (cyclical is Dropper dropper)
-                _conductor = new ConductorBetweenWaves(_ball.GetBallComponent<BallAwaitBreaker>(), dropper, _blocksBus);
-        }
-
+        LoadSettings();
         IsAvailable = true;
     }
 
@@ -111,8 +86,8 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         _sceneCallBack = callback;
         _mainUI.Init();
         _rootUI.AttachSceneUI(_mainUI, _operator.UI);
-        RestartLevel(isLoad);
-        _orientators.Clear();
+        RestartLevel(isLoad && _save.IsLoaded);
+        GetFromMap<IDependentScreenOrientation>().Clear();
     }
 
     private void OnBallLeftGame()
@@ -123,39 +98,51 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     private void RestartLevel(bool isLoad = false)
     {
         if (isLoad)
-        {
-            LoadLevel();
-        }
+            LoadSave();
         else
-        {
-            StartLevel();
             _conductor.Start();
-        }
 
+        StartLevel(isLoad);
         _data.Saves.EraseAllData();
     }
 
-    private void StartLevel()
+    private void LoadSettings()
     {
-        foreach (ILevelLoader loader in _loaders)
-            loader.StartLevel();
+        foreach (var settingsDepend in GetFromMap<IDependentSettings>())
+            settingsDepend.ApplySettings(_level.Current);
     }
 
-    private void LoadLevel()
+    private void StartLevel(bool isAfterLoad = false)
     {
-        foreach (ILevelLoader loader in _loaders)
-            loader.Load();
+        foreach (var starter in GetFromMap<ILevelStarter>())
+            starter.StartLevel(isAfterLoad);
+    }
+
+    private void LoadSave()
+    {
+        foreach (var loader in GetFromMap<ISaveDependedObject>())
+            loader.Load(_save);
+    }
+
+    private SaveDataContainer CreateSave()
+    {
+        SaveDataContainer save = new SaveDataContainer();
+
+        foreach (var loader in GetFromMap<ISaveDependedObject>())
+            loader.Save(save);
+
+        return save;
     }
 
     private void OnWaveLoaded()
     {
-        foreach (IWaveUpdater waver in _wavers)
+        foreach (var waver in GetFromMap<IWaveUpdater>())
             waver.UpdateWave();
     }
 
     private void OnGameFinished()
     {
-        foreach (ILevelFinisher finisher in _finishers)
+        foreach (var finisher in GetFromMap<ILevelFinisher>())
             finisher.FinishLevel();
 
         StartQuest(RestartQuestName, "Want one more game?");
@@ -194,7 +181,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             }
             else
             {
-                StartQuest(SaveQuestName, "Do you want yo save your progress?");
+                StartQuest(SaveQuestName, "Do you want to save your progress?");
             }
         }
         else if (answer.Name == SaveQuestName)
@@ -202,9 +189,49 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             _userQuestioner.Answer -= OnUserAnswer;
 
             if (answer.IsPositiveAnswer)
-                _exitData.ConnectSavers(_savers);
+                _exitData.Put(CreateSave());
+            else
+                _exitData.Put(CreateHistory());
 
             _sceneCallBack.Invoke(_exitData);
         }
     }
+
+    private GameHistoryData CreateHistory()
+    {
+        GameHistoryData historyData = new GameHistoryData();
+
+        foreach (var historical in GetFromMap<IHistorical>())
+            historyData = historical.Write(historyData);
+    
+        return historyData;
+    }
+    
+    private void BuildBehaviourMap()
+    {
+        _behaviourMap = new Dictionary<Type, object>();
+        AddToBehaviourMap<ILevelFinisher>();
+        AddToBehaviourMap<IInitializable>();
+        AddToBehaviourMap<IWaveUpdater>();
+        AddToBehaviourMap<IDependentScreenOrientation>();
+        AddToBehaviourMap<ISaveDependedObject>();
+        AddToBehaviourMap<ILevelStarter>();
+        AddToBehaviourMap<IDependentSettings>();
+        AddToBehaviourMap<IHistorical>();
+    }
+
+    private void AddToBehaviourMap<T>()
+    {
+        List<T> values = new List<T>();
+
+        foreach (var cyclical in _components.OrderBy(item => item.Order))
+        {
+            if (cyclical is T value)
+                values.Add(value);
+        }
+
+        _behaviourMap.Add(typeof(T), values);
+    }
+
+    private List<T> GetFromMap<T>() => _behaviourMap[typeof(T)] as List<T>;
 }

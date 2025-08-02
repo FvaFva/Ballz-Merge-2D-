@@ -1,18 +1,21 @@
 ﻿using System.Collections.Generic;
+using BallzMerge.Data;
 
 public struct SceneExitData
 {
     public bool IsGameQuit;
     public string TargetScene;
-    public List<ILevelSaver> Savers;
+    public SaveDataContainer Save { get; private set; }
+    public GameHistoryData History;
     public bool IsLoad;
 
     public SceneExitData(bool isExit)
     {
         IsGameQuit = isExit;
         TargetScene = null;
-        Savers = null;
+        Save = null;
         IsLoad = false;
+        History = default;
     }
 
     public SceneExitData(string targetScene, bool isLoad = false)
@@ -20,11 +23,14 @@ public struct SceneExitData
         TargetScene = targetScene;
         IsGameQuit = false;
         IsLoad = isLoad;
-        Savers = null;
+        Save = null;
+        History = default;
     }
 
-    public void ConnectSavers(IEnumerable<ILevelSaver> savers)
+    public void Put(SaveDataContainer saver)
     {
-        Savers = new List<ILevelSaver>(savers);
+        Save = saver;
     }
+
+    public void Put(GameHistoryData history) => History = history;
 }

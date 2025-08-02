@@ -4,11 +4,10 @@ using Zenject;
 using BallzMerge.Gameplay.Level;
 using System;
 using System.Collections;
-using BallzMerge.Data;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlocksBinder : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader
+    public class BlocksBinder : CyclicBehavior, IInitializable, ISaveDependedObject
     {
         private const float AnimationDelay = 0.1f;
 
@@ -18,7 +17,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         [SerializeField] private BlocksDestroyImpact _destroyImpact;
         [SerializeField] private BlockAdditionalEffectHandler _additionalEffectHandler;
 
-        [Inject] private DataBaseSource _data;
         [Inject] private GridSettings _gridSettings;
         [Inject] private BlocksInGame _activeBlocks;
         [Inject] private DiContainer _diContainer;
@@ -55,21 +53,15 @@ namespace BallzMerge.Gameplay.BlockSpace
             _hitInspector.Init();
         }
 
-        public void GetSavingData()
+        public void Save(SaveDataContainer save)
         {
-            List<SavedBlock> savedBlocks = new List<SavedBlock>();
-
             foreach (Block block in _activeBlocks.Blocks)
-                savedBlocks.Add(new SavedBlock(block.ID, block.Number, block.GridPosition.x, block.GridPosition.y));
-
-            _data.Saves.SaveBlocks(savedBlocks);
+                save.Blocks.Add(new SavedBlock(block.ID, block.Number, block.GridPosition.x, block.GridPosition.y));
         }
 
-        public void Load()
+        public void Load(SaveDataContainer save)
         {
-            IEnumerable<SavedBlock> savedBlocks = _data.Saves.GetSavedBlocks();
-
-            foreach (SavedBlock savedBlock in savedBlocks)
+            foreach (SavedBlock savedBlock in save.Blocks)
                 _spawner.SpawnBlock(savedBlock.Number, new Vector2Int(savedBlock.GridPositionX, savedBlock.GridPositionY), savedBlock.ID);
 
             _additionalEffectHandler.LoadEffects(_activeBlocks.Blocks);

@@ -1,21 +1,17 @@
-﻿using BallzMerge.Data;
-using DG.Tweening;
+﻿using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class DropSelector : CyclicBehavior, IInitializable, ILevelLoader, ILevelFinisher
+    public class DropSelector : CyclicBehavior, IInitializable, ILevelStarter, ILevelFinisher
     {
         private const float AnimationTime = 0.8f;
 
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private DropView _firstSlot;
         [SerializeField] private DropView _secondSlot;
-
-        [Inject] private DataBaseSource _data;
 
         private List<IBallVolumesBagCell<BallVolume>> _dropsMap = new List<IBallVolumesBagCell<BallVolume>>();
         private Action _callback;
@@ -44,7 +40,7 @@ namespace BallzMerge.Gameplay.Level
             _secondSlot.InitMaterial();
         }
 
-        public void StartLevel()
+        public void StartLevel(bool _)
         {
             _dropsMap.Clear();
         }

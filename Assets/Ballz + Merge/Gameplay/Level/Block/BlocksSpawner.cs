@@ -1,5 +1,4 @@
-﻿using BallzMerge.Data;
-using BallzMerge.Gameplay.BallSpace;
+﻿using BallzMerge.Gameplay.BallSpace;
 using BallzMerge.Gameplay.Level;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using Zenject;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlocksSpawner : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader, IDependentSettings
+    public class BlocksSpawner : CyclicBehavior, IInitializable, ILevelStarter, ISaveDependedObject, IDependentSettings
     {
         private const string CurrentWave = "CurrentWave";
 
@@ -18,7 +17,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         [SerializeField] private VirtualWorldFactory _factory;
 
         [Inject] private DiContainer _container;
-        [Inject] private DataBaseSource _data;
         [Inject] private GridSettings _gridSettings;
         [Inject] private BlocksInGame _activeBlocks;
 
@@ -45,25 +43,17 @@ namespace BallzMerge.Gameplay.BlockSpace
                 _blocks.Enqueue(Generate(++_blockID));
         }
 
-        public void StartLevel()
+        public void StartLevel(bool isAfterLoad = false)
         {
-            _currentWave = 0;
+            if (isAfterLoad == false)
+                _currentWave = 0;
         }
 
-        public void GetSavingData()
-        {
-            _data.Saves.Save(new KeyValuePair<string, float>(CurrentWave, _currentWave));
-        }
+        public void Save(SaveDataContainer save) => save.Set(CurrentWave, _currentWave);
 
-        public void Load()
-        {
-            _currentWave = Mathf.RoundToInt(_data.Saves.Get(CurrentWave));
-        }
+        public void Load(SaveDataContainer save) => _currentWave = Mathf.RoundToInt(save.Get(CurrentWave));
 
-        public void ApplySettings(LevelSettings settings)
-        {
-            _settings = settings.BlocksSettings;
-        }
+        public void ApplySettings(LevelSettings settings) => _settings = settings.BlocksSettings;
 
         public IEnumerable<Block> SpawnWave()
         {

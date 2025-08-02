@@ -62,7 +62,7 @@ public class GameDataVolumeMicView : MonoBehaviour
 
     public void Show(string volumeName, int level)
     {
-        var volume = _map.GetVolume(volumeName);
+        var volume = _map.GetVolumeByName(volumeName);
         var rarity = _map.GetRarity(level);
 
         if (volume == null)

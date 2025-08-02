@@ -9,18 +9,22 @@ namespace BallzMerge.Data
         public string ID;
         public string Date;
         public int Number;
+        public int Level;
 
-        public GameHistoryData(string id, int score, string date, int number)
+        public GameHistoryData(string id, int score, string date, int number, int level)
         {
             Score = score;
             Volumes = new Dictionary<string, int>();
             ID = id;
             Date = date;
             Number = number;
+            Level = level;
         }
 
         public void Add(string volume, int value) => Volumes[volume] = value;
 
         public string GetDateOrID(bool state) => state ? ID : Date;
+
+        public bool IsEmpty() => Volumes is null || Score == 0;
     }
 }

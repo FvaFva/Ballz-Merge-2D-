@@ -1,4 +1,5 @@
-﻿using Mono.Data.Sqlite;
+﻿using System.Collections.Generic;
+using Mono.Data.Sqlite;
 
 namespace BallzMerge.Data
 {
@@ -16,7 +17,7 @@ namespace BallzMerge.Data
         public readonly string VolumeColumName = "Volume";
         public readonly string ValueColumName = "Value";
 
-        public void Set(SqliteConnection connection, string gameID, BallVolumesBag volumes)
+        public void Set(SqliteConnection connection, string gameID, IEnumerable<KeyValuePair<string, int>> volumes)
         {
             using (var command = connection.CreateCommand())
             {
@@ -27,12 +28,12 @@ namespace BallzMerge.Data
 
                 command.Parameters.AddWithValue($"@{IDColumName}", gameID);
 
-                foreach (IBallVolumesBagCell<BallVolume> cell in volumes.All)
+                foreach (var cell in volumes)
                 {
                     if (cell.Value.Equals(0))
                         continue;
 
-                    command.Parameters.AddWithValue($"@{VolumeColumName}", cell.Name);
+                    command.Parameters.AddWithValue($"@{VolumeColumName}", cell.Key);
                     command.Parameters.AddWithValue($"@{ValueColumName}", cell.Value);
                     command.ExecuteNonQuery();
                 }

@@ -20,6 +20,148 @@ public class GameSavesStorage
         CreateTable();
     }
 
+    public void Save(SaveDataContainer save)
+    {
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+            {
+                string commandText = $@"INSERT OR REPLACE INTO {GameSavesTable}
+                                        ({Key}, {Value})
+                                        VALUES
+                                        (@{Key}, @{Value})";
+
+                using (var command = new SqliteCommand(commandText, connection, transaction))
+                {
+                    command.Prepare();
+                    var pValue = command.Parameters.Add($"@{Value}", System.Data.DbType.Double);
+                    var pKey = command.Parameters.Add($"@{Key}", System.Data.DbType.String);
+
+                    foreach (var saveDate in save.Main)
+                    {
+                        pValue.Value = saveDate.Value;
+                        pKey.Value = saveDate.Key;
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                _blocksStorage.Set(connection, save.Blocks, transaction);
+                _volumesStorage.Set(connection, save.Volumes, transaction);
+                _blockEffectsStorage.Set(connection, save.BlockEffects, transaction);
+                transaction.Commit();
+            }
+
+            connection.Close();
+        }
+    }
+
+    public SaveDataContainer Get()
+    {
+        SaveDataContainer data = new SaveDataContainer();
+
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+            if (CheckSaves(connection))
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = $"SELECT {Value}, {Key} FROM {GameSavesTable}";
+                    Dictionary<string, float> main = new Dictionary<string, float>();
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            main.Add(Convert.ToString(reader[Key]), float.Parse(reader[Value].ToString(), NumberStyles.Float, CultureInfo.InvariantCulture));
+                    }
+
+                    data = new SaveDataContainer(main, GetSavedBlocks(connection), GetSavedVolumes(connection), GetSavedBlocksEffects(connection));
+                }
+            }
+            connection.Close();
+        }
+
+        return data;
+    }
+
+    public void EraseAllData()
+    {
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+
+            using (var transaction = connection.BeginTransaction())
+            {
+                Delete(connection, transaction);
+                _blockEffectsStorage.Delete(connection, transaction);
+                _blocksStorage.Delete(connection, transaction);
+                _volumesStorage.Delete(connection, transaction);
+
+                transaction.Commit();
+            }
+
+            connection.Close();
+        }
+    }
+
+    public bool CheckSaves()
+    {
+        bool isSaved = false;
+
+        using (var connection = new SqliteConnection(_dbPath))
+        {
+            connection.Open();
+            isSaved = CheckSaves(connection);
+            connection.Close();
+        }
+
+        return isSaved;
+    }
+
+    private bool CheckSaves(SqliteConnection connection) => IsExist(connection) || _blockEffectsStorage.IsExist(connection) || _blocksStorage.IsExist(connection) || _volumesStorage.IsExist(connection);
+
+    private void Delete(SqliteConnection connection, SqliteTransaction transaction)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
+            command.CommandText = $"DELETE FROM {GameSavesTable}";
+            command.ExecuteNonQuery();
+        }
+    }
+
+    private bool IsExist(SqliteConnection connection)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.CommandText = $"SELECT EXISTS(SELECT 1 FROM {GameSavesTable})";
+            object result = command.ExecuteScalar();
+            return Convert.ToBoolean(result);
+        }
+    }
+
+    private IEnumerable<SavedBlock> GetSavedBlocks(SqliteConnection connection)
+    {
+        IEnumerable<SavedBlock> savedBlocks;
+        savedBlocks = _blocksStorage.Get(connection);
+        return savedBlocks;
+    }
+
+    private IEnumerable<SavedVolume> GetSavedVolumes(SqliteConnection connection)
+    {
+        IEnumerable<SavedVolume> savedVolumes;
+        savedVolumes = _volumesStorage.Get(connection);
+        return savedVolumes;
+    }
+
+    private IEnumerable<SavedBlockEffect> GetSavedBlocksEffects(SqliteConnection connection)
+    {
+        IEnumerable<SavedBlockEffect> savedEffects;
+        savedEffects = _blockEffectsStorage.Get(connection);
+        return savedEffects;
+    }
+
     private void CreateTable()
     {
         using (var connection = new SqliteConnection(_dbPath))
@@ -40,173 +182,6 @@ public class GameSavesStorage
             _blockEffectsStorage = new GameSavedBlocksEffectsStorage(connection, _blocksStorage.GetTableName(), _blocksStorage.GetIDName());
 
             connection.Close();
-        }
-    }
-
-    public void Save(KeyValuePair<string, float> data)
-    {
-        using (var connection = new SqliteConnection(_dbPath))
-        {
-            connection.Open();
-
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = $@"INSERT OR REPLACE INTO {GameSavesTable}
-                                        ({Key}, {Value})
-                                        VALUES
-                                        (@{Key}, @{Value})";
-
-                command.Parameters.AddWithValue(Key, data.Key);
-                command.Parameters.AddWithValue(Value, data.Value);
-                command.ExecuteNonQuery();
-            }
-
-            connection.Close();
-        }
-    }
-
-    public void SaveBlocks(IEnumerable<SavedBlock> savedBlocks)
-    {
-        using (var connection = new SqliteConnection(_dbPath))
-        {
-            connection.Open();
-            _blocksStorage.Set(connection, savedBlocks);
-            connection.Close();
-        }
-    }
-
-    public void SaveVolumes(IEnumerable<SavedVolume> savedVolumes)
-    {
-        using (var connection = new SqliteConnection(_dbPath))
-        {
-            connection.Open();
-            _volumesStorage.Set(connection, savedVolumes);
-            connection.Close();
-        }
-    }
-
-    public void SaveBlocksEffects(IEnumerable<SavedBlockEffect> savedBlocksEffects)
-    {
-        using (var connection = new SqliteConnection(_dbPath))
-        {
-            connection.Open();
-            _blockEffectsStorage.Set(connection, savedBlocksEffects);
-            connection.Close();
-        }
-    }
-
-    public float Get(string key)
-    {
-        float value = 0;
-
-        using (var connection = new SqliteConnection(_dbPath))
-        {
-            connection.Open();
-
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = $"SELECT {Value} FROM {GameSavesTable} WHERE {Key} = @{Key}";
-                command.Parameters.AddWithValue(Key, key);
-                object result = command.ExecuteScalar();
-
-                if (result != null)
-                    value = float.Parse(result.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture);
-            }
-
-            connection.Close();
-        }
-
-        return value;
-    }
-
-    public IEnumerable<SavedBlock> GetSavedBlocks()
-    {
-        IEnumerable<SavedBlock> savedBlocks;
-
-        using (var connection = new SqliteConnection(_dbPath))
-        {
-            connection.Open();
-            savedBlocks = _blocksStorage.Get(connection);
-            connection.Close();
-        }
-
-        return savedBlocks;
-    }
-
-    public IEnumerable<SavedVolume> GetSavedVolumes()
-    {
-        IEnumerable<SavedVolume> savedVolumes;
-
-        using (var connection = new SqliteConnection(_dbPath))
-        {
-            connection.Open();
-            savedVolumes = _volumesStorage.Get(connection);
-            connection.Close();
-        }
-
-        return savedVolumes;
-    }
-
-    public IEnumerable<SavedBlockEffect> GetSavedBlocksEffects()
-    {
-        IEnumerable<SavedBlockEffect> savedEffects;
-
-        using (var connection = new SqliteConnection(_dbPath))
-        {
-            connection.Open();
-            savedEffects = _blockEffectsStorage.Get(connection);
-            connection.Close();
-        }
-
-        return savedEffects;
-    }
-
-    public void EraseAllData()
-    {
-        using (var connection = new SqliteConnection(_dbPath))
-        {
-            connection.Open();
-            Delete(connection);
-            _blockEffectsStorage.Delete(connection);
-            _blocksStorage.Delete(connection);
-            _volumesStorage.Delete(connection);
-            connection.Close();
-        }
-    }
-
-    public bool CheckSaves()
-    {
-        bool isSaved = false;
-
-        using (var connection = new SqliteConnection(_dbPath))
-        {
-            connection.Open();
-
-            if (IsExist(connection) || _blockEffectsStorage.IsExist(connection) || _blocksStorage.IsExist(connection) || _volumesStorage.IsExist(connection))
-                isSaved = true;
-
-            connection.Close();
-        }
-
-        return isSaved;
-    }
-
-    private void Delete(SqliteConnection connection)
-    {
-        using (var command = connection.CreateCommand())
-        {
-            command.CommandText = $"DELETE FROM {GameSavesTable}";
-            command.ExecuteNonQuery();
-        }
-    }
-
-    private bool IsExist(SqliteConnection connection)
-    {
-        using (var command = connection.CreateCommand())
-        {
-            command.CommandText = $"SELECT EXISTS(SELECT 1 FROM {GameSavesTable})";
-            object result = command.ExecuteScalar();
-            return Convert.ToBoolean(result);
         }
     }
 }

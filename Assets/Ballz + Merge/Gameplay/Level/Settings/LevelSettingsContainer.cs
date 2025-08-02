@@ -12,10 +12,8 @@ public class LevelSettingsContainer
     {
         if (_current is null)
             return _default;
-
-        var temp = _current;
-        _current = null;
-        return temp;
+        else
+            return _current;
     }
 
     public void Change(LevelSettings settings) => _current = settings;

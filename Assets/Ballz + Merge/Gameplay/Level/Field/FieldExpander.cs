@@ -1,12 +1,10 @@
-using BallzMerge.Data;
 using BallzMerge.Gameplay;
 using BallzMerge.Gameplay.BlockSpace;
 using BallzMerge.Gameplay.Level;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILevelSaver, ILevelLoader, ILevelFinisher
+public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILevelStarter, ISaveDependedObject, ILevelFinisher
 {
     private const string FieldSizeX = "FieldSizeX";
     private const string FieldSizeY = "FieldSizeY";
@@ -18,7 +16,6 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
     [SerializeField] private CamerasOperator _cameras;
 
     [Inject] private PhysicGrid _physicGrid;
-    [Inject] private DataBaseSource _data;
     [Inject] private GridSettings _gridSettings;
     [Inject] private BlocksBinder _blocksBinder;
     [Inject] private BallWaveVolume _ballWaveVolume;
@@ -66,7 +63,7 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
         }
     }
 
-    public void StartLevel()
+    public void StartLevel(bool isAfterLoad)
     {
         _gridSettings.ReloadSize();
         _physicGrid.InitGrid();
@@ -75,23 +72,24 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
         _fieldShape.scale = _fieldScale;
         _countUntilSpawn = 0;
         _remainingCountSpawn = _fieldExpanderSettings.CountOfSpawn;
-        _currentColumns = _gridSettings.Size.x;
+
+        if(isAfterLoad == false)
+            _currentColumns = _gridSettings.Size.x;
+        
         _currentRows = _gridSettings.Size.y;
         _cameras.SetGameplayBoardSize(BoardSize());
         SetDefault();
     }
 
-    public void GetSavingData()
+    public void Save(SaveDataContainer save)
     {
-        _data.Saves.Save(new KeyValuePair<string, float>(FieldSizeX, _currentColumns));
-        _data.Saves.Save(new KeyValuePair<string, float>(FieldSizeY, _currentRows));
+        save.Set(FieldSizeX, _currentColumns);
+        save.Set(FieldSizeY, _currentRows);
     }
 
-    public void Load()
+    public void Load(SaveDataContainer save)
     {
-        StartLevel();
-
-        _currentColumns = Mathf.RoundToInt(_data.Saves.Get(FieldSizeX));
+        _currentColumns = Mathf.RoundToInt(save.Get(FieldSizeX));
 
         for (int i = _gridSettings.Size.x; i < _currentColumns; i++)
             AddColumn();

@@ -1,20 +1,16 @@
-using BallzMerge.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Zenject;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlockAdditionalEffectHandler : CyclicBehavior, ILevelSaver, ILevelLoader, ILevelFinisher, IWaveUpdater
+    public class BlockAdditionalEffectHandler : CyclicBehavior, ISaveDependedObject, ILevelFinisher, IWaveUpdater
     {
         [SerializeField] private BlockAdditionalEffectSettings _settings;
         [SerializeField] private AdditionalEffectsPool _effectsPool;
         [SerializeField] private Transform _parent;
         [SerializeField] private int _countOfPreload;
-
-        [Inject] private DataBaseSource _data;
 
         private BlocksInGame _activeBlocks;
         private Dictionary<BlockAdditionalEffectType, Queue<BlockAdditionalEffectBase>> _effects;
@@ -42,25 +38,18 @@ namespace BallzMerge.Gameplay.BlockSpace
             }
         }
 
-        public void GetSavingData()
+        public void Save(SaveDataContainer save)
         {
-            List<SavedBlockEffect> savedEffects = new List<SavedBlockEffect>();
-
             foreach (var effect in _activeEffects)
             {
                 if (effect.ConnectBlock == null)
-                    savedEffects.Add(new SavedBlockEffect(effect.Type.ToString(), effect.Current.ID, null));
+                    save.BlockEffects.Add(new SavedBlockEffect(effect.Type.ToString(), effect.Current.ID, null));
                 else
-                    savedEffects.Add(new SavedBlockEffect(effect.Type.ToString(), effect.Current.ID, effect.ConnectBlock.ID));
+                    save.BlockEffects.Add(new SavedBlockEffect(effect.Type.ToString(), effect.Current.ID, effect.ConnectBlock.ID));
             }
-
-            _data.Saves.SaveBlocksEffects(savedEffects);
         }
 
-        public void Load()
-        {
-            _savedEffects = _data.Saves.GetSavedBlocksEffects().ToList();
-        }
+        public void Load(SaveDataContainer save) => _savedEffects = save.BlockEffects.ToList();
 
         public void FinishLevel()
         {
