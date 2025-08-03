@@ -1,59 +1,36 @@
-﻿using BallzMerge.Data;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using BallzMerge.Data;
 using UnityEngine;
-using Zenject;
 
-public class PlayerScore : CyclicBehavior, IInitializable, ILevelSaver, ILevelLoader, IWaveUpdater, ILevelFinisher
+public class PlayerScore : CyclicBehavior, ILevelStarter, ISaveDependedObject, IWaveUpdater, IHistorical
 {
-    private const string Score = "PlayerScore";
-
-    [Inject] private DataBaseSource _data;
-    [Inject] private BallWaveVolume _waveVolume;
-
-    private int _bestScore;
+    private const string ScoreProp = "PlayerScore";
 
     private int _score;
+
     public event Action<int> ScoreChanged;
 
-    public void Init()
+    public void StartLevel(bool isAfterLoad = false)
     {
-        _bestScore = _data.History.GetBestScore();
-    }
+        if (isAfterLoad == false)
+            _score = 0;
 
-    public void StartLevel()
-    {
-        _score = 0;
         ScoreChanged?.Invoke(_score);
     }
 
-    public void Load()
-    {
-        _score = Mathf.RoundToInt(_data.Saves.Get(Score));
-        ScoreChanged?.Invoke(_score);
-    }
+    public void Load(SaveDataContainer save) => _score = Mathf.RoundToInt(save.Get(ScoreProp));
 
-    public void GetSavingData()
-    {
-        _data.Saves.Save(new KeyValuePair<string, float>(Score, _score));
-    }
-
-    public void FinishLevel()
-    {
-        if (_score == 0)
-            return;
-
-        _data.History.SaveResult(_score, _waveVolume.Bag);
-
-        if (_score > _bestScore)
-            _bestScore = _score;
-
-        ScoreChanged?.Invoke(_score);
-    }
+    public void Save(SaveDataContainer save) => save.Set(ScoreProp, _score);
 
     public void UpdateWave()
     {
         _score++;
         ScoreChanged?.Invoke(_score);
+    }
+
+    public GameHistoryData Write(GameHistoryData data)
+    {
+        data.Score = _score;
+        return data;
     }
 }

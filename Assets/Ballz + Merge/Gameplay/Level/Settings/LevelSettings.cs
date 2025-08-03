@@ -6,9 +6,12 @@ public class LevelSettings : ScriptableObject , ISerializationCallbackReceiver
     [SerializeField] private BlocksSettings _blocksSettings;
     [SerializeField] private DropSettings _dropSettings;
 
+    [SerializeField] private int _iD;
+
     public BlocksSettings BlocksSettings => _blocksSettings;
     public DropSettings DropSettings => _dropSettings;
     public string Title => _title;
+    public int ID => _iD;
 
     public LevelSettings()
     {

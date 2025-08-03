@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level.Field
 {
-    public class Field : CyclicBehavior, IWaveUpdater, ILevelLoader, IInitializable
+    public class Field : CyclicBehavior, IWaveUpdater, ILevelStarter, IInitializable
     {
         [SerializeField] private ParticleSystem _field;
         [SerializeField] private int _particlesForLevel;
@@ -25,7 +23,7 @@ namespace BallzMerge.Gameplay.Level.Field
             _baseParticles = _curve.constant;
         }
 
-        public void StartLevel()
+        public void StartLevel(bool _)
         {
             SetRate(_baseParticles);
         }

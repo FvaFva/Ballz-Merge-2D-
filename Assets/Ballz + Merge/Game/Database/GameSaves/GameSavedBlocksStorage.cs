@@ -19,11 +19,12 @@ public class GameSavedBlocksStorage
 
     public string GetIDName() => ID;
 
-    public void Set(SqliteConnection connection, IEnumerable<SavedBlock> savedBlocks)
+    public void Set(SqliteConnection connection, IEnumerable<SavedBlock> savedBlocks, SqliteTransaction transaction)
     {
         using (var command = connection.CreateCommand())
         {
-            Delete(connection);
+            command.Transaction = transaction;
+            Delete(connection, transaction);
 
             foreach (SavedBlock savedBlock in savedBlocks)
             {
@@ -41,10 +42,11 @@ public class GameSavedBlocksStorage
         }
     }
 
-    public void Delete(SqliteConnection connection)
+    public void Delete(SqliteConnection connection, SqliteTransaction transaction)
     {
         using (var command = connection.CreateCommand())
         {
+            command.Transaction = transaction;
             command.CommandText = $"DELETE FROM {TableName}";
             command.ExecuteNonQuery();
         }

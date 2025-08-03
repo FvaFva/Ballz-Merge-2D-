@@ -10,13 +10,13 @@ namespace BallzMerge.Root
         public OwnerPrimaryComponents()
         {
             Data = new DataBaseSource();
-            Saver = new GameSaves();
+            Saver = new GameSaves(Data.Saves);
             TimeScaler = new TimeScaler();
             UserInput = new MainInputMap();
             UserInput.Enable();
             Hub = new ResourcesHub();
             Coroutines = AddDontDestroyOnLoad<Coroutines>("[COROUTINES]");
-            OrientationObserver = AddDontDestroyOnLoad<ScreenOrientationObserver>("[ORIENTSTION_OBSERVER]");
+            OrientationObserver = AddDontDestroyOnLoad<ScreenOrientationObserver>("[ORIENTATION_OBSERVER]");
         }
 
         public readonly Coroutines Coroutines;

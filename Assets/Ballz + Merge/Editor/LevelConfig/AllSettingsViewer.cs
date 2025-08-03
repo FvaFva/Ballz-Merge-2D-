@@ -14,7 +14,7 @@ namespace BallzMerge.Editor
 
         private AssetData<LevelSettings> _current;
         private EditorService _service = new EditorService();
-        private bool _isShow;
+        private bool _isShow = true;
         private Vector2 _scroll;
         private List<AssetData<LevelSettings>> _allSettings;
         private AssetData<LevelSettingsMap> _map;
@@ -31,6 +31,25 @@ namespace BallzMerge.Editor
             _current = _service.LoadAsset<LevelSettings>();
             _map = _service.LoadAsset<LevelSettingsMap>();
             _available = _map.GetProperty("_available");
+            var allInMap = _map.GetProperty("_all");
+            var allInProject = _allSettings.Select(s => s.ScriptableObject).ToList();
+
+            for (int i = allInMap.arraySize - 1; i >= 0; i--)
+            {
+                var temp = allInMap.GetArrayElementAtIndex(i).objectReferenceValue;
+
+                if (temp is not null
+                    && temp is LevelSettings setting
+                    && allInProject.Contains(setting))
+                    allInProject.Remove(setting);
+                else
+                    allInMap.DeleteArrayElementAtIndex(i);
+            }
+
+            foreach (var setting in allInProject)
+                InsertInProperty(allInMap, setting);
+            
+            _map.SerializedObject.ApplyModifiedProperties();
         }
 
         public void OnGUI()
@@ -88,18 +107,19 @@ namespace BallzMerge.Editor
             if (EditorGUI.EndChangeCheck())
             {
                 if (newVal)
-                {
-                    var size = _available.arraySize;
-                    _available.InsertArrayElementAtIndex(size);
-                    _available.GetArrayElementAtIndex(size).objectReferenceValue = setting.ScriptableObject;
-                }
+                    InsertInProperty(_available, setting.ScriptableObject);
                 else
-                {
                     _available.DeleteArrayElementAtIndex(mapIndex);
-                }
 
                 _map.SerializedObject.ApplyModifiedProperties();
             }
+        }
+
+        private void InsertInProperty(SerializedProperty property, LevelSettings setting)
+        {
+            var size = property.arraySize;
+            property.InsertArrayElementAtIndex(size);
+            property.GetArrayElementAtIndex(size).objectReferenceValue = setting;
         }
 
         private int GetIndexInMap(LevelSettings level)
@@ -130,7 +150,9 @@ namespace BallzMerge.Editor
             _allSettings = _allSettings.OrderBy(level => level.ScriptableObject.Title).ToList();
             _current.SerializedObject.Update();
             var title = _current.GetProperty("_title");
+            var guid = _current.GetProperty("_iD");
             title.stringValue = name;
+            guid.intValue = _map.ScriptableObject.GetID();
             Undo.RecordObject(_current.ScriptableObject, "Change Title");
             _current.SerializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(_current.ScriptableObject);

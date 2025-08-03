@@ -1,16 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-using BallzMerge.Data;
-using Zenject;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class Dropper : CyclicBehavior, ILevelSaver, ILevelLoader, IDependentSettings
+    public class Dropper : CyclicBehavior, ILevelStarter, ISaveDependedObject, IDependentSettings
     {
         private const string WavesToDrop = "WavesToDrop";
-
-        [Inject] private DataBaseSource _data;
 
         [SerializeField] private int _wavesToDrop;
         [SerializeField] private DropSelector _selector;
@@ -21,32 +17,31 @@ namespace BallzMerge.Gameplay.Level
 
         public bool IsReadyToDrop { get; private set; }
 
-        public void StartLevel()
+        public void StartLevel(bool isAfterLoad)
         {
+            if (isAfterLoad)
+                return;
+
             _waveCount = _wavesToDrop;
             _view.Show(_waveCount);
         }
 
-        public void GetSavingData()
+        public void Save(SaveDataContainer save)
         {
-            List<SavedVolume> savedVolumes = new List<SavedVolume>();
+            foreach (IBallVolumesBagCell<BallVolume> bagCell in _selector.DropsMap)
+                save.Volumes.Add(new SavedVolume(bagCell.ID, bagCell.Name, bagCell.Value));
 
-            foreach (BallVolumesBagCell<BallVolume> bagCell in _selector.DropsMap)
-                savedVolumes.Add(new SavedVolume(bagCell.ID, bagCell.Name, bagCell.Rarity.Weight));
-
-            _data.Saves.Save(new KeyValuePair<string, float>(WavesToDrop, _waveCount));
-            _data.Saves.SaveVolumes(savedVolumes);
+            save.Set(WavesToDrop, _waveCount);
         }
 
-        public void Load()
+        public void Load(SaveDataContainer save)
         {
-            _waveCount = Mathf.RoundToInt(_data.Saves.Get(WavesToDrop));
+            _waveCount = Mathf.RoundToInt(save.Get(WavesToDrop));
             _view.Show(_waveCount);
 
-            IEnumerable<SavedVolume> savedVolumes = _data.Saves.GetSavedVolumes();
             List<Drop> temp = _drop.GetPool();
 
-            foreach (var savedVolume in savedVolumes)
+            foreach (var savedVolume in save.Volumes)
             {
                 for (int i = 0; i < temp.Count; i++)
                 {

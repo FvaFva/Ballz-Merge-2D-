@@ -29,21 +29,21 @@ public class GameDataView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Show(string toggleLabel, int score, int number, Dictionary<string, int> Volumes)
+    public void Show(string toggleLabel, int score, int number, Dictionary<string, int> volumes)
     {
         _toggleLabel.text = toggleLabel;
         _score.text = score.ToString();
         _number.text = number.ToString();
         gameObject.SetActive(true);
 
-        int countData = Volumes.Count;
+        int countData = volumes.Count;
 
         if (countData > _allViews.Count)
             GenerateViews(countData - _allViews.Count);
 
         int current = 0;
 
-        foreach (var item in Volumes)
+        foreach (var item in volumes)
             _allViews[current++].Show(item.Key, item.Value);
     }
 

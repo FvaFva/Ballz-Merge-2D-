@@ -14,18 +14,19 @@ public class GameSavedVolumesStorage
         CreateTable(connection);
     }
 
-    public void Set(SqliteConnection connection, IEnumerable<SavedVolume> savedVolumes)
+    public void Set(SqliteConnection connection, IEnumerable<SavedVolume> savedVolumes, SqliteTransaction transaction)
     {
         using (var command = connection.CreateCommand())
         {
-            Delete(connection);
+            Delete(connection, transaction);
 
             foreach (SavedVolume savedVolume in savedVolumes)
             {
+                command.Transaction = transaction;
                 command.CommandText = $@"   INSERT INTO {TableName}
                                             ({CageID}, {Name}, {Weight})
                                             VALUES
-                                            (@{CageID}, @{Name} @{Weight})";
+                                            (@{CageID}, @{Name}, @{Weight})";
 
                 command.Parameters.AddWithValue(CageID, savedVolume.ID);
                 command.Parameters.AddWithValue(Name, savedVolume.Name);
@@ -35,10 +36,11 @@ public class GameSavedVolumesStorage
         }
     }
 
-    public void Delete(SqliteConnection connection)
+    public void Delete(SqliteConnection connection, SqliteTransaction transaction)
     {
         using (var command = connection.CreateCommand())
         {
+            command.Transaction = transaction;
             command.CommandText = $"DELETE FROM {TableName}";
             command.ExecuteNonQuery();
         }

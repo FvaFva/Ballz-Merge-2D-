@@ -1,10 +1,14 @@
-using System.Collections.Generic;
-
 public class GameSaves
 {
-    public void SaveGame(IEnumerable<ILevelSaver> savers)
+    private GameSavesStorage _storage;
+
+    public GameSaves(GameSavesStorage storage)
     {
-        foreach (ILevelSaver saver in savers)
-            saver.GetSavingData();
+        _storage = storage;
+    }
+
+    public void SaveGame(SaveDataContainer saver)
+    {
+        _storage.Save(saver);
     }
 }
