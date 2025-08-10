@@ -3,7 +3,6 @@ using BallzMerge.Root;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 namespace BallzMerge.MainMenu
@@ -12,42 +11,50 @@ namespace BallzMerge.MainMenu
     {
         [SerializeField] private UIView _view;
         [SerializeField] private LevelSelectorOperator _levelSelector;
-        [SerializeField] private Button _continueGame;
-        [SerializeField] private AnimatedButton _continueGameButtonView;
+        [SerializeField] private LevelContinueView _levelLoader;
+        [SerializeField] private LevelInGame _level;
         [SerializeField] private List<CyclicBehavior> _behaviors;
 
         [Inject] private UIRootView _rootUI;
         [Inject] private DataBaseSource _db;
 
         private List<IInitializable> _initializedComponents;
-        private List<IDependentScreenOrientation> _orientators;
+        private List<IDependentScreenOrientation> _orientationDependObjects;
         private Action<SceneExitData> _callback;
 
         public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
-        public IEnumerable<IDependentScreenOrientation> OrientationDepends => _orientators;
+        public IEnumerable<IDependentScreenOrientation> OrientationDepends => _orientationDependObjects;
 
         public bool IsAvailable { get; private set; }
-
 
         private void Start()
         {
             IsAvailable = true;
-            _continueGame.interactable = _db.Saves.CheckSaves();
-            _continueGameButtonView.SetState(_continueGame.interactable);
+            var load = _db.Saves.Get();
+
+            if (load.IsLoaded)
+            {
+                _level.Load(load);
+                _levelLoader.ChangeState(true, _level.Current.Title);
+            }
+            else
+            {
+                _levelLoader.ChangeState(false);
+            }
         }
 
         private void Awake()
         {
             _initializedComponents = new List<IInitializable>();
-            _orientators = new List<IDependentScreenOrientation>();
+            _orientationDependObjects = new List<IDependentScreenOrientation>();
 
             foreach (var component in _behaviors)
             {
                 if (component is IInitializable componentInstance)
                     _initializedComponents.Add(componentInstance);
 
-                if (component is IDependentScreenOrientation orientator)
-                    _orientators.Add(orientator);
+                if (component is IDependentScreenOrientation temp)
+                    _orientationDependObjects.Add(temp);
             }
         }
 
@@ -55,14 +62,14 @@ namespace BallzMerge.MainMenu
         {
             _rootUI.EscapeMenu.QuitRequired += LeftScene;
             _levelSelector.Selected += OnStartRequire;
-            _continueGame.AddListener(OnContinueRequire);
+            _levelLoader.Selected += OnContinueRequire;
         }
 
         private void OnDisable()
         {
             _rootUI.EscapeMenu.QuitRequired -= LeftScene;
             _levelSelector.Selected -= OnStartRequire;
-            _continueGame.RemoveListener(OnContinueRequire);
+            _levelLoader.Selected -= OnContinueRequire;
         }
 
         private void OnDestroy()

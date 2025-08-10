@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class GameDataVolumeMicView : MonoBehaviour
+public class GameDataVolumeMicView : MonoBehaviour, IAvailable
 {
     [SerializeField] private TMP_Text _header;
     [SerializeField] private TMP_Text _level;
@@ -17,7 +17,7 @@ public class GameDataVolumeMicView : MonoBehaviour
 
     public IBallVolumesBagCell<BallVolume> Data {  get; private set; }
     public bool IsActive { get; private set; }
-
+    public bool IsAvailable { get; private set; }
     public event Action<GameDataVolumeMicView> Performed;
 
     private void OnEnable()
@@ -35,6 +35,7 @@ public class GameDataVolumeMicView : MonoBehaviour
     {
         ProjectContext.Instance.Container.Inject(this);
         _sprite = _icon.sprite;
+        IsAvailable = true;
         return this;
     }
 
@@ -42,6 +43,7 @@ public class GameDataVolumeMicView : MonoBehaviour
     {
         gameObject.SetActive(false);
         IsActive = false;
+        IsAvailable = true;
         _additional.Unperformed();
         return this;
     }
@@ -57,6 +59,7 @@ public class GameDataVolumeMicView : MonoBehaviour
         _header.text = "";
         _additional.SetBaseView();
         IsActive = false;
+        IsAvailable = true;
         _icon.sprite = _sprite;
     }
 
@@ -83,6 +86,7 @@ public class GameDataVolumeMicView : MonoBehaviour
     private void Show(BallVolume volume, int level, string description)
     {
         gameObject.SetActive(true);
+        IsAvailable = false;
 
         if (volume == null)
         {

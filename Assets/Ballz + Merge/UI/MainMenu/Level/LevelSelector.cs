@@ -7,6 +7,7 @@ public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable
 {
     [SerializeField] private RectTransform _box;
     [SerializeField] private LevelSelectionView _prefab;
+    [SerializeField] private LevelView _level;
 
     [Inject] private LevelSettingsMap _map;
     [Inject] private LevelSettingsContainer _container;
@@ -19,12 +20,16 @@ public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable
 
     private void OnEnable()
     {
+        _level.Chose += OnChose;
+
         foreach (var selector in _selectors)
             selector.Selected += OnSelect;
     }
 
     private void OnDisable()
     {
+        _level.Chose -= OnChose;
+
         foreach (var selector in _selectors)
             selector.Selected -= OnSelect;
     }
@@ -52,6 +57,11 @@ public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable
     }
 
     private void OnSelect(LevelSettings level)
+    {
+        _level.Show(level);
+    }
+
+    private void OnChose(LevelSettings level)
     {
         _container.Change(level);
         Selected?.Invoke();
