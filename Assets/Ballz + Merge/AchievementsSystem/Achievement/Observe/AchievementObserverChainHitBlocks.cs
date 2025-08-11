@@ -20,16 +20,16 @@ namespace BallzMerge.Achievement
         {
             _ballCollisionHandler = _ball.GetBallComponent<BallCollisionHandler>();
             _ballCollisionHandler.GameZoneLeft += OnGameZoneLeft;
-           // _ballCollisionHandler.HitBlock += OnBlockHit;
+            _ballCollisionHandler.BlockHit += OnBlockHit;
         }
 
         protected override void Destruct()
         {
             _ballCollisionHandler.GameZoneLeft -= OnGameZoneLeft;
-            //_ballCollisionHandler.HitBlock -= OnBlockHit;
+            _ballCollisionHandler.BlockHit -= OnBlockHit;
         }
 
-        private void OnBlockHit(GridCell cell, Vector2 contactPoint)
+        private void OnBlockHit()
         {
             _hitsInShot += Count;
 
