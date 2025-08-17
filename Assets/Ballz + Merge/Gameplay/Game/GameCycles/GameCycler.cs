@@ -12,10 +12,6 @@ using Zenject;
 
 public class GameCycler : MonoBehaviour, ISceneEnterPoint
 {
-    private const string QuitQuestName = "Quit";
-    private const string RestartQuestName = "Restart";
-    private const string SaveQuestName = "Save";
-
     [SerializeField] private UIView _mainUI;
     [SerializeField] private CamerasOperator _operator;
     [SerializeField] private Dropper _dropper;
@@ -56,7 +52,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     private void OnEnable()
     {
         _ball.LeftGame += OnBallLeftGame;
-        _conductor.GameFinished += OnGameFinished;
+        _conductor.GameFinished += OnGameFinishing;
         _conductor.WaveLoaded += OnWaveLoaded;
         _rootUI.EscapeMenu.QuitRequired += OnQuitRequired;
     }
@@ -64,7 +60,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     private void OnDisable()
     {
         _ball.LeftGame -= OnBallLeftGame;
-        _conductor.GameFinished -= OnGameFinished;
+        _conductor.GameFinished -= OnGameFinishing;
         _conductor.WaveLoaded -= OnWaveLoaded;
         _rootUI.EscapeMenu.QuitRequired -= OnQuitRequired;
     }
@@ -92,7 +88,10 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     private void OnBallLeftGame()
     {
-        _conductor.Continue();
+        if (GetFromMap<IFinishTrigger>().All(f => f.IsReady))
+            FinishGame();
+        else
+            _conductor.Continue();
     }
 
     private void RestartLevel(bool isLoad = false)
@@ -140,70 +139,64 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             waver.UpdateWave();
     }
 
-    private void OnGameFinished()
+    private void FinishGame()
+    {
+        _exitData.Put(CreateHistory(true));
+        _exitData.TargetScene = ScenesNames.MAIN_MENU;
+        _mainUI.ShowFinish(() => _sceneCallBack.Invoke(_exitData));
+    }
+
+    private void OnGameFinishing()
     {
         foreach (var finisher in GetFromMap<ILevelFinisher>())
             finisher.FinishLevel();
 
-        StartQuest(RestartQuestName, "Want one more game?");
+        _userQuestioner.Show(new UserQuestion(HandlerRestartQuestion, "Want one more game?"));
     }
 
     private void OnQuitRequired(SceneExitData exitData)
     {
         _exitData = exitData;
-        StartQuest(QuitQuestName, "Really left dat the best run?");
+        _userQuestioner.Show(new UserQuestion(HandlerQuitQuestion, "Really left dat the best run?"));
     }
 
-    private void StartQuest(string id, string header)
+    private void HandlerRestartQuestion(bool answer)
     {
-        _userQuestioner.Show(new UserQuestion(id, header));
-        _userQuestioner.Answer += OnUserAnswer;
+        if (answer)
+            RestartLevel();
+        else
+            _sceneCallBack.Invoke(new SceneExitData(ScenesNames.MAIN_MENU));
     }
 
-    private void OnUserAnswer(UserQuestion answer)
+    private void HandlerQuitQuestion(bool answer)
     {
-        if (answer.Name == RestartQuestName)
+        if (answer)
         {
-            _userQuestioner.Answer -= OnUserAnswer;
-
-            if (answer.IsPositiveAnswer)
-                RestartLevel();
-            else
-                _sceneCallBack.Invoke(new SceneExitData(ScenesNames.MAIN_MENU));
-        }
-        else if (answer is { Name: QuitQuestName, IsPositiveAnswer: true })
-        {
-            _userQuestioner.Answer -= OnUserAnswer;
-
             if (_exitData.TargetScene == ScenesNames.GAMEPLAY)
-            {
                 _sceneCallBack.Invoke(_exitData);
-            }
             else
-            {
-                StartQuest(SaveQuestName, "Do you want to save your progress?");
-            }
-        }
-        else if (answer.Name == SaveQuestName)
-        {
-            _userQuestioner.Answer -= OnUserAnswer;
-
-            if (answer.IsPositiveAnswer)
-                _exitData.Put(CreateSave());
-            else
-                _exitData.Put(CreateHistory());
-
-            _sceneCallBack.Invoke(_exitData);
+                _userQuestioner.Show(new UserQuestion(HandlerSaveQuestion, "Do you want to save your progress?"));
         }
     }
 
-    private GameHistoryData CreateHistory()
+    private void HandlerSaveQuestion(bool answer)
+    {
+        if (answer)
+            _exitData.Put(CreateSave());
+        else
+            _exitData.Put(CreateHistory());
+
+        _sceneCallBack.Invoke(_exitData);
+    }
+
+    private GameHistoryData CreateHistory(bool isWin = false)
     {
         GameHistoryData historyData = new GameHistoryData();
+        historyData.IsCompleted = isWin;
 
         foreach (var historical in GetFromMap<IHistorical>())
             historyData = historical.Write(historyData);
-    
+
         return historyData;
     }
     
@@ -218,6 +211,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         AddToBehaviourMap<ILevelStarter>();
         AddToBehaviourMap<IDependentSettings>();
         AddToBehaviourMap<IHistorical>();
+        AddToBehaviourMap<IFinishTrigger>();
     }
 
     private void AddToBehaviourMap<T>()

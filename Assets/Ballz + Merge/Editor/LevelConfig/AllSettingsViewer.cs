@@ -31,25 +31,7 @@ namespace BallzMerge.Editor
             _current = _service.LoadAsset<LevelSettings>();
             _map = _service.LoadAsset<LevelSettingsMap>();
             _available = _map.GetProperty("_available");
-            var allInMap = _map.GetProperty("_all");
-            var allInProject = _allSettings.Select(s => s.ScriptableObject).ToList();
-
-            for (int i = allInMap.arraySize - 1; i >= 0; i--)
-            {
-                var temp = allInMap.GetArrayElementAtIndex(i).objectReferenceValue;
-
-                if (temp is not null
-                    && temp is LevelSettings setting
-                    && allInProject.Contains(setting))
-                    allInProject.Remove(setting);
-                else
-                    allInMap.DeleteArrayElementAtIndex(i);
-            }
-
-            foreach (var setting in allInProject)
-                InsertInProperty(allInMap, setting);
-            
-            _map.SerializedObject.ApplyModifiedProperties();
+            RebuildMap();
         }
 
         public void OnGUI()
@@ -157,6 +139,20 @@ namespace BallzMerge.Editor
             _current.SerializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(_current.ScriptableObject);
             Changed?.Invoke();
+            RebuildMap();
+        }
+
+        private void RebuildMap()
+        {
+            Undo.RecordObject(_map.ScriptableObject, "Change map");
+            var allInMap = _map.GetProperty("_all");
+            allInMap.ClearArray();
+
+            foreach (var setting in _allSettings.Select(s => s.ScriptableObject))
+                InsertInProperty(allInMap, setting);
+
+            EditorUtility.SetDirty(_map.ScriptableObject);
+            _map.SerializedObject.ApplyModifiedProperties();
         }
     }
 }

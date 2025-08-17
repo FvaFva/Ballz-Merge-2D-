@@ -9,16 +9,16 @@ public class PlayZoneBoard : MonoBehaviour
     [SerializeField] private List<ParticleSystem> _effects;
 
     private Transform _transform;
-    private Vector2 _basePosition;
-    private Vector2 _baseScale;
-    private Dictionary<ParticleSystem, Vector2>  _baseScales;
+    private Vector3 _basePosition;
+    private Vector3 _baseScale;
+    private Dictionary<ParticleSystem, Vector3>  _baseScales;
 
     public void MarkAsVirtual()
     {
         if (_renderer != null)
             _renderer.enabled = false;
 
-        _baseScales = new Dictionary<ParticleSystem, Vector2>();
+        _baseScales = new Dictionary<ParticleSystem, Vector3>();
 
         foreach (var effect in _effects)
             Destroy(effect);
@@ -31,7 +31,7 @@ public class PlayZoneBoard : MonoBehaviour
         _transform = transform;
         _basePosition = _transform.localPosition;
         _baseScale = _transform.localScale;
-        _baseScales = new Dictionary<ParticleSystem, Vector2>();
+        _baseScales = new Dictionary<ParticleSystem, Vector3>();
 
         foreach (var effect in _effects)
             _baseScales.Add(effect, effect.shape.scale);
@@ -60,7 +60,7 @@ public class PlayZoneBoard : MonoBehaviour
         foreach (var effect in _effects)
         {
             var shape = effect.shape;
-            shape.scale = new Vector3(shape.scale.x + xScale, shape.scale.y);
+            shape.scale = new Vector3(shape.scale.x + xScale, shape.scale.y, shape.scale.z);
         }
     }
 

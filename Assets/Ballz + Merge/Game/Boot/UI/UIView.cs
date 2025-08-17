@@ -1,4 +1,5 @@
 ﻿using BallzMerge.Root;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class UIView : MonoBehaviour
 {
     [SerializeField] private bool _isUseSettingsQuiteButton;
     [SerializeField] private bool _isUseSettingsMaineMenuButton;
+    [SerializeField] private GameFinishView _finish;
     [SerializeField] private List<UIRootContainerItem> _items;
 
     private Transform _baseParent;
@@ -31,7 +33,11 @@ public class UIView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-
+    public void ShowFinish(Action action)
+    {
+        _finish.Show(action);
+    }
+    
     public void Init()
     {
         _baseParent = transform.parent;

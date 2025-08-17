@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class LevelSettings : ScriptableObject , ISerializationCallbackReceiver
 {
+    [SerializeField] private int _iD;
     [SerializeField] private string _title;
     [SerializeField] private BlocksSettings _blocksSettings;
     [SerializeField] private DropSettings _dropSettings;
-
-    [SerializeField] private int _iD;
 
     public BlocksSettings BlocksSettings => _blocksSettings;
     public DropSettings DropSettings => _dropSettings;

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11b28ddf7b1d4ac2a82f4a494e67ffe, type: 3}
   m_Name: Level_0001
   m_EditorClassIdentifier: 
+  _iD: 1
   _title: 0001
   _blocksSettings:
     _additionalEffectChance:
@@ -92,11 +93,13 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 07a08933dc17a4ba1beb4135aec0fe99, type: 2}
       - {fileID: 11400000, guid: f2b6e9d68589a41a98a483fd4ff2893d, type: 2}
       - {fileID: 11400000, guid: a185fd578eb1b48beb6a70deb7b4dda7, type: 2}
+      - {fileID: 11400000, guid: ee8587b00250c4271af8bc89cf1c965d, type: 2}
     - Rarity: {fileID: 11400000, guid: de1bfb22cde269241bb3c06c6f4ae76d, type: 2}
       Volumes:
       - {fileID: 11400000, guid: 4206ea1b9c3f7411f9421d1586388d74, type: 2}
       - {fileID: 11400000, guid: f2b6e9d68589a41a98a483fd4ff2893d, type: 2}
       - {fileID: 11400000, guid: ee8587b00250c4271af8bc89cf1c965d, type: 2}
     - Rarity: {fileID: 11400000, guid: 0cf2a46033e6a4e41980736da5596fbd, type: 2}
-      Volumes: []
-  _iD: 1
+      Volumes:
+      - {fileID: 11400000, guid: f2b6e9d68589a41a98a483fd4ff2893d, type: 2}
+      - {fileID: 11400000, guid: ee8587b00250c4271af8bc89cf1c965d, type: 2}

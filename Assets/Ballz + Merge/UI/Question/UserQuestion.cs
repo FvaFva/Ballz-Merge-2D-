@@ -1,18 +1,18 @@
-﻿public struct UserQuestion
-{
-    public string Name;
-    public string Description;
-    public bool IsPositiveAnswer;
+﻿using System;
 
-    public UserQuestion(string name, string description)
+public struct UserQuestion
+{
+    public string Description;
+    public Action<bool> CallBack;
+
+    public UserQuestion(Action<bool> callBack, string description)
     {
-        Name = name;
         Description = description;
-        IsPositiveAnswer = false;
+        CallBack = callBack;
     }
 
     public bool IsEmpty()
     {
-        return Name == null || Name.Equals(string.Empty);
+        return CallBack == null;
     }
 }

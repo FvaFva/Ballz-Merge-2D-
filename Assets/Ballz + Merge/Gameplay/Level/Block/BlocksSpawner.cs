@@ -7,7 +7,7 @@ using Zenject;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlocksSpawner : CyclicBehavior, IInitializable, ILevelStarter, ISaveDependedObject, IDependentSettings
+    public class BlocksSpawner : CyclicBehavior, IInitializable, ILevelStarter, ISaveDependedObject, IDependentSettings, IFinishTrigger
     {
         private const string CurrentWave = "CurrentWave";
 
@@ -23,7 +23,10 @@ namespace BallzMerge.Gameplay.BlockSpace
         private BlocksSettings _settings;
         private Queue<Block> _blocks = new Queue<Block>();
         private int _currentWave;
+        private int _totalWaves;
         private int _blockID;
+
+        public bool IsReady => _currentWave == _totalWaves;
 
         private void OnEnable()
         {
@@ -53,21 +56,19 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Load(SaveDataContainer save) => _currentWave = Mathf.RoundToInt(save.Get(CurrentWave));
 
-        public void ApplySettings(LevelSettings settings) => _settings = settings.BlocksSettings;
+        public void ApplySettings(LevelSettings settings)
+        {
+            _settings = settings.BlocksSettings;
+            _totalWaves = _settings.SpawnProperties.Count() - 1;
+        }
 
         public IEnumerable<Block> SpawnWave()
         {
-            _currentWave++;
-            List<int> positions = _gridSettings.GetPositionsInRow();
-            var current = GetCurrent();
-
-            if (current.IsEmpty())
+            if (_currentWave < _totalWaves)
             {
-                Vector2Int gridPosition = new Vector2Int(positions.TakeRandom(), _gridSettings.FirstRowIndex);
-                yield return SpawnBlock(1, gridPosition);
-            }
-            else
-            {
+                _currentWave++;
+                List<int> positions = _gridSettings.GetPositionsInRow();
+                var current = _settings.SpawnProperties[_currentWave];
                 int count = Mathf.Min(GetValue(current.Count), positions.Count);
 
                 for (int i = 0; i < count; i++)
@@ -106,12 +107,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             block.Activate(id, number, gridPosition, _settings.GetColor(number));
             _activeBlocks.AddBlocks(block);
-        }
-
-        private WaveSpawnProperty GetCurrent()
-        {
-            int set = Mathf.Min(_currentWave, _settings.SpawnProperties.Count() - 1);
-            return _settings.SpawnProperties[set];
         }
 
         private int GetValue(IEnumerable<BlocksSpawnProperty> prop)

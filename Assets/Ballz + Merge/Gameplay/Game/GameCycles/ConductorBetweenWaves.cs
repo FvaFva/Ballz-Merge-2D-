@@ -49,7 +49,7 @@ namespace BallzMerge.Gameplay.Level
             _dropper.UpdateWave();
 
             if (_dropper.IsReadyToDrop)
-                _dropper.ShowDrop(ProcessBall);
+                _dropper.ShowDrop(ProcessDropper);
             else
                 ProcessBall();
         }
