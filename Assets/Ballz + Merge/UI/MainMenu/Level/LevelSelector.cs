@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BallzMerge.Data;
 using UnityEngine;
 using Zenject;
 
@@ -11,6 +12,7 @@ public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable
 
     [Inject] private LevelSettingsMap _map;
     [Inject] private LevelSettingsContainer _container;
+    [Inject] private DataBaseSource _data;
 
     private List<LevelSelectionView> _selectors;
     private RectTransform _parent;
@@ -39,9 +41,10 @@ public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable
         _transform = transform as RectTransform;
         _parent = _transform.parent as RectTransform;
         _selectors = new List<LevelSelectionView>();
+        var completedLevels = _data.History.GetCompleted();
 
         foreach (var level in _map.Available)
-            _selectors.Add(Instantiate(_prefab, _box).Show(level));
+            _selectors.Add(Instantiate(_prefab, _box).Show(level, completedLevels.Contains(level.ID)));
     }
 
     public void Show(RectTransform showcase)

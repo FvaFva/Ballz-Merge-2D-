@@ -17,8 +17,6 @@ public class UserQuestioner : MonoBehaviour
     private Queue<UserQuestion> _questions = new Queue<UserQuestion>();
     private UserQuestion _current;
 
-    public event Action<UserQuestion> Answer;
-
     private void OnEnable()
     {
         _no.AddListener(OnAnswerNo);
@@ -53,8 +51,6 @@ public class UserQuestioner : MonoBehaviour
 
     private void ButtonHandle()
     {
-        Answer?.Invoke(_current);
-
         if (_questions.TryDequeue(out _current))
             Display(_current);
         else
@@ -71,13 +67,13 @@ public class UserQuestioner : MonoBehaviour
 
     private void OnAnswerNo()
     {
-        _current.IsPositiveAnswer = false;
+        _current.CallBack(false);
         ButtonHandle();
     }
 
     private void OnAnswerYes()
     {
-        _current.IsPositiveAnswer = true;
+        _current.CallBack(true);
         ButtonHandle();
     }
 }

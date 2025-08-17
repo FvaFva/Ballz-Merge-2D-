@@ -12,6 +12,7 @@ namespace BallzMerge.Data
         private const string DateColumnName = "Date";
         private const string NumberColumnName = "Number";
         private const string LevelColumnName = "Level";
+        private const string IsCompletedColumnName = "IsCompleted";
 
         private string _dbPath;
         private GameHistoryVolumesStorage _volumeStorage;
@@ -19,7 +20,7 @@ namespace BallzMerge.Data
         public GameHistoryStorage(string basePath)
         {
             _dbPath = basePath;
-            CreateSettingsTable();
+            CreateTable();
         }
 
         public List<GameHistoryData> GetData()
@@ -37,6 +38,7 @@ namespace BallzMerge.Data
                                                game.{ScoreColumnName} as {ScoreColumnName},
                                                game.{NumberColumnName} as {NumberColumnName},
                                                game.{LevelColumnName} as {LevelColumnName},
+                                               game.{IsCompletedColumnName} as {IsCompletedColumnName},
                                                strftime('%d.%m.', game.{DateColumnName}) || substr(strftime('%Y', game.{DateColumnName}), 3, 2) || strftime(' %H:', game.{DateColumnName}) || strftime('%M', game.{DateColumnName}) as {DateColumnName},
                                                volumes.{_volumeStorage.ValueColumName} as {_volumeStorage.ValueColumName},
                                                volumes.{_volumeStorage.VolumeColumName} as {_volumeStorage.VolumeColumName}
@@ -72,9 +74,9 @@ namespace BallzMerge.Data
             }
         }
 
-        public int GetBestScore()
+        public List<int> GetCompleted()
         {
-            int bestScore = 0;
+            var completed = new List<int>();
 
             using (var connection = new SqliteConnection(_dbPath))
             {
@@ -82,17 +84,18 @@ namespace BallzMerge.Data
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = $"SELECT MAX({ScoreColumnName}) FROM {TableName}";
-                    var result = command.ExecuteScalar();
-
-                    if (result != DBNull.Value)
-                        bestScore = Convert.ToInt32(result);
+                    command.CommandText = $"SELECT DISTINCT {LevelColumnName} FROM {TableName} WHERE {IsCompletedColumnName} = 1";
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            completed.Add(Convert.ToInt32(reader[LevelColumnName]));
+                    }
                 }
 
                 connection.Close();
             }
 
-            return bestScore;
+            return completed;
         }
 
         public void SaveResult(GameHistoryData data)
@@ -105,11 +108,12 @@ namespace BallzMerge.Data
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = $"INSERT INTO {TableName} ({ScoreColumnName}, {IDColumnName}, {DateColumnName}, {LevelColumnName}) VALUES (@{ScoreColumnName}, @{IDColumnName}, @{DateColumnName}, @{LevelColumnName})";
+                    command.CommandText = $"INSERT INTO {TableName} ({ScoreColumnName}, {IDColumnName}, {DateColumnName}, {LevelColumnName}, {IsCompletedColumnName}) VALUES (@{ScoreColumnName}, @{IDColumnName}, @{DateColumnName}, @{LevelColumnName}, @{IsCompletedColumnName})";
                     command.Parameters.AddWithValue(ScoreColumnName, data.Score);
                     command.Parameters.AddWithValue(IDColumnName, gameUUID);
                     command.Parameters.AddWithValue(DateColumnName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                     command.Parameters.AddWithValue(LevelColumnName, data.Level);
+                    command.Parameters.AddWithValue(IsCompletedColumnName, data.IsCompleted ? 1 : 0);
 
                     command.ExecuteNonQuery();
                 }
@@ -119,7 +123,7 @@ namespace BallzMerge.Data
             }
         }
 
-        private void CreateSettingsTable()
+        private void CreateTable()
         {
             using (var connection = new SqliteConnection(_dbPath))
             {
@@ -132,6 +136,7 @@ namespace BallzMerge.Data
                                             {ScoreColumnName} INTEGER,
                                             {DateColumnName} TEXT,
                                             {LevelColumnName} INTEGER,
+                                            {IsCompletedColumnName} INTEGER,
                                             {IDColumnName} TEXT NOT NULL UNIQUE)";
 
                     command.ExecuteNonQuery();
@@ -159,7 +164,8 @@ namespace BallzMerge.Data
                     int number = Convert.ToInt32(reader[NumberColumnName]);
                     int level = Convert.ToInt32(reader[LevelColumnName]);
                     string date = reader[DateColumnName].ToString();
-                    data.Add(new GameHistoryData(lastGame, score, date, number, level));
+                    bool completed = Convert.ToInt32(reader[IsCompletedColumnName]) == 1;
+                    data.Add(new GameHistoryData(lastGame, score, date, number, level, completed));
                     currentDataId = data.Count - 1;
                 }
 

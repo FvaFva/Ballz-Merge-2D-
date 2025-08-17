@@ -11,6 +11,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private readonly Vector2Int[] AllSides = new Vector2Int[4] { Vector2Int.right, Vector2Int.left, Vector2Int.down, Vector2Int.up };
 
         public IEnumerable<Block> Blocks => _blocks;
+        public bool IsNoBlocks => _blocks.Count() == 0;
 
         public event Action<Block> BlockRemoved;
         public event Action<Block> BlockDestroyed;
