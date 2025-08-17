@@ -42,12 +42,14 @@ namespace BallzMerge.Gameplay.Level
             _binder.StartMoveAllBlocks(Vector2Int.down, AfterMoveBlock);
         }
 
-        private void AfterMoveBlock() => _binder.StartSpawnWave(ProcessDropper);
+        private void AfterMoveBlock()
+        {
+            _dropper.UpdateWave();
+            _binder.StartSpawnWave(ProcessDropper);
+        }
 
         private void ProcessDropper()
         {
-            _dropper.UpdateWave();
-
             if (_dropper.IsReadyToDrop)
                 _dropper.ShowDrop(ProcessDropper);
             else
