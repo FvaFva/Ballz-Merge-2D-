@@ -18,6 +18,12 @@ public class LevelSettings : ScriptableObject , ISerializationCallbackReceiver
         _dropSettings = new DropSettings();
     }
 
+    public void Copy(BlocksSettings blocks, DropSettings drop)
+    {
+        _blocksSettings = blocks;
+        _dropSettings = drop;
+    }
+
     private void OnValidate()
     {
         _blocksSettings.RebuildColorMap();

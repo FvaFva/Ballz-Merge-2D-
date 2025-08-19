@@ -11,6 +11,7 @@ namespace BallzMerge.Editor
         private int _selectedTab;
         private List<IGameSettingsTab> _tabs;
         private AllSettingsViewer _settings = new AllSettingsViewer();
+        private bool _picking;
 
         [MenuItem("Tools/Game/Level configurator")]
         public static void ShowWindow() => GetWindow<LevelSettingsEditor>("Level configurator");
@@ -43,9 +44,32 @@ namespace BallzMerge.Editor
                     _service.ShowAsset(_settings.Current.ScriptableObject);
                     _settings.Current.SerializedObject.Update();
                     EditorGUILayout.Space();
-                    EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                    EditorGUILayout.PropertyField(_settings.Current.GetProperty("_title"));
-                    EditorGUILayout.EndVertical();
+
+                    EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+                    {
+                        EditorGUILayout.PropertyField(_settings.Current.GetProperty("_title"));
+
+                        if (GUILayout.Button("Copy settings"))
+                        {
+                            _picking = true;
+                            EditorGUIUtility.ShowObjectPicker<LevelSettings>(null, false, "", 0);
+                        }
+
+                        if (_picking && Event.current.commandName == "ObjectSelectorClosed")
+                        {
+                            var picked = EditorGUIUtility.GetObjectPickerObject() as LevelSettings;
+                            _picking = false;
+
+                            if (picked != null)
+                            {
+                                _settings.CopyFrom(picked);
+                                GUI.FocusControl(null);
+                                Repaint(); 
+                            }
+                        }
+                    }
+                    EditorGUILayout.EndHorizontal();
+
                     EditorGUILayout.Space();
                     DrawToolbar();
                     EditorGUILayout.Space();

@@ -79,6 +79,17 @@ namespace BallzMerge.Editor
                 _isShow = !_isShow;
         }
 
+        public void CopyFrom(LevelSettings source)
+        {
+            if (source is null)
+                return;
+            
+            Undo.RecordObject(_current.ScriptableObject, "Copy LevelSettings");
+            _current.ScriptableObject.Copy(new BlocksSettings(source.BlocksSettings), new DropSettings(source.DropSettings));
+            EditorUtility.SetDirty(_current.ScriptableObject);
+            AssetDatabase.SaveAssets();
+        }
+
         private void ShowToggle(AssetData<LevelSettings> setting)
         {
             int mapIndex = GetIndexInMap(setting.ScriptableObject);
