@@ -99,7 +99,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         if (isLoad)
             LoadSave();
         else
-            _conductor.Start();
+            FinishLevel();
 
         StartLevel(isLoad);
         _data.Saves.EraseAllData();
@@ -111,10 +111,12 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             settingsDepend.ApplySettings(_level.Current);
     }
 
-    private void StartLevel(bool isAfterLoad = false)
+    private void StartLevel(bool isAfterLoad)
     {
         foreach (var starter in GetFromMap<ILevelStarter>())
             starter.StartLevel(isAfterLoad);
+
+        _conductor.Start();
     }
 
     private void LoadSave()
@@ -146,11 +148,15 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         _mainUI.ShowFinish(() => _sceneCallBack.Invoke(_exitData));
     }
 
-    private void OnGameFinishing()
+    private void FinishLevel()
     {
         foreach (var finisher in GetFromMap<ILevelFinisher>())
             finisher.FinishLevel();
-
+    }
+    
+    private void OnGameFinishing()
+    {
+        FinishLevel();
         _userQuestioner.Show(new UserQuestion(HandlerRestartQuestion, "Want one more game?"));
     }
 
@@ -173,7 +179,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         if (answer)
         {
             if (_exitData.TargetScene == ScenesNames.GAMEPLAY)
-                _sceneCallBack.Invoke(_exitData);
+                RestartLevel();
             else
                 _userQuestioner.Show(new UserQuestion(HandlerSaveQuestion, "Do you want to save your progress?"));
         }
