@@ -10,8 +10,9 @@ namespace BallzMerge.Data
         public string Date;
         public int Number;
         public int Level;
+        public bool IsCompleted;
 
-        public GameHistoryData(string id, int score, string date, int number, int level)
+        public GameHistoryData(string id, int score, string date, int number, int level, bool isCompleted)
         {
             Score = score;
             Volumes = new Dictionary<string, int>();
@@ -19,6 +20,7 @@ namespace BallzMerge.Data
             Date = date;
             Number = number;
             Level = level;
+            IsCompleted = isCompleted;
         }
 
         public void Add(string volume, int value) => Volumes[volume] = value;

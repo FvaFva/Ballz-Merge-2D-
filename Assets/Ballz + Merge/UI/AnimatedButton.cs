@@ -107,7 +107,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public void SetState(bool state)
     {
-        _buttonViewStateActions[state].Invoke();
+        _buttonViewStateActions.GetValueOrDefault(state)?.Invoke();
         enabled = state;
     }
 

@@ -16,8 +16,8 @@ public class PlayerScoreView : MonoBehaviour
             _playerScore.ScoreChanged -= UpdateScore;
     }
 
-    private void UpdateScore(int score)
+    private void UpdateScore(int current, int total)
     {
-        _score.Show(score);
+        _score.Show(current, total);
     }
 }

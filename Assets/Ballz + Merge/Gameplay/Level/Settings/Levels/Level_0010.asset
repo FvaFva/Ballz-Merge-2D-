@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b11b28ddf7b1d4ac2a82f4a494e67ffe, type: 3}
+  m_Name: Level_0010
+  m_EditorClassIdentifier: 
+  _iD: 3
+  _title: 0010
+  _blocksSettings:
+    _additionalEffectChance:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    _numberGradient:
+      serializedVersion: 2
+      key0: {r: 0.23673905, g: 0.43249083, b: 0.5283019, a: 1}
+      key1: {r: 0.6415094, g: 0.47135192, b: 0.28141683, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: -1
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    _spawnProperties:
+    - Count:
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 1
+    - Count:
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 1
+    - Count:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 1
+      Number:
+      - Value: 3
+        Weight: 1
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 1
+        Weight: 1
+      - Value: 2
+        Weight: 1
+      Number:
+      - Value: 4
+        Weight: 1
+      - Value: 3
+        Weight: 2
+    - Count:
+      - Value: 3
+        Weight: 1
+      - Value: 2
+        Weight: 2
+      Number:
+      - Value: 4
+        Weight: 1
+      - Value: 3
+        Weight: 2
+    - Count:
+      - Value: 3
+        Weight: 1
+      - Value: 2
+        Weight: 2
+      Number:
+      - Value: 4
+        Weight: 2
+      - Value: 5
+        Weight: 2
+  _dropSettings:
+    _entries:
+    - Rarity: {fileID: 11400000, guid: a3ee3d68bf5a68a47b9136ccd18ae439, type: 2}
+      Volumes:
+      - {fileID: 11400000, guid: 07a08933dc17a4ba1beb4135aec0fe99, type: 2}
+      - {fileID: 11400000, guid: f2b6e9d68589a41a98a483fd4ff2893d, type: 2}
+      - {fileID: 11400000, guid: a185fd578eb1b48beb6a70deb7b4dda7, type: 2}
+      - {fileID: 11400000, guid: e63be5b0796ca45d1be23f7e0c882c8e, type: 2}
+      - {fileID: 11400000, guid: 09c3c036fd9a741aeb0853b4f7d4cb08, type: 2}
+    - Rarity: {fileID: 11400000, guid: de1bfb22cde269241bb3c06c6f4ae76d, type: 2}
+      Volumes:
+      - {fileID: 11400000, guid: 4206ea1b9c3f7411f9421d1586388d74, type: 2}
+      - {fileID: 11400000, guid: f2b6e9d68589a41a98a483fd4ff2893d, type: 2}
+      - {fileID: 11400000, guid: ee8587b00250c4271af8bc89cf1c965d, type: 2}
+      - {fileID: 11400000, guid: a185fd578eb1b48beb6a70deb7b4dda7, type: 2}
+      - {fileID: 11400000, guid: 414ce2aa06ad643b78219680a23ec028, type: 2}
+    - Rarity: {fileID: 11400000, guid: 0cf2a46033e6a4e41980736da5596fbd, type: 2}
+      Volumes:
+      - {fileID: 11400000, guid: a185fd578eb1b48beb6a70deb7b4dda7, type: 2}
+      - {fileID: 11400000, guid: aa3ba4657e3734c35b2fc4cf1d74236a, type: 2}

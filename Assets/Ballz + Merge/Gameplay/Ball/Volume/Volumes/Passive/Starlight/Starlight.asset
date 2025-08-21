@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c8e2137bc7de447191803b8f9f566fb, type: 3}
-  m_Name: ExtraAIMPoints
+  m_Name: Starlight
   m_EditorClassIdentifier: 
-  _icon: {fileID: 21300000, guid: 1a862a305a44ca64e939c2b35b24e829, type: 3}
-  _name: Advanced sight
+  _icon: {fileID: 21300000, guid: df7df9ba0d57d471a9580a0a0642872f, type: 3}
+  _name: Starlight
   _effect: {fileID: 0}
   _description: When you aim add extra point prediction
   _suffixes: []

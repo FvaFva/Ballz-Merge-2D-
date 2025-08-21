@@ -1,29 +1,48 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Zenject;
+using BallzMerge.Gameplay.BlockSpace;
 
 namespace BallzMerge.Gameplay.Level
 {
     public class Dropper : CyclicBehavior, ILevelStarter, ISaveDependedObject, IDependentSettings
     {
-        private const string WavesToDrop = "WavesToDrop";
+        private const string PointsToDrop = "PointsToDrop";
+        private const string DropsInStuck = "DropsInStuck";
 
-        [SerializeField] private int _wavesToDrop;
+        [SerializeField] private int _wavePoints;
+        [SerializeField] private int _mergePoints;
+        [SerializeField] private int _toDrop;
         [SerializeField] private DropSelector _selector;
         [SerializeField] private ValueView _view;
 
-        private DropSettings _drop;
-        private int _waveCount;
+        [Inject] private BlocksInGame _blocks;
 
-        public bool IsReadyToDrop { get; private set; }
+        private DropSettings _drop;
+        private int _current;
+        private int _dropInStuck;
+        private (Drop, Drop) _drops = default;
+
+        public bool IsReadyToDrop => _dropInStuck > 0;
+
+        private void OnEnable()
+        {
+            _blocks.BlocksMerged += OnMerge;
+        }
+
+        private void OnDisable()
+        {
+            _blocks.BlocksMerged -= OnMerge;
+        }
 
         public void StartLevel(bool isAfterLoad)
         {
             if (isAfterLoad)
                 return;
 
-            _waveCount = _wavesToDrop;
-            _view.Show(_waveCount);
+            _current = 0;
+            AddPoints();
         }
 
         public void Save(SaveDataContainer save)
@@ -31,13 +50,15 @@ namespace BallzMerge.Gameplay.Level
             foreach (IBallVolumesBagCell<BallVolume> bagCell in _selector.DropsMap)
                 save.Volumes.Add(new SavedVolume(bagCell.ID, bagCell.Name, bagCell.Value));
 
-            save.Set(WavesToDrop, _waveCount);
+            save.Set(PointsToDrop, _current);
+            save.Set(DropsInStuck, _dropInStuck);
         }
 
         public void Load(SaveDataContainer save)
         {
-            _waveCount = Mathf.RoundToInt(save.Get(WavesToDrop));
-            _view.Show(_waveCount);
+            _current = Mathf.RoundToInt(save.Get(PointsToDrop));
+            _dropInStuck = Mathf.RoundToInt(save.Get(DropsInStuck));
+            _view.Show(_current, _toDrop);
 
             List<Drop> temp = _drop.GetPool();
 
@@ -62,22 +83,40 @@ namespace BallzMerge.Gameplay.Level
             if (IsReadyToDrop == false)
                 return;
 
-            IsReadyToDrop = false;
-            List<Drop> temp = _drop.GetPool();
-            _waveCount = _wavesToDrop;
-            _view.Show(_waveCount);
-            _selector.Show(temp.TakeRandom(), temp.TakeRandom(), callback);
+            _dropInStuck--;
+
+            if (_drops.Item1.IsEmpty)
+            {
+                List<Drop> temp = _drop.GetPool();
+                _drops = (temp.TakeRandom(), temp.TakeRandom());
+            }
+
+            _selector.Show(_drops.Item1, _drops.Item2, () => AfterTakeDrop(callback));
         }
 
-        public void UpdateWave()
+        public void UpdateWave() => AddPoints(_wavePoints);
+
+        public void ApplySettings(LevelSettings settings) => _drop = settings.DropSettings;
+
+        private void OnMerge(Block _, Block __) => AddPoints(_mergePoints);
+
+        private void AddPoints(int points = 0)
         {
-            IsReadyToDrop = --_waveCount <= 0;
-            _view.Show(_waveCount);
+            _current += points;
+
+            while (_current >= _toDrop)
+            {
+                _current -= _toDrop;
+                _dropInStuck++;
+            }
+
+            _view.Show(_current, _toDrop);
         }
 
-        public void ApplySettings(LevelSettings settings)
+        private void AfterTakeDrop(Action callback)
         {
-            _drop = settings.DropSettings;
+            _drops = default;
+            callback.Invoke();
         }
     }
 }

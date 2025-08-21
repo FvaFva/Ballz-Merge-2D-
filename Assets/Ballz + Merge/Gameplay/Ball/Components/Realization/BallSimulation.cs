@@ -19,7 +19,7 @@ public class BallSimulation : BallComponent
 
     public void Restart(Vector2 position, Vector2 direction)
     {
-        CollisionsLeft = BaseCollisions + _waveVolume.GetPassiveValue<BallVolumeExtraAIMPoints>();
+        CollisionsLeft = BaseCollisions + _waveVolume.GetPassiveValue<BallVolumeStarlight>();
         _transform.position = position;
         MyBody.velocity = Vector2.zero;
         MyBody.AddForce(direction * _simulationForce);
