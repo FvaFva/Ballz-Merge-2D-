@@ -13048,7 +13048,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaf5c6514c990e94bb75b6db617c2eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initOrder: 3
+  _initOrder: 2
   _boards: {fileID: 8463822361797210563}
   _fieldExpanderSettings: {fileID: 11400000, guid: dc1cb636655819f48a06144bac1967c8, type: 2}
   _fieldEffect: {fileID: 8395251450457018000}

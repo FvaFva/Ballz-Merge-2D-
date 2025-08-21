@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BallzMerge.Gameplay.Level;
 using UnityEngine;
 
@@ -14,6 +15,15 @@ public class DropSettings
     {
         _entries = new List<DropEntry>();
         _dropMap = new Dictionary<DropRarity, List<BallVolume>>();
+    }
+
+    public DropSettings(DropSettings source)
+    {
+        _entries = source._entries.ToList();
+        _dropMap = new Dictionary<DropRarity, List<BallVolume>>();
+
+        foreach (var drop in source._dropMap)
+            _dropMap.Add(drop.Key, drop.Value.ToList());
     }
 
     public List<Drop> GetPool()
