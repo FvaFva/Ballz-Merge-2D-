@@ -52,7 +52,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     private void OnEnable()
     {
         _ball.LeftGame += OnBallLeftGame;
-        _conductor.GameFinished += OnGameFinishing;
+        _conductor.GameIsLost += OnGameIsLost;
         _conductor.WaveLoaded += OnWaveLoaded;
         _rootUI.EscapeMenu.QuitRequired += OnQuitRequired;
     }
@@ -60,7 +60,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     private void OnDisable()
     {
         _ball.LeftGame -= OnBallLeftGame;
-        _conductor.GameFinished -= OnGameFinishing;
+        _conductor.GameIsLost -= OnGameIsLost;
         _conductor.WaveLoaded -= OnWaveLoaded;
         _rootUI.EscapeMenu.QuitRequired -= OnQuitRequired;
     }
@@ -88,10 +88,25 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     private void OnBallLeftGame()
     {
-        if (GetFromMap<IFinishTrigger>().All(f => f.IsReady))
-            FinishGame();
+        if (GetFromMap<ICompleteLevelTrigger>().All(f => f.IsReadyToComplete))
+            CompleteLevel();
         else
             _conductor.Continue();
+    }
+
+    private void CompleteLevel()
+    {
+        _exitData.Put(CreateHistory(true));
+        _exitData.TargetScene = ScenesNames.MAIN_MENU;
+        _mainUI.ShowNotification(() => _sceneCallBack.Invoke(_exitData));
+    }
+
+    private void OnGameIsLost()
+    {
+        foreach (var finisher in GetFromMap<ILevelFinisher>())
+            finisher.FinishLevel();
+
+        _userQuestioner.Show(new UserQuestion(HandlerRestartQuestion, "Want one more game?"));
     }
 
     private void RestartLevel(bool isLoad = false)
@@ -139,21 +154,6 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             waver.UpdateWave();
     }
 
-    private void FinishGame()
-    {
-        _exitData.Put(CreateHistory(true));
-        _exitData.TargetScene = ScenesNames.MAIN_MENU;
-        _mainUI.ShowFinish(() => _sceneCallBack.Invoke(_exitData));
-    }
-
-    private void OnGameFinishing()
-    {
-        foreach (var finisher in GetFromMap<ILevelFinisher>())
-            finisher.FinishLevel();
-
-        _userQuestioner.Show(new UserQuestion(HandlerRestartQuestion, "Want one more game?"));
-    }
-
     private void OnQuitRequired(SceneExitData exitData)
     {
         _exitData = exitData;
@@ -189,10 +189,10 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         _sceneCallBack.Invoke(_exitData);
     }
 
-    private GameHistoryData CreateHistory(bool isWin = false)
+    private GameHistoryData CreateHistory(bool isLevelCompleted = false)
     {
         GameHistoryData historyData = new GameHistoryData();
-        historyData.IsCompleted = isWin;
+        historyData.IsCompleted = isLevelCompleted;
 
         foreach (var historical in GetFromMap<IHistorical>())
             historyData = historical.Write(historyData);
@@ -211,7 +211,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         AddToBehaviourMap<ILevelStarter>();
         AddToBehaviourMap<IDependentSettings>();
         AddToBehaviourMap<IHistorical>();
-        AddToBehaviourMap<IFinishTrigger>();
+        AddToBehaviourMap<ICompleteLevelTrigger>();
     }
 
     private void AddToBehaviourMap<T>()

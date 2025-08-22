@@ -8,6 +8,7 @@ public class GameDataView : MonoBehaviour
     [SerializeField] private TMP_Text _volumesLabel;
     [SerializeField] private TMP_Text _score;
     [SerializeField] private TMP_Text _number;
+    [SerializeField] private TMP_Text _level;
     [SerializeField] private TMP_Text _toggleLabel;
     [SerializeField] private RectTransform _volumesParent;
     [SerializeField] private GameDataVolumeMicView _volumeMicViewPrefab;
@@ -29,11 +30,12 @@ public class GameDataView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Show(string toggleLabel, int score, int number, Dictionary<string, int> volumes)
+    public void Show(string toggleLabel, int score, int number, int level, Dictionary<string, int> volumes)
     {
         _toggleLabel.text = toggleLabel;
         _score.text = score.ToString();
         _number.text = number.ToString();
+        _level.text = level.ToString();
         gameObject.SetActive(true);
 
         int countData = volumes.Count;

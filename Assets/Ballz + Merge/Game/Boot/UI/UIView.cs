@@ -33,7 +33,7 @@ public class UIView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void ShowFinish(Action action)
+    public void ShowNotification(Action action)
     {
         _finish.Show(action);
     }

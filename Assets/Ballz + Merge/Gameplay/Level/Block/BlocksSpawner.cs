@@ -7,7 +7,7 @@ using Zenject;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlocksSpawner : CyclicBehavior, IInitializable, ILevelStarter, ISaveDependedObject, IDependentSettings, IFinishTrigger
+    public class BlocksSpawner : CyclicBehavior, IInitializable, ILevelStarter, ISaveDependedObject, IDependentSettings, ICompleteLevelTrigger
     {
         private const string CurrentWave = "CurrentWave";
 
@@ -26,7 +26,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private int _totalWaves;
         private int _blockID;
 
-        public bool IsReady => _currentWave == _totalWaves;
+        public bool IsReadyToComplete => _currentWave == _totalWaves;
 
         private void OnEnable()
         {

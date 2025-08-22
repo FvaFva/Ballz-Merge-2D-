@@ -49,14 +49,6 @@ public class UserQuestioner : MonoBehaviour
         _label.text = question.Description;
     }
 
-    private void ButtonHandle()
-    {
-        if (_questions.TryDequeue(out _current))
-            Display(_current);
-        else
-            Hide();
-    }
-
     private void Hide()
     {
         _current = default;
@@ -75,5 +67,13 @@ public class UserQuestioner : MonoBehaviour
     {
         _current.CallBack(true);
         ButtonHandle();
+    }
+
+    private void ButtonHandle()
+    {
+        if (_questions.TryDequeue(out _current))
+            Display(_current);
+        else
+            Hide();
     }
 }
