@@ -19,7 +19,7 @@ namespace BallzMerge.Gameplay.Level
         }
 
         public event Action WaveLoaded;
-        public event Action GameFinished;
+        public event Action GameIsLost;
 
         public void Start()
         {
@@ -35,7 +35,7 @@ namespace BallzMerge.Gameplay.Level
         {
             if (_binder.TryFinish())
             {
-                GameFinished?.Invoke();
+                GameIsLost?.Invoke();
                 return;
             }
 

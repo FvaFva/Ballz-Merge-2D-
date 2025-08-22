@@ -14,6 +14,7 @@ namespace BallzMerge.Gameplay.BallSpace
         private Transform _transform;
 
         public event Action<Vector2> Hit;
+        public event Action BlockHit;
         public event Action NonBlockHit;
         public event Action GameZoneLeft;
 
@@ -31,9 +32,14 @@ namespace BallzMerge.Gameplay.BallSpace
             CorrectingBounceDirection(contactPoint - (Vector2)_transform.position);
 
             if (hitTarget.TryGetComponent(out BlockPhysicModel hitBlock))
+            {
                 hitBlock.Kick(contactPoint.CalculateDirection(hitBlock.WorldPosition));
+                BlockHit?.Invoke();
+            }
             else
+            {
                 NonBlockHit?.Invoke();
+            }
 
             if (hitTarget.TryGetComponent(out PlayZoneEdge _))
                 GameZoneLeft?.Invoke();

@@ -29,7 +29,7 @@ namespace BallzMerge.Editor
             _settings.Changed += RebuildSettings;
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             _settings.Changed -= RebuildSettings;
         }
