@@ -7,7 +7,7 @@ using System.Collections;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
-    public class BlocksBinder : CyclicBehavior, IInitializable, ISaveDependedObject, ICompleteLevelTrigger
+    public class BlocksBinder : CyclicBehavior, IInitializable, ISaveDependedObject, ICompleteLevelTrigger, ILevelFinisher
     {
         private const float AnimationDelay = 0.1f;
 
@@ -52,6 +52,11 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _sleep = new WaitForSeconds(AnimationDelay);
             _hitInspector.Init();
+        }
+
+        public void FinishLevel()
+        {
+            _activeBlocks.Clear();
         }
 
         public void Save(SaveDataContainer save)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -14,7 +15,21 @@ public class BlocksSettings
 
     private Dictionary<int, Color> _colorMap;
 
-    public List<WaveSpawnProperty> SpawnProperties { get { return _spawnProperties; } }
+    public BlocksSettings()
+    {
+        _spawnProperties = new List<WaveSpawnProperty>();
+    }
+
+    public BlocksSettings(BlocksSettings source)
+    {
+        _numberGradient = new Gradient();
+        _numberGradient.SetKeys(source._numberGradient.colorKeys.ToArray(), source._numberGradient.alphaKeys.ToArray());
+        _numberGradient.mode = source._numberGradient.mode;
+        _spawnProperties = source._spawnProperties.ToList();
+        RebuildColorMap();
+    }
+
+    public List<WaveSpawnProperty> SpawnProperties => _spawnProperties;
 
     public void RebuildColorMap()
     {

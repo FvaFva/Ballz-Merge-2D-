@@ -26,7 +26,14 @@ namespace BallzMerge.Editor
         public void OnGUI()
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
-            EditorGUILayout.PropertyField(_blocksSettings.FindPropertyRelative("_numberGradient"));
+                EditorGUILayout.PropertyField(_blocksSettings.FindPropertyRelative("_numberGradient"));
+            EditorGUILayout.EndHorizontal();
+            
+            EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+            {
+                if (GUILayout.Button("Add wave"))
+                    _waves.arraySize++;
+            }
             EditorGUILayout.EndHorizontal();
 
             _scroll = EditorGUILayout.BeginScrollView(_scroll);
@@ -36,12 +43,6 @@ namespace BallzMerge.Editor
 
         private void DrawWaves()
         {
-            EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
-
-            if (GUILayout.Button("Add wave"))
-                _waves.arraySize++;
-
-            EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space();
 
             for (int i = 0; i < _waves.arraySize; i++)
