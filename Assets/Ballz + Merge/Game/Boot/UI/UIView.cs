@@ -13,6 +13,7 @@ public class UIView : MonoBehaviour
     private Transform _baseParent;
     private Transform _transform;
 
+    public GameFinishView FinishView => _finish;
     public bool IsUseSettingsQuiteButton => _isUseSettingsQuiteButton;
     public bool IsUseSettingsMaineMenuButton => _isUseSettingsMaineMenuButton;
     public IEnumerable<UIRootContainerItem> Items => _items;
@@ -31,11 +32,6 @@ public class UIView : MonoBehaviour
     {
         _transform.SetParent(_baseParent);
         gameObject.SetActive(false);
-    }
-
-    public void ShowNotification(Action action)
-    {
-        _finish.Show(action);
     }
     
     public void Init()

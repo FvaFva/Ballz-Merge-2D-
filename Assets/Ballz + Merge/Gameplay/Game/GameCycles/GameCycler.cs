@@ -98,7 +98,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     {
         _exitData.Put(CreateHistory(true));
         _exitData.TargetScene = ScenesNames.MAIN_MENU;
-        _mainUI.ShowNotification(() => _sceneCallBack.Invoke(_exitData));
+        _mainUI.FinishView.Show(() => _sceneCallBack.Invoke(_exitData));
     }
 
     private void OnGameIsLost()
@@ -154,21 +154,6 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     {
         foreach (var waver in GetFromMap<IWaveUpdater>())
             waver.UpdateWave();
-    }
-
-    private void FinishGame()
-    {
-        _exitData.Put(CreateHistory(true));
-        _exitData.TargetScene = ScenesNames.MAIN_MENU;
-        _mainUI.ShowFinish(() => _sceneCallBack.Invoke(_exitData));
-    }
-
-    private void OnGameFinishing()
-    {
-        foreach (var finisher in GetFromMap<ILevelFinisher>())
-            finisher.FinishLevel();
-
-        _userQuestioner.Show(new UserQuestion(HandlerRestartQuestion, "Want one more game?"));
     }
 
     private void OnQuitRequired(SceneExitData exitData)
