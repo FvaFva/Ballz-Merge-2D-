@@ -101,11 +101,15 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         _mainUI.FinishView.Show(() => _sceneCallBack.Invoke(_exitData));
     }
 
-    private void OnGameIsLost()
+    private void FinishLevel()
     {
         foreach (var finisher in GetFromMap<ILevelFinisher>())
             finisher.FinishLevel();
+    }
 
+    private void OnGameIsLost()
+    {
+        FinishLevel();
         _userQuestioner.Show(new UserQuestion(HandlerRestartQuestion, "Want one more game?"));
     }
 
@@ -114,7 +118,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         if (isLoad)
             LoadSave();
         else
-            OnGameIsLost();
+            FinishLevel();
 
         StartLevel(isLoad);
         _data.Saves.EraseAllData();

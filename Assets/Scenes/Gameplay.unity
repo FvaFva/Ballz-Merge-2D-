@@ -31186,9 +31186,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 6
-  _wavePoints: 3
+  _wavePoints: 9
   _mergePoints: 2
-  _toDrop: 8
+  _toDrop: 3
   _selector: {fileID: 1414648494770224759}
   _view: {fileID: 1018109366}
 --- !u!1 &6718269442526170988

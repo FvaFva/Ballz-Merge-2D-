@@ -15,6 +15,7 @@ namespace BallzMerge.Gameplay.Level
 
         private List<IBallVolumesBagCell<BallVolume>> _dropsMap = new List<IBallVolumesBagCell<BallVolume>>();
         private Action _callback;
+        private Tween _hide;
 
         public IReadOnlyList<IBallVolumesBagCell<BallVolume>> DropsMap => _dropsMap;
 
@@ -47,6 +48,7 @@ namespace BallzMerge.Gameplay.Level
 
         public void Show(Drop first, Drop second, Action callback)
         {
+            KillHide();
             _firstSlot.Show(first);
             _secondSlot.Show(second);
             gameObject.SetActive(true);
@@ -60,6 +62,7 @@ namespace BallzMerge.Gameplay.Level
             _canvasGroup.alpha = 0;
             _dropsMap.Clear();
             gameObject.SetActive(false);
+            KillHide();
         }
 
         public void LoadDrop(Drop drop, int id)
@@ -86,14 +89,25 @@ namespace BallzMerge.Gameplay.Level
             SelectDrop(drop, DropSelected);
         }
 
-        private void Hide() => _canvasGroup.DOFade(0, AnimationTime).OnComplete(OnHideAnimationFinished);
+        private void Hide()
+        {
+            KillHide();
+            _hide = _canvasGroup.DOFade(0, AnimationTime).OnComplete(OnHideAnimationFinished);
+            _hide.Play();
+        }
+
+        private void KillHide()
+        {
+            if (_hide != null && _hide.IsActive())
+                _hide.Kill();
+        }
 
         private void OnHideAnimationFinished()
         {
             _firstSlot.Show(default);
             _secondSlot.Show(default);
-            _callback();
             gameObject.SetActive(false);
+            _callback();
         }
     }
 }
