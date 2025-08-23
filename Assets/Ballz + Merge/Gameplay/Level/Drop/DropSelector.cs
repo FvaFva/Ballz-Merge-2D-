@@ -106,8 +106,8 @@ namespace BallzMerge.Gameplay.Level
         {
             _firstSlot.Show(default);
             _secondSlot.Show(default);
-            _callback();
             gameObject.SetActive(false);
+            _callback();
         }
     }
 }
