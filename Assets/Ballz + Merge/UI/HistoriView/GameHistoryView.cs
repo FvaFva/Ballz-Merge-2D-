@@ -15,6 +15,7 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     [SerializeField] private ButtonToggle _dateID;
     [SerializeField] private ButtonToggle _score;
     [SerializeField] private ButtonToggle _number;
+    [SerializeField] private ButtonToggle _level;
     [SerializeField] private GameDataView _gameDataPrefab;
     [SerializeField] private RectTransform _dataParent;
     [SerializeField] private UIRootContainerItem _eraseButtonItem;
@@ -52,10 +53,12 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
         _toggles.Add(_dateID.Initialize(_toggleLabels[0], _toggleLabels[1]));
         _toggles.Add(_score.Initialize(_toggleLabels[2], _toggleLabels[3]));
         _toggles.Add(_number.Initialize(_toggleLabels[2], _toggleLabels[3]));
+        _toggles.Add(_level.Initialize(_toggleLabels[2], _toggleLabels[3]));
         _dateID.ChangeState();
         _dateID.SetTrigger(ChangeStateView);
         _score.SetTrigger(OrderScore);
         _number.SetTrigger(OrderNumber);
+        _level.SetTrigger(OrderLevel);
 
         if (_data.Count > _allViews.Count)
             GenerateViews(_data.Count - _allViews.Count);
@@ -94,6 +97,7 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
             _allViews[i].Show(_data[i].GetDateOrID(_dateID.State),
                 _data[i].Score,
                 _data[i].Number,
+                _data[i].Level,
                 _data[i].Volumes);
 
             if (i % batchSize == 0 || i == total - 1)
@@ -119,14 +123,16 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
 
     private void OrderNumber(ButtonToggle toggle) => ToggleSort(toggle, x => x.Number);
 
+    private void OrderLevel(ButtonToggle toggle) => ToggleSort(toggle, x => x.Level);
+
     private void ToggleSort<T>(ButtonToggle toggle, Func<GameHistoryData, T> keySelector)
     {
         _data = toggle.State ? _data.OrderBy(keySelector).ToList() : _data.OrderByDescending(keySelector).ToList();
         StartCoroutine(Show());
-        ResetCurrentToggleLabel(toggle);
+        SetNewToggleLabel(toggle);
     }
 
-    private void ResetCurrentToggleLabel(ButtonToggle toggle)
+    private void SetNewToggleLabel(ButtonToggle toggle)
     {
         if (_currentToggle != null && _currentToggle != toggle)
             _currentToggle.ResetLabel();
