@@ -14,17 +14,24 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
 
     private delegate Vector2 OversizeFix(float childAspect, float availableCross, float totalSpacing, float totalMainSize, float totalCrossSize);
     private OversizeFix _oversizeFix;
+    private Vector2 _anchorFactor;
 
-    private void OnValidate()
+    protected override void OnValidate()
     {
         base.OnValidate();
-        CalculateOversize();
+        CalculateAttributes();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        CalculateAttributes();
     }
 
     public override AdaptiveLayoutGroupBase Init()
     {
         base.Init();
-        CalculateOversize();
+        CalculateAttributes();
         return this;
     }
 
@@ -59,23 +66,6 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
         return ChildrenCrossSizes.Sum(x => Calculate(x.Value, rectTransform.rect.size[1 - axis]));
     }
 
-    private void GetAnchorFactors(TextAnchor a, out float h, out float v)
-    {
-        switch (a)
-        {
-            case TextAnchor.UpperLeft:    h = 0f;   v = 0f;   break;
-            case TextAnchor.UpperCenter:  h = 0.5f; v = 0f;   break;
-            case TextAnchor.UpperRight:   h = 1f;   v = 0f;   break;
-            case TextAnchor.MiddleLeft:   h = 0f;   v = 0.5f; break;
-            case TextAnchor.MiddleCenter: h = 0.5f; v = 0.5f; break;
-            case TextAnchor.MiddleRight:  h = 1f;   v = 0.5f; break;
-            case TextAnchor.LowerLeft:    h = 0f;   v = 1f;   break;
-            case TextAnchor.LowerCenter:  h = 0.5f; v = 1f;   break;
-            case TextAnchor.LowerRight:   h = 1f;   v = 1f;   break;
-            default:                      h = 0f;   v = 0f;   break;
-        }
-    }
-
     protected override void Place(float totalSpacing, float totalMainSize, float totalCrossSize)
     {
         int mainAxis = IsVertical ? 1 : 0;
@@ -86,9 +76,8 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
         float crossPadStart = crossAxis == 0 ? padding.left : padding.top;
         float crossPadEnd   = crossAxis == 0 ? padding.right : padding.bottom;
 
-        GetAnchorFactors(childAlignment, out float horiz, out float vert);
-        float mainAlign  = IsVertical ? vert  : horiz;
-        float crossAlign = IsVertical ? horiz : vert;
+        float mainAlign  = IsVertical ? _anchorFactor.y  : _anchorFactor.x;
+        float crossAlign = IsVertical ? _anchorFactor.x : _anchorFactor.y;
 
         float availableCross = Mathf.Max(0f, rectTransform.rect.size[crossAxis] - crossPadStart - crossPadEnd);
 
@@ -182,7 +171,7 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
         return new Vector2(IsVertical ? cross : main, IsVertical ? main : cross);
     }
 
-    private void CalculateOversize()
+    private void CalculateAttributes()
     {
         _oversizeFix = _oversizeBehaviour switch
         {
@@ -190,6 +179,20 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
             LayoutAspectBehaviour.ScaleMainToFit => OversizeScaleMain,
             LayoutAspectBehaviour.AdjustCrossEqually => OversizeAdjustCrossEqually,
             _ => OversizeNone
+        };
+
+        _anchorFactor = childAlignment switch
+        {
+            TextAnchor.UpperLeft => Vector2.zero,
+            TextAnchor.UpperCenter => new Vector2(0.5f,0),   
+            TextAnchor.UpperRight => new Vector2(1f,0),   
+            TextAnchor.MiddleLeft => new Vector2(0,0.5f), 
+            TextAnchor.MiddleCenter => new Vector2(0.5f,0.5f),   
+            TextAnchor.MiddleRight => new Vector2(1f,0.5f),
+            TextAnchor.LowerLeft => new Vector2(0,1),   
+            TextAnchor.LowerCenter => new Vector2(0.5f,1),  
+            TextAnchor.LowerRight => Vector2.one,   
+            _ => Vector2.zero
         };
     }
 }

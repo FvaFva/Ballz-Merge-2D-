@@ -50,6 +50,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             _moveTime = moveTime;
             _colorMap = settings;
+            _material.SetFloat(FadeProperty, 0);
         }
 
         public void Deactivate()

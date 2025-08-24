@@ -64,17 +64,22 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public IEnumerable<Block> SpawnWave()
         {
-            if (_currentWave < _totalWaves)
+            if (_currentWave <= _totalWaves)
             {
-                _currentWave++;
                 List<int> positions = _gridSettings.GetPositionsInRow();
                 var current = _settings.SpawnProperties[_currentWave];
+                _currentWave++;
+
                 int count = Mathf.Min(GetValue(current.Count), positions.Count);
 
                 for (int i = 0; i < count; i++)
                 {
                     int number = GetValue(current.Number);
                     Vector2Int gridPosition = new Vector2Int(positions.TakeRandom(), _gridSettings.FirstRowIndex);
+
+                    if (_activeBlocks.GetAtPosition(gridPosition) is not null)
+                        continue;
+
                     yield return SpawnBlock(number, gridPosition);
                 }
             }
