@@ -342,12 +342,12 @@ MonoBehaviour:
     m_Right: 5
     m_Top: 5
     m_Bottom: 5
-  m_ChildAlignment: 0
+  m_ChildAlignment: 8
   _spacing: 5
   _isInversive: 1
   _isVertical: 0
+  _oversizeBehaviour: 1
   _separate: 1
-  _alignment: 1
 --- !u!1 &536844549019002102
 GameObject:
   m_ObjectHideFlags: 0
@@ -3025,7 +3025,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.49019608}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9411765}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4043,12 +4043,12 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 2
   _spacing: 10
   _isInversive: 1
   _isVertical: 1
+  _oversizeBehaviour: 1
   _separate: 1
-  _alignment: 0
 --- !u!1 &3895087716785530741
 GameObject:
   m_ObjectHideFlags: 0
@@ -5291,12 +5291,12 @@ MonoBehaviour:
     m_Right: 5
     m_Top: 5
     m_Bottom: 5
-  m_ChildAlignment: 0
+  m_ChildAlignment: 5
   _spacing: 5
   _isInversive: 0
   _isVertical: 1
+  _oversizeBehaviour: 1
   _separate: 1
-  _alignment: 0
 --- !u!1 &5113179758438394592
 GameObject:
   m_ObjectHideFlags: 0
@@ -5764,8 +5764,8 @@ MonoBehaviour:
   _spacing: 5
   _isInversive: 0
   _isVertical: 0
+  _oversizeBehaviour: 0
   _separate: 1
-  _alignment: 2
 --- !u!1 &6048795902863571164
 GameObject:
   m_ObjectHideFlags: 0
@@ -7675,12 +7675,12 @@ MonoBehaviour:
     m_Right: 5
     m_Top: 5
     m_Bottom: 5
-  m_ChildAlignment: 0
+  m_ChildAlignment: 8
   _spacing: 5
   _isInversive: 0
   _isVertical: 0
+  _oversizeBehaviour: 1
   _separate: 1
-  _alignment: 0
 --- !u!1 &7603946355538188004
 GameObject:
   m_ObjectHideFlags: 0
@@ -8085,7 +8085,7 @@ MonoBehaviour:
     m_Right: 5
     m_Top: 5
     m_Bottom: 5
-  m_ChildAlignment: 0
+  m_ChildAlignment: 1
   _spacing: 5
   _isInversive: 0
   _isVertical: 0

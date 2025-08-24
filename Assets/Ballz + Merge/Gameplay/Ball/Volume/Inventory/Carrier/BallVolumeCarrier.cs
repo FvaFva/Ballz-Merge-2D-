@@ -8,7 +8,8 @@ using UnityEngine.UI;
 public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
 {
     private const float ShowDuration = 0.15f;
-    private const float BoardSize = 0.12f;
+    private const float BoardSize = 0.10f;
+    private const float BoardSizeRight = 0.155f;
     private const string ToBagHeader = "Drop here for bag";
     private const string ToCageHeader = "Click here for cage";
 
@@ -73,7 +74,7 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
         _transform.SetParent(showcase);
         _cageContainerItem.PuckUp(_cagePosition);
         _transform.anchorMin = new Vector2(BoardSize, BoardSize);
-        _transform.anchorMax = new Vector2(1 - BoardSize, 1 - BoardSize);
+        _transform.anchorMax = new Vector2(1 - BoardSizeRight, 1 - BoardSize);
         _transform.anchoredPosition = Vector2.zero;
         _transform.sizeDelta = Vector2.zero;
         _volumeView.ChangeActive(false);

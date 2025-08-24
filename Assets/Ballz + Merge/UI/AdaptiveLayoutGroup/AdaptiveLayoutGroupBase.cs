@@ -20,7 +20,7 @@ public abstract class AdaptiveLayoutGroupBase : LayoutGroup
     public bool IsInverse => _isInversive;
     public RectTransform Transform { get; private set; }
 
-    public AdaptiveLayoutGroupBase Init()
+    public virtual AdaptiveLayoutGroupBase Init()
     {
         Transform = GetComponent<RectTransform>();
         return this;
