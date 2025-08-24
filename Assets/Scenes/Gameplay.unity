@@ -1370,8 +1370,8 @@ MonoBehaviour:
   _spacing: 5
   _isInversive: 0
   _isVertical: 0
+  _oversizeBehaviour: 0
   _separate: 1
-  _alignment: 0
 --- !u!1 &600579008
 GameObject:
   m_ObjectHideFlags: 0
@@ -2338,23 +2338,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 810716274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Script: {fileID: 11500000, guid: c27bd5580894b46228434ac3e735a83f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 3
-    m_Right: 3
-    m_Top: 3
-    m_Bottom: 3
-  m_ChildAlignment: 0
-  m_Spacing: 3
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 1
-  m_ChildControlHeight: 1
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
+    m_Left: 5
+    m_Right: 5
+    m_Top: 5
+    m_Bottom: 5
+  m_ChildAlignment: 1
+  _spacing: 8
+  _isInversive: 1
+  _isVertical: 0
+  _oversizeBehaviour: 1
+  _separate: 1
 --- !u!1 &819301408
 GameObject:
   m_ObjectHideFlags: 0
@@ -13629,8 +13626,8 @@ MonoBehaviour:
   _spacing: 0
   _isInversive: 1
   _isVertical: 1
+  _oversizeBehaviour: 0
   _separate: 3
-  _alignment: 0
 --- !u!1 &3601712809512608102
 GameObject:
   m_ObjectHideFlags: 0
@@ -13910,8 +13907,8 @@ MonoBehaviour:
   _spacing: 5
   _isInversive: 1
   _isVertical: 1
+  _oversizeBehaviour: 0
   _separate: 2
-  _alignment: 0
 --- !u!1 &4145886688079498684
 GameObject:
   m_ObjectHideFlags: 0
@@ -31186,9 +31183,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initOrder: 6
-  _wavePoints: 9
+  _wavePoints: 3
   _mergePoints: 2
-  _toDrop: 3
+  _toDrop: 8
   _selector: {fileID: 1414648494770224759}
   _view: {fileID: 1018109366}
 --- !u!1 &6718269442526170988
