@@ -9,6 +9,7 @@ public class UIView : MonoBehaviour
     [SerializeField] private bool _isUseSettingsMaineMenuButton;
     [SerializeField] private GameFinishView _finish;
     [SerializeField] private List<UIRootContainerItem> _items;
+    [SerializeField] private LayoutAspectBehaviour _rootContainerBehavior;
 
     private Transform _baseParent;
     private Transform _transform;
@@ -17,6 +18,7 @@ public class UIView : MonoBehaviour
     public bool IsUseSettingsQuiteButton => _isUseSettingsQuiteButton;
     public bool IsUseSettingsMaineMenuButton => _isUseSettingsMaineMenuButton;
     public IEnumerable<UIRootContainerItem> Items => _items;
+    public LayoutAspectBehaviour RootContainerBehavior => _rootContainerBehavior;
 
     private void Start()
     {

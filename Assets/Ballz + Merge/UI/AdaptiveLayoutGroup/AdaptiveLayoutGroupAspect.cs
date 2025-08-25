@@ -35,6 +35,12 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
         return this;
     }
 
+    public void SetOversizeBehavior(LayoutAspectBehaviour layoutAspectBehavior)
+    {
+        _oversizeBehaviour = layoutAspectBehavior;
+        CalculateAttributes();
+    }
+
     protected override float Calculate(float aspect, float availableSize)
     {
         return IsVertical ? availableSize / aspect : availableSize * aspect;
