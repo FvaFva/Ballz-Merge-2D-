@@ -86,6 +86,9 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
 
     private IEnumerator Show()
     {
+        foreach (var view in _allViews)
+            view.Hide();
+
         _loadScreen.MoveProgress(0f);
         _loadScreen.Show();
 
@@ -98,7 +101,8 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
                 _data[i].Score,
                 _data[i].Number,
                 _data[i].Level,
-                _data[i].Volumes);
+                _data[i].Volumes,
+                _data[i].IsCompleted);
 
             if (i % batchSize == 0 || i == total - 1)
             {

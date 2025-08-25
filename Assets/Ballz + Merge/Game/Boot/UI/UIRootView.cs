@@ -47,6 +47,7 @@ namespace BallzMerge.Root
         public void AttachSceneUI(UIView sceneUI, Camera uICamera = null)
         {
             _sceneUI = sceneUI;
+            _containers.SetSettings(_sceneUI.RootContainerBehavior);
             ChangeStateUIView(true);
             _escapeMenu.UpdateButtonView(_sceneUI.IsUseSettingsQuiteButton, _sceneUI.IsUseSettingsMaineMenuButton);
 
