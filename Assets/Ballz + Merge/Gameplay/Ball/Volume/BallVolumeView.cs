@@ -13,13 +13,23 @@ public class BallVolumeView : MonoBehaviour
     [SerializeField] private TMP_Text _level;
 
     private Sprite _baseIcon;
-    private List<(Action<bool>, Action<IBallVolumeViewData>)> _items = new List<(Action<bool>, Action<IBallVolumeViewData>)>();
+    private List<(Action<bool>, Action<IBallVolumeViewData>)> _items;
 
     public IBallVolumeViewData CurrentData { get; private set; }
     public event Action<BallVolumeView> Triggered;
 
     private void Awake()
     {
+        Init();
+    }
+
+    public BallVolumeView Init()
+    {
+        if (_items != null)
+            return this;
+
+        _items  = new List<(Action<bool>, Action<IBallVolumeViewData>)>();
+
         if (_icon != null)
         {
             _baseIcon = _icon.sprite;
@@ -34,6 +44,8 @@ public class BallVolumeView : MonoBehaviour
 
         if (_description != null)
             _items.Add(((state) => { _description.SetActiveIfNotNull(state); }, (data) => { _description.text = data.Description; }));
+
+        return this;
     }
 
     private void OnEnable()
