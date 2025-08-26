@@ -15,11 +15,13 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
     [SerializeField] private int _countPreload;
     [SerializeField] private RectTransform _box;
 
+    [Inject] private IGameTimeOwner _timeScaler;
+
     private int _cageID;
     private List<BallVolumeCageElement> _elements = new List<BallVolumeCageElement>();
     private Queue<BallVolumeCageElement> _cage;
 
-    [Inject] private IGameTimeOwner _timeScaler;
+    public IReadOnlyList<BallVolumeCageElement> Elements => _elements;
 
     private void OnEnable()
     {

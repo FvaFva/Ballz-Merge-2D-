@@ -18,12 +18,16 @@ public class LevelSelectionView : MonoBehaviour
         _trigger.AddListener(OnTriggered);
     }
 
-    public LevelSelectionView Show(LevelSettings level, bool completed)
+    public LevelSelectionView Init(LevelSettings level)
     {
         _data = level;
         _header.text = _data.Title;
-        _completed.SetActive(completed);
         return this;
+    }
+
+    public void ShowStatus(bool completed)
+    {
+        _completed.SetActive(completed);
     }
 
     private void OnTriggered()
