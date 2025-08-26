@@ -37,7 +37,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     private void Awake()
     {
         BuildBehaviourMap();
-        _conductor = new ConductorBetweenWaves(_ball.GetBallComponent<BallAwaitBreaker>(), _dropper, _blocksBus);
+        _conductor = new ConductorBetweenWaves(_ball.GetBallComponent<BallAwaitBreaker>(), _dropper, _blocksBus, () => GetFromMap<ICompleteLevelTrigger>().All(f => f.IsReadyToComplete));
         _save = _data.Saves.Get();
 
         if (_save.IsLoaded)
@@ -54,6 +54,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         _ball.LeftGame += OnBallLeftGame;
         _conductor.GameIsLost += OnGameIsLost;
         _conductor.WaveLoaded += OnWaveLoaded;
+        _conductor.GameIsComplete += OnCompleteLevel;
         _rootUI.EscapeMenu.QuitRequired += OnQuitRequired;
     }
 
@@ -62,6 +63,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         _ball.LeftGame -= OnBallLeftGame;
         _conductor.GameIsLost -= OnGameIsLost;
         _conductor.WaveLoaded -= OnWaveLoaded;
+        _conductor.GameIsComplete -= OnCompleteLevel;
         _rootUI.EscapeMenu.QuitRequired -= OnQuitRequired;
     }
 
@@ -88,13 +90,10 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     private void OnBallLeftGame()
     {
-        if (GetFromMap<ICompleteLevelTrigger>().All(f => f.IsReadyToComplete))
-            CompleteLevel();
-        else
-            _conductor.Continue();
+        _conductor.Continue();
     }
 
-    private void CompleteLevel()
+    private void OnCompleteLevel()
     {
         _exitData.Put(CreateHistory(true));
         _exitData.TargetScene = ScenesNames.MAIN_MENU;

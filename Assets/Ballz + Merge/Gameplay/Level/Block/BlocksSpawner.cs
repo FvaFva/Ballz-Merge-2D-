@@ -26,7 +26,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private int _totalWaves;
         private int _blockID;
 
-        public bool IsReadyToComplete => _currentWave == _totalWaves;
+        public bool IsReadyToComplete => _currentWave > _totalWaves;
 
         private void OnEnable()
         {
