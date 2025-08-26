@@ -15,6 +15,7 @@ public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable
     [Inject] private DataBaseSource _data;
 
     private List<LevelSelectionView> _selectors;
+    private List<int> _completedLevels;
     private RectTransform _parent;
     private RectTransform _transform;
 
@@ -26,6 +27,12 @@ public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable
 
         foreach (var selector in _selectors)
             selector.Selected += OnSelect;
+
+        _completedLevels = _data.History.GetCompleted();
+        int count = 0;
+
+        foreach (var level in _map.Available)
+            _selectors[count++].ShowStatus(_completedLevels.Contains(level.ID));
     }
 
     private void OnDisable()
@@ -41,10 +48,9 @@ public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable
         _transform = transform as RectTransform;
         _parent = _transform.parent as RectTransform;
         _selectors = new List<LevelSelectionView>();
-        var completedLevels = _data.History.GetCompleted();
 
         foreach (var level in _map.Available)
-            _selectors.Add(Instantiate(_prefab, _box).Show(level, completedLevels.Contains(level.ID)));
+            _selectors.Add(Instantiate(_prefab, _box).Init(level));
     }
 
     public void Show(RectTransform showcase)

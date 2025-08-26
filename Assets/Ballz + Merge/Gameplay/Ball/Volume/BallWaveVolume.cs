@@ -33,7 +33,11 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
 
     public GameHistoryData Write(GameHistoryData data)
     {
-        data.Volumes = Bag.All.GroupBy(v => v.Name).ToDictionary(g => g.Key, g => g.Sum(v => v.Value));
+        data.Volumes = Bag.All.Select(ballVolume => new { ballVolume.Name, ballVolume.Value })
+            .Concat(Cage.Elements.Where(cage => cage.Current != null).Select(cage => new { cage.Current.Name, cage.Current.Value }))
+            .GroupBy(x => x.Name)
+            .ToDictionary(g => g.Key, g => g.Sum(x => x.Value));
+
         return data;
     }
 

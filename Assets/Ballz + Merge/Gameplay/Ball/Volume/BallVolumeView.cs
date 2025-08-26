@@ -40,7 +40,7 @@ public class BallVolumeView : MonoBehaviour
             _items.Add(((state) => { _name.SetActiveIfNotNull(state); }, (data) => { _name.text = data.Name; }));
 
         if (_level != null)
-            _items.Add(((state) => { _level.SetActiveIfNotNull(state); }, (data) => { _level.text = _level.text = data.Value.ToString(); }));
+            _items.Add(((state) => { _level.SetActiveIfNotNull(state); }, (data) => { _level.text = data.Value.ToString(); }));
 
         if (_description != null)
             _items.Add(((state) => { _description.SetActiveIfNotNull(state); }, (data) => { _description.text = data.Description; }));
