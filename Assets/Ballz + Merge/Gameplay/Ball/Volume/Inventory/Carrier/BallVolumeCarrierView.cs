@@ -36,7 +36,7 @@ public class BallVolumeCarrierView : MonoBehaviour
         _trigger.enabled = state;
         _header.text = header;
         _headerParent.gameObject.SetActive(state);
-        _volumeView.Show(volume);
+        _volumeView.Show(state ? volume : default);
 
         float targetFade = state ? 0 : _lockBaseFade;
         float targetScale = state ? 2 : 1;

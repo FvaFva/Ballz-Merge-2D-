@@ -133,8 +133,7 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
         else
             CurrentData = default;
 
-        if (wasActive != gonnaActive)
-            ActiveVolumePerformed?.Invoke(gonnaActive);
+        ActiveVolumePerformed?.Invoke(gonnaActive);
     }
 
     private bool IsCurrentGonnaActive()

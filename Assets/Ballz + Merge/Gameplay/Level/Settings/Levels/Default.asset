@@ -53,34 +53,60 @@ MonoBehaviour:
       m_NumAlphaKeys: 2
     _spawnProperties:
     - Count:
-      - Value: 2
-        Weight: 3
-      - Value: 3
+      - Value: 10
+        Weight: 1
+      Number:
+      - Value: 9
+        Weight: 1
+    - Count:
+      - Value: 10
         Weight: 1
       Number:
       - Value: 1
-        Weight: 4
+        Weight: 1
+      - Value: 2
+        Weight: 1
+      - Value: 3
+        Weight: 1
+      - Value: 4
+        Weight: 1
+      - Value: 5
+        Weight: 1
+      - Value: 6
+        Weight: 1
+      - Value: 7
+        Weight: 1
+      - Value: 8
+        Weight: 1
+      - Value: 9
+        Weight: 1
+    - Count:
+      - Value: 10
+        Weight: 1
+      Number:
       - Value: 2
         Weight: 1
     - Count:
-      - Value: 2
-        Weight: 2
-      - Value: 3
+      - Value: 10
         Weight: 1
       Number:
       - Value: 1
-        Weight: 2
+        Weight: 1
       - Value: 2
         Weight: 1
-    - Count:
-      - Value: 2
-        Weight: 2
-      Number:
       - Value: 3
-        Weight: 2
-      - Value: 2
-        Weight: 2
-      - Value: 1
+        Weight: 1
+      - Value: 4
+        Weight: 1
+      - Value: 5
+        Weight: 1
+      - Value: 6
+        Weight: 1
+      - Value: 7
+        Weight: 1
+      - Value: 8
+        Weight: 1
+      - Value: 9
         Weight: 1
   _dropSettings:
     _entries:

@@ -38,9 +38,10 @@ public class BallVolumesPassiveView : CyclicBehavior, ILevelFinisher, IInitializ
     public void Init()
     {
         foreach (var volume in _map.GetAllByType<BallVolumePassive>())
-            _volumesMap.Add(volume.GetType(), Instantiate(_prefab, _content).Deactivate());
+            _volumesMap.Add(volume.GetType(), Instantiate(_prefab, _content).Deactivate().Init());
 
         gameObject.SetActive(true);
+        UpdateAllValues();
     }
 
     public void FinishLevel()
