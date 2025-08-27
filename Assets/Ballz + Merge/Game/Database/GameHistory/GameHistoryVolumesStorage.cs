@@ -1,41 +1,50 @@
-﻿using System.Collections.Generic;
-using Mono.Data.Sqlite;
+﻿using Mono.Data.Sqlite;
+using System.Collections.Generic;
+using System.Data;
+using UnityEngine.Rendering;
 
 namespace BallzMerge.Data
 {
     public class GameHistoryVolumesStorage
     {
-        private readonly string IDColumName;
+        private readonly string IDColumnName;
 
-        public GameHistoryVolumesStorage(SqliteConnection connectionForInit, string iDColumName)
+        public GameHistoryVolumesStorage(SqliteConnection connectionForInit, string idColumnName)
         {
-            IDColumName = iDColumName;
+            IDColumnName = idColumnName;
             CreateSettingsTable(connectionForInit);
         }
 
         public readonly string TableName = "GameVolumes";
-        public readonly string VolumeColumName = "Volume";
-        public readonly string ValueColumName = "Value";
+        public readonly string VolumeColumnName = "Volume";
+        public readonly string ValueColumnName = "Value";
 
-        public void Set(SqliteConnection connection, string gameID, IEnumerable<KeyValuePair<string, int>> volumes)
+        public void Set(SqliteConnection connection, string gameID, IReadOnlyDictionary<string, List<int>> volumes)
         {
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = $@"   INSERT INTO {TableName}  
-                                            ({VolumeColumName}, {ValueColumName}, {IDColumName})  
+                                            ({VolumeColumnName}, {ValueColumnName}, {IDColumnName})  
                                             VALUES
-                                            (@{VolumeColumName}, @{ValueColumName}, @{IDColumName})";
+                                            (@{VolumeColumnName}, @{ValueColumnName}, @{IDColumnName})";
 
-                command.Parameters.AddWithValue($"@{IDColumName}", gameID);
+                var idParam = command.Parameters.Add($"@{IDColumnName}", DbType.String);
+                var nameParam = command.Parameters.Add($"@{VolumeColumnName}", DbType.String);
+                var valueParam = command.Parameters.Add($"@{ValueColumnName}", DbType.Int64);
 
-                foreach (var cell in volumes)
+                foreach (var volume in volumes)
                 {
-                    if (cell.Value.Equals(0))
+                    if (volume.Value.Equals(0))
                         continue;
 
-                    command.Parameters.AddWithValue($"@{VolumeColumName}", cell.Key);
-                    command.Parameters.AddWithValue($"@{ValueColumName}", cell.Value);
-                    command.ExecuteNonQuery();
+                    idParam.Value = gameID;
+                    nameParam.Value = volume.Key;
+
+                    foreach(var value in volume.Value)
+                    {
+                        valueParam.Value = value;
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
@@ -55,9 +64,9 @@ namespace BallzMerge.Data
             {
                 command.CommandText = $@"   CREATE TABLE IF NOT EXISTS {TableName}
                                             (ID INTEGER PRIMARY KEY,
-                                            {VolumeColumName} TEXT,
-                                            {ValueColumName} INTEGER,
-                                            {IDColumName} TEXT)";
+                                            {VolumeColumnName} TEXT,
+                                            {ValueColumnName} INTEGER,
+                                            {IDColumnName} TEXT)";
 
                 command.ExecuteNonQuery();
             }

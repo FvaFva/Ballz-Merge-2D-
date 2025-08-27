@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,7 +37,7 @@ public class GameDataView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Show(string toggleLabel, int score, int number, int level, Dictionary<string, int> volumes, bool isCompleted)
+    public void Show(string toggleLabel, int score, int number, int level, Dictionary<string, List<int>> volumes, bool isCompleted)
     {
         _toggleLabel.text = toggleLabel;
         _score.text = score.ToString();
@@ -43,15 +46,28 @@ public class GameDataView : MonoBehaviour
         _backgroundView.color = isCompleted ? CompleteColor : LostColor;
         gameObject.SetActive(true);
 
-        int countData = volumes.Count;
+        int current = 0;
+
+        var result = volumes.ToDictionary(
+            volume => volume.Key,
+            volume => volume.Value
+                .GroupBy(x => x)
+                .Select(group => new { Value = group.Key, Count = group.Count() })
+                .ToList()
+        );
+
+        int countData = result.Values.Sum(count => count.Count);
 
         if (countData > _allViews.Count)
             GenerateViews(countData - _allViews.Count);
 
-        int current = 0;
-
-        foreach (var item in volumes)
-            _allViews[current++].Show(item.Key, item.Value);
+        foreach (var volume in result)
+        {
+            foreach (var item in volume.Value)
+            {
+                _allViews[current++].Show(volume.Key, item.Value, item.Count);
+            }
+        }
     }
 
     private void GenerateViews(int count)

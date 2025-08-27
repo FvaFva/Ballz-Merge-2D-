@@ -22,6 +22,7 @@ public class BallVolumesBagCell<T> : IBallVolumesBagCell<T> where T : BallVolume
     public Action<bool> ViewCallback { get; private set; }
     public string Description  {get; private set; }
     public Sprite Icon => Volume.Icon;
+    public Color RarityColor => Rarity.Color;
 
     BallVolume IBallVolumeViewData.Volume => Volume;
 
