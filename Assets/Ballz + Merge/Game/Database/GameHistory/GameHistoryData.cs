@@ -4,7 +4,7 @@ namespace BallzMerge.Data
 {
     public struct GameHistoryData
     {
-        public Dictionary<string, int> Volumes;
+        public Dictionary<string, List<int>> Volumes;
         public int Score;
         public string ID;
         public string Date;
@@ -15,7 +15,7 @@ namespace BallzMerge.Data
         public GameHistoryData(string id, int score, string date, int number, int level, bool isCompleted)
         {
             Score = score;
-            Volumes = new Dictionary<string, int>();
+            Volumes = new Dictionary<string, List<int>>();
             ID = id;
             Date = date;
             Number = number;
@@ -23,7 +23,7 @@ namespace BallzMerge.Data
             IsCompleted = isCompleted;
         }
 
-        public void Add(string volume, int value) => Volumes[volume] = value;
+        public void Add(string volume, List<int> value) => Volumes[volume] = value;
 
         public string GetDateOrID(bool state) => state ? ID : Date;
 

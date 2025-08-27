@@ -15,10 +15,13 @@ public class VolumeMicAdditionalView : MonoBehaviour
     [SerializeField] private List<Button> _triggers;
     [SerializeField] private TMP_Text _descriptionView;
     [SerializeField] private RectPumper _pumper;
+    [SerializeField] private Image _activatorImage;
+    [SerializeField] private Sprite _expandedSprite;
 
     private RectTransform _transform;
     private bool _isOpened;
     private bool _isNeedCallback;
+    private Sprite _originalSprite;
 
     private Vector2 _originalAnchorMin;
     private Vector2 _originalAnchorMax;
@@ -36,12 +39,13 @@ public class VolumeMicAdditionalView : MonoBehaviour
         _openedAnchorMin = new Vector2(Frame, Frame);
         _openedAnchorMax = new Vector2(1 - Frame, 1 - Frame);
         _isNeedCallback = true;
+        _originalSprite = _activatorImage.sprite;
     }
 
     private void OnEnable()
     {
         foreach(var trigger in _triggers)
-            trigger.AddListener(ChangeVew);
+            trigger.AddListener(ChangeView);
 
         SetBaseView();
     }
@@ -49,7 +53,7 @@ public class VolumeMicAdditionalView : MonoBehaviour
     private void OnDisable()
     {
         foreach (var trigger in _triggers)
-            trigger.RemoveListener(ChangeVew);
+            trigger.RemoveListener(ChangeView);
 
         SetBaseView();
     }
@@ -65,7 +69,7 @@ public class VolumeMicAdditionalView : MonoBehaviour
         if(_isOpened)
         {
             _isNeedCallback = false;
-            ChangeVew();
+            ChangeView();
         }
     }
 
@@ -82,9 +86,10 @@ public class VolumeMicAdditionalView : MonoBehaviour
         _transform.localScale = Vector3.one;
         _descriptionView.gameObject.SetActive(false);
         _descriptionView.maxVisibleCharacters = 0;
+        _activatorImage.sprite = _originalSprite;
     }
 
-    private void ChangeVew()
+    private void ChangeView()
     {
         _pumper.enabled = _isOpened;
         _isOpened = !_isOpened;
@@ -92,9 +97,15 @@ public class VolumeMicAdditionalView : MonoBehaviour
         _descriptionView.maxVisibleCharacters = 0;
 
         if (_isOpened)
+        {
+            _activatorImage.sprite = _expandedSprite;
             RestartSizeAnimation(_openedAnchorMin, _openedAnchorMax);
+        }
         else
+        {
+            _activatorImage.sprite = _originalSprite;
             RestartSizeAnimation(_originalAnchorMin, _originalAnchorMax);
+        }
     }
 
     private void StopCurrentAnimation()

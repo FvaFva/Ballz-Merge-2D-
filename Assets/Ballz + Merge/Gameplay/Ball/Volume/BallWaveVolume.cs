@@ -35,8 +35,8 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
     {
         data.Volumes = Bag.All.Select(ballVolume => new { ballVolume.Name, ballVolume.Value })
             .Concat(Cage.Elements.Where(cage => cage.Current != null).Select(cage => new { cage.Current.Name, cage.Current.Value }))
-            .GroupBy(x => x.Name)
-            .ToDictionary(g => g.Key, g => g.Sum(x => x.Value));
+            .GroupBy(name => name.Name)
+            .ToDictionary(name => name.Key, values => values.Select(value => value.Value).ToList());
 
         return data;
     }

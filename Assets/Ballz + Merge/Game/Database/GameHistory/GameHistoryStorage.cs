@@ -1,4 +1,5 @@
-﻿using Mono.Data.Sqlite;
+﻿using ModestTree;
+using Mono.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 
@@ -40,8 +41,8 @@ namespace BallzMerge.Data
                                                game.{LevelColumnName} as {LevelColumnName},
                                                game.{IsCompletedColumnName} as {IsCompletedColumnName},
                                                strftime('%d.%m.', game.{DateColumnName}) || substr(strftime('%Y', game.{DateColumnName}), 3, 2) || strftime(' %H:', game.{DateColumnName}) || strftime('%M', game.{DateColumnName}) as {DateColumnName},
-                                               volumes.{_volumeStorage.ValueColumName} as {_volumeStorage.ValueColumName},
-                                               volumes.{_volumeStorage.VolumeColumName} as {_volumeStorage.VolumeColumName}
+                                               volumes.{_volumeStorage.ValueColumnName} as {_volumeStorage.ValueColumnName},
+                                               volumes.{_volumeStorage.VolumeColumnName} as {_volumeStorage.VolumeColumnName}
                                           FROM {TableName} as game
                                               LEFT JOIN {_volumeStorage.TableName} as volumes
                                               ON game.{IDColumnName} = volumes.{IDColumnName}
@@ -169,13 +170,21 @@ namespace BallzMerge.Data
                     currentDataId = data.Count - 1;
                 }
 
-                object value = reader[_volumeStorage.ValueColumName];
-                object volume = reader[_volumeStorage.VolumeColumName];
+                string volume = reader[_volumeStorage.VolumeColumnName].ToString();
+                int value = Convert.ToInt32(reader[_volumeStorage.ValueColumnName]);
 
-                if (value == DBNull.Value || volume == DBNull.Value)
+                if (value.Equals(0) || volume.IsEmpty())
                     continue;
 
-                data[currentDataId].Add(volume.ToString(), Convert.ToInt32(value));
+                if (!data[currentDataId].Volumes.TryGetValue(volume, out var list))
+                {
+                    list = new List<int>();
+                    data[currentDataId].Volumes[volume] = list;
+                }
+
+                list.Add(value);
+
+                //data[currentDataId].Add(volume.ToString(), new List<int>(value));
             }
         }
     }

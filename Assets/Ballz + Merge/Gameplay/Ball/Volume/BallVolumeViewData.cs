@@ -8,6 +8,7 @@ public struct BallVolumeViewData : IBallVolumeViewData
         Description = volume.GetDescription(value);
         Value = value;
         Icon = volume.Icon;
+        RarityColor = default;
         Volume = volume;
     }
 
@@ -20,6 +21,8 @@ public struct BallVolumeViewData : IBallVolumeViewData
     public Sprite Icon { get; private set; }
 
     public BallVolume Volume { get; private set; }
+
+    public Color RarityColor { get; private set; }
 
     public bool IsEqual<Type>() where Type : BallVolume
     {
