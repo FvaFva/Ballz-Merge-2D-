@@ -4604,10 +4604,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a85015e292b344f83e5b966e785586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isMask: 1
-  _shinyBrightness: 5
+  _isMask: 0
+  _shinyBrightness: 10
   _shinyColor: {r: 1, g: 0, b: 0, a: 1}
-  _textureColor: {r: 1, g: 1, b: 1, a: 1}
+  _textureColor: {r: 1, g: 1, b: 1, a: 0.5019608}
 --- !u!1 &4288608955486403031
 GameObject:
   m_ObjectHideFlags: 0
@@ -4885,7 +4885,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 105.15
+  m_fontSize: 91.35
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6305,8 +6305,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 182.54639, y: -230.32349}
-  m_SizeDelta: {x: 146.88232, y: 146.88232}
+  m_AnchoredPosition: {x: 229.3414, y: -201.43942}
+  m_SizeDelta: {x: 127.62628, y: 127.62628}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1696618635217812777
 CanvasRenderer:
