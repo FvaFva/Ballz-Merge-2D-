@@ -170,21 +170,22 @@ namespace BallzMerge.Data
                     currentDataId = data.Count - 1;
                 }
 
-                string volume = reader[_volumeStorage.VolumeColumnName].ToString();
-                int value = Convert.ToInt32(reader[_volumeStorage.ValueColumnName]);
+                object volume = reader[_volumeStorage.VolumeColumnName];
+                object value = reader[_volumeStorage.ValueColumnName];
 
-                if (value.Equals(0) || volume.IsEmpty())
+                if (value == DBNull.Value || volume == DBNull.Value)
                     continue;
 
-                if (!data[currentDataId].Volumes.TryGetValue(volume, out var list))
+                string volumeName = volume.ToString();
+                int volumeValue = Convert.ToInt32(value);
+
+                if (!data[currentDataId].Volumes.TryGetValue(volumeName, out var list))
                 {
                     list = new List<int>();
-                    data[currentDataId].Volumes[volume] = list;
+                    data[currentDataId].Volumes[volumeName] = list;
                 }
 
-                list.Add(value);
-
-                //data[currentDataId].Add(volume.ToString(), new List<int>(value));
+                list.Add(volumeValue);
             }
         }
     }

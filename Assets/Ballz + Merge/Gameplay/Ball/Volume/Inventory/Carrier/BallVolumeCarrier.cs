@@ -81,18 +81,9 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
         _transform.SetParent(_baseParent);
         _volumesView.HidePerformed();
         _volumeView.ChangeActive(false);
-        _cageContainerItem.UpdatePositionByGroupDelayed();
-
-        if (gameObject.activeSelf)
-        {
-            _cageContainerItem.UpdatePositionByGroupDelayed();
-            StartCoroutine(DelayedDeactivate());
-        }
-        else
-        {
-            _cageContainerItem.UpdatePositionByGroup();
-            gameObject.SetActive(false);
-        }
+        _cageContainerItem.SetUpdatePositionOnEnable(true);
+        _cageContainerItem.UpdatePositionByGroup();
+        gameObject.SetActive(false);
     }
 
     private void OnTrigger()
@@ -117,11 +108,5 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
     {
         _volumesView.HidePerformed();
         _volumeView.ChangeActive(false, data);
-    }
-
-    private IEnumerator DelayedDeactivate()
-    {
-        yield return new WaitForSeconds(ShowDuration);
-        gameObject.SetActive(false);
     }
 }

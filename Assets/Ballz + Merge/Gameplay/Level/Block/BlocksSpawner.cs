@@ -59,12 +59,12 @@ namespace BallzMerge.Gameplay.BlockSpace
         public void ApplySettings(LevelSettings settings)
         {
             _settings = settings.BlocksSettings;
-            _totalWaves = _settings.SpawnProperties.Count();
+            _totalWaves = _settings.SpawnProperties.Count() - 1;
         }
 
         public IEnumerable<Block> SpawnWave()
         {
-            if (_currentWave < _totalWaves)
+            if (_currentWave <= _totalWaves)
             {
                 List<int> positions = _gridSettings.GetPositionsInRow();
                 var current = _settings.SpawnProperties[_currentWave];

@@ -69,7 +69,10 @@ public class BallVolumeCageContainer : MonoBehaviour
     public void Swap(BallVolumesBagCell<BallVolumeOnHit> finisher, Action<BallVolumesBagCell<BallVolumeOnHit>> startTarget)
     {
         if (_starter == default)
+        {
             startTarget(default);
+            return;
+        }
 
         var startValue = _starter.Current;
         _starter.Apply(finisher);

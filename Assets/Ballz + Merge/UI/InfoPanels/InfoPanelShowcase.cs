@@ -84,6 +84,7 @@ public class InfoPanelShowcase : MonoBehaviour
             return;
 
         _current.Hide();
+        _current = null;
         CloseTriggered?.Invoke();
 
         if (_panels.TryDequeue(out IInfoPanelView temp))
@@ -139,7 +140,7 @@ public class InfoPanelShowcase : MonoBehaviour
 
     private void HideAllPanels()
     {
-        _current.Hide();
+        _current?.Hide();
 
         if (_panels.IsEmpty() == false)
         {

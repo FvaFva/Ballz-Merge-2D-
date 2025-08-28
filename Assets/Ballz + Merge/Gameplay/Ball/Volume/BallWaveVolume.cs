@@ -56,9 +56,9 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
         Changed?.Invoke();
     }
 
-    public int GetPassiveValue(Type type)=> Bag.Passive.Where(c => c.IsEqual(type)).Sum(c=>c.Value);
+    public int GetPassiveValue(Type type)=> Bag.Passive.Where(c => c.IsEqual(type)).Count();
     
-    public int GetPassiveValue<T>() where T : BallVolumePassive => Bag.Passive.Where(c => c.IsEqual<T>()).Sum(c => c.Value); 
+    public int GetPassiveValue<T>() where T : BallVolumePassive => Bag.Passive.Where(c => c.IsEqual<T>()).Count(); 
 
     public void FinishLevel()
     {
