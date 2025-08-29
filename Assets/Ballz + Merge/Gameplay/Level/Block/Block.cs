@@ -22,6 +22,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         private Tweener _moveTween;
         private TweenCallback _onCompleteTweenAction;
         private Dictionary<BlockMoveActionType, Action> _blockMoveTypeActions;
+        private bool _isMerged;
+
         public bool IsAlive { get; private set; }
         public Vector2Int GridPosition { get; private set; }
         public Vector2 WorldPosition => _transform.position;
@@ -73,6 +75,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _view.Init(_gridSettings.MoveTime, settings);
             _physic.Init(virtualBox);
             IsAlive = true;
+            _isMerged = false;
             Deactivate();
             return this;
         }
@@ -85,6 +88,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _newPosition = _transform.localPosition;
             IsWithEffect = false;
             IsAlive = true;
+            _isMerged = false;
             Number = number;
             GridPosition = gridPosition;
             _view.Activate(number, color);
@@ -142,7 +146,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Merge(Block mergedBlock)
         {
-            if (IsAlive == false)
+            if (IsAlive == false || _isMerged == true || mergedBlock._isMerged == true)
                 return;
 
             Debug.Add($"Merge with {mergedBlock.name}");
@@ -152,6 +156,11 @@ namespace BallzMerge.Gameplay.BlockSpace
             PlayTween(tweener, Deactivate);
             _view.PlayMerge();
             _physic.Deactivate();
+        }
+
+        public void SetMerged()
+        {
+            _isMerged = true;
         }
 
         public void Destroy()
@@ -216,6 +225,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             TweenCallback callback = _onCompleteTweenAction;
             _onCompleteTweenAction = null;
+            _moveTween = null;
             callback?.Invoke();
         }
 
