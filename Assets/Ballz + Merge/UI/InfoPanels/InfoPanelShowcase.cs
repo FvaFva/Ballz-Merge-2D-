@@ -14,7 +14,7 @@ public class InfoPanelShowcase : MonoBehaviour
     [SerializeField] private Button _openDefaultButton;
     [SerializeField] private RectTransform _box;
     [SerializeField] private InfoPanelView _default;
-    [SerializeField] private GameObject _content;
+    [SerializeField] private InfoPanelContent _content;
     [SerializeField] private EscapeMenu _escapeMenu;
     [SerializeField] private InfoPanelView _settingsPanel;
 
@@ -83,14 +83,18 @@ public class InfoPanelShowcase : MonoBehaviour
         if (TryActivate(_default))
             return;
 
-        _current.Hide();
-        _current = null;
         CloseTriggered?.Invoke();
 
         if (_panels.TryDequeue(out IInfoPanelView temp))
+        {
+            _current.Hide();
+            _current = null;
             ShowPanel(temp);
+        }
         else
+        {
             Deactivate();
+        }
     }
 
     private void OnCloseClick()
@@ -105,11 +109,15 @@ public class InfoPanelShowcase : MonoBehaviour
 
     private void Deactivate()
     {
+        _content.Close(OnContentClosed);
+    }
+
+    private void OnContentClosed()
+    {
         UIViewStateChanged?.Invoke(true);
         HideAllPanels();
         _current = null;
         _panels.Clear();
-        _content.SetActive(false);
         _openDefaultButton.gameObject.SetActive(true);
         _closeButton.gameObject.SetActive(false);
         _closeArea.gameObject.SetActive(false);
@@ -120,11 +128,11 @@ public class InfoPanelShowcase : MonoBehaviour
     {
         if (_current == null)
         {
-            _content.SetActive(true);
+            ShowPanel(panelView);
+            _content.Open();
             _openDefaultButton.gameObject.SetActive(false);
             _closeButton.gameObject.SetActive(true);
             _closeArea.gameObject.SetActive(true);
-            ShowPanel(panelView);
             UIViewStateChanged?.Invoke(false);
             return true;
         }

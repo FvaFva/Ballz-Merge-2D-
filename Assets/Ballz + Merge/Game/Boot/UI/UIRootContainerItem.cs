@@ -62,11 +62,6 @@ namespace BallzMerge.Root
             _transform.PerformIfNotNull(rectTransform => rectTransform.SetParent(_parent));
         }
 
-        public void SetUpdatePositionOnEnable(bool state)
-        {
-            _updatePositionOnEnable = state;
-        }
-
         public void UpdatePositionByGroup()
         {
             _transform.SetParent(Group.Transform);

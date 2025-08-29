@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 318efa92e696cb54f9b13999dc381c75, type: 3}
+  m_Name: AchievementWaveSpawnedSettings
+  m_EditorClassIdentifier: 
+  _steps: 01000000050000000a000000
+  _name: Spawner
+  _description: Survive as many waves as possible.
+  _image: {fileID: 4285667266083149212, guid: 38db1beec36ae478095b7f75a61a5afe, type: 3}
+  _iD:
+    Google: 
+    Internal: 1
