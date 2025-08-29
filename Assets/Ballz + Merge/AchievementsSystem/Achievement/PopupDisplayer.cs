@@ -1,4 +1,5 @@
 using BallzMerge.Achievement;
+using BallzMerge.Root.Audio;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ public class PopupDisplayer : MonoBehaviour
     private const float NextShift = 210f;
     private const float AnimationDuration = 0.5f;
 
+
+    [SerializeField] private AudioSourceHandler _audio;
     [SerializeField] private RectTransform _container;
     [SerializeField] private PopupView _achievementView;
 
@@ -28,6 +31,7 @@ public class PopupDisplayer : MonoBehaviour
     public void ShowPopup(AchievementData achievementData, int currentStep = 0, string message = null)
     {
         _currentMessage = message ?? achievementData.Name;
+        _audio.Play();
 
         PopupView achievementView = Instantiate(_achievementView, _container);
 

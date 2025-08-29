@@ -3,6 +3,7 @@
     public enum AudioEffectsTypes
     {
         Hit,
-        Move
+        Move,
+        Drop
     }
 }

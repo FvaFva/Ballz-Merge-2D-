@@ -14,10 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _steps: 010000000200000003000000
   _name: Destroyer
-  _description: "\u041D\u0430\u0447\u0438\u0441\u043B\u044F\u0435\u0442\u0441\u044F
-    \u043F\u0440\u0438 \u0443\u043D\u0438\u0447\u0442\u043E\u0436\u0435\u043D\u0438\u0438
-    \u0431\u043B\u043E\u043A\u043E\u0432"
-  _image: {fileID: 21300000, guid: b12502ba5c973e3488a651f1e7634829, type: 3}
+  _description: Destroy the blocks to get.
+  _image: {fileID: 5002116245990000644, guid: 4e018997910914c308776ecb62bf2e90, type: 3}
   _iD:
     Google: 
     Internal: 0

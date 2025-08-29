@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 318efa92e696cb54f9b13999dc381c75, type: 3}
   m_Name: AchievementWaveSpawnedSettings
   m_EditorClassIdentifier: 
-  _steps: 010000000200000003000000
+  _steps: 01000000050000000a000000
   _name: Spawner
-  _description: "\u041D\u0430\u0447\u0438\u0441\u043B\u044F\u0435\u0442\u0441\u044F
-    \u043F\u0440\u0438 \u0441\u043F\u0430\u0432\u043D\u0435 \u0432\u043E\u043B\u043D"
-  _image: {fileID: 21300000, guid: ddfe6380e427a034c98cf286b332173c, type: 3}
+  _description: Survive as many waves as possible.
+  _image: {fileID: 4285667266083149212, guid: 38db1beec36ae478095b7f75a61a5afe, type: 3}
   _iD:
     Google: 
     Internal: 1

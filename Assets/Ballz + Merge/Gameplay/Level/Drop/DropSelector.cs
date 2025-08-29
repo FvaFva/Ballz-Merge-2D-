@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using BallzMerge.Root.Audio;
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private DropView _firstSlot;
         [SerializeField] private DropView _secondSlot;
+        [SerializeField] private AudioSourceHandler _audio;
 
         private List<IBallVolumesBagCell<BallVolume>> _dropsMap = new List<IBallVolumesBagCell<BallVolume>>();
         private Action _callback;
@@ -49,6 +51,7 @@ namespace BallzMerge.Gameplay.Level
         public void Show(Drop first, Drop second, Action callback)
         {
             KillHide();
+            _audio?.Play(AudioEffectsTypes.Drop);
             _firstSlot.Show(first);
             _secondSlot.Show(second);
             gameObject.SetActive(true);
@@ -92,6 +95,7 @@ namespace BallzMerge.Gameplay.Level
         private void Hide()
         {
             KillHide();
+            _audio?.Play(AudioEffectsTypes.Drop);
             _hide = _canvasGroup.DOFade(0, AnimationTime).OnComplete(OnHideAnimationFinished);
             _hide.Play();
         }

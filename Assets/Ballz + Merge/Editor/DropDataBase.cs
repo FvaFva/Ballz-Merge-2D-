@@ -5,10 +5,10 @@ using UnityEngine;
 public class DropDataBase
 {
     [MenuItem("Tools/Game/Drop DB/Drop history")]
-    public static void ShowWindow()
-    {
-        DropTable("GameHistory");
-    }
+    public static void DropHistory() => DropTable("GameHistory");
+
+    [MenuItem("Tools/Game/Drop DB/Drop Achievements")]
+    public static void DropAchievements() => DropTable("Achievements");
 
     private static void DropTable(string tableName)
     {

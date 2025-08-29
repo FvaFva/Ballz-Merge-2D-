@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using BallzMerge.Root;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -81,7 +80,6 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
         _transform.SetParent(_baseParent);
         _volumesView.HidePerformed();
         _volumeView.ChangeActive(false);
-        _cageContainerItem.SetUpdatePositionOnEnable(true);
         _cageContainerItem.UpdatePositionByGroup();
         gameObject.SetActive(false);
     }

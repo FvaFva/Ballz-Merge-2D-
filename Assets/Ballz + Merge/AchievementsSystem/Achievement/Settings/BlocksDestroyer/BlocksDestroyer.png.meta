@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 38db1beec36ae478095b7f75a61a5afe
+guid: 4e018997910914c308776ecb62bf2e90
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4285667266083149212
-    second: WaveSpawn_0
+      213: 5002116245990000644
+    second: BlocksDestroyer_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: WaveSpawn_0
+      name: BlocksDestroyer_0
       rect:
         serializedVersion: 2
         x: 0
@@ -134,14 +134,14 @@ TextureImporter:
         width: 1024
         height: 1024
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c95d76c0cafb97b30800000000000000
-      internalID: 4285667266083149212
+      spriteID: 408c17f29361b6540800000000000000
+      internalID: 5002116245990000644
       vertices: []
       indices: 
       edges: []
@@ -149,15 +149,14 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      WaveSpawn_0: 4285667266083149212
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

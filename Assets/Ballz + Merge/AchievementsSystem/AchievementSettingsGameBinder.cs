@@ -7,7 +7,7 @@ namespace BallzMerge.Achievement
 {
     public class AchievementSettingsGameBinder : CyclicBehavior, IInitializable
     {
-        private const string Message = "Открыто достижение!";
+        private const string Message = "New Achievement!";
 
         [Inject] private DiContainer _container;
         [Inject] private AchievementsBus _bus;
