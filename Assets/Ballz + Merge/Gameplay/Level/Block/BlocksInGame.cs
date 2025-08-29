@@ -76,6 +76,8 @@ namespace BallzMerge.Gameplay.BlockSpace
             if (firstBlock != null && secondBlock != null && secondBlock.Number == firstBlock.Number)
             {
                 firstBlock.Debug.Add($"I Initialized merge with {secondBlock.name}");
+                firstBlock.Moved -= OnBlockCameNewPosition;
+                secondBlock.Moved -= OnBlockCameNewPosition;
                 MergeBlocks(firstBlock, secondBlock);
                 return true;
             }
@@ -111,6 +113,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             firstBlock.Merge(secondBlock);
             secondBlock.Merge(firstBlock);
+            firstBlock.SetMerged();
+            secondBlock.SetMerged();
             BlocksMerged?.Invoke(firstBlock, secondBlock);
         }
 
