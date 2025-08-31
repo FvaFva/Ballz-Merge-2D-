@@ -1,6 +1,8 @@
+using BallzMerge.Root.Audio;
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -14,12 +16,27 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [SerializeField] private ButtonView _buttonView;
     [SerializeField] private RectPumper _pumper;
     [SerializeField] private RectTransform _hiddenField;
+    [SerializeField] private AudioSourceHandler _audio;
 
     private bool _isPointerDown;
     private bool _isPointerEnter;
     private Transform _transform;
     private Action<bool> _viewChanger = (bool state) => { };
     private Dictionary<bool, Action> _buttonViewStateActions = new Dictionary<bool, Action>();
+
+    private void ConfigureViewChanger()
+    {
+        Action<bool> changer = _ => { };
+
+        if (_pumper != null)
+            changer += state => _pumper.enabled = state;
+        if (_hiddenField != null)
+            changer += state => _hiddenField.gameObject.SetActive(state);
+        if (_audio != null)
+            changer += exit => { if (!exit) _audio.Play(AudioEffectsTypes.Pick); };
+
+        _viewChanger = changer;
+    }
 
     private void Awake()
     {
@@ -29,12 +46,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         _buttonView.Init();
         _buttonView.SetDefault();
 
-        if (_pumper != null && _hiddenField != null)
-            _viewChanger = (bool state) => { _pumper.enabled = state; _hiddenField.gameObject.SetActive(state); };
-        else if (_pumper != null)
-            _viewChanger = (bool state) => { _pumper.enabled = state; };
-        else if (_hiddenField != null)
-            _viewChanger = (bool state) => { _hiddenField.gameObject.SetActive(state); };
+        ConfigureViewChanger();
 
         _buttonViewStateActions.Add(true, ActivateButtonView);
         _buttonViewStateActions.Add(false, DeactivateButtonView);

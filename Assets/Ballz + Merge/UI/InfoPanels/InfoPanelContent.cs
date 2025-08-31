@@ -28,14 +28,18 @@ public class InfoPanelContent : MonoBehaviour
         _canvas.alpha = 0f;
     }
 
+    public void Activate()
+    {
+        _transform.localScale = Vector3.one;
+        gameObject.SetActive(true);
+    }
+
     public void Open()
     {
         _audio.Play(1);
         _seq?.Kill();
         _canvas.alpha = 0f;
         _transform.localScale = Vector3.one * OversizeScale;
-        gameObject.SetActive(true);
-
         _seq = DOTween.Sequence()
             .Join(_transform.DOScale(1f, OpenDuration).SetEase(Ease.OutBack))
             .Join(_canvas.DOFade(1f, OpenDuration))

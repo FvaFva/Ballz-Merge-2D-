@@ -4,6 +4,9 @@
     {
         Hit,
         Move,
-        Drop
+        Drop,
+        Show,
+        Pick,
+        Bloop
     }
 }

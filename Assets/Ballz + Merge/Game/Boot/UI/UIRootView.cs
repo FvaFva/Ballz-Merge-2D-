@@ -4,7 +4,6 @@ namespace BallzMerge.Root
 {
     using Data;
     using Settings;
-    using System;
 
     public class UIRootView : MonoBehaviour
     {

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8a0616cd19c545c1955b536765b4562, type: 3}
+  m_Name: Rules list
+  m_EditorClassIdentifier: 
+  _rules:
+  - When the ball comes back down you get 3 volumes points and can choose it if you
+    have accumulated enough.
+  - Every 3 times the ball returns down the field increases by 1 column to the right.
+  - If you push a block into another with the same number, they will be destroyed.
+  - When you receive a volume it is placed in your inventory and is not used until
+    you transfer it to the cage.
+  - The cage's volumes are activated in turn for each hit on the block.
+  - If a block with a red glow spawns, then after each wave spawns, it increases
+    the number of a random other block.
+  - If blocks are connected by a line, they exchange all influences.
+  - You can drag and drop volumes around the cage.
+  - If the block crosses the lower border, you lose.

@@ -51,7 +51,7 @@ namespace BallzMerge.Gameplay.Level
         public void Show(Drop first, Drop second, Action callback)
         {
             KillHide();
-            _audio?.Play(AudioEffectsTypes.Drop);
+            _audio?.Play(AudioEffectsTypes.Show);
             _firstSlot.Show(first);
             _secondSlot.Show(second);
             gameObject.SetActive(true);

@@ -2467,6 +2467,7 @@ MonoBehaviour:
   _buttonView: {fileID: 1350010940}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 1012256183}
 --- !u!114 &876233630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2604,6 +2605,7 @@ MonoBehaviour:
   _buttonView: {fileID: 444696210}
   _pumper: {fileID: 444696209}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!114 &956527691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2794,6 +2796,12 @@ MonoBehaviour:
   _effects:
   - Type: 2
     Effect: {fileID: 8300000, guid: e703d35cb0ae945f782902bd832202a1, type: 3}
+  - Type: 3
+    Effect: {fileID: 8300000, guid: 1087aed6ec6dd4918920a4f2aecbeef2, type: 3}
+  - Type: 4
+    Effect: {fileID: 8300000, guid: 107e264d33828d04280bcb533a9782bf, type: 3}
+  - Type: 5
+    Effect: {fileID: 8300000, guid: 9faf27d7e08d6a84da22c62a124afc5e, type: 3}
 --- !u!82 &1012256184
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3742,6 +3750,7 @@ MonoBehaviour:
   _trigger: {fileID: 1094842289}
   _volumeView: {fileID: 1405719210}
   _dropHandler: {fileID: 1523675990}
+  _audio: {fileID: 1012256183}
 --- !u!1 &1242943500
 GameObject:
   m_ObjectHideFlags: 0
@@ -4852,6 +4861,7 @@ MonoBehaviour:
   _buttonView: {fileID: 1094842287}
   _pumper: {fileID: 1523675987}
   _hiddenField: {fileID: 527691625}
+  _audio: {fileID: 0}
 --- !u!114 &1523675989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5598,7 +5608,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f691db9f65854e94e9a098db3b5c3bbd, type: 3}
+  m_Sprite: {fileID: 1415960599824078398, guid: cbb04db7b4b114a0e9e2e1a8c2b0a085, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6178,6 +6188,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4397546227461154052, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
   m_PrefabInstance: {fileID: 7181182090348343694}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2090727825 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1424906618905554474, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
+  m_PrefabInstance: {fileID: 7181182090348343694}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6309aa82e20ca542a93e9a7152e8fc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &45434701777697242
 GameObject:
   m_ObjectHideFlags: 0
@@ -14218,6 +14239,7 @@ MonoBehaviour:
   _buttonView: {fileID: 5964920330214975851}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!1 &4367276759412440715
 GameObject:
   m_ObjectHideFlags: 0
@@ -31384,7 +31406,7 @@ MonoBehaviour:
   - Type: 0
     Effect: {fileID: 8300000, guid: d5bb8c05f2f93ed4da53f07a77d14a49, type: 3}
   - Type: 1
-    Effect: {fileID: 8300000, guid: 8d7267741d09ce341b92ed913233448d, type: 3}
+    Effect: {fileID: 8300000, guid: 21b7c8217bb2b45d1a501d9b75a5ed02, type: 3}
 --- !u!1 &6762323525398277282
 GameObject:
   m_ObjectHideFlags: 0
@@ -31998,6 +32020,14 @@ PrefabInstance:
       propertyPath: _maxHitsPerShoot
       value: 500
       objectReference: {fileID: 0}
+    - target: {fileID: 3420952979989523706, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
+      propertyPath: _inGame._activeComponents.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3420952979989523706, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
+      propertyPath: '_inGame._activeComponents.Array.data[7]'
+      value: 
+      objectReference: {fileID: 2090727825}
     - target: {fileID: 4397546227461154052, guid: c647d81d3012161499fdbd6da5f6cdc3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

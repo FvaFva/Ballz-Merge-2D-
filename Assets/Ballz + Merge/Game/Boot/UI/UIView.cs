@@ -1,6 +1,7 @@
 ﻿using BallzMerge.Root;
 using System;
 using System.Collections.Generic;
+using Unity.Android.Gradle;
 using UnityEngine;
 
 public class UIView : MonoBehaviour
@@ -33,6 +34,10 @@ public class UIView : MonoBehaviour
     public void LeftRoot()
     {
         _transform.SetParent(_baseParent);
+
+        foreach (var item in _items)
+            item.UnpackUp();
+
         gameObject.SetActive(false);
     }
     

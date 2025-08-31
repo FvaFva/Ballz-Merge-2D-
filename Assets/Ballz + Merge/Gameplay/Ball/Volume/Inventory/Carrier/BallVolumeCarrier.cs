@@ -1,12 +1,12 @@
 using System;
 using BallzMerge.Root;
+using BallzMerge.Root.Audio;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
 {
-    private const float ShowDuration = 0.15f;
     private const string ToBagHeader = "Drop here for bag";
     private const string ToCageHeader = "Click here for cage";
 
@@ -20,6 +20,7 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
     [SerializeField] private Button _trigger;
     [SerializeField] private BallVolumeCarrierView _volumeView;
     [SerializeField] private DropHandlerProxy _dropHandler;
+    [SerializeField] private AudioSourceHandler _audio;
 
     private RectTransform _transform;
     private Transform _baseParent;
@@ -100,11 +101,13 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
     private void OnBagSpellActivate(bool state)
     {
         _volumeView.ChangeActive(state, _volumesView.CurrentData, ToCageHeader);
+        _audio?.Play(AudioEffectsTypes.Bloop);
     }
 
     private void OnPassiveActivate(IBallVolumeViewData data)
     {
         _volumesView.HidePerformed();
-        _volumeView.ChangeActive(false, data);
+        _volumeView.ChangeActive(true, data);
+        _audio?.Play(AudioEffectsTypes.Bloop);
     }
 }

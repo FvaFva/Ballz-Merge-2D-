@@ -73,7 +73,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public bool TryMergeBlocks(Block firstBlock, Block secondBlock)
         {
-            if (firstBlock != null && secondBlock != null && secondBlock.Number == firstBlock.Number)
+            if (IsCanMerge(firstBlock, secondBlock))
             {
                 firstBlock.Debug.Add($"I Initialized merge with {secondBlock.name}");
                 firstBlock.Moved -= OnBlockCameNewPosition;
@@ -85,6 +85,15 @@ namespace BallzMerge.Gameplay.BlockSpace
             {
                 return false;
             }
+        }
+
+        private bool IsCanMerge(Block firstBlock, Block secondBlock)
+        {
+            return firstBlock != null
+            && secondBlock != null
+            && secondBlock.Number == firstBlock.Number
+            && !secondBlock.IsInMerge
+            && !firstBlock.IsInMerge;
         }
 
         private void Remove(Block block)
@@ -113,8 +122,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             firstBlock.Merge(secondBlock);
             secondBlock.Merge(firstBlock);
-            firstBlock.SetMerged();
-            secondBlock.SetMerged();
             BlocksMerged?.Invoke(firstBlock, secondBlock);
         }
 
