@@ -32,7 +32,13 @@ public class LevelSelectorOperator : MonoBehaviour
 
     private void OnSelect()
     {
+        _uiRoot.InfoPanelShowcase.CloseTriggered += OnPanelClose;
         _uiRoot.InfoPanelShowcase.Close();
+    }
+
+    private void OnPanelClose()
+    {
+        _uiRoot.InfoPanelShowcase.CloseTriggered -= OnPanelClose;
         Selected?.Invoke();
     }
 }

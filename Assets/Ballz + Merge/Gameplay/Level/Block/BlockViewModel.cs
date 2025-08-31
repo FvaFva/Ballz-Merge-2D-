@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -17,21 +18,33 @@ namespace BallzMerge.Gameplay.BlockSpace
         private const float BounceScaleCoefficient = 0.15f;
         private const float BounceTime = 0.15f;
 
-        [SerializeField] private SpriteRenderer _skin;
+        [SerializeField] private ParticleSystem _hitEffect;
+        [SerializeField] private SpriteRenderer _colorSkin;
+        [SerializeField] private SpriteRenderer _stoneSkin;
         [SerializeField] private TMP_Text _number;
+        [SerializeField] private List<Sprite> _stoneSkins;
 
         private BlocksSettings _colorMap;
         private Transform _transform;
         private Vector3 _baseScale;
         private Material _material;
         private float _moveTime;
+        private Dictionary<Vector2Int, float> _rotationsToDictionary;
 
         private void Awake()
         {
             _transform = transform;
             _baseScale = _transform.localScale;
-            _material = new Material(_skin.material);
-            _skin.material = _material;
+            _material = new Material(_colorSkin.material);
+            _colorSkin.material = _material;
+            _stoneSkin.material = _material;
+            _rotationsToDictionary = new Dictionary<Vector2Int, float>
+            {
+                { Vector2Int.left, 0f },
+                { Vector2Int.down, 90f },
+                { Vector2Int.right, 180f },
+                { Vector2Int.up, 270f }
+            };
         }
 
         private void OnEnable()
@@ -42,7 +55,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private void OnDisable()
         {
             DOTween.Kill(_transform);
-            DOTween.Kill(_skin);
+            DOTween.Kill(_colorSkin);
             DOTween.Kill(_material);
         }
 
@@ -64,7 +77,8 @@ namespace BallzMerge.Gameplay.BlockSpace
             gameObject.SetActive(true);
             _transform.localPosition = Vector3.zero;
             _transform.localScale = _baseScale;
-            _skin.color = color;
+            _colorSkin.color = color;
+            _stoneSkin.sprite = _stoneSkins[Random.Range(0, _stoneSkins.Count)];
             _material.DOFloat(1, FadeProperty, FadeTime);
             _number.text = number.ToString();
         }
@@ -72,24 +86,26 @@ namespace BallzMerge.Gameplay.BlockSpace
         public void PlayDestroy(TweenCallback onDestroyed)
         {
             _number.text = "";
-            _skin.color = new Color();
+            _colorSkin.color = new Color();
             Sequence sequence = DOTween.Sequence();
             var downScale = _baseScale * DownscaleModifier;
             var upScale = _baseScale * UpscaleModifier;
             sequence.Append(_transform.DOScale(downScale, ScaleTime));
             sequence.Append(_transform.DOScale(upScale, ScaleTime))
-                .Join(_skin.DOFade(0f, FadeDestroy))
+                .Join(_colorSkin.DOFade(0f, FadeDestroy))
+                .Join(_stoneSkin.DOFade(0f, FadeDestroy))
                 .OnComplete(onDestroyed)
                 .SetDelay(0.1f);
             sequence.Play();
         }
 
-        public void PlayBounce(Vector2 direction, Vector2 position)
+        public void PlayBounce(Vector2Int direction)
         {
             Sequence sequence = DOTween.Sequence();
-            var newPosition = (Vector2)_transform.localPosition + (direction * BounceScaleCoefficient);
+            var newPosition = (Vector2)_transform.localPosition + ((Vector2)direction * BounceScaleCoefficient);
             float xScale = _transform.localScale.x * (1 + (direction.y == 0 ? -1 * BounceScaleCoefficient : BounceScaleCoefficient));
             float yScale = _transform.localScale.y * (1 + (direction.x == 0 ? -1 * BounceScaleCoefficient : BounceScaleCoefficient));
+            PlayEffect(direction);
 
             sequence.Append(_transform
                 .DOLocalMove(newPosition, BounceTime)
@@ -136,7 +152,13 @@ namespace BallzMerge.Gameplay.BlockSpace
         public void ChangeNumber(int number)
         {
             _number.text = number.ToString();
-            _skin.color = _colorMap.GetColor(number);
+            _colorSkin.color = _colorMap.GetColor(number);
+        }
+
+        private void PlayEffect(Vector2Int direction)
+        {
+            _hitEffect.transform.rotation = Quaternion.Euler(0, 0, _rotationsToDictionary[direction]);
+            _hitEffect.Play();
         }
     }
 }

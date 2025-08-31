@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 using TMPro;
 
 namespace BallzMerge.Root
@@ -9,13 +8,13 @@ namespace BallzMerge.Root
     {
         [SerializeField] private Slider _progress;
         [SerializeField] private TMP_Text _hint;
-        [SerializeField] private List<string> _hints;
+        [SerializeField] private GameRulesList _rules;
 
         public void Show()
         {
             _progress.value = 0;
             gameObject.SetActive(true);
-            _hint.text = _hints[Random.Range(0, _hints.Count)];
+            _hint.text = _rules.Get();
         }
 
         public void Hide()

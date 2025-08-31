@@ -83,12 +83,11 @@ public class InfoPanelShowcase : MonoBehaviour
         if (TryActivate(_default))
             return;
 
-        CloseTriggered?.Invoke();
-
         if (_panels.TryDequeue(out IInfoPanelView temp))
         {
             _current.Hide();
             _current = null;
+            CloseTriggered?.Invoke();
             ShowPanel(temp);
         }
         else
@@ -128,6 +127,7 @@ public class InfoPanelShowcase : MonoBehaviour
     {
         if (_current == null)
         {
+            _content.Activate();
             ShowPanel(panelView);
             _content.Open();
             _openDefaultButton.gameObject.SetActive(false);

@@ -22,8 +22,8 @@ namespace BallzMerge.Gameplay.BlockSpace
         private Tweener _moveTween;
         private TweenCallback _onCompleteTweenAction;
         private Dictionary<BlockMoveActionType, Action> _blockMoveTypeActions;
-        private bool _isMerged;
 
+        public bool IsInMerge{ get; private set; }
         public bool IsAlive { get; private set; }
         public Vector2Int GridPosition { get; private set; }
         public Vector2 WorldPosition => _transform.position;
@@ -75,7 +75,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _view.Init(_gridSettings.MoveTime, settings);
             _physic.Init(virtualBox);
             IsAlive = true;
-            _isMerged = false;
+            IsInMerge = false;
             Deactivate();
             return this;
         }
@@ -88,7 +88,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _newPosition = _transform.localPosition;
             IsWithEffect = false;
             IsAlive = true;
-            _isMerged = false;
+            IsInMerge = false;
             Number = number;
             GridPosition = gridPosition;
             _view.Activate(number, color);
@@ -146,21 +146,17 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Merge(Block mergedBlock)
         {
-            if (IsAlive == false || _isMerged == true || mergedBlock._isMerged == true)
+            if (IsAlive == false || IsInMerge == true)
                 return;
 
             Debug.Add($"Merge with {mergedBlock.name}");
+            IsInMerge = true;
             StopCurrentMoveTween();
             _newPosition = Vector2.Lerp(WorldPosition, mergedBlock.WorldPosition, 0.5f);
             Tweener tweener = _transform.DOMove(_newPosition, _gridSettings.MoveTime).Pause();
             PlayTween(tweener, Deactivate);
             _view.PlayMerge();
             _physic.Deactivate();
-        }
-
-        public void SetMerged()
-        {
-            _isMerged = true;
         }
 
         public void Destroy()
@@ -184,9 +180,9 @@ namespace BallzMerge.Gameplay.BlockSpace
                 NumberChanged?.Invoke(this, count);
         }
 
-        public void PlayBounceAnimation(Vector2 direction)
+        public void PlayBounceAnimation(Vector2Int direction)
         {
-            _view.PlayBounce(direction, GridPosition);
+            _view.PlayBounce(direction);
         }
 
         public void PlayShakeAnimation()
