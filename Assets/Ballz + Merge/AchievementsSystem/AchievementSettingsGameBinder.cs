@@ -5,16 +5,19 @@ using Zenject;
 
 namespace BallzMerge.Achievement
 {
-    public class AchievementSettingsGameBinder : CyclicBehavior, IInitializable
+    public class AchievementSettingsGameBinder : CyclicBehavior, IInitializable, ILevelCompleter, IDependentSettings
     {
         private const string Message = "New Achievement!";
 
         [Inject] private DiContainer _container;
         [Inject] private AchievementsBus _bus;
         [Inject] private UIRootView _rootView;
+        [Inject] private LevelSettingsMap _map;
 
         private PopupDisplayer _displayer;
+        private AchievementObserverLevelsCompleted _levelCompletedObserver;
         private List<AchievementObserverBase> _observers = new List<AchievementObserverBase>();
+        private int _levelID;
 
         private void Awake()
         {
@@ -46,6 +49,16 @@ namespace BallzMerge.Achievement
             LoadSettings();
         }
 
+        public void ApplySettings(LevelSettings settings)
+        {
+            _levelID = settings.ID;
+        }
+
+        public void Complete()
+        {
+            _levelCompletedObserver.OnLevelCompleted();
+        }
+
         private void LoadSettings()
         {
             foreach (var setting in _bus.GetSettings())
@@ -61,11 +74,25 @@ namespace BallzMerge.Achievement
                     case AchievementsTypes.blocksDestroy:
                         CreateObserver<AchievementObserverBlocksDestroyer>(setting);
                         break;
+                    case AchievementsTypes.levelComplete:
+                        CreateLevelCompleteObserver(setting);
+                        break;
                 }
             }
         }
 
-        private void CreateObserver<T>(KeyValuePair<AchievementSettings, AchievementPointsStep> setting) where T : AchievementObserverBase
+        private void CreateLevelCompleteObserver(KeyValuePair<AchievementSettings, AchievementPointsStep> setting)
+        {
+            List<int> steps = new List<int>();
+            steps.Add(_map.Available.Count - (_map.Available.Count - 1));
+            steps.Add(_map.Available.Count / 2);
+            steps.Add(_map.Available.Count);
+            setting.Key.SetSteps(steps);
+            _levelCompletedObserver = CreateObserver<AchievementObserverLevelsCompleted>(setting);
+            _levelCompletedObserver.SetCurrentLevelID(_levelID);
+        }
+
+        private T CreateObserver<T>(KeyValuePair<AchievementSettings, AchievementPointsStep> setting) where T : AchievementObserverBase
         {
             var newObserver = _container.Instantiate<T>(new object[] { setting.Key, setting.Value });
             _observers.Add(newObserver);
@@ -73,6 +100,7 @@ namespace BallzMerge.Achievement
             newObserver.ChangedPoints += OnPointsChanged;
             newObserver.ReachedStep += OnStepReached;
             newObserver.ReachedAchievement += OnReachedAchievement;
+            return newObserver;
         }
 
         private void OnPointsChanged(AchievementsTypes type, int points)
@@ -89,7 +117,7 @@ namespace BallzMerge.Achievement
         private void OnReachedAchievement(AchievementsTypes type, AchievementData achievementData)
         {
             _bus.ReachAchievement(type);
-            _displayer.ShowPopup(achievementData, message : Message);
+            _displayer.ShowPopup(achievementData, message: Message);
         }
     }
 }

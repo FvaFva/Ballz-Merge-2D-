@@ -95,6 +95,9 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     private void OnCompleteLevel()
     {
+        foreach (var completer in GetFromMap<ILevelCompleter>())
+            completer.Complete();
+
         _exitData.Put(CreateHistory(true));
         _exitData.TargetScene = ScenesNames.MAIN_MENU;
         _mainUI.FinishView.Show(() => _sceneCallBack.Invoke(_exitData));
@@ -217,6 +220,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         AddToBehaviourMap<IDependentSettings>();
         AddToBehaviourMap<IHistorical>();
         AddToBehaviourMap<ICompleteLevelTrigger>();
+        AddToBehaviourMap<ILevelCompleter>();
     }
 
     private void AddToBehaviourMap<T>()

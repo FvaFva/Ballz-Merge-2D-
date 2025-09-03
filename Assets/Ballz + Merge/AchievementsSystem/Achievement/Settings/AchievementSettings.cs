@@ -18,6 +18,11 @@ namespace BallzMerge.Achievement
         public Sprite Image => _image;
         public AchievementKey ID => _iD;
 
+        public void SetSteps(List<int> steps)
+        {
+            _steps = steps;
+        }
+
         public bool CheckReachedNewSteps(int points, ref int step)
         {
             bool isReached = false;

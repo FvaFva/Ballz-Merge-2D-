@@ -1,24 +1,39 @@
-using BallzMerge.Gameplay.BlockSpace;
-using System.Collections;
+using BallzMerge.Data;
 using System.Collections.Generic;
-using UnityEngine;
+using Zenject;
 
 namespace BallzMerge.Achievement
 {
     public class AchievementObserverLevelsCompleted : AchievementObserverBase
     {
+        [Inject] private DataBaseSource _data;
+
+        private List<int> _completedLevels;
+        private int _currentLevelID;
+
         public AchievementObserverLevelsCompleted(AchievementSettings settings, AchievementPointsStep pointsStep) : base(settings, pointsStep)
         {
         }
 
         public override void Construct()
         {
-            throw new System.NotImplementedException();
+            _completedLevels = _data.History.GetCompleted();
         }
 
         protected override void Destruct()
         {
-            throw new System.NotImplementedException();
+            
+        }
+
+        public void SetCurrentLevelID(int levelID)
+        {
+            _currentLevelID = levelID;
+        }
+
+        public void OnLevelCompleted()
+        {
+            if (_completedLevels.Contains(_currentLevelID) == false)
+                Property.Apply(Count);
         }
     }
 }

@@ -1,3 +1,4 @@
+using BallzMerge.Achievement;
 using BallzMerge.Data;
 using BallzMerge.Root;
 using UnityEngine;
@@ -45,6 +46,7 @@ public class HistoryManager : CyclicBehavior, IInitializable
     private void EraseData()
     {
         _source.History.EraseData();
+        _source.Achievements.DeleteAchievement(AchievementsTypes.levelComplete);
         _uiRoot.InfoPanelShowcase.Close();
         ChangeInit(false);
     }

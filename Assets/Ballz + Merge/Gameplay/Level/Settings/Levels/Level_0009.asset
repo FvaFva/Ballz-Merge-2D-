@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11b28ddf7b1d4ac2a82f4a494e67ffe, type: 3}
   m_Name: Level_0009
   m_EditorClassIdentifier: 
-  _iD: 3
+  _iD: 9
   _title: 0009
   _blocksSettings:
     _additionalEffectChance:
@@ -48,7 +48,7 @@ MonoBehaviour:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 4
       m_NumAlphaKeys: 2
     _spawnProperties:
