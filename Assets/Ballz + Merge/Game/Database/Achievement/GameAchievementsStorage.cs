@@ -2,15 +2,17 @@
 using Mono.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using UnityEngine.Rendering.LookDev;
 
 namespace BallzMerge.Data
 {
     public class GameAchievementsStorage
     {
         private const string TableName = "Achievements";
-        private const string StepColumName = "Step";
-        private const string PointsColumName = "Points";
-        private const string KeyColumName = "Key";
+        private const string StepColumnName = "Step";
+        private const string PointsColumnName = "Points";
+        private const string KeyColumnName = "Key";
 
         private string _dbPath;
 
@@ -29,11 +31,11 @@ namespace BallzMerge.Data
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = $@"UPDATE {TableName}
-                                            SET {PointsColumName} = {PointsColumName} + @{PointsColumName}
-                                            WHERE {KeyColumName} = @{KeyColumName};";
+                                            SET {PointsColumnName} = @{PointsColumnName}
+                                            WHERE {KeyColumnName} = @{KeyColumnName};";
 
-                    command.Parameters.Add(new SqliteParameter($"@{PointsColumName}", points));
-                    command.Parameters.Add(new SqliteParameter($"@{KeyColumName}", key.ToString()));
+                    command.Parameters.Add(new SqliteParameter($"@{PointsColumnName}", points));
+                    command.Parameters.Add(new SqliteParameter($"@{KeyColumnName}", key.ToString()));
                     command.ExecuteNonQuery();
                 }
 
@@ -55,11 +57,11 @@ namespace BallzMerge.Data
                 {
                     using (var command = connection.CreateCommand())
                     {
-                        command.CommandText = $@"INSERT OR REPLACE INTO {TableName} ({KeyColumName}, {PointsColumName}, {StepColumName})
-                                            VALUES (@{KeyColumName}, @{PointsColumName}, @{StepColumName});";
-                        command.Parameters.AddWithValue(KeyColumName, sKey);
-                        command.Parameters.AddWithValue(PointsColumName, value.Points);
-                        command.Parameters.AddWithValue(StepColumName, value.Step);
+                        command.CommandText = $@"INSERT OR REPLACE INTO {TableName} ({KeyColumnName}, {PointsColumnName}, {StepColumnName})
+                                            VALUES (@{KeyColumnName}, @{PointsColumnName}, @{StepColumnName});";
+                        command.Parameters.AddWithValue(KeyColumnName, sKey);
+                        command.Parameters.AddWithValue(PointsColumnName, value.Points);
+                        command.Parameters.AddWithValue(StepColumnName, value.Step);
                         command.ExecuteNonQuery();
                         isWroten = true;
                     }
@@ -69,6 +71,25 @@ namespace BallzMerge.Data
             }
 
             return isWroten;
+        }
+
+        public void DeleteAchievement(AchievementsTypes type)
+        {
+            using (var connection = new SqliteConnection(_dbPath))
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = $@"DELETE FROM {TableName}
+                                            WHERE {KeyColumnName} = @{KeyColumnName}";
+
+                    command.Parameters.AddWithValue(KeyColumnName, type.ToString());
+                    command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+            }
         }
 
         public IDictionary<AchievementsTypes, AchievementPointsStep> GetAll()
@@ -81,15 +102,15 @@ namespace BallzMerge.Data
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = $"SELECT {PointsColumName}, {StepColumName}, {KeyColumName} FROM {TableName};";
+                    command.CommandText = $"SELECT {PointsColumnName}, {StepColumnName}, {KeyColumnName} FROM {TableName};";
                     command.ExecuteNonQuery();
 
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            if(Enum.TryParse<AchievementsTypes>(reader[KeyColumName].ToString(), out var key))
-                                values.Add(key, new AchievementPointsStep(reader[PointsColumName],reader[StepColumName]));
+                            if (Enum.TryParse<AchievementsTypes>(reader[KeyColumnName].ToString(), out var key))
+                                values.Add(key, new AchievementPointsStep(reader[PointsColumnName], reader[StepColumnName]));
                         }
                     }
                 }
@@ -123,9 +144,9 @@ namespace BallzMerge.Data
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = $@"CREATE TABLE IF NOT EXISTS {TableName}
-                                            ({KeyColumName} TEXT PRIMARY KEY,
-                                            {PointsColumName} INTEGER,
-                                            {StepColumName} INTEGER)";
+                                            ({KeyColumnName} TEXT PRIMARY KEY,
+                                            {PointsColumnName} INTEGER,
+                                            {StepColumnName} INTEGER)";
 
                     command.ExecuteNonQuery();
                 }
@@ -140,15 +161,15 @@ namespace BallzMerge.Data
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT {PointsColumName}, {StepColumName} FROM {TableName} WHERE {KeyColumName} = @{KeyColumName};";
-                command.Parameters.AddWithValue(KeyColumName, key);
+                command.CommandText = $"SELECT {PointsColumnName}, {StepColumnName} FROM {TableName} WHERE {KeyColumnName} = @{KeyColumnName};";
+                command.Parameters.AddWithValue(KeyColumnName, key);
 
                 using (var reader = command.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        pointsStep.Points = Convert.ToInt32(reader[PointsColumName]);
-                        pointsStep.Step = Convert.ToInt32(reader[StepColumName]);
+                        pointsStep.Points = Convert.ToInt32(reader[PointsColumnName]);
+                        pointsStep.Step = Convert.ToInt32(reader[StepColumnName]);
                     }
                 }
             }

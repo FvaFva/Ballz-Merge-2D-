@@ -4,6 +4,7 @@
     {
         blocksDestroy,
         wavesSpawned,
-        chainsHits
+        chainsHits,
+        levelComplete
     }
 }

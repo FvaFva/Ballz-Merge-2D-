@@ -12,19 +12,20 @@ public class PopupDisplayer : MonoBehaviour
     private const float NextShift = 210f;
     private const float AnimationDuration = 0.5f;
 
-
     [SerializeField] private AudioSourceHandler _audio;
     [SerializeField] private RectTransform _container;
     [SerializeField] private PopupView _achievementView;
 
     private Queue<PopupView> _activePopups = new Queue<PopupView>();
     private Vector2 _startPosition;
+    private Vector2 _currentPosition;
     private Vector2 _nextPosition;
     private string _currentMessage;
 
     private void Awake()
     {
         _startPosition = new Vector2(0, StartShift);
+        _currentPosition = new Vector2(0, StartShift);
         _nextPosition = new Vector2(0, NextShift);
     }
 
@@ -43,9 +44,9 @@ public class PopupDisplayer : MonoBehaviour
         _activePopups.Enqueue(achievementView);
 
         if (_activePopups.Count > 1)
-            _startPosition += _nextPosition;
+            _currentPosition += _nextPosition;
 
-        achievementView.RectTransform.DOAnchorPos(_startPosition, AnimationDuration).OnComplete(() => StartCoroutine(WaitCoroutine(achievementView))).SetEase(Ease.InOutQuad);
+        achievementView.RectTransform.DOAnchorPos(_currentPosition, AnimationDuration).OnComplete(() => StartCoroutine(WaitCoroutine(achievementView))).SetEase(Ease.InOutQuad);
     }
 
     private IEnumerator WaitCoroutine(PopupView achievementView)
@@ -58,9 +59,25 @@ public class PopupDisplayer : MonoBehaviour
     {
         _activePopups.Dequeue();
 
-        if (_activePopups.Count > 1)
-            _startPosition -= _nextPosition;
-
         achievementView.RectTransform.DOAnchorPos(_container.anchoredPosition, AnimationDuration).OnComplete(() => Destroy(achievementView.gameObject)).SetEase(Ease.InOutQuad);
+
+        if (_activePopups.Count >= 1)
+        {
+            _currentPosition -= _nextPosition;
+
+            foreach (var activePopup in _activePopups)
+            {
+                if (activePopup != achievementView)
+                {
+                    float clampValue = Mathf.Max(((Vector2)activePopup.RectTransform.anchoredPosition - _nextPosition).y, _startPosition.y);
+                    Debug.Log($"ClampValue: {clampValue}");
+                    activePopup.RectTransform.DOAnchorPos(new Vector2(transform.position.x, clampValue), AnimationDuration);
+                }
+            }
+        }
+        else
+        {
+            _currentPosition = _startPosition;
+        }
     }
 }

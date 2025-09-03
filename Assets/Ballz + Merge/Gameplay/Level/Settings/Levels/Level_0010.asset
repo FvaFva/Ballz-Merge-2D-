@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11b28ddf7b1d4ac2a82f4a494e67ffe, type: 3}
   m_Name: Level_0010
   m_EditorClassIdentifier: 
-  _iD: 3
+  _iD: 10
   _title: 0010
   _blocksSettings:
     _additionalEffectChance:

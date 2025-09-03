@@ -9,7 +9,7 @@ public class LevelSettingsMap : ScriptableObject
     [SerializeField] private List<LevelSettings> _available;
     [SerializeField] private int _settingsIDCounter;
 
-    public IEnumerable<LevelSettings> Available => _available;
+    public IReadOnlyList<LevelSettings> Available => _available;
 
     public int GetID() => _settingsIDCounter++;
 
