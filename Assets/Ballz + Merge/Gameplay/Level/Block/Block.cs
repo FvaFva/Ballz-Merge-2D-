@@ -130,7 +130,7 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Move(Vector2Int step, BlockMoveActionType moveType)
         {
-            if (IsAlive == false)
+            if (IsAlive == false || IsInMerge == true)
                 return;
 
             Debug.Add($"Move {step}");

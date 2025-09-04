@@ -79,6 +79,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _transform.localScale = _baseScale;
             _colorSkin.color = color;
             _stoneSkin.sprite = _stoneSkins[Random.Range(0, _stoneSkins.Count)];
+            _stoneSkin.color = Color.white;
             _material.DOFloat(1, FadeProperty, FadeTime);
             _number.text = number.ToString();
         }
