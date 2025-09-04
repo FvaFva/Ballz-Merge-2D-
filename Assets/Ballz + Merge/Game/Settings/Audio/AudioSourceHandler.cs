@@ -28,6 +28,9 @@ namespace BallzMerge.Root.Audio
 
         private void Play(AudioClip clip)
         {
+            if (_audio == null)
+                return;
+
             _audio.pitch = Random.Range(1 - PitchDice, 1 + PitchDice);
             _audio.PlayOneShot(clip);
         }
