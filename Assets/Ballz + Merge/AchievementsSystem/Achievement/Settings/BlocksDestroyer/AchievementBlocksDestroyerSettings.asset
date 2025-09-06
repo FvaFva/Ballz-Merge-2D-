@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 318efa92e696cb54f9b13999dc381c75, type: 3}
   m_Name: AchievementBlocksDestroyerSettings
   m_EditorClassIdentifier: 
-  _steps: 010000000200000003000000
+  _steps: 0a0000003200000064000000
   _name: Destroyer
   _description: Destroy the blocks to get.
   _image: {fileID: 5002116245990000644, guid: 4e018997910914c308776ecb62bf2e90, type: 3}

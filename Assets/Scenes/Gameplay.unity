@@ -24509,13 +24509,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _loader: {fileID: 2228828352981903698}
   _ballVolumesCageView: {fileID: 1941457512255070044}
-  _ballVolumeCarrierActivator: {fileID: 224731363}
   _ball: {fileID: 2090727811}
   _physicsGrid: {fileID: 7987047365824961655}
   _blocksBus: {fileID: 7643977174484492128}
   _ballLevelVolume: {fileID: 3895819656212432924}
   _achievementSource: {fileID: 1473422073910594557}
   _operator: {fileID: 8427693446239190018}
+  _ballVolumeCarrierActivator: {fileID: 224731363}
 --- !u!224 &4991371861274782459
 RectTransform:
   m_ObjectHideFlags: 0

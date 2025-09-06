@@ -16,6 +16,7 @@ namespace BallzMerge.Achievement
 
         private PopupDisplayer _displayer;
         private AchievementObserverLevelsCompleted _levelCompletedObserver;
+        private AchievementObserverIncreaserCompleted _increaserCompletedObserver;
         private List<AchievementObserverBase> _observers = new List<AchievementObserverBase>();
         private int _levelID;
 
@@ -57,6 +58,7 @@ namespace BallzMerge.Achievement
         public void Complete()
         {
             _levelCompletedObserver.OnLevelCompleted();
+            _increaserCompletedObserver.OnIncreaserCompleted();
         }
 
         private void LoadSettings()
@@ -76,6 +78,9 @@ namespace BallzMerge.Achievement
                         break;
                     case AchievementsTypes.levelComplete:
                         CreateLevelCompleteObserver(setting);
+                        break;
+                    case AchievementsTypes.increaserComplete:
+                        _increaserCompletedObserver = CreateObserver<AchievementObserverIncreaserCompleted>(setting);
                         break;
                 }
             }

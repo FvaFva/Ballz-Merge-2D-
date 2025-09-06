@@ -33,7 +33,7 @@ namespace BallzMerge.Achievement
         {
             _hitsInShot += Count;
 
-            if (_hitsInShot > Property.PointsStep.Points)
+            if (_hitsInShot >= Property.PointsStep.Points)
                 Property.Apply(Count);
         }
 

@@ -5,6 +5,7 @@
         blocksDestroy,
         wavesSpawned,
         chainsHits,
-        levelComplete
+        levelComplete,
+        increaserComplete
     }
 }
