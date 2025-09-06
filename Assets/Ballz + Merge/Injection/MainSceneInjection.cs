@@ -12,17 +12,17 @@ public class MainSceneInjection : MonoInstaller
     [Header("Project context bind")]
     [SerializeField] private GameCycler _loader;
     [SerializeField] private BallVolumesCageView _ballVolumesCageView;
-    [SerializeField] private BallVolumeInventoryActivator _ballVolumeCarrierActivator;
 
     [Header("Bind")]
     [SerializeField] private Ball _ball;
     [SerializeField] private PhysicGrid _physicsGrid;
     [SerializeField] private BlocksBinder _blocksBus;
     [SerializeField] private BallWaveVolume _ballLevelVolume;
-
-    [Header("Inject")]
     [SerializeField] private AchievementSettingsGameBinder _achievementSource;
     [SerializeField] private CamerasOperator _operator;
+
+    [Header("Inject")]
+    [SerializeField] private BallVolumeInventoryActivator _ballVolumeCarrierActivator;
 
     [Inject] private TargetSceneEntryPointContainer _entryPointBinder;
 
@@ -34,10 +34,10 @@ public class MainSceneInjection : MonoInstaller
         Container.Bind<BallWaveVolume>().FromInstance(_ballLevelVolume).AsSingle().NonLazy();
         Container.Bind<AchievementSettingsGameBinder>().FromInstance(_achievementSource).AsSingle().NonLazy();
         Container.Bind<CamerasOperator>().FromInstance(_operator).AsSingle().NonLazy();
+        Container.Bind<ISceneEnterPoint>().To<GameCycler>().FromInstance(_loader).AsSingle().NonLazy();
 
         Container.Bind<BlocksInGame>().FromNew().AsSingle().NonLazy();
         Container.Bind<BlocksMover>().FromNew().AsSingle().NonLazy();
-        Container.Bind<ISceneEnterPoint>().To<GameCycler>().FromInstance(_loader).AsSingle().NonLazy();
         
         Container.Inject(_ballVolumeCarrierActivator);
 

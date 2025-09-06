@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 318efa92e696cb54f9b13999dc381c75, type: 3}
-  m_Name: AchievementWaveSpawnedSettings
+  m_Name: AchievementIncreaserCompletedSettings
   m_EditorClassIdentifier: 
-  _steps: 0a0000001900000032000000
-  _name: Spawner
-  _description: Survive as many waves as possible.
-  _image: {fileID: 4285667266083149212, guid: 38db1beec36ae478095b7f75a61a5afe, type: 3}
+  _steps: 0200000003000000
+  _name: Increaser
+  _description: 'Complete levels with serveral active '
+  _image: {fileID: -1993017582648504272, guid: 47764c65225f7964ebaec06588fb9df7, type: 3}
   _iD:
     Google: 
-    Internal: 1
+    Internal: 4

@@ -25,6 +25,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         private BallVolumeHitInspector _hitInspector;
         private WaitForSeconds _sleep;
 
+        public BlockAdditionalEffectHandler EffectHandler => _additionalEffectHandler;
         public bool IsReadyToComplete => _activeBlocks.NoBlocks;
         public event Action WaveSpawned;
 

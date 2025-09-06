@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zenject;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
@@ -14,13 +15,19 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         private BlocksInGame _activeBlocks;
         private Dictionary<BlockAdditionalEffectType, Queue<BlockAdditionalEffectBase>> _effects;
+        private Dictionary<BlockAdditionalEffectType, int> _effectsCount;
         private List<BlockAdditionalEffectBase> _activeEffects;
         private List<SavedBlockEffect> _savedEffects;
+        private int _necessarySimultaneouslyActiveEffect;
+
+        public IReadOnlyDictionary<BlockAdditionalEffectType, int> EffectsCount => _effectsCount;
 
         public void Init(BlocksInGame activeBlocks)
         {
             _activeBlocks = activeBlocks;
             _effects = new Dictionary<BlockAdditionalEffectType, Queue<BlockAdditionalEffectBase>>();
+            _effectsCount = new Dictionary<BlockAdditionalEffectType, int>();
+            _necessarySimultaneouslyActiveEffect = 2;
             _activeEffects = new List<BlockAdditionalEffectBase>();
             BlockAdditionalEffectProperty property;
 
@@ -103,6 +110,23 @@ namespace BallzMerge.Gameplay.BlockSpace
                 effect = Instantiate(effectProperty.Prefab, transform).Init(effectProperty.Type, _activeBlocks, _effectsPool);
 
             _activeEffects.Add(effect);
+
+            if (_effectsCount.ContainsKey(effectProperty.Type))
+            {
+                int count = _activeEffects.Select(activeEffect => activeEffect.Type == BlockAdditionalEffectType.BlockIncreaser).Count();
+
+                if (count >= _necessarySimultaneouslyActiveEffect)
+                {
+                    _effectsCount[effectProperty.Type]++;
+                    _necessarySimultaneouslyActiveEffect++;
+                }
+            }
+            else
+            {
+                _effectsCount.Add(effectProperty.Type, 1);
+            }
+
+
             UpdateEffectSubscription(effect, true);
             effect.Activate(block, connectBlock);
         }

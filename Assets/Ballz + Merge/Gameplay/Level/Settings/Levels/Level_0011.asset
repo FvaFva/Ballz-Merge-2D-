@@ -53,10 +53,104 @@ MonoBehaviour:
       m_NumAlphaKeys: 2
     _spawnProperties:
     - Count:
-      - Value: 0
-        Weight: 0
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
       Number:
       - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
         Weight: 2
   _dropSettings:
     _entries:
@@ -65,4 +159,7 @@ MonoBehaviour:
     - Rarity: {fileID: 11400000, guid: de1bfb22cde269241bb3c06c6f4ae76d, type: 2}
       Volumes: []
     - Rarity: {fileID: 11400000, guid: 0cf2a46033e6a4e41980736da5596fbd, type: 2}
-      Volumes: []
+      Volumes:
+      - {fileID: 11400000, guid: f2b6e9d68589a41a98a483fd4ff2893d, type: 2}
+      - {fileID: 11400000, guid: aa3ba4657e3734c35b2fc4cf1d74236a, type: 2}
+      - {fileID: 11400000, guid: 09c3c036fd9a741aeb0853b4f7d4cb08, type: 2}
