@@ -6,6 +6,7 @@
         wavesSpawned,
         chainsHits,
         levelComplete,
-        increaserComplete
+        increaserComplete,
+        bandlerComplete
     }
 }

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 318efa92e696cb54f9b13999dc381c75, type: 3}
-  m_Name: AchievementIncreaserCompletedSettings
+  m_Name: AchievementBandlerCompletedSettings
   m_EditorClassIdentifier: 
   _steps: 0200000003000000
-  _name: Increaser
-  _description: Complete levels with serveral active increasers
-  _image: {fileID: -1993017582648504272, guid: 47764c65225f7964ebaec06588fb9df7, type: 3}
+  _name: Bandler
+  _description: Complete levels with serveral active bandlers
+  _image: {fileID: -2288564352162161194, guid: c8ca0bfd1fa08d84d83bdb33e25cfb96, type: 3}
   _iD:
     Google: 
-    Internal: 4
+    Internal: 5

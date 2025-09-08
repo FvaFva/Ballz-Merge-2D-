@@ -152,6 +152,106 @@ MonoBehaviour:
         Weight: 2
       - Value: 2
         Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
+    - Count:
+      - Value: 2
+        Weight: 3
+      - Value: 1
+        Weight: 1
+      Number:
+      - Value: 1
+        Weight: 2
+      - Value: 2
+        Weight: 2
   _dropSettings:
     _entries:
     - Rarity: {fileID: 11400000, guid: a3ee3d68bf5a68a47b9136ccd18ae439, type: 2}

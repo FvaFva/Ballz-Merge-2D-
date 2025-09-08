@@ -18,7 +18,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         private Dictionary<BlockAdditionalEffectType, int> _effectsCount;
         private List<BlockAdditionalEffectBase> _activeEffects;
         private List<SavedBlockEffect> _savedEffects;
-        private int _necessarySimultaneouslyActiveEffect;
 
         public IReadOnlyDictionary<BlockAdditionalEffectType, int> EffectsCount => _effectsCount;
 
@@ -27,7 +26,6 @@ namespace BallzMerge.Gameplay.BlockSpace
             _activeBlocks = activeBlocks;
             _effects = new Dictionary<BlockAdditionalEffectType, Queue<BlockAdditionalEffectBase>>();
             _effectsCount = new Dictionary<BlockAdditionalEffectType, int>();
-            _necessarySimultaneouslyActiveEffect = 2;
             _activeEffects = new List<BlockAdditionalEffectBase>();
             BlockAdditionalEffectProperty property;
 
@@ -111,24 +109,25 @@ namespace BallzMerge.Gameplay.BlockSpace
 
             _activeEffects.Add(effect);
 
+            AddAchievementPoint(effectProperty);
+
+            UpdateEffectSubscription(effect, true);
+            effect.Activate(block, connectBlock);
+        }
+
+        private void AddAchievementPoint(BlockAdditionalEffectProperty effectProperty)
+        {
             if (_effectsCount.ContainsKey(effectProperty.Type))
             {
-                int count = _activeEffects.Select(activeEffect => activeEffect.Type == BlockAdditionalEffectType.BlockIncreaser).Count();
+                int count = _activeEffects.Select(activeEffect => activeEffect.Type == effectProperty.Type).Count();
 
-                if (count >= _necessarySimultaneouslyActiveEffect)
-                {
+                while (count > _effectsCount[effectProperty.Type])
                     _effectsCount[effectProperty.Type]++;
-                    _necessarySimultaneouslyActiveEffect++;
-                }
             }
             else
             {
                 _effectsCount.Add(effectProperty.Type, 1);
             }
-
-
-            UpdateEffectSubscription(effect, true);
-            effect.Activate(block, connectBlock);
         }
 
         private void UpdateEffectSubscription(BlockAdditionalEffectBase effect, bool isActive)

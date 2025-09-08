@@ -1,6 +1,4 @@
-using BallzMerge.Data;
 using BallzMerge.Gameplay.BlockSpace;
-using System.Collections.Generic;
 using Zenject;
 
 namespace BallzMerge.Achievement
@@ -25,10 +23,13 @@ namespace BallzMerge.Achievement
 
         public void OnIncreaserCompleted()
         {
-            _increasersCount = _blocksBus.EffectHandler.EffectsCount[BlockAdditionalEffectType.BlockIncreaser];
+            if (_blocksBus.EffectHandler.EffectsCount.ContainsKey(BlockAdditionalEffectType.BlockIncreaser))
+            {
+                _increasersCount = _blocksBus.EffectHandler.EffectsCount[BlockAdditionalEffectType.BlockIncreaser];
 
-            if (_increasersCount >= Property.PointsStep.Points)
-                Property.Apply(_increasersCount);
+                if (_increasersCount >= Property.PointsStep.Points)
+                    Property.Set(_increasersCount);
+            }
         }
     }
 }

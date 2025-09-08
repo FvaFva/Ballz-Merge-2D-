@@ -27,7 +27,17 @@ namespace BallzMerge.Achievement
         public void Apply(int points)
         {
             _pointsStep.Points += points;
+            Apply();
+        }
 
+        public void Set(int points)
+        {
+            _pointsStep.Points = points;
+            Apply();
+        }
+
+        private void Apply()
+        {
             if (_settings.CheckReachedNewSteps(_pointsStep.Points, ref _pointsStep.Step))
             {
                 ChangedStep?.Invoke(_type, _pointsStep, _data);
