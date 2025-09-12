@@ -20,6 +20,12 @@ public abstract class AdaptiveLayoutGroupBase : LayoutGroup
     public bool IsInverse => _isInversive;
     public RectTransform Transform { get; private set; }
 
+#if UNITY_EDITOR
+    protected override void OnValidate()
+    {
+        base.OnValidate();
+    }
+#endif
     public virtual AdaptiveLayoutGroupBase Init()
     {
         Transform = GetComponent<RectTransform>();
