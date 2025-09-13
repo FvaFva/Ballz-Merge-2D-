@@ -137,7 +137,8 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         foreach (var starter in GetFromMap<ILevelStarter>())
             starter.StartLevel(isAfterLoad);
 
-        _conductor.Start();
+        if (isAfterLoad == false)
+            _conductor.Start();
     }
 
     private void LoadSave()
@@ -207,7 +208,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
         return historyData;
     }
-    
+
     private void BuildBehaviourMap()
     {
         _behaviourMap = new Dictionary<Type, object>();

@@ -6,7 +6,7 @@ using Zenject;
 public class ScrollViewMouseScroll : MonoBehaviour
 {
     [SerializeField] private ScrollRect _scrollRect;
-    [SerializeField] private float scrollSpeed = 5f;
+    [SerializeField] private float _scrollStep = 0.1f;
 
     [Inject] private MainInputMap _userInput;
 
@@ -26,7 +26,7 @@ public class ScrollViewMouseScroll : MonoBehaviour
 
         if (scroll.y != 0)
         {
-            _scrollRect.verticalNormalizedPosition += scroll.y * scrollSpeed * Time.deltaTime;
+            _scrollRect.verticalNormalizedPosition += Mathf.Sign(scroll.y) * _scrollStep;
             _scrollRect.verticalNormalizedPosition = Mathf.Clamp01(_scrollRect.verticalNormalizedPosition);
         }
     }
