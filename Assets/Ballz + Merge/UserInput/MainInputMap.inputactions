@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "MainInputMap",
     "maps": [
         {
@@ -27,7 +28,7 @@
                     "name": "Escape",
                     "type": "Button",
                     "id": "9447dfd9-c755-430b-8585-d6a771e8dc33",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -121,6 +122,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Sensor",
+                    "action": "Shot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "18d36b83-2a4a-4457-a32e-a3d7639bdeb2",
+                    "path": "<Touchscreen>/primaryTouch/tap",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Sensor",
                     "action": "Shot",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -258,7 +270,23 @@
         {
             "name": "Sensor",
             "bindingGroup": "Sensor",
-            "devices": []
+            "devices": [
+                {
+                    "devicePath": "<Touchscreen>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Gyroscope>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Accelerometer>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
         }
     ]
 }

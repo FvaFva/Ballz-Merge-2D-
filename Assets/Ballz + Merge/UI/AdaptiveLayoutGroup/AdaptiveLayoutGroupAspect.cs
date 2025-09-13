@@ -15,13 +15,13 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
     private delegate Vector2 OversizeFix(float childAspect, float availableCross, float totalSpacing, float totalMainSize, float totalCrossSize);
     private OversizeFix _oversizeFix;
     private Vector2 _anchorFactor;
-
+#if UNITY_EDITOR
     protected override void OnValidate()
     {
         base.OnValidate();
         CalculateAttributes();
     }
-
+#endif
     protected override void OnEnable()
     {
         base.OnEnable();

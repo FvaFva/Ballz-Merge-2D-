@@ -51,17 +51,17 @@ namespace BallzMerge.Gameplay.BallSpace
 
             if (Math.Abs(direction.y) < MinDelta)
             {
-                Vector2 correctVelocity = MyBody.velocity;
+                Vector2 correctVelocity = MyBody.linearVelocity;
                 correctVelocity.y = (Math.Abs(correctVelocity.y) + ExtraFlip) * -1;
                 correctVelocity.x = Math.Sign(correctVelocity.x) * (Math.Abs(correctVelocity.x) - ExtraFlip);
-                MyBody.velocity = correctVelocity;
+                MyBody.linearVelocity = correctVelocity;
             }
             else if (Math.Abs(direction.x) < MinDelta)
             {
-                Vector2 correctVelocity = MyBody.velocity;
+                Vector2 correctVelocity = MyBody.linearVelocity;
                 correctVelocity.x = (Math.Abs(correctVelocity.x) + ExtraFlip) * -1;
                 correctVelocity.y = Math.Sign(correctVelocity.y) * (Math.Abs(correctVelocity.y) - ExtraFlip);
-                MyBody.velocity = correctVelocity;
+                MyBody.linearVelocity = correctVelocity;
             }
         }
     }

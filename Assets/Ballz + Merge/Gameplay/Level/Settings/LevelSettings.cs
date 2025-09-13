@@ -24,11 +24,6 @@ public class LevelSettings : ScriptableObject , ISerializationCallbackReceiver
         _dropSettings = drop;
     }
 
-    private void OnValidate()
-    {
-        _blocksSettings.RebuildColorMap();
-    }
-
     public void OnBeforeSerialize()
     {
         _dropSettings?.OnBeforeSerialize();
@@ -37,5 +32,6 @@ public class LevelSettings : ScriptableObject , ISerializationCallbackReceiver
     public void OnAfterDeserialize()
     {
         _dropSettings.OnAfterDeserialize();
+        _blocksSettings.RebuildColorMap();
     }
 }

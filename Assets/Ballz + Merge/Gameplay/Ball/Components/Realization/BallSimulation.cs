@@ -21,7 +21,7 @@ public class BallSimulation : BallComponent
     {
         CollisionsLeft = BaseCollisions + _waveVolume.GetPassiveValue<BallVolumeStarlight>();
         _transform.position = position;
-        MyBody.velocity = Vector2.zero;
+        MyBody.linearVelocity = Vector2.zero;
         MyBody.AddForce(direction * _simulationForce);
     }
 
