@@ -91,7 +91,11 @@ public class StickView : MonoBehaviour
     {
         _position = position;
         _previousInZone = IsInZone;
+#if (UNITY_IOS || UNITY_ANDROID || UNITY_WSA) && !UNITY_EDITOR
+        IsInZone = _monitoredZone.IsPointIn(_cameras.UI, position);
+#else
         IsInZone = _monitoredZone.IsIn;
+#endif
         CheckAnimation();
         _action();
     }

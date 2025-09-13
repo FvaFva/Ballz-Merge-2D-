@@ -47,13 +47,13 @@ namespace BallzMerge.Gameplay.BallSpace
 
         private void OnHit(Vector2 _)
         {
-            if (--_restHits == 0 || MyBody.velocity.sqrMagnitude < _minForce)
+            if (--_restHits == 0 || MyBody.linearVelocity.sqrMagnitude < _minForce)
                 StartCoroutine(GameExit());
         }
 
         private IEnumerator GameExit()
         {
-            MyBody.velocity = Vector3.zero;
+            MyBody.linearVelocity = Vector3.zero;
             _collapseEffect.Play();
             yield return _delay;
             _transform.position = _startPosition;

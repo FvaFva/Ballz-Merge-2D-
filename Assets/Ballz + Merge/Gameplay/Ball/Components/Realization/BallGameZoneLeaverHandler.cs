@@ -38,7 +38,7 @@ public class BallGameZoneLeaverHandler : BallComponent
         if (_countBounce-- != 0)
             return;
 
-        MyBody.velocity = Vector2.zero;
+        MyBody.linearVelocity = Vector2.zero;
         _transform.position += _shift;
         ActivateTrigger();
     }

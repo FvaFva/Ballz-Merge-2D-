@@ -1,11 +1,10 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UIZoneObserver : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
+public class UIZoneObserver : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public bool IsIn { get; private set; }
-    public event Action<bool> IsPressed;
+
     public RectTransform Transform { get; private set; }
 
     private void Awake()
@@ -17,10 +16,8 @@ public class UIZoneObserver : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         IsIn = false;
     }
-    
-    public void OnPointerDown(PointerEventData eventData) => IsPressed?.Invoke(true);
 
-    public void OnPointerUp(PointerEventData eventData) => IsPressed?.Invoke(false);
+    public void OnPointerDown(PointerEventData eventData) => IsIn = true;
 
     public void OnPointerEnter(PointerEventData eventData) => IsIn = true;
 
@@ -30,5 +27,10 @@ public class UIZoneObserver : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         var temp = Transform.TransformPoint(Transform.rect.center.x, Transform.rect.yMax, 0);
         return RectTransformUtility.WorldToScreenPoint(uiCamera, temp);
+    }
+
+    public bool IsPointIn(Camera uiCamera, Vector2 point)
+    {
+        return RectTransformUtility.RectangleContainsScreenPoint(Transform, point, uiCamera);
     }
 }
