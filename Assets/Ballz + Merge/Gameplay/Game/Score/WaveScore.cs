@@ -1,22 +1,21 @@
 ﻿using System;
-using BallzMerge.Data;
 using UnityEngine;
 
-public class PlayerScore : CyclicBehavior, ILevelStarter, ISaveDependedObject, IWaveUpdater, IHistorical, IDependentSettings
+public class WaveScore : CyclicBehavior, ILevelStarter, ISaveDependedObject, IWaveUpdater, IDependentSettings, IValueViewScore
 {
-    private const string ScoreProp = "PlayerScore";
+    private const string ScoreProp = "WaveScore";
 
     private int _wave;
     private int _totalWaves;
 
-    public event Action<int, int> ScoreChanged;
+    public event Action<IValueViewScore, int, int> ScoreChanged;
 
     public void StartLevel(bool isAfterLoad = false)
     {
         if (isAfterLoad == false)
             _wave = 1;
 
-        ScoreChanged?.Invoke(_wave, _totalWaves);
+        ScoreChanged?.Invoke(this, _wave, _totalWaves);
     }
 
     public void Load(SaveDataContainer save) => _wave = Mathf.RoundToInt(save.Get(ScoreProp));
@@ -28,13 +27,7 @@ public class PlayerScore : CyclicBehavior, ILevelStarter, ISaveDependedObject, I
         if (_wave == _totalWaves)
             return;
 
-        ScoreChanged?.Invoke(++_wave, _totalWaves);
-    }
-
-    public GameHistoryData Write(GameHistoryData data)
-    {
-        data.Score = _wave;
-        return data;
+        ScoreChanged?.Invoke(this, ++_wave, _totalWaves);
     }
 
     public void ApplySettings(LevelSettings settings)

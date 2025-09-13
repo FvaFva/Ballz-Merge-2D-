@@ -173,6 +173,7 @@ MonoBehaviour:
   _buttonView: {fileID: 515386450}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!114 &49551832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1859,6 +1860,7 @@ MonoBehaviour:
   _buttonView: {fileID: 1955639251}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!114 &449857672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3265,6 +3267,7 @@ MonoBehaviour:
   _buttonView: {fileID: 1823465001}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!114 &928279666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3754,6 +3757,7 @@ MonoBehaviour:
   _buttonView: {fileID: 193932087}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!114 &953613260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5002,8 +5006,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1173495686}
   - component: {fileID: 1173495689}
-  - component: {fileID: 1173495688}
-  - component: {fileID: 1173495687}
+  - component: {fileID: 1173495690}
   m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
@@ -5022,8 +5025,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1395455176}
+  m_Children: []
   m_Father: {fileID: 1073982771}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5031,22 +5033,15 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1173495687
-MonoBehaviour:
+--- !u!222 &1173495689
+CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1173495685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ea9188c08e29704da0da66fc82a595c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _buttonView: {fileID: 1395455177}
-  _pumper: {fileID: 0}
-  _hiddenField: {fileID: 0}
---- !u!114 &1173495688
+  m_CullTransparentMesh: 1
+--- !u!114 &1173495690
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5059,14 +5054,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 0.44705883, g: 0.29803923, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 3706678123839641305, guid: 1ce526756b5614648bf02872aaac513a, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5076,14 +5071,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!222 &1173495689
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1173495685}
-  m_CullTransparentMesh: 1
 --- !u!1 &1178100959
 GameObject:
   m_ObjectHideFlags: 0
@@ -5191,6 +5178,7 @@ MonoBehaviour:
   _buttonView: {fileID: 978427401}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!114 &1178100965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6049,110 +6037,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
---- !u!1 &1395455175
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1395455176}
-  - component: {fileID: 1395455180}
-  - component: {fileID: 1395455179}
-  - component: {fileID: 1395455178}
-  - component: {fileID: 1395455177}
-  m_Layer: 5
-  m_Name: View
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1395455176
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1395455175}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1173495686}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1395455177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1395455175}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86d7f3c56da4e644abe9526a7f8e39bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1395455178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1395455175}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.63529414, g: 0.02745098, b: 1, a: 0}
-  m_EffectDistance: {x: 5, y: -5}
-  m_UseGraphicAlpha: 1
---- !u!114 &1395455179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1395455175}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.5254902, g: 0.019607844, b: 0.9254902, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 0
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 3706678123839641305, guid: 1ce526756b5614648bf02872aaac513a, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1395455180
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1395455175}
-  m_CullTransparentMesh: 1
 --- !u!1 &1419179094
 GameObject:
   m_ObjectHideFlags: 0
@@ -7206,6 +7090,7 @@ MonoBehaviour:
   _buttonView: {fileID: 1799484948}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!114 &1663738635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7939,7 +7824,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 1173495688}
+  m_TargetGraphic: {fileID: 0}
   m_HandleRect: {fileID: 1173495686}
   m_Direction: 2
   m_Value: 1
@@ -7961,7 +7846,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.44705883, g: 0.29803923, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.6627451, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
@@ -8349,6 +8234,7 @@ MonoBehaviour:
   _buttonView: {fileID: 361159035}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!114 &2031202730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8584,6 +8470,7 @@ MonoBehaviour:
   _buttonView: {fileID: 1419179096}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!114 &2088287061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9709,6 +9596,7 @@ MonoBehaviour:
   _buttonView: {fileID: 2035481785}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!114 &7319816749315911823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9939,6 +9827,7 @@ MonoBehaviour:
   _buttonView: {fileID: 918524793}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!222 &8679245564115841252
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9970,6 +9859,7 @@ MonoBehaviour:
   _buttonView: {fileID: 1878799258}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
