@@ -6,7 +6,7 @@ using BallzMerge.Gameplay.BlockSpace;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class Dropper : CyclicBehavior, ILevelStarter, ISaveDependedObject, IDependentSettings
+    public class Dropper : CyclicBehavior, ILevelStarter, ISaveDependedObject, IDependentSettings, IValueViewScore
     {
         private const string PointsToDrop = "PointsToDrop";
         private const string DropsInStuck = "DropsInStuck";
@@ -15,7 +15,6 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private int _mergePoints;
         [SerializeField] private int _toDrop;
         [SerializeField] private DropSelector _selector;
-        [SerializeField] private ValueView _view;
 
         [Inject] private BlocksInGame _blocks;
 
@@ -25,6 +24,8 @@ namespace BallzMerge.Gameplay.Level
         private (Drop, Drop) _drops = default;
 
         public bool IsReadyToDrop => _dropInStuck > 0;
+
+        public event Action<IValueViewScore, int, int> ScoreChanged;
 
         private void OnEnable()
         {
@@ -38,11 +39,13 @@ namespace BallzMerge.Gameplay.Level
 
         public void StartLevel(bool isAfterLoad)
         {
-            if (isAfterLoad)
-                return;
+            if (isAfterLoad == false)
+            {
+                _current = 0;
+                AddPoints();
+            }
 
-            _current = 0;
-            AddPoints();
+            ScoreChanged?.Invoke(this, _current, _toDrop);
         }
 
         public void Save(SaveDataContainer save)
@@ -58,7 +61,6 @@ namespace BallzMerge.Gameplay.Level
         {
             _current = Mathf.RoundToInt(save.Get(PointsToDrop));
             _dropInStuck = Mathf.RoundToInt(save.Get(DropsInStuck));
-            _view.Show(_current, _toDrop);
 
             List<Drop> temp = _drop.GetPool();
 
@@ -110,7 +112,7 @@ namespace BallzMerge.Gameplay.Level
                 _dropInStuck++;
             }
 
-            _view.Show(_current, _toDrop);
+            ScoreChanged?.Invoke(this, _current, _toDrop);
         }
 
         private void AfterTakeDrop(Action callback)
