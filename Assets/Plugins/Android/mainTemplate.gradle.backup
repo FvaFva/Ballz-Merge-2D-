@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply from: '../shared/keepUnitySymbols.gradle'
 **APPLY_PLUGINS**
 
 buildscript {
@@ -31,8 +30,7 @@ allprojects {
 }
 // Android Resolver Exclusions Start
 android {
-    ndkVersion "**NDKVERSION**"
-  packaging {
+  packagingOptions {
       doNotStrip '**/*.so' // Не удалять .so файлы
       pickFirst '**/libsqlite3.so' // Добавить libsqlite3.so
       exclude ('/lib/armeabi/*' + '*')
@@ -48,7 +46,7 @@ android {
     ndkPath "**NDKPATH**"
     namespace "com.unity3d.player"
 
-    compileSdk **APIVERSION**
+    compileSdkVersion **APIVERSION**
     buildToolsVersion '**BUILDTOOLS**'
 
     compileOptions {
@@ -57,10 +55,9 @@ android {
     }
 
     defaultConfig {
-        minSdk **MINSDK**
-        targetSdk **TARGETSDK**
+        minSdkVersion **MINSDKVERSION**
+        targetSdkVersion **TARGETSDKVERSION**
         ndk {
-            debugSymbolLevel **DEBUGSYMBOLLEVEL**
             abiFilters **ABIFILTERS**
         }
         versionCode **VERSIONCODE**
@@ -69,14 +66,14 @@ android {
 **DEFAULT_CONFIG_SETUP**
     }
 
-    lint {
+    lintOptions {
         abortOnError false
     }
 
-    androidResources {
+    aaptOptions {
         noCompress = **BUILTIN_NOCOMPRESS** + unityStreamingAssets.tokenize(', ')
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
-    }**PACKAGING**
+    }**PACKAGING_OPTIONS**
 }
 **IL_CPP_BUILD_SETUP**
 **SOURCE_BUILD_SETUP**
