@@ -4,17 +4,14 @@ using UnityEngine;
 
 public class DisplayMode : IGameSettingData
 {
+    public string Name { get; private set; }
+    public float Value { get; private set; }
+    public string Label { get; private set; }
+    public int? CountOfPresets { get; private set; }
+
     private List<DisplayType> _modes;
     private DisplayApplier _displayApplier;
     private FullScreenMode _fullScreenMode;
-
-    public string Name { get; private set; }
-
-    public float Value { get; private set; }
-
-    public string Label { get; private set; }
-
-    public int? CountOfPresets { get; private set; }
 
     public DisplayMode(string name)
     {
@@ -29,7 +26,7 @@ public class DisplayMode : IGameSettingData
 
         CountOfPresets = _modes.Count - 1;
 
-        for (int i = _modes.Count - 1; i > 0; i--)
+        for (int i = 0; i < _modes.Count; i++)
         {
             if (_modes[i].FullScreenMode == Screen.fullScreenMode)
             {

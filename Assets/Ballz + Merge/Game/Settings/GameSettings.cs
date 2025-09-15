@@ -23,8 +23,19 @@ namespace BallzMerge.Root.Settings
             SoundVolumeEffects = new GameSettingsDataProxyAudio(mixer, "Effects");
             SoundVolumeMusic = new GameSettingsDataProxyAudio(mixer, "Music");
             DisplayQualityPreset = new QualityPreset("Quality");
-            DisplayResolution = new DisplayResolution("Resolution");
-            DisplayMode = new DisplayMode("Display");
+
+            PlatformRunner.RunOnSpecificPlatform(this,
+            X64Action: me =>
+            {
+                me.DisplayResolution = new DisplayResolution("Resolution");
+                me.DisplayMode = new DisplayMode("Display");
+            },
+            ARMAction: me =>
+            {
+                me.DisplayOrientation = new DisplayOrientation("Orientation");
+            }
+        );
+
             _timeScaler = primary.TimeScaler;
             _infoPanelShowcase = infoPanelShowcase;
             _settingsMenu = settingsMenu;
@@ -45,9 +56,10 @@ namespace BallzMerge.Root.Settings
         public readonly GameSettingsDataProxyAudio SoundVolumeEffects;
         public readonly GameSettingsDataProxyAudio SoundVolumeMusic;
         public readonly QualityPreset DisplayQualityPreset;
-        public readonly DisplayResolution DisplayResolution;
-        public readonly DisplayMode DisplayMode;
+        public DisplayResolution DisplayResolution { get; private set; }
+        public DisplayMode DisplayMode { get; private set; }
         public readonly DisplayApplier DisplayApplier;
+        public DisplayOrientation DisplayOrientation { get; private set; }
 
         public void Dispose()
         {
@@ -73,10 +85,19 @@ namespace BallzMerge.Root.Settings
                 { SoundVolumeEffects.Name, SoundVolumeEffects },
                 { SoundVolumeMusic.Name, SoundVolumeMusic },
                 { _timeScaler.Name, _timeScaler },
-                { DisplayQualityPreset.Name, DisplayQualityPreset },
-                { DisplayResolution.Name, DisplayResolution },
-                { DisplayMode.Name, DisplayMode },
+                { DisplayQualityPreset.Name, DisplayQualityPreset }
             };
+
+            PlatformRunner.RunOnSpecificPlatform(this,
+            X64Action: me =>
+            {
+                _settings.Add(DisplayResolution.Name, DisplayResolution);
+                _settings.Add(DisplayMode.Name, DisplayMode);
+            },
+            ARMAction: me =>
+            {
+                _settings.Add(DisplayOrientation.Name, DisplayOrientation);
+            });
         }
 
         private void GenerateMenu()
@@ -84,10 +105,19 @@ namespace BallzMerge.Root.Settings
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeGlobal, PanelToggleType.AudioToggle);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeEffects, PanelToggleType.AudioToggle);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeMusic, PanelToggleType.AudioToggle);
-            _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayQualityPreset, PanelToggleType.DisplayToggle);
-            _settingsMenu.AddInstantiate(GameSettingType.GameScreenResolutionSetting, DisplayResolution, PanelToggleType.DisplayToggle);
-            _settingsMenu.AddExist(GameSettingType.GameScreenResolutionSetting, DisplayMode);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, _timeScaler, PanelToggleType.AudioToggle);
+            _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayQualityPreset, PanelToggleType.DisplayToggle);
+
+            PlatformRunner.RunOnSpecificPlatform(this,
+            X64Action: me =>
+            {
+                _settingsMenu.AddInstantiate(GameSettingType.GameScreenResolutionSetting, DisplayResolution, PanelToggleType.DisplayToggle);
+                _settingsMenu.AddExist(GameSettingType.GameScreenResolutionSetting, DisplayMode);
+            },
+            ARMAction: me =>
+            {
+                _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayOrientation, PanelToggleType.DisplayToggle);
+            });
         }
 
         private void OnSettingsChanged(string key, float value)

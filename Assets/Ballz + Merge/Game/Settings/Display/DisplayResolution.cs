@@ -16,15 +16,6 @@ public class DisplayResolution : IGameSettingData
     public DisplayResolution(string name)
     {
         Name = name;
-#if UNITY_ANDROID && !UNITY_EDITOR
-        int currentWidth = Screen.width;
-        int currentHeight = Screen.height;
-        _resolutions = new Resolution[1];
-        _resolutions[0] = new Resolution { width = currentWidth, height = currentHeight };
-        CountOfPresets = 1;
-        Value = 0;
-        _resolution = _resolutions[0];
-#else
         _resolutions = Screen.resolutions
             .Select(res => new Resolution { width = res.width, height = res.height })
             .Distinct()
@@ -34,7 +25,6 @@ public class DisplayResolution : IGameSettingData
 
         Value = _resolutions.ToList().FindIndex(res => res.width == Screen.currentResolution.width && res.height == Screen.currentResolution.height);
         _resolution = _resolutions[Mathf.RoundToInt(Value)];
-#endif
     }
 
     public void SetDisplayApplier(DisplayApplier displayApplier)

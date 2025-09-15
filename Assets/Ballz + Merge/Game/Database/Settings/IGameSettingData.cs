@@ -9,7 +9,7 @@ namespace BallzMerge.Data
         public string Label { get; }
         public int? CountOfPresets { get; }
 
-        public void Change(float value);
         public void Get(float value);
+        public void Change(float value);
     }
 }
