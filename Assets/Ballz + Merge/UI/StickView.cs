@@ -91,11 +91,17 @@ public class StickView : MonoBehaviour
     {
         _position = position;
         _previousInZone = IsInZone;
-#if (UNITY_IOS || UNITY_ANDROID || UNITY_WSA) && !UNITY_EDITOR
-        IsInZone = _monitoredZone.IsPointIn(_cameras.UI, position);
-#else
-        IsInZone = _monitoredZone.IsIn;
-#endif
+
+        PlatformRunner.RunOnSpecificPlatform(
+        ARMAction: () =>
+        {
+            IsInZone = _monitoredZone.IsPointIn(_cameras.UI, position);
+        },
+        X64Action: () =>
+        {
+            IsInZone = _monitoredZone.IsIn;
+        });
+
         CheckAnimation();
         _action();
     }
@@ -137,7 +143,7 @@ public class StickView : MonoBehaviour
             SetBaseStick();
         }
 
-        if(isAimActive)
+        if (isAimActive)
         {
             Vector2 localPoint = GetConvertToLocalVector(_position, _inputZone.Transform);
             Vector2 clampedPosition = ClampToRect(_inputZone.Transform, localPoint);

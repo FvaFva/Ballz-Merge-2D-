@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BallzMerge.Root
 {
-    internal class OwnerPrimaryComponents
+    public class OwnerPrimaryComponents
     {
         public OwnerPrimaryComponents()
         {
