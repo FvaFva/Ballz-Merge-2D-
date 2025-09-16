@@ -16,7 +16,7 @@ namespace BallzMerge.Root.Settings
         private readonly InfoPanelShowcase _infoPanelShowcase;
         private Dictionary<string, IGameSettingData> _settings;
 
-        internal GameSettings(GameSettingsMenu settingsMenu, OwnerPrimaryComponents primary, InfoPanelShowcase infoPanelShowcase)
+        public GameSettings(GameSettingsMenu settingsMenu, OwnerPrimaryComponents primary, InfoPanelShowcase infoPanelShowcase)
         {
             var mixer = primary.Hub.Get<AudioMixer>();
             SoundVolumeGlobal = new GameSettingsDataProxyAudio(mixer, "Global");
@@ -24,17 +24,16 @@ namespace BallzMerge.Root.Settings
             SoundVolumeMusic = new GameSettingsDataProxyAudio(mixer, "Music");
             DisplayQualityPreset = new QualityPreset("Quality");
 
-            PlatformRunner.RunOnSpecificPlatform(this,
-            X64Action: me =>
+            PlatformRunner.RunOnSpecificPlatform(
+            X64Action: () =>
             {
-                me.DisplayResolution = new DisplayResolution("Resolution");
-                me.DisplayMode = new DisplayMode("Display");
+                DisplayResolution = new DisplayResolution("Resolution");
+                DisplayMode = new DisplayMode("Display");
             },
-            ARMAction: me =>
+            ARMAction: () =>
             {
-                me.DisplayOrientation = new DisplayOrientation("Orientation");
-            }
-        );
+                DisplayOrientation = new DisplayOrientation("Orientation");
+            });
 
             _timeScaler = primary.TimeScaler;
             _infoPanelShowcase = infoPanelShowcase;
@@ -45,11 +44,20 @@ namespace BallzMerge.Root.Settings
             _db = primary.Data.Settings;
             CashSettings();
             GenerateMenu();
-            Button applyButton = _settingsMenu.GetApplyButton(GameSettingType.GameScreenResolutionSetting);
-            DisplayApplier = new DisplayApplier(applyButton);
-            DisplayApplier.Applied += OnSettingsApplyChanges;
-            DisplayResolution.SetDisplayApplier(DisplayApplier);
-            DisplayMode.SetDisplayApplier(DisplayApplier);
+
+            PlatformRunner.RunOnSpecificPlatform(
+            X64Action: () =>
+            {
+                Button applyButton = _settingsMenu.GetApplyButton(GameSettingType.GameScreenResolutionSetting);
+                DisplayApplier = new DisplayApplier(applyButton);
+                DisplayApplier.Applied += OnSettingsApplyChanges;
+                DisplayResolution.SetDisplayApplier(DisplayApplier);
+                DisplayMode.SetDisplayApplier(DisplayApplier);
+            },
+            ARMAction: () =>
+            {
+                
+            });
         }
 
         public readonly GameSettingsDataProxyAudio SoundVolumeGlobal;
@@ -58,7 +66,7 @@ namespace BallzMerge.Root.Settings
         public readonly QualityPreset DisplayQualityPreset;
         public DisplayResolution DisplayResolution { get; private set; }
         public DisplayMode DisplayMode { get; private set; }
-        public readonly DisplayApplier DisplayApplier;
+        public DisplayApplier DisplayApplier { get; private set; }
         public DisplayOrientation DisplayOrientation { get; private set; }
 
         public void Dispose()
@@ -88,13 +96,13 @@ namespace BallzMerge.Root.Settings
                 { DisplayQualityPreset.Name, DisplayQualityPreset }
             };
 
-            PlatformRunner.RunOnSpecificPlatform(this,
-            X64Action: me =>
+            PlatformRunner.RunOnSpecificPlatform(
+            X64Action: () =>
             {
                 _settings.Add(DisplayResolution.Name, DisplayResolution);
                 _settings.Add(DisplayMode.Name, DisplayMode);
             },
-            ARMAction: me =>
+            ARMAction: () =>
             {
                 _settings.Add(DisplayOrientation.Name, DisplayOrientation);
             });
@@ -108,13 +116,13 @@ namespace BallzMerge.Root.Settings
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, _timeScaler, PanelToggleType.AudioToggle);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayQualityPreset, PanelToggleType.DisplayToggle);
 
-            PlatformRunner.RunOnSpecificPlatform(this,
-            X64Action: me =>
+            PlatformRunner.RunOnSpecificPlatform(
+            X64Action: () =>
             {
                 _settingsMenu.AddInstantiate(GameSettingType.GameScreenResolutionSetting, DisplayResolution, PanelToggleType.DisplayToggle);
                 _settingsMenu.AddExist(GameSettingType.GameScreenResolutionSetting, DisplayMode);
             },
-            ARMAction: me =>
+            ARMAction: () =>
             {
                 _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayOrientation, PanelToggleType.DisplayToggle);
             });

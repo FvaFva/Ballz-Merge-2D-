@@ -1,9 +1,8 @@
-﻿#if UNITY_EDITOR
-using UnityEngine.SceneManagement;
+﻿using UnityEngine.SceneManagement;
 
 namespace BallzMerge.Root
 {
-    internal class DebugScenesChecker
+    public class DebugScenesChecker
     {
         public bool IsItDebug(ref string sceneName, DevelopersScenes devScenes)
         {
@@ -23,4 +22,3 @@ namespace BallzMerge.Root
         }
     }
 }
-#endif

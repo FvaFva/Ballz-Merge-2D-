@@ -13,9 +13,6 @@ namespace BallzMerge.Root
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Enter()
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            SQLiteLoader.Init();
-#endif
             Application.targetFrameRate = 60;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
@@ -39,12 +36,20 @@ namespace BallzMerge.Root
         private void RunGame()
         {
             string sceneName = ScenesNames.MAIN_MENU;
-#if UNITY_EDITOR
-            DebugScenesChecker checker = new DebugScenesChecker();
 
-            if (checker.IsItDebug(ref sceneName, _primary.Hub.Get<DevelopersScenes>()))
-                return;
-#endif
+            PlatformRunner.RunOnEditor(
+            editorAction: () =>
+            {
+                var checker = new DebugScenesChecker();
+
+                if (checker.IsItDebug(ref sceneName, _primary.Hub.Get<DevelopersScenes>()))
+                    return;
+            },
+            nonEditorAction: () =>
+            {
+
+            });
+
             LoadScene(sceneName);
         }
 
@@ -57,11 +62,16 @@ namespace BallzMerge.Root
         private void QuitGame()
         {
             _primary.UserInput.Disable();
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+
+            PlatformRunner.RunOnEditor(
+            editorAction: () =>
+            {
+                PlatformRunner.QuitPlayMode();
+            },
+            nonEditorAction: () =>
+            {
+                Application.Quit();
+            });
         }
 
         private void InitMinorComponents()
@@ -112,7 +122,7 @@ namespace BallzMerge.Root
             if (exitData.Save != null)
                 _primary.Saver.SaveGame(exitData.Save);
 
-            if(exitData.History.IsEmpty() == false)
+            if (exitData.History.IsEmpty() == false)
                 _primary.Data.History.SaveResult(exitData.History);
 
             if (exitData.IsLoad)
