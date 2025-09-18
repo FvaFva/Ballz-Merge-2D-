@@ -1,4 +1,5 @@
 using BallzMerge.Data;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ public class DisplayMode : IGameSettingData
     private DisplayApplier _displayApplier;
     private FullScreenMode _fullScreenMode;
 
+    public event Action<bool> StateChanged;
+
     public DisplayMode(string name)
     {
         Name = name;
@@ -21,7 +24,8 @@ public class DisplayMode : IGameSettingData
         {
             { new DisplayType(FullScreenMode.FullScreenWindow, "Windowed Fullscreen") },
             { new DisplayType(FullScreenMode.ExclusiveFullScreen, "Fullscreen") },
-            { new DisplayType(FullScreenMode.Windowed, "Windowed") }
+            { new DisplayType(FullScreenMode.Windowed, "Windowed") },
+            { new DisplayType(FullScreenMode.MaximizedWindow, "Flexible")}
         };
 
         CountOfPresets = _modes.Count - 1;
@@ -47,6 +51,7 @@ public class DisplayMode : IGameSettingData
     {
         Value = CountOfPresets < value ? (float)CountOfPresets : value;
         Change(Value);
+        _displayApplier.SetLoadScreenMode();
     }
 
     public void Change(float value)

@@ -1,4 +1,5 @@
 using BallzMerge.Data;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -13,17 +14,25 @@ public class DisplayResolution : IGameSettingData
     public string Label { get; private set; }
     public int? CountOfPresets { get; private set; }
 
+    public event Action<bool> StateChanged;
+
     public DisplayResolution(string name)
     {
         Name = name;
         _resolutions = Screen.resolutions
-            .Select(res => new Resolution { width = res.width, height = res.height })
+            .GroupBy(resolution => (resolution.width, resolution.height))
+            .Select((group) => new Resolution { width = group.Key.width, height = group.Key.height, refreshRateRatio = Screen.currentResolution.refreshRateRatio })
             .Distinct()
             .ToArray();
 
         CountOfPresets = _resolutions.Length - 1;
 
         Value = _resolutions.ToList().FindIndex(res => res.width == Screen.currentResolution.width && res.height == Screen.currentResolution.height);
+        Debug.Log($"Value is: {Value}");
+
+        if (Value == -1)
+            Value = _resolutions.Length - 1;
+
         _resolution = _resolutions[Mathf.RoundToInt(Value)];
     }
 
@@ -32,10 +41,16 @@ public class DisplayResolution : IGameSettingData
         _displayApplier = displayApplier;
     }
 
+    public void ChangeState(bool state)
+    {
+        StateChanged?.Invoke(state);
+    }
+
     public void Get(float value)
     {
         Value = CountOfPresets < value ? (float)CountOfPresets : value;
         Change(Value);
+        _displayApplier.SetLoadResolution();
     }
 
     public void Change(float value)
@@ -43,6 +58,6 @@ public class DisplayResolution : IGameSettingData
         Value = value;
         Label = $"{_resolutions[Mathf.RoundToInt(Value)].width}x{_resolutions[Mathf.RoundToInt(Value)].height}";
         _resolution = _resolutions[Mathf.RoundToInt(Value)];
-        _displayApplier.SetResolution(_resolution, this);
+        _displayApplier.SetResolution(_resolution, this, this);
     }
 }

@@ -1,4 +1,5 @@
 using BallzMerge.Data;
+using System;
 using UnityEngine;
 
 public class QualityPreset : IGameSettingData
@@ -7,6 +8,8 @@ public class QualityPreset : IGameSettingData
     public float Value { get; private set; }
     public string Label { get; private set; }
     public int? CountOfPresets { get; private set; }
+
+    public event Action<bool> StateChanged;
 
     public QualityPreset(string name)
     {

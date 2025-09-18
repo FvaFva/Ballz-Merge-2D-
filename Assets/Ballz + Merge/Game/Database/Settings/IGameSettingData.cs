@@ -11,5 +11,7 @@ namespace BallzMerge.Data
 
         public void Get(float value);
         public void Change(float value);
+
+        public event Action<bool> StateChanged;
     }
 }

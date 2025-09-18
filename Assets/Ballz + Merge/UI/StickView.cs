@@ -92,12 +92,12 @@ public class StickView : MonoBehaviour
         _position = position;
         _previousInZone = IsInZone;
 
-        PlatformRunner.RunOnSpecificPlatform(
-        ARMAction: () =>
+        PlatformRunner.RunOnDesktopMobilePlatform(
+        mobileAction: () =>
         {
             IsInZone = _monitoredZone.IsPointIn(_cameras.UI, position);
         },
-        X64Action: () =>
+        desktopAction: () =>
         {
             IsInZone = _monitoredZone.IsIn;
         });

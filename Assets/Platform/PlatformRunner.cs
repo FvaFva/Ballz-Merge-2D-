@@ -2,12 +2,12 @@ using System;
 
 public static class PlatformRunner
 {
-    public static void RunOnSpecificPlatform(Action X64Action, Action ARMAction)
+    public static void RunOnDesktopMobilePlatform(Action desktopAction, Action mobileAction)
     {
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR
-        X64Action?.Invoke();
+        desktopAction?.Invoke();
 #elif UNITY_ANDROID || UNITY_IOS
-        ARMAction?.Invoke();
+        mobileAction?.Invoke();
 #endif
     }
 

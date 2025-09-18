@@ -1,8 +1,10 @@
 using BallzMerge.Data;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class DisplayOrientation : IGameSettingData
+public class DisplayOrientation : IGameSettingData, IDisposable
 {
     public string Name { get; private set; }
     public float Value { get; private set; }
@@ -11,10 +13,17 @@ public class DisplayOrientation : IGameSettingData
 
     private List<DisplayOrientationProperty> _orientations;
     private ScreenOrientation _orientation;
+    private Button _applyButton;
 
-    public DisplayOrientation(string name)
+    public event Action<bool> StateChanged;
+
+    public event Action<IGameSettingData> Applied;
+
+    public DisplayOrientation(string name, Button applyButton)
     {
         Name = name;
+        _applyButton = applyButton;
+        _applyButton.onClick.AddListener(SetOrientation);
 
         _orientations = new List<DisplayOrientationProperty>
         {
@@ -38,6 +47,11 @@ public class DisplayOrientation : IGameSettingData
         _orientation = _orientations[Mathf.RoundToInt(Value)].Orientation;
     }
 
+    public void Dispose()
+    {
+        _applyButton.onClick.RemoveListener(SetOrientation);
+    }
+
     public void Get(float value)
     {
         Value = CountOfPresets < value ? (float)CountOfPresets : value;
@@ -49,6 +63,11 @@ public class DisplayOrientation : IGameSettingData
         Value = value;
         Label = _orientations[Mathf.RoundToInt(Value)].OrientationName;
         _orientation = _orientations[Mathf.RoundToInt(Value)].Orientation;
+    }
+
+    private void SetOrientation()
+    {
         Screen.orientation = _orientation;
+        Applied?.Invoke(this);
     }
 }

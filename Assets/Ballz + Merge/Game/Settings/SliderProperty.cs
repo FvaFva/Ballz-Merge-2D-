@@ -3,6 +3,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 [Serializable]
 public class SliderProperty : IDisposable
@@ -10,6 +11,8 @@ public class SliderProperty : IDisposable
     [SerializeField] private Slider _slider;
     [SerializeField] private TMP_Text _label;
     [SerializeField] private TMP_Text _header;
+    [SerializeField] private AnimatedButton _animatedButton;
+    [SerializeField] private Image _fillImage;
     [SerializeField] private string _key;
 
     public IGameSettingData SettingData { get; private set; }
@@ -18,6 +21,8 @@ public class SliderProperty : IDisposable
     private float _step;
     private int _preset;
     private bool _isStepByStep;
+    private Color _startFillImageColor;
+    private Dictionary<bool, Color> StateColors;
 
     public event Action<string, float> ValueChanged;
 
@@ -25,11 +30,20 @@ public class SliderProperty : IDisposable
     {
         _slider.onValueChanged.RemoveListener(SetPreset);
         _slider.onValueChanged.RemoveListener(OnValueChanged);
+        SettingData.StateChanged -= SetSliderState;
     }
 
-    public void SetSettingData(IGameSettingData settingData)
+    public void Init(IGameSettingData settingData)
     {
         SettingData = settingData;
+        SettingData.StateChanged += SetSliderState;
+        _startFillImageColor = _fillImage.color;
+
+        StateColors = new Dictionary<bool, Color>
+        {
+            { true, _startFillImageColor },
+            { false, Color.white }
+        };
     }
 
     public SliderProperty SetValue(float value)
@@ -77,6 +91,13 @@ public class SliderProperty : IDisposable
     {
         _label.text = label;
         return this;
+    }
+
+    private void SetSliderState(bool state)
+    {
+        _slider.interactable = state;
+        _animatedButton.SetState(state);
+        _fillImage.color = StateColors[state];
     }
 
     private void OnValueChanged(float value)
