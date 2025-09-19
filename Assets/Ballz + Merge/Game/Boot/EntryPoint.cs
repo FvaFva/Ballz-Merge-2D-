@@ -44,10 +44,6 @@ namespace BallzMerge.Root
 
                 if (checker.IsItDebug(ref sceneName, _primary.Hub.Get<DevelopersScenes>()))
                     return;
-            },
-            nonEditorAction: () =>
-            {
-
             });
 
             LoadScene(sceneName);

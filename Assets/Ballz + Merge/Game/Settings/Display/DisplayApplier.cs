@@ -1,5 +1,6 @@
 using BallzMerge.Data;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,7 @@ public class DisplayApplier : IDisposable
     {
         _applyButton = applyButton;
         _applyButton.onClick.AddListener(ApplyResolutionAndTriggerChanges);
+        _isEverythingLoaded = true;
     }
 
     public void Dispose()
@@ -68,30 +70,46 @@ public class DisplayApplier : IDisposable
 
     private void ApplyResolution()
     {
-        if (_isEverythingLoaded)
-            return;
+        _isResolutionLoaded = false;
+        _isScreenModeLoaded = false;
 
         if (_fullScreenMode == FullScreenMode.MaximizedWindow)
         {
-            _fullScreenMode = FullScreenMode.Windowed;
-            WindowResizer.SetResizable(true);
+            if (WindowResizer.IsResizable == false)
+            {
+                _fullScreenMode = FullScreenMode.Windowed;
+                SetResolution();
+                CoroutineRunner.Instance.StartCoroutine(SetResizeNextFrame(true));
+                _fullScreenMode = FullScreenMode.MaximizedWindow;
+            }
+
             _displayResolution.ChangeState(false);
-            SetResolution();
-            _fullScreenMode = FullScreenMode.MaximizedWindow;
         }
         else
         {
-            WindowResizer.SetResizable(false);
-            _displayResolution.ChangeState(true);
             SetResolution();
+
+            if (WindowResizer.IsResizable == true)
+                CoroutineRunner.Instance.StartCoroutine(SetResizeNextFrame(false));
+
+            _displayResolution.ChangeState(true);
         }
     }
 
     private void SetResolution()
     {
+        if (_isEverythingLoaded)
+            return;
+
         _isEverythingLoaded = true;
         Screen.SetResolution(_resolution.width, _resolution.height, _fullScreenMode);
         Applied?.Invoke(_displayModeData);
         Applied?.Invoke(_resolutionData);
+    }
+
+    private IEnumerator SetResizeNextFrame(bool state)
+    {
+        yield return null;
+        WindowResizer.SetResizable(state);
     }
 }

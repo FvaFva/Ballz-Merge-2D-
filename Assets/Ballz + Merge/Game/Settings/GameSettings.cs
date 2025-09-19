@@ -24,19 +24,6 @@ namespace BallzMerge.Root.Settings
             SoundVolumeMusic = new GameSettingsDataProxyAudio(mixer, "Music");
             DisplayQualityPreset = new QualityPreset("Quality");
 
-            PlatformRunner.RunOnDesktopMobilePlatform(
-            desktopAction: () =>
-            {
-                DisplayResolution = new DisplayResolution("Resolution");
-                DisplayMode = new DisplayMode("Display");
-            },
-            mobileAction: () =>
-            {
-                Button applyButton = _settingsMenu.GetApplyButton(GameSettingType.GameApplierSetting);
-                DisplayOrientation = new DisplayOrientation("Orientation", applyButton);
-                DisplayOrientation.Applied += OnSettingsApplyChanges;
-            });
-
             _timeScaler = primary.TimeScaler;
             _infoPanelShowcase = infoPanelShowcase;
             _settingsMenu = settingsMenu;
@@ -44,10 +31,24 @@ namespace BallzMerge.Root.Settings
             _settingsMenu.PanelSwitch.PanelSwitched += ReadData;
             _infoPanelShowcase.CloseTriggered += ReadData;
             _db = primary.Data.Settings;
-            CashSettings();
-            GenerateMenu();
 
-            PlatformRunner.RunOnDesktopMobilePlatform(
+            PlatformRunner.RunOnDesktopPlatform(
+            desktopAction: () =>
+            {
+                DisplayResolution = new DisplayResolution("Resolution");
+                DisplayMode = new DisplayMode("Display");
+            });
+
+            PlatformRunner.RunOnMobilePlatform(
+            mobileAction: () =>
+            {
+                DisplayOrientation = new DisplayOrientation("Orientation");
+            });
+
+            GenerateMenu();
+            CashSettings();
+
+            PlatformRunner.RunOnDesktopPlatform(
             desktopAction: () =>
             {
                 Button applyButton = _settingsMenu.GetApplyButton(GameSettingType.GameScreenResolutionSetting);
@@ -55,10 +56,14 @@ namespace BallzMerge.Root.Settings
                 DisplayApplier.Applied += OnSettingsApplyChanges;
                 DisplayResolution.SetDisplayApplier(DisplayApplier);
                 DisplayMode.SetDisplayApplier(DisplayApplier);
-            },
+            });
+
+            PlatformRunner.RunOnMobilePlatform(
             mobileAction: () =>
             {
-                
+                Button applyButton = _settingsMenu.GetApplyButton(GameSettingType.GameApplierSetting);
+                DisplayOrientation.SetApplyButton(applyButton);
+                DisplayOrientation.Applied += OnSettingsApplyChanges;
             });
         }
 
@@ -100,12 +105,14 @@ namespace BallzMerge.Root.Settings
                 { DisplayQualityPreset.Name, DisplayQualityPreset }
             };
 
-            PlatformRunner.RunOnDesktopMobilePlatform(
+            PlatformRunner.RunOnDesktopPlatform(
             desktopAction: () =>
             {
                 _settings.Add(DisplayResolution.Name, DisplayResolution);
                 _settings.Add(DisplayMode.Name, DisplayMode);
-            },
+            });
+
+            PlatformRunner.RunOnMobilePlatform(
             mobileAction: () =>
             {
                 _settings.Add(DisplayOrientation.Name, DisplayOrientation);
@@ -120,12 +127,14 @@ namespace BallzMerge.Root.Settings
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, _timeScaler, PanelToggleType.AudioToggle);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayQualityPreset, PanelToggleType.DisplayToggle);
 
-            PlatformRunner.RunOnDesktopMobilePlatform(
+            PlatformRunner.RunOnDesktopPlatform(
             desktopAction: () =>
             {
                 _settingsMenu.AddInstantiate(GameSettingType.GameScreenResolutionSetting, DisplayResolution, PanelToggleType.DisplayToggle);
                 _settingsMenu.AddExist(GameSettingType.GameScreenResolutionSetting, DisplayMode);
-            },
+            });
+
+            PlatformRunner.RunOnMobilePlatform(
             mobileAction: () =>
             {
                 _settingsMenu.AddInstantiate(GameSettingType.GameApplierSetting, DisplayOrientation, PanelToggleType.DisplayToggle);
@@ -142,7 +151,7 @@ namespace BallzMerge.Root.Settings
             changed.Change(value);
             _settingsMenu.UpdateLabel(changed);
 
-            if (changed == DisplayMode || changed == DisplayResolution)
+            if (changed == DisplayMode || changed == DisplayResolution || changed == DisplayOrientation)
                 return;
 
             OnSettingsApplyChanges(changed);

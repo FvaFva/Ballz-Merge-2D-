@@ -14,16 +14,15 @@ public class DisplayOrientation : IGameSettingData, IDisposable
     private List<DisplayOrientationProperty> _orientations;
     private ScreenOrientation _orientation;
     private Button _applyButton;
+    private bool _isOrientationLoaded;
 
     public event Action<bool> StateChanged;
 
     public event Action<IGameSettingData> Applied;
 
-    public DisplayOrientation(string name, Button applyButton)
+    public DisplayOrientation(string name)
     {
         Name = name;
-        _applyButton = applyButton;
-        _applyButton.onClick.AddListener(SetOrientation);
 
         _orientations = new List<DisplayOrientationProperty>
         {
@@ -49,13 +48,20 @@ public class DisplayOrientation : IGameSettingData, IDisposable
 
     public void Dispose()
     {
-        _applyButton.onClick.RemoveListener(SetOrientation);
+        _applyButton.onClick.RemoveListener(ApplyOrientation);
+    }
+
+    public void SetApplyButton(Button applyButton)
+    {
+        _applyButton = applyButton;
+        _applyButton.onClick.AddListener(ApplyOrientation);
     }
 
     public void Get(float value)
     {
         Value = CountOfPresets < value ? (float)CountOfPresets : value;
         Change(Value);
+        SetOrientation();
     }
 
     public void Change(float value)
@@ -65,8 +71,18 @@ public class DisplayOrientation : IGameSettingData, IDisposable
         _orientation = _orientations[Mathf.RoundToInt(Value)].Orientation;
     }
 
+    private void ApplyOrientation()
+    {
+        _isOrientationLoaded = false;
+        SetOrientation();
+    }
+
     private void SetOrientation()
     {
+        if (_isOrientationLoaded)
+            return;
+
+        _isOrientationLoaded = true;
         Screen.orientation = _orientation;
         Applied?.Invoke(this);
     }
