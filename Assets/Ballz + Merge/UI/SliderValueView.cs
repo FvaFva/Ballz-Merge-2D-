@@ -20,7 +20,7 @@ public class SliderValueView : MonoBehaviour, IDisposable
     public void Init(IGameSettingData settingData)
     {
         SliderProperty sliderProperty = _slidersProperty.Where(sp => sp.SettingData == null).FirstOrDefault();
-        sliderProperty.SetSettingData(settingData);
+        sliderProperty.Init(settingData);
         _slidersTypes.Add(sliderProperty.SettingData, sliderProperty);
         sliderProperty.ValueChanged += SetValue;
         RectTransform = (RectTransform)transform;

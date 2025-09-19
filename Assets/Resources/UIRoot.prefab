@@ -8574,6 +8574,9 @@ MonoBehaviour:
   - _sliderValueView: {fileID: 4198498107382772452, guid: 9c47dd515bab11845835dd7a7e3403fa, type: 3}
     _settingType: 1
     _height: 360
+  - _sliderValueView: {fileID: 4198498107382772452, guid: d8cc1a056ecf790448716a96ad546f06, type: 3}
+    _settingType: 2
+    _height: 225
 --- !u!114 &2814658365248518064
 MonoBehaviour:
   m_ObjectHideFlags: 0

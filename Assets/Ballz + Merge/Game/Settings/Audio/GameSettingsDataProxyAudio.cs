@@ -19,6 +19,8 @@ namespace BallzMerge.Root.Settings
         private readonly int _labelMultiplier = (int)Math.Pow(10, AdditionalZero);
         private readonly AudioMixer _mixer;
 
+        public event Action<bool> StateChanged;
+
         public GameSettingsDataProxyAudio(AudioMixer mixer, string name)
         {
             _mixer = mixer;

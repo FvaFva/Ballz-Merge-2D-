@@ -18,15 +18,16 @@ namespace BallzMerge.Root.Settings
         private const string Suffix = "X";
         private const float Shift = 1f;
 
-        private Tween _currentSlowMoTween;
-        private bool _isTimeScaled = false;
-
         public float Value { get; private set; }
         public string Name { get { return "Time"; } }
         public string Label { get; private set; }
         public int? CountOfPresets { get; private set; }
 
+        private Tween _currentSlowMoTween;
+        private bool _isTimeScaled = false;
         private readonly int _labelMultiplier = (int)Math.Pow(10, AdditionalZero);
+
+        public event Action<bool> StateChanged; 
 
         public void Stop()
         {
