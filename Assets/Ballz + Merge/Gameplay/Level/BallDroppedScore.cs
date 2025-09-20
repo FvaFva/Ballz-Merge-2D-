@@ -41,6 +41,7 @@ public class BallDroppedScore : CyclicBehavior, ILevelStarter, IHistorical, ISav
     public void Load(SaveDataContainer save)
     {
         _ballScore = Mathf.RoundToInt(save.Get(BallScore));
+        ScoreChanged?.Invoke(this, _ballScore, 0);
     }
 
     public void Save(SaveDataContainer save)

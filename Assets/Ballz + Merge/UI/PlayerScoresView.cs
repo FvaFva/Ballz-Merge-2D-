@@ -1,8 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System;
 
-public class PlayerScoresView : CyclicBehavior, IInitializable, ILevelStarter, IDisposable
+public class PlayerScoresView : CyclicBehavior, IInitializable, ILevelStarter, ILevelFinisher
 {
     [SerializeField] private List<ValueViewProperty> _valueViewProperties;
 
@@ -33,7 +32,7 @@ public class PlayerScoresView : CyclicBehavior, IInitializable, ILevelStarter, I
             property.Value.Counter.ScoreChanged += UpdateScore;
     }
 
-    public void Dispose()
+    public void FinishLevel()
     {
         foreach (var property in ValueViews)
             property.Value.Counter.ScoreChanged -= UpdateScore;

@@ -61,6 +61,7 @@ namespace BallzMerge.Gameplay.Level
         {
             _current = Mathf.RoundToInt(save.Get(PointsToDrop));
             _dropInStuck = Mathf.RoundToInt(save.Get(DropsInStuck));
+            ScoreChanged?.Invoke(this, _current, _toDrop);
 
             List<Drop> temp = _drop.GetPool();
 

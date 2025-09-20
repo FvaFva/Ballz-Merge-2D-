@@ -111,18 +111,16 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     private void OnGameIsLost()
     {
-        FinishLevel();
-        _userQuestioner.Show(new UserQuestion(HandlerRestartQuestion, "Want one more game?"));
+        _userQuestioner.Show(new UserQuestion(HandlerLoseQuestion, "Want one more game?"));
     }
 
     private void RestartLevel(bool isLoad = false)
     {
+        StartLevel(isLoad);
+
         if (isLoad)
             LoadSave();
-        else
-            FinishLevel();
 
-        StartLevel(isLoad);
         _data.Saves.EraseAllData();
     }
 
@@ -169,8 +167,10 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         _userQuestioner.Show(new UserQuestion(HandlerQuitQuestion, "Really left dat the best run?"));
     }
 
-    private void HandlerRestartQuestion(bool answer)
+    private void HandlerLoseQuestion(bool answer)
     {
+        FinishLevel();
+
         if (answer)
             RestartLevel();
         else
@@ -182,9 +182,14 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         if (answer)
         {
             if (_exitData.TargetScene == ScenesNames.GAMEPLAY)
+            {
+                FinishLevel();
                 RestartLevel();
+            }
             else
+            {
                 _userQuestioner.Show(new UserQuestion(HandlerSaveQuestion, "Do you want to save your progress?"));
+            }
         }
     }
 
@@ -195,6 +200,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         else
             _exitData.Put(CreateHistory());
 
+        FinishLevel();
         _sceneCallBack.Invoke(_exitData);
     }
 
