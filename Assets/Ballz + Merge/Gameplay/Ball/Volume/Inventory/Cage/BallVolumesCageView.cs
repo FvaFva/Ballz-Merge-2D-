@@ -67,6 +67,7 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
     {
         BallVolumeCageElement cageElement = _elements.Where(element => element.ID == savedVolume.ID).FirstOrDefault();
         cageElement.PerformIfNotNull(cageElement => cageElement.Apply(savedVolume));
+        RebuildCage();
     }
 
     public void HideAllHightLights()

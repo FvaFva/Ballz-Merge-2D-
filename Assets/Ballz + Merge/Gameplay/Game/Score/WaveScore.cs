@@ -18,7 +18,11 @@ public class WaveScore : CyclicBehavior, ILevelStarter, ISaveDependedObject, IWa
         ScoreChanged?.Invoke(this, _wave, _totalWaves);
     }
 
-    public void Load(SaveDataContainer save) => _wave = Mathf.RoundToInt(save.Get(ScoreProp));
+    public void Load(SaveDataContainer save)
+    {
+        _wave = Mathf.RoundToInt(save.Get(ScoreProp));
+        ScoreChanged?.Invoke(this, _wave, _totalWaves);
+    }
 
     public void Save(SaveDataContainer save) => save.Set(ScoreProp, _wave);
 

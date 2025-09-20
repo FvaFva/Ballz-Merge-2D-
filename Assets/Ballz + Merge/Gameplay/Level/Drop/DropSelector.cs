@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class DropSelector : CyclicBehavior, IInitializable, ILevelStarter, ILevelFinisher
+    public class DropSelector : CyclicBehavior, IInitializable, ILevelFinisher
     {
         private const float AnimationTime = 0.8f;
 
@@ -41,11 +41,6 @@ namespace BallzMerge.Gameplay.Level
         {
             _firstSlot.InitMaterial();
             _secondSlot.InitMaterial();
-        }
-
-        public void StartLevel(bool _)
-        {
-            _dropsMap.Clear();
         }
 
         public void Show(Drop first, Drop second, Action callback)
