@@ -7,13 +7,15 @@ public class PlayerScoresView : CyclicBehavior, IInitializable, ILevelStarter, I
 
     private Dictionary<IValueViewScore, ValueViewProperty> ValueViews;
 
-#if UNITY_EDITOR
     private void OnValidate()
     {
-        foreach (var property in _valueViewProperties)
-            property.Init();
+        PlatformRunner.RunOnEditor(
+            editorAction: () =>
+            {
+                foreach (var property in _valueViewProperties)
+                    property.Init();
+            });
     }
-#endif
 
     public void Init()
     {

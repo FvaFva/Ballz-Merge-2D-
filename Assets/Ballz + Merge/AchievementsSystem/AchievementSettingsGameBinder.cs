@@ -5,7 +5,7 @@ using Zenject;
 
 namespace BallzMerge.Achievement
 {
-    public class AchievementSettingsGameBinder : CyclicBehavior, IInitializable, ILevelCompleter, IDependentSettings
+    public class AchievementSettingsGameBinder : CyclicBehavior, IInitializable, ILevelCompleter, IDependentLevelSetting
     {
         private const string Message = "New Achievement!";
 

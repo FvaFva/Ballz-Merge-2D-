@@ -1,14 +1,24 @@
+using BallzMerge.Gameplay.Level;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using Zenject;
 
 public class GlobalEffects : MonoBehaviour
 {
-    [SerializeField] private ScreenInteraction _interaction;
+    [SerializeField] private List<ParticleSystem> _particles;
+    [SerializeField] private List<ParticleSystem> _boardsEffects;
 
-    [Inject] private DiContainer _container;
+    public IReadOnlyList<string> AllEffects => _particles.Select(p => p.name).ToList();
 
-    public void Init()
+    public void ChangeState(bool state, string name)
     {
-        _container.Inject(_interaction);
+        foreach (var particle in _particles)
+        {
+            if (particle.name == name)
+            {
+                particle.gameObject.SetActive(state);
+                return;
+            }
+        }
     }
 }

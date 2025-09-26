@@ -16,11 +16,16 @@ namespace BallzMerge.ScreenOrientations
 
         private void Awake()
         {
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            _orientation = Mobile;
-#else
-            _orientation = StandalonePC;
-#endif
+            PlatformRunner.RunOnDesktopPlatform(
+                desktopAction: () =>
+                {
+                    _orientation = StandalonePC;
+                },
+                nonDesktopAction: () =>
+                {
+                    _orientation = Mobile;
+                });
+
             _last = _orientation();
         }
 
