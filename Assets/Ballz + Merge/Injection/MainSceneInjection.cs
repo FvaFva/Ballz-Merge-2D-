@@ -13,15 +13,13 @@ public class MainSceneInjection : MonoInstaller
     [SerializeField] private GameCycler _loader;
     [SerializeField] private BallVolumesCageView _ballVolumesCageView;
 
-    [Header("Bind")]
+    [Header("Container Bind")]
     [SerializeField] private Ball _ball;
     [SerializeField] private PhysicGrid _physicsGrid;
     [SerializeField] private BlocksBinder _blocksBus;
     [SerializeField] private BallWaveVolume _ballLevelVolume;
     [SerializeField] private AchievementSettingsGameBinder _achievementSource;
     [SerializeField] private CamerasOperator _operator;
-
-    [Header("Inject")]
     [SerializeField] private BallVolumeInventoryActivator _ballVolumeCarrierActivator;
 
     [Inject] private TargetSceneEntryPointContainer _entryPointBinder;

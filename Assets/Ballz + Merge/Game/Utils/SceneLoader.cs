@@ -22,14 +22,16 @@ namespace BallzMerge.Root
         private readonly LoadScreen _loadView;
         private readonly Action<SceneExitData> _sceneExit;
         private readonly ScreenOrientationObserver _orientationObserver;
+        private readonly GlobalEffects _globalEffects;
 
-        public SceneLoader(LoadScreen loadView, Action<SceneExitData> sceneExit, GameSettings settings, ScreenOrientationObserver orientationObserver)
+        public SceneLoader(LoadScreen loadView, Action<SceneExitData> sceneExit, GameSettings settings, ScreenOrientationObserver orientationObserver, GlobalEffects globalEffects)
         {
             _checkTime = new WaitForSeconds(SecondsCheckTime);
             _loadView = loadView;
             _sceneExit = sceneExit;
             _settings = settings;
             _orientationObserver = orientationObserver;
+            _globalEffects = globalEffects;
             _isLoad = false;
             ProjectContext.Instance.Container.Inject(this);
         }
@@ -44,6 +46,7 @@ namespace BallzMerge.Root
             _loadView.Show();
             _targetSceneEntryPoint.Clear();
             _orientationObserver.CheckOutScene();
+            _settings.CheckOutScene();
 
             foreach (var _ in LoadSceneFromBoot(name))
                 yield return _checkTime;
@@ -91,6 +94,9 @@ namespace BallzMerge.Root
 
             foreach (IDependentScreenOrientation orientator in _targetSceneEntryPoint.Current.OrientationDepends)
                 _orientationObserver.CheckInSceneElements(orientator);
+
+            foreach (IDependentSceneSettings sceneSetting in _targetSceneEntryPoint.Current.SettingsDepends)
+                _settings.CheckInSceneElement(sceneSetting);
 
             _targetSceneEntryPoint.Current.Init(_sceneExit, _isLoad);
             _loadView.MoveProgress(1, 1);

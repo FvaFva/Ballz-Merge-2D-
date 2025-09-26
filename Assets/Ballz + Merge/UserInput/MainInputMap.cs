@@ -141,7 +141,7 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                     ""name"": ""ScreenRotation"",
                     ""type"": ""Value"",
                     ""id"": ""99458c0d-e2fa-449a-b4c9-597109226ae5"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Vector3"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -302,11 +302,11 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d5a3e9bd-27fc-4a7d-a795-13e81554e9d2"",
-                    ""path"": ""<Touchscreen>/delta"",
+                    ""id"": ""00d370d0-fe45-4774-8515-2d531aca1aff"",
+                    ""path"": ""<Gyroscope>/angularVelocity"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Sensor"",
                     ""action"": ""ScreenRotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

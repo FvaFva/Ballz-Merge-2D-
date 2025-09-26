@@ -1,4 +1,4 @@
-public interface IDependentSettings 
+public interface IDependentLevelSetting 
 {
     public void ApplySettings(LevelSettings settings);
 }

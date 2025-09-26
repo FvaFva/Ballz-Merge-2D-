@@ -5,25 +5,23 @@ public class PlayZoneBoard : MonoBehaviour
 {
     private const float EffectEdgeScale = 0.5f;
 
-    [SerializeField] private SpriteRenderer _renderer;
     [SerializeField] private List<ParticleSystem> _effects;
 
     private Transform _transform;
     private Vector3 _basePosition;
     private Vector3 _baseScale;
-    private Dictionary<ParticleSystem, Vector3>  _baseScales;
+    private Dictionary<ParticleSystem, Vector3> _baseScales;
+
+    public IReadOnlyList<ParticleSystem> Effects => _effects;
 
     public void MarkAsVirtual()
     {
-        if (_renderer != null)
-            _renderer.enabled = false;
-
         _baseScales = new Dictionary<ParticleSystem, Vector3>();
 
         foreach (var effect in _effects)
             Destroy(effect);
 
-        _effects = new List<ParticleSystem> ();
+        _effects = new List<ParticleSystem>();
     }
 
     public PlayZoneBoard Init()
@@ -69,8 +67,11 @@ public class PlayZoneBoard : MonoBehaviour
         _transform.localPosition += step;
     }
 
-    public void Deactivate()
+    public void ChangeView(bool isDynamic)
     {
-        gameObject.SetActive(false);
+        foreach (var effect in _effects)
+        {
+            effect.gameObject.SetActive(isDynamic);
+        }
     }
 }
