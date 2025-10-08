@@ -38,7 +38,7 @@ namespace BallzMerge.Root.Settings
             _settingsMenu = settingsMenu;
             _settingsMenu.ValueChanged += OnSettingsChanged;
             _sceneSetting.Changed += OnGlobalSettingChanged;
-            _settingsMenu.PanelSwitch.PanelSwitched += ReadData;
+            _settingsMenu.PanelSwitch.PanelSwitched += ResetData;
             _infoPanelShowcase.CloseTriggered += ReadData;
             _db = primary.Data.Settings;
 
@@ -89,7 +89,7 @@ namespace BallzMerge.Root.Settings
         public void Dispose()
         {
             _settingsMenu.ValueChanged -= OnSettingsChanged;
-            _settingsMenu.PanelSwitch.PanelSwitched -= ReadData;
+            _settingsMenu.PanelSwitch.PanelSwitched -= ResetData;
             _infoPanelShowcase.CloseTriggered -= ReadData;
             DisplayOrientation.Applied -= OnSettingsApplyChanges;
             DisplayApplier.Applied -= OnSettingsApplyChanges;
@@ -99,10 +99,7 @@ namespace BallzMerge.Root.Settings
         public void ReadData()
         {
             foreach (var setting in _settings.Values)
-            {
-                setting.Get(_db.Get(setting));
-                _settingsMenu.UpdateStartValue(setting);
-            }
+                ResetData(setting);
         }
 
         public void CheckInSceneElement(IDependentSceneSettings element)
@@ -150,6 +147,21 @@ namespace BallzMerge.Root.Settings
             });
         }
 
+        private void ResetData()
+        {
+            foreach (var setting in _settings.Values)
+            {
+                if (setting == DisplayResolution || setting == DisplayMode || setting == DisplayOrientation)
+                    ResetData(setting);
+            }
+        }
+
+        private void ResetData(IGameSettingData settingData)
+        {
+            settingData.Get(_db.Get(settingData));
+            _settingsMenu.UpdateStartValue(settingData);
+        }
+
         private void GenerateMenu()
         {
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeGlobal, PanelToggleType.AudioToggle);
@@ -159,10 +171,10 @@ namespace BallzMerge.Root.Settings
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayQualityPreset, PanelToggleType.DisplayToggle);
 
             foreach (IGameSettingData preset in _sceneSetting.GameSettings)
-                _settingsMenu.AddInstantiate(GameSettingType.GameSetting, preset, PanelToggleType.DisplayToggle);
+                _settingsMenu.AddInstantiate(GameSettingType.GameSetting, preset, PanelToggleType.DisplayToggle, PanelSubToggleType.Second);
             
             foreach (IGameSettingData preset in _environmentPresets)
-                _settingsMenu.AddInstantiate(GameSettingType.GameSetting, preset, PanelToggleType.DisplayToggle);
+                _settingsMenu.AddInstantiate(GameSettingType.GameSetting, preset, PanelToggleType.DisplayToggle, PanelSubToggleType.Second);
 
 
             PlatformRunner.RunOnDesktopPlatform(

@@ -3362,9 +3362,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ec3a02b4bf68e4e9928d7c59948215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GlobalSettingsInGame
-  _initOrder: 0
-  _globalSettings: {_globalSettings: {fileID: 0}}
-  <Current>k__BackingField: {fileID: 0}
 --- !u!1 &1225426210
 GameObject:
   m_ObjectHideFlags: 0
@@ -13493,7 +13490,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -180, y: 180}
-  m_SizeDelta: {x: 256, y: 256}
+  m_SizeDelta: {x: 256, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!61 &2792584872321858848
 BoxCollider2D:
@@ -13805,7 +13802,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8388029215952911257, guid: 72ab209436eba6045b43a628a373972f, type: 3}
+  m_Sprite: {fileID: 1258356168912954238, guid: a452ce78dc71793409de42292541981a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -13830,8 +13827,8 @@ RectTransform:
   - {fileID: 6329996149350421044}
   m_Father: {fileID: 4515701791043354830}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.25, y: 0.25}
-  m_AnchorMax: {x: 0.75, y: 0.75}
+  m_AnchorMin: {x: 0.4, y: 0.3}
+  m_AnchorMax: {x: 0.6, y: 0.7}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -14172,7 +14169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
+  m_IgnoreLayout: 1
   m_MinWidth: -1
   m_MinHeight: -1
   m_PreferredWidth: -1

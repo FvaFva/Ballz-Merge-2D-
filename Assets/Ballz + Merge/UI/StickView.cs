@@ -9,7 +9,7 @@ public class StickView : MonoBehaviour
 {
     private const float ClampCoefficient = 3.5f;
     private const float BackgroundMoveDelay = 0.06f;
-    private const float MinRange = 10f;
+    private const float MinRange = 0.1f;
 
     [SerializeField] private UIZoneObserver _inputZone;
     [SerializeField] private UIZoneObserver _cancelZone;
@@ -22,9 +22,8 @@ public class StickView : MonoBehaviour
 
     private WaitForSeconds _delay = new WaitForSeconds(BackgroundMoveDelay);
     private Queue<Coroutine> _backMoves;
-    private Action _action;
+    private Action<Vector2> _aimAction;
     private Queue<Action> _transitionsZoneReactions;
-    private Vector2 _position;
     private Vector2 _stickPosition;
     private Vector2 _startStickAnchorPosition;
     private UIZoneObserver _monitoredZone;
@@ -59,7 +58,7 @@ public class StickView : MonoBehaviour
     {
         _monitoredZone = _cancelZone;
         TransitState(_cancelZoneAnimator, true);
-        _action = AimAction;
+        _aimAction = AimAction;
         _inputZoneAnimator.Press();
     }
 
@@ -70,12 +69,30 @@ public class StickView : MonoBehaviour
         _inputZoneAnimator.SetDefault();
         TransitState(_inputZoneAnimator, false);
         SetBaseStick();
-        _action = () => { };
+        _aimAction = (Vector2 position) => { };
     }
 
     public Vector2 GetCenterPosition()
     {
         return _inputZone.GetCenterInWorld(_cameras.UI);
+    }
+
+    public void ApplyPosition(Vector2 position)
+    {
+        _previousInZone = IsInZone;
+
+        PlatformRunner.RunOnIOS(
+        IOSAction: () =>
+        {
+            IsInZone = _monitoredZone.IsPointIn(_cameras.UI, position);
+        },
+        nonIOSAction: () =>
+        {
+            IsInZone = _monitoredZone.IsIn;
+        });
+
+        CheckAnimation();
+        _aimAction(position);
     }
 
     private void TransitState(ImageAnimator monitored, bool cancelState)
@@ -85,38 +102,6 @@ public class StickView : MonoBehaviour
         _transitionsZoneReactions.Clear();
         _transitionsZoneReactions.Enqueue(monitored.Highlight);
         _transitionsZoneReactions.Enqueue(monitored.DoDefault);
-    }
-
-    public void ApplyPosition(Vector2 position)
-    {
-        _position = position;
-        _previousInZone = IsInZone;
-
-        PlatformRunner.RunOnMobilePlatform(
-        mobileAction: () =>
-        {
-            IsInZone = _monitoredZone.IsPointIn(_cameras.UI, position);
-        });
-
-        PlatformRunner.RunOnDesktopPlatform(
-        desktopAction: () =>
-        {
-            IsInZone = _monitoredZone.IsIn;
-        });
-
-        CheckAnimation();
-        _action();
-    }
-
-    private static Vector2 ClampToRect(RectTransform zone, Vector2 targetPosition)
-    {
-        Vector2 size = zone.rect.size;
-        Vector2 clampSize = size / ClampCoefficient;
-
-        float clampedX = Mathf.Clamp(targetPosition.x, -clampSize.x, clampSize.x);
-        float clampedY = Mathf.Clamp(targetPosition.y, -clampSize.y, clampSize.y);
-
-        return new Vector2(clampedX, clampedY);
     }
 
     private void CheckAnimation()
@@ -129,13 +114,7 @@ public class StickView : MonoBehaviour
         }
     }
 
-    private Vector2 GetConvertToLocalVector(Vector2 point, RectTransform rectTransform)
-    {
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, point, _cameras.UI, out Vector2 localPoint);
-        return localPoint;
-    }
-
-    private void AimAction()
+    private void AimAction(Vector2 position)
     {
         bool isAimActive = !IsInZone;
 
@@ -147,8 +126,8 @@ public class StickView : MonoBehaviour
 
         if (isAimActive)
         {
-            Vector2 localPoint = GetConvertToLocalVector(_position, _inputZone.Transform);
-            Vector2 clampedPosition = ClampToRect(_inputZone.Transform, localPoint);
+            Debug.Log($"Stick position: {position}");
+            Vector2 clampedPosition = ClampToRect(_inputZone.Transform, position);
             float range = Vector2.Distance(_stickPosition, clampedPosition);
 
             if (range > MinRange)
@@ -158,6 +137,26 @@ public class StickView : MonoBehaviour
                 _backMoves.Enqueue(StartCoroutine(BackMove(_stickPosition)));
             }
         }
+    }
+
+    private Vector2 GetConvertToLocalVector(Vector2 point, RectTransform rectTransform)
+    {
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, point, _cameras.UI, out Vector2 localPoint);
+        return localPoint;
+    }
+
+    private static Vector2 ClampToRect(RectTransform zone, Vector2 direction)
+    {
+        // Размер зоны (половина ширины = максимум отклонения)
+        Vector2 size = zone.rect.size;
+        Vector2 clampSize = size / 2f;
+
+        // ограничиваем вектор, чтобы не выходил за рамки зоны
+        float clampedX = Mathf.Clamp(direction.x, -1f, 1f);
+       //Debug.Log($"ClampedX: {clampedX}");
+        float clampedY = Mathf.Clamp(direction.y, -1f, 1f);
+
+        return new Vector2(clampedX * clampSize.x, 0f) * -1;
     }
 
     private void SetBaseStick()

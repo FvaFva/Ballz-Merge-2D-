@@ -1,56 +1,110 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Linq;
 
-public class PanelToggle : MonoBehaviour
+public class PanelToggle : PanelToggleBase
 {
-    [SerializeField] private Button _triggerButton;
-    [SerializeField] private PanelToggleView _toggleView;
-    [SerializeField] private RectTransform _content;
+    [SerializeField] private List<PanelSubToggle> _subToggles;
+    [SerializeField] private PanelToggleType _panelToggleType;
 
-    public RectTransform Content => _content;
+    private PanelSubToggle _currentSubToggle;
+    private Action<RectTransform> _applyContent;
 
-    public event Action<PanelToggle> Triggered;
-    public event Action<RectTransform> Selected;
-    public event Action<PanelToggle> Initialized;
+    public PanelToggleType PanelToggleType => _panelToggleType;
 
-    public void Initialize()
+    public override void Initialize(Action<PanelToggleBase> afterInitialized = null)
     {
-        _toggleView.Initialized += OnInitialized;
-        _toggleView.Initialize();
+        base.Initialize(afterInitialized);
+
+        foreach (PanelSubToggle panelSubToggle in _subToggles)
+            panelSubToggle.Initialize(afterInitialized);
+
+        afterInitialized?.Invoke(this);
     }
 
-    public void Enable()
+    public override void Enable()
     {
-        _triggerButton.onClick.AddListener(OnClickButton);
+        base.Enable();
+
+        foreach (PanelSubToggle panelSubToggle in _subToggles)
+            panelSubToggle.Enable();
     }
 
-    public void Disable()
+    public override void Disable()
     {
-        _triggerButton.onClick.RemoveListener(OnClickButton);
+        base.Disable();
+
+        foreach (PanelSubToggle panelSubToggle in _subToggles)
+            panelSubToggle.Disable();
     }
 
-    private void OnInitialized()
+    public override void Select(Action<RectTransform> applyContent)
     {
-        Initialized?.Invoke(this);
-        _toggleView.Initialized -= OnInitialized;
+        _applyContent = applyContent;
+        base.Select(_applyContent);
+
+        if (!_subToggles.Any())
+        {
+            applyContent?.Invoke(Content);
+            return;
+        }
+
+        foreach (var subToggle in _subToggles)
+        {
+            subToggle.Triggered += ChangeCurrentSubToggle;
+            subToggle.SetState(true);
+        }
+
+        if (_currentSubToggle == null)
+        {
+            _currentSubToggle = _subToggles.FirstOrDefault();
+            _currentSubToggle.Select();
+            applyContent?.Invoke(_currentSubToggle.GetContent());
+            return;
+        }
+
+        SelectSubToggle(_currentSubToggle);
     }
 
-    private void OnClickButton()
+    public override void Unselect()
     {
-        Triggered?.Invoke(this);
+        base.Unselect();
+
+        if (!_subToggles.Any())
+            return;
+
+        foreach (var subToggle in _subToggles)
+        {
+            subToggle.Triggered -= ChangeCurrentSubToggle;
+            subToggle.Unselect();
+            subToggle.SetState(false);
+        }
     }
 
-    public void Select()
+    public override RectTransform GetContent(PanelSubToggleType subToggleType)
     {
-        _toggleView.Select();
-        _content.gameObject.SetActive(true);
-        Selected?.Invoke(_content);
+        if (!_subToggles.Any())
+            return Content;
+
+        return _subToggles.Find(subToggle => subToggle.PanelSubToggleType == subToggleType).GetContent();
     }
 
-    public void Unselect()
+    private void ChangeCurrentSubToggle(PanelToggleBase panelSubToggle)
     {
-        _toggleView.Unselect();
-        _content.gameObject.SetActive(false);
+        if (_currentSubToggle == panelSubToggle)
+            return;
+
+        SelectSubToggle(panelSubToggle);
+    }
+
+    private void SelectSubToggle(PanelToggleBase panelSubToggle)
+    {
+        foreach (var subToggle in _subToggles)
+            subToggle.Unselect();
+
+        _currentSubToggle = panelSubToggle as PanelSubToggle;
+        _currentSubToggle.Select();
+        _applyContent?.Invoke(_currentSubToggle.GetContent());
     }
 }

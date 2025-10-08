@@ -37,13 +37,15 @@ public class BallStrikeVectorReader : BallComponent
     public Vector3 GetDirection()
     {
         Vector3 final = _vector;
+        Debug.Log($"direction: {final.normalized * -1}");
         return final.normalized * -1;
     }
 
     private void VectorMoved(InputAction.CallbackContext context)
     {
         _touchPoint = context.ReadValue<Vector2>();
-        _view.ApplyPosition(_touchPoint);
+        _touchPoint.y = 0;
+        _view.ApplyPosition(GetDirection());
     }
 
     private void OnShotStarted(InputAction.CallbackContext context) => StartCoroutine(HandleEndOfFrame(EndFrameShotStarted));
