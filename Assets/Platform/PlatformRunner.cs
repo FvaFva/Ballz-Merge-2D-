@@ -20,6 +20,15 @@ public static class PlatformRunner
 #endif
     }
 
+    public static void RunOnIOS(Action IOSAction, Action nonIOSAction = null)
+    {
+#if UNITY_IOS                           
+        IOSAction?.Invoke();
+#else
+        nonIOSAction?.Invoke();
+#endif
+    }
+
     public static void RunOnEditor(Action editorAction, Action nonEditorAction = null)
     {
 #if UNITY_EDITOR

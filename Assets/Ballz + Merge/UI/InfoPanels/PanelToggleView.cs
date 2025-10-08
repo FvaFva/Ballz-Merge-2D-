@@ -10,13 +10,10 @@ public class PanelToggleView : MonoBehaviour
     private Image _image;
     private Color _startColor;
 
-    public event Action Initialized;
-
     public void Initialize()
     {
         _image = GetComponent<Image>();
         _startColor = _image.color;
-        Initialized?.Invoke();
     }
 
     public void Select()

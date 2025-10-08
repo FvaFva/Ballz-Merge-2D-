@@ -6,32 +6,25 @@ using System;
 
 public class PanelSwitch : MonoBehaviour
 {
-    [SerializeField] private List<PanelToggleProperty> _listOfPanels;
+    [SerializeField] private List<PanelToggle> _panelToggles;
     [SerializeField] private ScrollRect _scrollRect;
 
-    private Dictionary<PanelToggleType, PanelToggle> _panelToggles = new();
-    private int _initializedCount = 0;
+    private PanelToggleBase _currentToggle;
 
     public event Action PanelSwitched;
 
     private void Awake()
     {
-        foreach(var panel in _listOfPanels)
-            _panelToggles.Add(panel.PanelToggleType, panel.PanelToggle);
-
         foreach (var panelToggle in _panelToggles)
-        {
-            panelToggle.Value.Initialized += OnInitialized;
-            panelToggle.Value.Initialize();
-        }
+            panelToggle.Initialize(OnInitialized);
     }
 
     private void OnEnable()
     {
         foreach (var panelToggle in _panelToggles)
         {
-            panelToggle.Value.Triggered += ApplyPanelToggle;
-            panelToggle.Value.Enable();
+            panelToggle.Triggered += ApplyPanelToggle;
+            panelToggle.Enable();
         }
     }
 
@@ -39,37 +32,41 @@ public class PanelSwitch : MonoBehaviour
     {
         foreach (var panelToggle in _panelToggles)
         {
-            panelToggle.Value.Triggered -= ApplyPanelToggle;
-            panelToggle.Value.Disable();
+            panelToggle.Triggered -= ApplyPanelToggle;
+            panelToggle.Disable();
         }
     }
 
-    public RectTransform GetContent(PanelToggleType panelToggleType)
+    public RectTransform GetContent(PanelToggleType panelToggleType, PanelSubToggleType panelSubToggleType)
     {
-        return _panelToggles[panelToggleType].Content;
+        PanelToggle panelToggle = _panelToggles.FirstOrDefault(pt => pt.PanelToggleType == panelToggleType);
+
+        if (panelToggle != null)
+            return panelToggle.GetContent(panelSubToggleType);
+
+        return null;
     }
 
-    private void OnInitialized(PanelToggle panelToggle)
+    private void OnInitialized(PanelToggleBase panelToggle)
     {
-        panelToggle.Initialized -= OnInitialized;
-        _initializedCount++;
-
-        if (_initializedCount == _panelToggles.Count)
+        if (!_panelToggles.Where(toggle => !toggle.IsInitialized).Any())
         {
-            ApplyPanelToggle(_panelToggles[PanelToggleType.AudioToggle]);
-            _initializedCount = 0;
+            PanelToggle defaultPanelToggle = _panelToggles.FirstOrDefault(panelToggle => panelToggle.PanelToggleType == PanelToggleType.AudioToggle);
+            ApplyPanelToggle(defaultPanelToggle);
         }
     }
 
-    private void ApplyPanelToggle(PanelToggle triggeredPanelToggle)
+    private void ApplyPanelToggle(PanelToggleBase triggeredPanelToggle)
     {
-        triggeredPanelToggle.Selected += ApplyContent;
+        if (_currentToggle == triggeredPanelToggle)
+            return;
 
-        foreach (var panelToggle in _panelToggles)
-            panelToggle.Value.Unselect();
+        _currentToggle = triggeredPanelToggle;
 
-        triggeredPanelToggle.Select();
-        triggeredPanelToggle.Selected -= ApplyContent;
+        foreach (PanelToggle panelToggle in _panelToggles)
+            panelToggle.Unselect();
+
+        _currentToggle.Select(ApplyContent);
         PanelSwitched?.Invoke();
     }
 
