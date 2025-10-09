@@ -56,21 +56,21 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
         _update();
     }
 
-    public void UpdateScreenOrientation(ScreenOrientation orientation)
+    public void UpdateScreenOrientation(bool isVertical)
     {
-        if (!_layout.IsInverse ^ (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight))
-        {
-            _fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-            _fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            _scroll.vertical = true;
-            _scroll.horizontal = false;
-        }
-        else
+        if (!_layout.IsInverse ^ isVertical)
         {
             _fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             _fitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
             _scroll.vertical = false;
             _scroll.horizontal = true;
+        }
+        else
+        {
+            _fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            _fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            _scroll.vertical = true;
+            _scroll.horizontal = false;
         }
 
         _viewPort.sizeDelta = Vector2.zero;

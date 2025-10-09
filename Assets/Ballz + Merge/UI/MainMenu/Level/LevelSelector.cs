@@ -4,11 +4,12 @@ using BallzMerge.Data;
 using UnityEngine;
 using Zenject;
 
-public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable
+public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable, IDependentScreenOrientation
 {
     [SerializeField] private RectTransform _box;
     [SerializeField] private LevelSelectionView _prefab;
     [SerializeField] private LevelView _level;
+    [SerializeField] private AdaptiveLayoutGroupStretching _body;
 
     [Inject] private LevelSettingsMap _map;
     [Inject] private LevelSettingsContainer _container;
@@ -51,6 +52,11 @@ public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable
 
         foreach (var level in _map.Available)
             _selectors.Add(Instantiate(_prefab, _box).Init(level));
+    }
+
+    public void UpdateScreenOrientation(bool isVertical)
+    {
+        _body.UpdateScreenOrientation(isVertical);
     }
 
     public void Show(RectTransform showcase)

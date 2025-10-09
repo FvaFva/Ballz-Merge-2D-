@@ -61,9 +61,9 @@ namespace BallzMerge.Gameplay
             UpdateValues();
         }
 
-        public void UpdateScreenOrientation(ScreenOrientation orientation)
+        public void UpdateScreenOrientation(bool isVertical)
         {
-            if (orientation == ScreenOrientation.Portrait || orientation == ScreenOrientation.PortraitUpsideDown)
+            if (isVertical)
             {
                 _currentSize = PortraitSize;
                 _currentAvailableSpacePrecent = _portraitAvailableSpacePrecent;

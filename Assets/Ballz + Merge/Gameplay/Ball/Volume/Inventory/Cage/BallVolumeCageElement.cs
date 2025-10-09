@@ -1,10 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private GameDataVolumeMicView _view;
+    [SerializeField] private LayoutElement _layout;
     [SerializeField] private RectPumper _viewPumper;
     [SerializeField] private UIParticle _backlight;
     [SerializeField] private UIParticle _highlight;
@@ -22,7 +24,6 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
 
     private void Awake()
     {
-        _transform = GetComponent<RectTransform>();
         _view.Init();
     }
 
@@ -87,6 +88,9 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
     public BallVolumeCageElement Init(int id, BallVolumeCageContainer container)
     {
         ID = id;
+        _transform = GetComponent<RectTransform>();
+        _layout.layoutPriority = -ID;
+        _transform.SetSiblingIndex(0);
         _container = container;
         _backlight.Init();
         _highlight.Init();

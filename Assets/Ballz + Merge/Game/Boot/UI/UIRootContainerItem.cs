@@ -13,9 +13,9 @@ namespace BallzMerge.Root
         private RectTransform _parent;
         private bool _updatePositionOnEnable;
         private Coroutine _positionUpdater;
-        private Dictionary<ScreenOrientation, CrossPosition> _positions;
+        private Dictionary<bool, CrossPosition> _positions;
 
-        public IDictionary<ScreenOrientation, CrossPosition> Positions => _positions;
+        public IDictionary<bool, CrossPosition> Positions => _positions;
         public AdaptiveLayoutGroupBase Group { get; private set; }
 
         private void OnEnable()
@@ -31,12 +31,10 @@ namespace BallzMerge.Root
         {
             _transform = GetComponent<RectTransform>();
             _parent = (RectTransform)_transform.parent;
-            _positions = new Dictionary<ScreenOrientation, CrossPosition>
+            _positions = new Dictionary<bool, CrossPosition>
             {
-                { ScreenOrientation.LandscapeLeft, _positionHorizontal },
-                { ScreenOrientation.LandscapeRight, _positionHorizontal },
-                { ScreenOrientation.Portrait, _positionVertical },
-                { ScreenOrientation.PortraitUpsideDown, _positionVertical }
+                { false, _positionHorizontal },
+                { true, _positionVertical }
             };
         }
 

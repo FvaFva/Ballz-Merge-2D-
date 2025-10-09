@@ -15,6 +15,7 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
     private delegate Vector2 OversizeFix(float childAspect, float availableCross, float totalSpacing, float totalMainSize, float totalCrossSize);
     private OversizeFix _oversizeFix;
     private Vector2 _anchorFactor;
+
 #if UNITY_EDITOR
     protected override void OnValidate()
     {
@@ -33,6 +34,13 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
         base.Init();
         CalculateAttributes();
         return this;
+    }
+
+    public void SetProperty(int separate, LayoutAspectBehaviour layoutAspectBehavior)
+    {
+        _oversizeBehaviour = layoutAspectBehavior;
+        _separate = separate;
+        CalculateAttributes();
     }
 
     public void SetOversizeBehavior(LayoutAspectBehaviour layoutAspectBehavior)
@@ -87,12 +95,40 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
 
         float availableCross = Mathf.Max(0f, rectTransform.rect.size[crossAxis] - crossPadStart - crossPadEnd);
 
+        var items = ChildrenCrossSizes.ToList();
+        int perLine = Mathf.Max(1, _separate);
+        int lines = Mathf.CeilToInt((float)items.Count / perLine);
+
+        float totalLinesMain = 0f;
+        if (lines > 0)
+        {
+            for (int lineIndex = 0; lineIndex < lines; lineIndex++)
+            {
+                int firstIdx = lineIndex * perLine;
+                if (firstIdx >= items.Count) break;
+                var pair = items[firstIdx];
+                var size = _oversizeFix(pair.Value, availableCross, totalSpacing, totalMainSize, totalCrossSize);
+                float lineMain = IsVertical ? size.y : size.x;
+                totalLinesMain += lineMain;
+            }
+        }
+
+        float spacing;
+        if (_oversizeBehaviour == LayoutAspectBehaviour.SpacingRegulation)
+        {
+            int gapsMain = Mathf.Max(1, lines - 1);
+            float desired = (totalMainSize - totalLinesMain) / gapsMain; 
+            spacing = Mathf.Min(Spacing, desired);
+        }
+        else
+        {
+            spacing = Spacing;
+        }
+
         float occupiedMain = ChildrenCrossSizes.Sum(x => Calculate(x.Value, availableCross)) + totalSpacing;
         float remainingMain = Mathf.Max(0f, totalMainSize - occupiedMain);
         float mainOffset = mainAlign * remainingMain;
 
-        var items = ChildrenCrossSizes.ToList();
-        int perLine = Mathf.Max(1, _separate);
         int idx = 0;
 
         float posMain = mainPadStart + mainOffset;
@@ -111,7 +147,7 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
                 float mainSize  = IsVertical ? size.y : size.x;
                 float crossSize = IsVertical ? size.x : size.y;
                 line.Add((pair.Key, mainSize, crossSize));
-                occupiedCrossBySteps += mainSize;
+                occupiedCrossBySteps += crossSize;
             }
             if (countInLine > 1) occupiedCrossBySteps += Spacing * (countInLine - 1);
 
@@ -124,10 +160,10 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
                 var (rect, mainSize, crossSize) = line[i];
                 SetChildAlongAxis(rect, mainAxis, posMain, mainSize);
                 SetChildAlongAxis(rect, crossAxis, posCross, crossSize);
-                if (i < line.Count - 1) posCross += (mainSize + Spacing);
+                if (i < line.Count - 1) posCross += crossSize + Spacing;
             }
 
-            posMain += line.Count > 0 ? (line[0].mainSize + Spacing) : 0f;
+            posMain += line.Count > 0 ? (line[0].mainSize + spacing) : 0f;
             idx += countInLine;
         }
     }
@@ -147,33 +183,12 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
         foreach (var kv in ChildrenCrossSizes)
             sumMainPerLine += Calculate(kv.Value, availableCross) / _separate;
 
-        float baseTotalMain = sumMainPerLine + totalSpacing;
+        float baseTotalMain = (sumMainPerLine + totalSpacing) / _separate;
         float scale = baseTotalMain > 0f ? Mathf.Min(1f, (totalMainSize - totalSpacing) / Mathf.Max(SafeEpsilon, baseTotalMain - totalSpacing)) : 1f;
         scale = Mathf.Clamp01(scale);
 
         float main = baseMain * scale;
         float cross = totalCrossSize / _separate * scale;
-        return new Vector2(IsVertical ? cross : main, IsVertical ? main : cross);
-    }
-
-    private Vector2 OversizeAdjustCrossEqually(float childAspect, float availableCross, float totalSpacing, float totalMainSize, float totalCrossSize)
-    {
-        int count = Mathf.Max(1, ChildrenCrossSizes.Count);
-        float targetAspect;
-        if (IsVertical)
-        {
-            float denom = Mathf.Max(SafeEpsilon, totalMainSize - totalSpacing);
-            targetAspect = count * availableCross / denom;
-        }
-        else
-        {
-            float denom = Mathf.Max(SafeEpsilon, count * availableCross);
-            targetAspect = (totalMainSize - totalSpacing) / denom;
-        }
-        targetAspect = Mathf.Max(SafeEpsilon, targetAspect);
-
-        float main = Calculate(targetAspect, availableCross) / _separate;
-        float cross = totalCrossSize / _separate;
         return new Vector2(IsVertical ? cross : main, IsVertical ? main : cross);
     }
 
@@ -183,10 +198,10 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
         {
             LayoutAspectBehaviour.None => OversizeNone,
             LayoutAspectBehaviour.ScaleMainToFit => OversizeScaleMain,
-            LayoutAspectBehaviour.AdjustCrossEqually => OversizeAdjustCrossEqually,
+            LayoutAspectBehaviour.SpacingRegulation => OversizeNone,
             _ => OversizeNone
         };
-
+            
         _anchorFactor = childAlignment switch
         {
             TextAnchor.UpperLeft => Vector2.zero,

@@ -5,11 +5,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
+public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView, IDependentScreenOrientation
 {
     private const string ToBagHeader = "Drop here for bag";
     private const string ToCageHeader = "Click here for cage";
 
+    [SerializeField] private BallVolumeCarrierOrientationAdapter _adapter;
     [SerializeField] private BallVolumesPassiveView _passiveView;
     [SerializeField] private BallWaveVolume _volumes;
     [SerializeField] private BallWaveVolumeView _volumesView;
@@ -70,7 +71,8 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
     {
         gameObject.SetActive(true);
         _transform.SetParent(showcase);
-        _cageContainerItem.PuckUp(_cagePosition);
+        _cageContainerItem.PuckUp(_adapter.CagePosition);
+        _cage.UpdateCompellation(true, _adapter.CageSeparate);
         _transform.anchoredPosition = Vector2.zero;
         _transform.sizeDelta = Vector2.zero;
         _volumeView.ChangeActive(false);
@@ -82,7 +84,13 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView
         _volumesView.HidePerformed();
         _volumeView.ChangeActive(false);
         _cageContainerItem.UpdatePositionByGroup();
+        _cage.UpdateCompellation();
         gameObject.SetActive(false);
+    }
+
+    public void UpdateScreenOrientation(bool isVertical)
+    {
+        _adapter.UpdateScreenOrientation(isVertical);
     }
 
     private void OnTrigger()

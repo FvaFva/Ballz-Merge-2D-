@@ -4,12 +4,12 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILevelFinisher, IDisposable, IHistorical
+public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILevelFinisher, IDisposable, IHistorical, IDependentScreenOrientation
 {
     [SerializeField] private DropSelector _dropSelector;
     [SerializeField] private BallVolumesCageView _cage;
 
-    public BallVolumesBag Bag {  get; private set; }
+    public BallVolumesBag Bag { get; private set; }
     public BallVolumesCageView Cage => _cage;
 
     public event Action Changed;
@@ -59,6 +59,11 @@ public class BallWaveVolume : CyclicBehavior, IWaveUpdater, IInitializable, ILev
     public int GetPassiveValue(Type type)=> Bag.Passive.Where(c => c.IsEqual(type)).Count();
     
     public int GetPassiveValue<T>() where T : BallVolumePassive => Bag.Passive.Where(c => c.IsEqual<T>()).Count(); 
+
+    public void UpdateScreenOrientation(bool isVertical)
+    {
+        _cage.UpdateScreenOrientation(isVertical);
+    }
 
     public void FinishLevel()
     {

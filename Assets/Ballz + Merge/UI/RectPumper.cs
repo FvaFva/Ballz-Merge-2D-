@@ -9,6 +9,7 @@ public class RectPumper : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private const float Scatter = 0.2f;
     private const float Interval = 0.15f;
 
+    [SerializeField] private bool _upIndexForShow;
     [SerializeField, Range(1, 10)] private float _interval;
     [SerializeField, Range(0, 30)] private float _power;
     [SerializeField, Range(0, 1)] private float _scalePower;
@@ -24,6 +25,7 @@ public class RectPumper : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private Vector2 _scale;
     private Tween _rotator;
     private Tween _scaler;
+    private int _oldIndex;
 
     private void Awake()
     {
@@ -34,9 +36,11 @@ public class RectPumper : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         _rotationBase = _me.localRotation;
         _scaleBase = _me.localScale;
         _scale = _scaleBase * (1 + _scalePower);
-        _reroller = () => {
+        _reroller = () =>
+        {
             _me.localRotation = _rotationBase;
-            _me.localRotation *= Quaternion.Euler(0, 0, Random.Range(-_power, _power));};
+            _me.localRotation *= Quaternion.Euler(0, 0, Random.Range(-_power, _power));
+        };
     }
 
     private void OnEnable()
@@ -84,14 +88,27 @@ public class RectPumper : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(_isPointerReactor)
+        if (_isPointerReactor)
+        {
+            if (_upIndexForShow)
+            {
+                _oldIndex = _me.GetSiblingIndex();
+                _me.SetAsLastSibling();
+            }
+
             ChangeScale(_scale);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if(_isPointerReactor)
+        if (_isPointerReactor)
+        {
+            if (_upIndexForShow)
+            _me.SetSiblingIndex(_oldIndex);
+
             ChangeScale(_scaleBase);
+        }
     }
 
     private void ChangeScale(Vector2 scale)
