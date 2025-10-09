@@ -55,7 +55,7 @@ public class LevelView : MonoBehaviour
             view.Show(map.Key, names);
         }
 
-        var allNumbers = level.BlocksSettings.SpawnProperties.SelectMany(s => s.Number).Select(n=>n.Value).Distinct().OrderBy(n => n);
+        var allNumbers = level.BlocksSettings.SpawnProperties.SelectMany(s => s.Number).Select(n => n.Value).Distinct().OrderBy(n => n);
 
         foreach (var number in allNumbers)
             GetView(_blocks, () => Instantiate(_blockPrefab, _blockContent)).Show(level.BlocksSettings.GetColor(number), number);

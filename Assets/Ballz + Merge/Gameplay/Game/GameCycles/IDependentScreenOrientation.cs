@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public interface IDependentScreenOrientation
+﻿public interface IDependentScreenOrientation
 {
-    public void UpdateScreenOrientation(ScreenOrientation orientation);
+    public void UpdateScreenOrientation(bool isVertical);
 }

@@ -5,19 +5,25 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class BallVolumesCageView : MonoBehaviour, IInitializable
+public class BallVolumesCageView : MonoBehaviour, IInitializable, IDependentScreenOrientation
 {
     private const float SlowMoTime = 0.7f;
+    private const float WeightInCage = 3;
+    private const float WeightOutCage = 7;
 
     [SerializeField] private Image _block;
     [SerializeField] private BallVolumeCageElement _prefab;
     [SerializeField] private BallVolumeCageContainer _container;
     [SerializeField] private int _countPreload;
-    [SerializeField] private RectTransform _box;
+    [SerializeField] private AdaptiveLayoutGroupAspect _group;
+    [SerializeField] private LayoutElement _layoutElement;
 
     [Inject] private IGameTimeOwner _timeScaler;
 
     private int _cageID;
+    private bool _isExternalCompellation;
+    private bool _isVertical;
+    private int _separate;
     private List<BallVolumeCageElement> _elements = new List<BallVolumeCageElement>();
     private Queue<BallVolumeCageElement> _cage;
 
@@ -41,6 +47,14 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
 
     public void SetOnlyView(bool isOnlyView) => _block.enabled = isOnlyView;
 
+    public void UpdateCompellation(bool isExternal = false, int separate = 1)
+    {
+        _separate = separate;
+        _isExternalCompellation = isExternal;
+        _layoutElement.flexibleWidth = isExternal ? WeightInCage : WeightOutCage;
+        UpdateGroup();
+    }
+    
     public void Clear()
     {
         _cage.Clear();
@@ -124,11 +138,25 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
 
     public void Init()
     {
+        _group.Init();
         _cageID = 0;
         _cage = new Queue<BallVolumeCageElement>();
+        UpdateCompellation();
 
         for (int i = 0; i < _countPreload; i++)
             _elements.Add(GenerateElement());
+    }
+
+    public void UpdateScreenOrientation(bool isVertical)
+    {
+        _isVertical = isVertical;
+        UpdateGroup();
+    }
+
+    private void UpdateGroup()
+    {
+        _group.SetProperty(_separate, !_isExternalCompellation && _isVertical ? LayoutAspectBehaviour.SpacingRegulation : LayoutAspectBehaviour.ScaleMainToFit);
+        _group.UpdateScreenOrientation(_isExternalCompellation && _isVertical);
     }
 
     private void HighlightNext()
@@ -141,15 +169,12 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable
 
     private BallVolumeCageElement GenerateElement()
     {
-        var newElement = Instantiate(_prefab, _box).Init(++_cageID, _container).Clear();
+        var newElement = Instantiate(_prefab, _group.Transform).Init(++_cageID, _container).Clear();
         newElement.RequiredSlowMo += OnRequiredSlowMo;
         return newElement;
     }
 
     private void OnRequiredSlowMo() => _timeScaler.PlaySlowMo(SlowMoTime);
 
-    private void OnCellSwap()
-    {
-        RebuildCage();
-    }
+    private void OnCellSwap() => RebuildCage();
 }

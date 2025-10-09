@@ -10,16 +10,16 @@ namespace BallzMerge.ScreenOrientations
         private List<IDependentScreenOrientation> _sceneElements = new List<IDependentScreenOrientation>();
         private List<IDependentScreenOrientation> _rootElements = new List<IDependentScreenOrientation>();
 
-        private ScreenOrientation _last;
+        private bool _last;
 
-        private Func<ScreenOrientation> _orientation;
+        private Func<bool> _orientation;
 
         private void Awake()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            _orientation = Mobile;
+            _orientation = () => Screen.orientation is ScreenOrientation.Portrait or ScreenOrientation.PortraitUpsideDown;
 #else
-            _orientation = StandalonePC;
+            _orientation = () => Screen.width < Screen.height;
 #endif
             _last = _orientation();
         }
@@ -49,16 +49,6 @@ namespace BallzMerge.ScreenOrientations
 
             elements.Add(element);
             element.UpdateScreenOrientation(_last);
-        }
-
-        private ScreenOrientation StandalonePC()
-        {
-            return  Screen.width > Screen.height ? ScreenOrientation.LandscapeLeft : ScreenOrientation.Portrait;
-        }
-
-        private ScreenOrientation Mobile()
-        {
-            return Screen.orientation;
         }
 
         private void UpdateElements()

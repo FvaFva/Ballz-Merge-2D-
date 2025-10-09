@@ -15,7 +15,7 @@ namespace BallzMerge.Root
 
         private Dictionary<CrossPosition, AdaptiveLayoutGroupBase> _groups;
         private List<UIRootContainerItem> _items;
-        private ScreenOrientation _orientation;
+        private bool _isVertical;
 
         public void Init()
         {
@@ -32,13 +32,13 @@ namespace BallzMerge.Root
             };
         }
 
-        public void UpdateScreenOrientation(ScreenOrientation orientation)
+        public void UpdateScreenOrientation(bool isVertical)
         {
-            _orientation = orientation;
+            _isVertical = isVertical;
 
-            _top.UpdateScreenOrientation(orientation);
-            _bottomRight.UpdateScreenOrientation(orientation);
-            _rightCentre.UpdateScreenOrientation(orientation);
+            _top.UpdateScreenOrientation(isVertical);
+            _bottomRight.UpdateScreenOrientation(isVertical);
+            _rightCentre.UpdateScreenOrientation(isVertical);
             UpdateItemsPositions();
         }
 
@@ -64,7 +64,7 @@ namespace BallzMerge.Root
         {
             foreach (var item in _items)
             {
-                var newItemPosition = item.Positions[_orientation];
+                var newItemPosition = item.Positions[_isVertical];
                 var newItemGroup = _groups[newItemPosition];
 
                 if (newItemGroup != item.Group)

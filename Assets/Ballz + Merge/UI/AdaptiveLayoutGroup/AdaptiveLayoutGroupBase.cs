@@ -59,11 +59,7 @@ public abstract class AdaptiveLayoutGroupBase : LayoutGroup
 
     public override void SetLayoutVertical() => ApplyLayout();
 
-    public void UpdateScreenOrientation(ScreenOrientation orientation)
-    {
-        _isVertical = orientation == ScreenOrientation.Portrait || orientation == ScreenOrientation.PortraitUpsideDown;
-        _isVertical = _isVertical ^ _isInversive;
-    }
+    public void UpdateScreenOrientation(bool isVertical) => _isVertical = isVertical ^ _isInversive;
 
     protected abstract float GetCrossSize(LayoutElement element);
     protected abstract float GetMainSize(int axis);

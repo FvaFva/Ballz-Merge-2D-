@@ -5,9 +5,9 @@ public class OrientationDependentPuck : CyclicBehavior, IDependentScreenOrientat
 {
     [SerializeField] private List<AdaptiveLayoutGroupBase> _puck;
 
-    public void UpdateScreenOrientation(ScreenOrientation orientation)
+    public void UpdateScreenOrientation(bool isVertical)
     {
         foreach (var element in _puck)
-            element.UpdateScreenOrientation(orientation);
+            element.UpdateScreenOrientation(isVertical);
     }
 }
