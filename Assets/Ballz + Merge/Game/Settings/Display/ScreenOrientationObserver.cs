@@ -19,11 +19,11 @@ namespace BallzMerge.ScreenOrientations
             PlatformRunner.RunOnDesktopPlatform(
                 desktopAction: () =>
                 {
-                    _orientation = StandalonePC;
+                    _orientation = () => Screen.orientation is ScreenOrientation.Portrait or ScreenOrientation.PortraitUpsideDown;
                 },
                 nonDesktopAction: () =>
                 {
-                    _orientation = Mobile;
+                    _orientation = () => Screen.width < Screen.height;
                 });
 
             _last = _orientation();
