@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class PlayZoneBoards : CyclicBehavior, ILevelStarter, IInitializable
+    public class PlayZoneBoards : CyclicBehavior, ILevelStarter, IInitializable, IDependentSceneSettings
     {
         [SerializeField] private PlayZoneBoard _leftBorder;
         [SerializeField] private PlayZoneBoard _rightBorder;
@@ -42,6 +43,14 @@ namespace BallzMerge.Gameplay.Level
             }
 
             return _simulation.gameObject;
+        }
+
+        public void ApplySetting(SceneSetting sceneSetting)
+        {
+            bool isDynamicBoards = Convert.ToBoolean(sceneSetting.GetValue(SceneSetting.DynamicBoards));
+
+            foreach (var board in _boards)
+                board.ChangeView(isDynamicBoards);
         }
 
         public void ChangePositionScale(bool isVerticalOffset, PositionScaleProperty property)

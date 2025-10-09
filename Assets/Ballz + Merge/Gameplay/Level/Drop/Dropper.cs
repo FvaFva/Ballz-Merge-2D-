@@ -6,7 +6,7 @@ using BallzMerge.Gameplay.BlockSpace;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class Dropper : CyclicBehavior, ILevelStarter, ISaveDependedObject, IDependentSettings, IValueViewScore
+    public class Dropper : CyclicBehavior, ILevelStarter, ISaveDependedObject, IDependentLevelSetting, IValueViewScore
     {
         private const string PointsToDrop = "PointsToDrop";
         private const string DropsInStuck = "DropsInStuck";

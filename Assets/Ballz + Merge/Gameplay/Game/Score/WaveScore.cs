@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class WaveScore : CyclicBehavior, ILevelStarter, ISaveDependedObject, IWaveUpdater, IDependentSettings, IValueViewScore
+public class WaveScore : CyclicBehavior, ILevelStarter, ISaveDependedObject, IWaveUpdater, IDependentLevelSetting, IValueViewScore
 {
     private const string ScoreProp = "WaveScore";
 

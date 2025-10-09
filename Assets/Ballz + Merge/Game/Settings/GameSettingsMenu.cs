@@ -35,10 +35,10 @@ namespace BallzMerge.Data
                 sliderProperty.ValueChanged -= OnSliderChanged;
         }
 
-        public void AddInstantiate(GameSettingType settingType, IGameSettingData settingData, PanelToggleType panelType)
+        public void AddInstantiate(GameSettingType settingType, IGameSettingData settingData, PanelToggleType panelType, PanelSubToggleType panelSubType = PanelSubToggleType.First)
         {
             GameSettingProperty settingProperty = _settingsTypes[settingType];
-            SliderValueView newSlider = Instantiate(settingProperty.SliderValueView, _settingsPanelController.GetContent(panelType));
+            SliderValueView newSlider = Instantiate(settingProperty.SliderValueView, _settingsPanelController.GetContent(panelType, panelSubType));
             newSlider.Init(settingData);
             newSlider.SetProperty(settingData, countOfPresets: settingData.CountOfPresets, key: settingData.Name, header: settingData.Name);
             newSlider.RectTransform.sizeDelta = new Vector2(newSlider.RectTransform.sizeDelta.x, _settingsTypes[settingType].Height);

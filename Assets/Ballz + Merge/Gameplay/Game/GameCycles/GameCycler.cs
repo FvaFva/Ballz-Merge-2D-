@@ -32,6 +32,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     public IEnumerable<IInitializable> InitializedComponents => GetFromMap<IInitializable>();
     public IEnumerable<IDependentScreenOrientation> OrientationDepends => GetFromMap<IDependentScreenOrientation>();
+    public IEnumerable<IDependentSceneSettings> SettingsDepends => GetFromMap<IDependentSceneSettings>();
     public bool IsAvailable { get; private set; }
 
     private void Awake()
@@ -86,6 +87,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         _rootUI.AttachSceneUI(_mainUI, _operator.UI);
         RestartLevel(isLoad && _save.IsLoaded);
         GetFromMap<IDependentScreenOrientation>().Clear();
+        GetFromMap<IDependentSceneSettings>().Clear();
     }
 
     private void OnBallLeftGame()
@@ -126,7 +128,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     private void LoadSettings()
     {
-        foreach (var settingsDepend in GetFromMap<IDependentSettings>())
+        foreach (var settingsDepend in GetFromMap<IDependentLevelSetting>())
             settingsDepend.ApplySettings(_level.Current);
     }
 
@@ -224,7 +226,8 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
         AddToBehaviourMap<IDependentScreenOrientation>();
         AddToBehaviourMap<ISaveDependedObject>();
         AddToBehaviourMap<ILevelStarter>();
-        AddToBehaviourMap<IDependentSettings>();
+        AddToBehaviourMap<IDependentLevelSetting>();
+        AddToBehaviourMap<IDependentSceneSettings>();
         AddToBehaviourMap<IHistorical>();
         AddToBehaviourMap<ICompleteLevelTrigger>();
         AddToBehaviourMap<ILevelCompleter>();

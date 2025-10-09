@@ -15,4 +15,6 @@ MonoBehaviour:
   _gridSettings: {fileID: 11400000, guid: dc8d2a47402be934fb2c4092d7b0b3a0, type: 2}
   _levelSettings:
     _default: {fileID: 11400000, guid: 3fe5f3f6f84954b8aaa7dc30810c3223, type: 2}
+  _globalSettingsContainer:
+    _globalSettings: {fileID: 11400000, guid: 466db12beb559384299333b037a32c89, type: 2}
   _levelMap: {fileID: 11400000, guid: ce4736b6f45b04910a878466ff29594c, type: 2}

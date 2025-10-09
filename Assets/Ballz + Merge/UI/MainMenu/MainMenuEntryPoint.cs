@@ -20,11 +20,12 @@ namespace BallzMerge.MainMenu
 
         private List<IInitializable> _initializedComponents;
         private List<IDependentScreenOrientation> _orientationDependObjects;
+        private List<IDependentSceneSettings> _settingsDependObjects;
         private Action<SceneExitData> _callback;
 
         public IEnumerable<IInitializable> InitializedComponents => _initializedComponents;
         public IEnumerable<IDependentScreenOrientation> OrientationDepends => _orientationDependObjects;
-
+        public IEnumerable<IDependentSceneSettings> SettingsDepends => _settingsDependObjects;
         public bool IsAvailable { get; private set; }
 
         private void Start()
@@ -47,14 +48,18 @@ namespace BallzMerge.MainMenu
         {
             _initializedComponents = new List<IInitializable>();
             _orientationDependObjects = new List<IDependentScreenOrientation>();
+            _settingsDependObjects = new List<IDependentSceneSettings>();
 
             foreach (var component in _behaviors)
             {
                 if (component is IInitializable componentInstance)
                     _initializedComponents.Add(componentInstance);
 
-                if (component is IDependentScreenOrientation temp)
-                    _orientationDependObjects.Add(temp);
+                if (component is IDependentScreenOrientation screenOrientation)
+                    _orientationDependObjects.Add(screenOrientation);
+
+                if (component is IDependentSceneSettings settingDependent)
+                    _settingsDependObjects.Add(settingDependent);
             }
         }
 
