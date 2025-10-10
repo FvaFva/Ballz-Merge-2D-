@@ -341,7 +341,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 126.2
+  m_fontSize: 12.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -944,6 +944,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c795a318b44ca4d88e5b76575c42a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _upIndexForShow: 0
   _interval: 4.26
   _power: 3.1
   _scalePower: 0
@@ -1107,6 +1108,7 @@ MonoBehaviour:
   _buttonView: {fileID: 5035977437433657305}
   _pumper: {fileID: 28953258336415312}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
 --- !u!114 &717988696189820596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1226,7 +1228,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100.25
+  m_fontSize: 13.7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

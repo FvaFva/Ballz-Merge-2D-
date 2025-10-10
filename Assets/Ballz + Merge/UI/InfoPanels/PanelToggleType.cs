@@ -1,5 +1,6 @@
 public enum PanelToggleType
 {
     AudioToggle,
-    DisplayToggle
+    DisplayToggle,
+    GeneralToggle
 }

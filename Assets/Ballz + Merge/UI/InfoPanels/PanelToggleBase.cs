@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.UI;
-using System.Linq;
 
 public abstract class PanelToggleBase : MonoBehaviour
 {
@@ -10,8 +8,6 @@ public abstract class PanelToggleBase : MonoBehaviour
     [SerializeField] private PanelToggleView _toggleView;
     [SerializeField] private RectTransform _content;
 
-    public Button TriggerButton => _triggerButton;
-    public PanelToggleView ToggleView => _toggleView;
     public RectTransform Content => _content;
     public bool IsInitialized { get; private set; }
 
@@ -19,18 +15,18 @@ public abstract class PanelToggleBase : MonoBehaviour
 
     public virtual void Initialize(Action<PanelToggleBase> afterInitialized = null)
     {
-        ToggleView.Initialize();
+        _toggleView.Initialize();
         IsInitialized = true;
     }
 
     public virtual void Enable()
     {
-        TriggerButton.onClick.AddListener(OnClickButton);
+        _triggerButton.onClick.AddListener(OnClickButton);
     }
 
     public virtual void Disable()
     {
-        TriggerButton.onClick.RemoveListener(OnClickButton);
+        _triggerButton.onClick.RemoveListener(OnClickButton);
     }
 
     private void OnClickButton()
@@ -40,13 +36,13 @@ public abstract class PanelToggleBase : MonoBehaviour
 
     public virtual void Select(Action<RectTransform> applyContent = null)
     {
-        ToggleView.Select();
+        _toggleView.Select();
         _content.SetActiveIfNotNull(true);
     }
 
     public virtual void Unselect()
     {
-        ToggleView.Unselect();
+        _toggleView.Unselect();
         _content.SetActiveIfNotNull(false);
     }
 
