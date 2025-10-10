@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 using static UnityEngine.ParticleSystem;
 
 public class UIParticle : MonoBehaviour
@@ -8,6 +9,11 @@ public class UIParticle : MonoBehaviour
     private RectTransform _transform;
     private ShapeModule _shapeModule;
     private ExternalForcesModule _externalForcesModule;
+
+    private void FixedUpdate()
+    {
+        UpdateScale();
+    }
 
     public void Init()
     {
@@ -25,8 +31,7 @@ public class UIParticle : MonoBehaviour
 
     public void Play()
     {
-        Vector2 scale = _transform.rect.size * _transform.lossyScale;
-        _shapeModule.scale = new Vector3(scale.x, scale.y, 0f);
+        UpdateScale();
         _particle.Play();
     }
 
@@ -34,5 +39,11 @@ public class UIParticle : MonoBehaviour
     {
         _externalForcesModule.RemoveAllInfluences();
         _particle.Stop();
+    }
+
+    private void UpdateScale()
+    {
+        Vector2 scale = _transform.rect.size * _transform.lossyScale;
+        _shapeModule.scale = new Vector3(scale.x, scale.y, 0f);
     }
 }

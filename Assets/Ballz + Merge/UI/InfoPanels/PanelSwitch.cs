@@ -51,7 +51,7 @@ public class PanelSwitch : MonoBehaviour
     {
         if (!_panelToggles.Where(toggle => !toggle.IsInitialized).Any())
         {
-            PanelToggle defaultPanelToggle = _panelToggles.FirstOrDefault(panelToggle => panelToggle.PanelToggleType == PanelToggleType.AudioToggle);
+            PanelToggle defaultPanelToggle = _panelToggles.FirstOrDefault(panelToggle => panelToggle.PanelToggleType == PanelToggleType.GeneralToggle);
             ApplyPanelToggle(defaultPanelToggle);
         }
     }
