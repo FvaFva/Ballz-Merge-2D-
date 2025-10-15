@@ -1,9 +1,11 @@
 using BallzMerge.Data;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections.Generic;
+using static UnityEngine.GraphicsBuffer;
 
 [Serializable]
 public class SliderProperty : IDisposable
@@ -11,8 +13,9 @@ public class SliderProperty : IDisposable
     [SerializeField] private Slider _slider;
     [SerializeField] private TMP_Text _label;
     [SerializeField] private TMP_Text _header;
-    [SerializeField] private AnimatedButton _animatedButton;
     [SerializeField] private Image _fillImage;
+    [SerializeField] private SliderDragger _sliderDragger;
+    [SerializeField] private SliderHandle _sliderHandle;
     [SerializeField] private string _key;
 
     public IGameSettingData SettingData { get; private set; }
@@ -23,18 +26,25 @@ public class SliderProperty : IDisposable
     private bool _isStepByStep;
     private Color _startFillImageColor;
     private Dictionary<bool, Color> StateColors;
+    private ValueChanger _valueChanger;
+    private bool _isDragging;
+    private float _lastValue;
+    private Coroutine _animationRoute;
 
     public event Action<string, float> ValueChanged;
 
     public void Dispose()
     {
-        _slider.onValueChanged.RemoveListener(SetPreset);
-        _slider.onValueChanged.RemoveListener(OnValueChanged);
+        _slider.onValueChanged.RemoveListener(OnSliderValueChanged);
         SettingData.StateChanged -= SetSliderState;
+        _sliderDragger.Handled -= OnStickHandled;
     }
 
     public void Init(IGameSettingData settingData)
     {
+        _valueChanger = new ValueChanger();
+        _sliderDragger.Handled += OnStickHandled;
+        _sliderHandle.Init();
         SettingData = settingData;
         SettingData.StateChanged += SetSliderState;
         _startFillImageColor = _fillImage.color;
@@ -50,16 +60,18 @@ public class SliderProperty : IDisposable
     {
         if (_isStepByStep)
         {
-            _slider.value = 0;
+            _slider.SetValueWithoutNotify(0);
             _preset = Mathf.RoundToInt(value);
 
             for (float i = _preset; i > 0; i--)
-                _slider.value += _step;
+                _slider.SetValueWithoutNotify(_slider.value + _step);
         }
         else
         {
-            _slider.value = value;
+            _slider.SetValueWithoutNotify(value);
         }
+
+        _lastValue = _slider.value;
 
         return this;
     }
@@ -76,7 +88,7 @@ public class SliderProperty : IDisposable
         }
         else
         {
-            _slider.onValueChanged.AddListener(OnValueChanged);
+            _slider.onValueChanged.AddListener(OnSliderValueChanged);
         }
 
         if (string.IsNullOrEmpty(header) == false)
@@ -93,16 +105,75 @@ public class SliderProperty : IDisposable
         return this;
     }
 
+    private void OnStickHandled(bool isDown)
+    {
+        if (isDown)
+            OnPointerDown();
+        else
+            OnPointerUp();
+    }
+
+    private void OnPointerDown()
+    {
+        _isDragging = true;
+        _valueChanger.Stop();
+    }
+
+    private void OnPointerUp()
+    {
+        _isDragging = false;
+    }
+
+    private void OnSliderValueChanged(float value)
+    {
+        if (_isDragging)
+        {
+            ValueChanged?.Invoke(_key, value);
+            _lastValue = value;
+            return;
+        }
+
+        AnimateTo(value);
+    }
+
+    private void SetPreset(float value)
+    {
+        float target = Mathf.RoundToInt(value / _step) * _step;
+        _preset = Mathf.RoundToInt(target / _step);
+
+        if (_isDragging)
+        {
+            _slider.SetValueWithoutNotify(target);
+            ValueChanged?.Invoke(_key, _preset);
+            _lastValue = target;
+            return;
+        }
+
+        AnimateTo(target, _preset);
+    }
+
+    private void AnimateTo(float target, int? preset = null)
+    {
+        ValueChanged?.Invoke(_key, preset == null ? target : (int)preset);
+        _valueChanger.ChangeValueOverTime(_lastValue, target, OnValueAnimationChanged, () => OnAnimationEnded(target), 0.3f);
+    }
+
+    private void OnValueAnimationChanged(float newValue)
+    {
+        _slider.SetValueWithoutNotify(newValue);
+        _lastValue = newValue;
+    }
+
+    private void OnAnimationEnded(float target)
+    {
+        _slider.SetValueWithoutNotify(target);
+    }
+
     private void SetSliderState(bool state)
     {
         _slider.interactable = state;
-        _animatedButton.SetState(state);
+        _sliderHandle.SetState(state);
         _fillImage.color = StateColors[state];
-    }
-
-    private void OnValueChanged(float value)
-    {
-        ValueChanged?.Invoke(_key, value);
     }
 
     private bool CheckStepByStep(int? countOfPresets)
@@ -115,14 +186,5 @@ public class SliderProperty : IDisposable
     {
         _countOfPresets = Math.Max(0, countOfPresets);
         _step = _countOfPresets.Equals(0) ? 0 : _slider.maxValue / countOfPresets;
-    }
-
-    private void SetPreset(float value)
-    {
-        value = Mathf.RoundToInt(value / _step) * _step;
-        _preset = Mathf.RoundToInt(value / _step);
-
-        _slider.value = value;
-        ValueChanged?.Invoke(_key, _preset);
     }
 }

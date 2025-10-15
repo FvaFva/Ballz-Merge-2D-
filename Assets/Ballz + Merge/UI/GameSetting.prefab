@@ -147,8 +147,7 @@ GameObject:
   - component: {fileID: 4723167054978855357}
   - component: {fileID: 8551231252439205383}
   - component: {fileID: 2922034695440179687}
-  - component: {fileID: 9021342490385216813}
-  - component: {fileID: 7599932783194635592}
+  - component: {fileID: 8398287595103357364}
   m_Layer: 0
   m_Name: View
   m_TagString: Untagged
@@ -213,7 +212,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &9021342490385216813
+--- !u!114 &8398287595103357364
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -222,24 +221,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1856105633901853509}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e3afc64db12f8341b5cb3a903050a8d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.6341842, g: 0.028301716, b: 1, a: 0}
-  m_EffectDistance: {x: 0, y: 0}
-  m_UseGraphicAlpha: 1
---- !u!114 &7599932783194635592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1856105633901853509}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86d7f3c56da4e644abe9526a7f8e39bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::SliderView
 --- !u!1 &3332160488641637299
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,8 +320,9 @@ MonoBehaviour:
   - _slider: {fileID: 6638078900934305472}
     _label: {fileID: 5571629843018048621}
     _header: {fileID: 700330632416908599}
-    _animatedButton: {fileID: 5760516532613463262}
     _fillImage: {fileID: 5703740238674727704}
+    _sliderDragger: {fileID: 9184412341017642796}
+    _sliderHandle: {fileID: 8523501352192202306}
     _key: 
   _applyButton: {fileID: 0}
 --- !u!114 &3982754001058787278
@@ -371,7 +356,7 @@ GameObject:
   - component: {fileID: 357261295639467914}
   - component: {fileID: 206211509178854050}
   - component: {fileID: 4149343429199710505}
-  - component: {fileID: 5760516532613463262}
+  - component: {fileID: 8523501352192202306}
   m_Layer: 0
   m_Name: Handle
   m_TagString: Untagged
@@ -428,7 +413,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 0}
-  m_Type: 1
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -437,7 +422,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5760516532613463262
+--- !u!114 &8523501352192202306
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -446,13 +431,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4153902008492919374}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ea9188c08e29704da0da66fc82a595c, type: 3}
+  m_Script: {fileID: 11500000, guid: f45bbab80387e6545a3f4ed0ab9a17ff, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  _buttonView: {fileID: 7599932783194635592}
-  _pumper: {fileID: 0}
-  _hiddenField: {fileID: 0}
-  _audio: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::SliderHandle
+  _sliderView: {fileID: 8398287595103357364}
 --- !u!1 &4864276594088034530
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,8 +596,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6529452224165445652}
-  - component: {fileID: 6638078900934305472}
   - component: {fileID: 3718445361017089307}
+  - component: {fileID: 6638078900934305472}
+  - component: {fileID: 9184412341017642796}
   m_Layer: 0
   m_Name: Slider
   m_TagString: Untagged
@@ -644,6 +627,14 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &3718445361017089307
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5488845299333393117}
+  m_CullTransparentMesh: 1
 --- !u!114 &6638078900934305472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -695,14 +686,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!222 &3718445361017089307
-CanvasRenderer:
+--- !u!114 &9184412341017642796
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5488845299333393117}
-  m_CullTransparentMesh: 1
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26fd513569e222f42869dc8062109d64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StickHandle
+  _sliderHandle: {fileID: 8523501352192202306}
 --- !u!1 &5593313603703751096
 GameObject:
   m_ObjectHideFlags: 0
@@ -1013,6 +1009,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1312656311186404723}
+  - component: {fileID: 6220806101149153611}
   m_Layer: 0
   m_Name: Handle Slide Area
   m_TagString: Untagged
@@ -1040,3 +1037,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &6220806101149153611
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7899238769682357881}
+  m_CullTransparentMesh: 1
