@@ -17,17 +17,20 @@ public static class WindowResizer
 #elif UNITY_STANDALONE_OSX
     private const int NSWindowStyleMaskResizable = 1 << 3; // 8
 
-    [DllImport("/System/Library/Frameworks/AppKit.framework/AppKit")]
-    private static extern IntPtr NSApplicationSharedApplication();
+    [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_getClass")]
+    private static extern IntPtr objc_getClass(string name);
 
-    [DllImport("/usr/lib/libobjc.A.dylib")]
+    [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "sel_registerName")]
     private static extern IntPtr sel_registerName(string name);
 
-    [DllImport("/usr/lib/libobjc.A.dylib")]
+    [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
     private static extern IntPtr objc_msgSend(IntPtr receiver, IntPtr selector);
 
-    [DllImport("/usr/lib/libobjc.A.dylib")]
-    private static extern IntPtr objc_msgSend(IntPtr receiver, IntPtr selector, int arg);
+    [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
+    private static extern long objc_msgSend_long(IntPtr receiver, IntPtr selector);
+
+    [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
+    private static extern void objc_msgSend_void_long(IntPtr receiver, IntPtr selector, long arg);
 #endif
 
     public static void SetResizable(bool enable)
@@ -50,13 +53,15 @@ public static class WindowResizer
         SetWindowLong(handle, GWL_STYLE, style);
 
 #elif UNITY_STANDALONE_OSX
-        IntPtr nsApp = NSApplicationSharedApplication();
+        IntPtr nsAppClass = objc_getClass("NSApplication");
+        IntPtr sharedAppSel = sel_registerName("sharedApplication");
+        IntPtr nsApp = objc_msgSend(nsAppClass, sharedAppSel);
 
         IntPtr mainWindowSel = sel_registerName("mainWindow");
         IntPtr mainWindow = objc_msgSend(nsApp, mainWindowSel);
 
         IntPtr styleMaskSel = sel_registerName("styleMask");
-        int styleMask = (int)objc_msgSend(mainWindow, styleMaskSel);
+        long styleMask = objc_msgSend_long(mainWindow, styleMaskSel);
 
         if (enable)
         {
@@ -70,7 +75,7 @@ public static class WindowResizer
         }
 
         IntPtr setStyleMaskSel = sel_registerName("setStyleMask:");
-        objc_msgSend(mainWindow, setStyleMaskSel, styleMask);
+        objc_msgSend_void_long(mainWindow, setStyleMaskSel, styleMask);
 #endif
     }
 }
