@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class DisplayApplier : IDisposable
 {
+    private const float ApplyDelay = 0.2f;
+
     private Button _applyButton;
     private Resolution _resolution;
     private FullScreenMode _fullScreenMode;
@@ -109,7 +111,7 @@ public class DisplayApplier : IDisposable
 
     private IEnumerator SetResizeNextFrame(bool state)
     {
-        yield return null;
+        yield return new WaitForSeconds(ApplyDelay);
         WindowResizer.SetResizable(state);
     }
 }
