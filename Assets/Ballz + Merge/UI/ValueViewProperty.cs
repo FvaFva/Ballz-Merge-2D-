@@ -8,8 +8,7 @@ public struct ValueViewProperty
     public IValueViewScore Counter;
     public ValueView ValueView;
 
-    public void Init()
-    {
-        Counter = CounterObject.GetInterface<IValueViewScore>();
-    }
+    public void Init() => Counter = CounterObject.GetInterface<IValueViewScore>();
+
+    public void Load() => ValueView.Init();
 }

@@ -25,6 +25,7 @@ public class PlayerScoresView : CyclicBehavior, IInitializable, ILevelStarter, I
         {
             property.Init();
             ValueViews.Add(property.Counter, property);
+            property.Load();
         }
     }
 
