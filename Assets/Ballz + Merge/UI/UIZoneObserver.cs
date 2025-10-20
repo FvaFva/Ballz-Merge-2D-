@@ -1,36 +1,29 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
-public class UIZoneObserver : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
+public class UIZoneObserver : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public bool IsIn { get; private set; }
+    [SerializeField] private GameObject _zoneView;
 
-    public RectTransform Transform { get; private set; }
+    private Transform _transform;
+
+    public event Action<bool> Entered;
 
     private void Awake()
     {
-        Transform = GetComponent<RectTransform>();
+        _transform = transform;
     }
 
-    private void OnDisable()
+    public void OnPointerEnter(PointerEventData eventData) => Entered?.Invoke(true);
+
+    public void OnPointerExit(PointerEventData eventData) => Entered?.Invoke(false);
+
+    public void SetState(bool state)
     {
-        IsIn = false;
+        _zoneView.SetActive(state);
     }
 
-    public void OnPointerDown(PointerEventData eventData) => IsIn = true;
-
-    public void OnPointerEnter(PointerEventData eventData) => IsIn = true;
-
-    public void OnPointerExit(PointerEventData eventData) => IsIn = false;
-
-    public Vector2 GetCenterInWorld(Camera uiCamera)
-    {
-        var temp = Transform.TransformPoint(Transform.rect.center.x, Transform.rect.yMax, 0);
-        return RectTransformUtility.WorldToScreenPoint(uiCamera, temp);
-    }
-
-    public bool IsPointIn(Camera uiCamera, Vector2 point)
-    {
-        return RectTransformUtility.RectangleContainsScreenPoint(Transform, point, uiCamera);
-    }
+    public void SetSize(float scale, float duration) => _transform.DOScale(scale, duration);
 }

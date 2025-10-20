@@ -93,24 +93,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
             ""id"": ""335fc25a-de6c-4e91-a9bc-c302eb57db31"",
             ""actions"": [
                 {
-                    ""name"": ""StrikeVector"",
-                    ""type"": ""Value"",
-                    ""id"": ""1d5e6894-dc72-4a26-990c-11db221b666d"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Shot"",
-                    ""type"": ""Button"",
-                    ""id"": ""9c29a5e3-c9c1-45b0-ba7d-ea0bb9db0f48"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Escape"",
                     ""type"": ""Button"",
                     ""id"": ""9447dfd9-c755-430b-8585-d6a771e8dc33"",
@@ -157,72 +139,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""1a58d808-1a58-49e4-a119-57d7f1ab54a1"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepade"",
-                    ""action"": ""StrikeVector"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a894bb7d-7bd9-490f-8960-64bba8f11b5e"",
-                    ""path"": ""<Touchscreen>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Sensor"",
-                    ""action"": ""StrikeVector"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""704629d2-a7dd-48c9-9f95-4f5423e103ed"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""StrikeVector"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""5e01dff0-c1f2-4d6f-ab44-dde2a8a91b9a"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Shot"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8feb1e58-e1a9-4547-ae2b-e7d88efa96e3"",
-                    ""path"": ""<Touchscreen>/Press"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Sensor"",
-                    ""action"": ""Shot"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""18d36b83-2a4a-4457-a32e-a3d7639bdeb2"",
-                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Sensor"",
-                    ""action"": ""Shot"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""80945a28-405e-4acb-822f-33ded3c94a7a"",
@@ -378,8 +294,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
 }");
         // MainInput
         m_MainInput = asset.FindActionMap("MainInput", throwIfNotFound: true);
-        m_MainInput_StrikeVector = m_MainInput.FindAction("StrikeVector", throwIfNotFound: true);
-        m_MainInput_Shot = m_MainInput.FindAction("Shot", throwIfNotFound: true);
         m_MainInput_Escape = m_MainInput.FindAction("Escape", throwIfNotFound: true);
         m_MainInput_StrikePosition = m_MainInput.FindAction("StrikePosition", throwIfNotFound: true);
         m_MainInput_ScreenInteract = m_MainInput.FindAction("ScreenInteract", throwIfNotFound: true);
@@ -465,8 +379,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
     // MainInput
     private readonly InputActionMap m_MainInput;
     private List<IMainInputActions> m_MainInputActionsCallbackInterfaces = new List<IMainInputActions>();
-    private readonly InputAction m_MainInput_StrikeVector;
-    private readonly InputAction m_MainInput_Shot;
     private readonly InputAction m_MainInput_Escape;
     private readonly InputAction m_MainInput_StrikePosition;
     private readonly InputAction m_MainInput_ScreenInteract;
@@ -483,14 +395,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
         public MainInputActions(@MainInputMap wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "MainInput/StrikeVector".
-        /// </summary>
-        public InputAction @StrikeVector => m_Wrapper.m_MainInput_StrikeVector;
-        /// <summary>
-        /// Provides access to the underlying input action "MainInput/Shot".
-        /// </summary>
-        public InputAction @Shot => m_Wrapper.m_MainInput_Shot;
         /// <summary>
         /// Provides access to the underlying input action "MainInput/Escape".
         /// </summary>
@@ -537,12 +441,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_MainInputActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_MainInputActionsCallbackInterfaces.Add(instance);
-            @StrikeVector.started += instance.OnStrikeVector;
-            @StrikeVector.performed += instance.OnStrikeVector;
-            @StrikeVector.canceled += instance.OnStrikeVector;
-            @Shot.started += instance.OnShot;
-            @Shot.performed += instance.OnShot;
-            @Shot.canceled += instance.OnShot;
             @Escape.started += instance.OnEscape;
             @Escape.performed += instance.OnEscape;
             @Escape.canceled += instance.OnEscape;
@@ -569,12 +467,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
         /// <seealso cref="MainInputActions" />
         private void UnregisterCallbacks(IMainInputActions instance)
         {
-            @StrikeVector.started -= instance.OnStrikeVector;
-            @StrikeVector.performed -= instance.OnStrikeVector;
-            @StrikeVector.canceled -= instance.OnStrikeVector;
-            @Shot.started -= instance.OnShot;
-            @Shot.performed -= instance.OnShot;
-            @Shot.canceled -= instance.OnShot;
             @Escape.started -= instance.OnEscape;
             @Escape.performed -= instance.OnEscape;
             @Escape.canceled -= instance.OnEscape;
@@ -669,20 +561,6 @@ public partial class @MainInputMap: IInputActionCollection2, IDisposable
     /// <seealso cref="MainInputActions.RemoveCallbacks(IMainInputActions)" />
     public interface IMainInputActions
     {
-        /// <summary>
-        /// Method invoked when associated input action "StrikeVector" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnStrikeVector(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Shot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnShot(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Escape" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

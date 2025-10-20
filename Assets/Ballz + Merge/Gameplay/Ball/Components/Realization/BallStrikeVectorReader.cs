@@ -1,19 +1,11 @@
 using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using Zenject;
 
 public class BallStrikeVectorReader : BallComponent
 {
-    [SerializeField] private StickView _view;
+    [SerializeField] private Stick _stick;
 
-    [Inject] private MainInputMap _userInput;
-
-    private Vector3 _vector;
-    private Vector2 _touchPoint;
-    private Vector2 _inputCentre;
-    private WaitForEndOfFrame _delay = new WaitForEndOfFrame();
+    public Vector3 Vector { get; private set; }
 
     public event Action<Vector3> Changed;
     public event Action<Vector3> Dropped;
@@ -21,84 +13,55 @@ public class BallStrikeVectorReader : BallComponent
 
     private void OnEnable()
     {
-        _userInput.MainInput.StrikeVector.performed += VectorMoved;
-        _userInput.MainInput.Shot.started += OnShotStarted;
-        _view.SetActiveIfNotNull(true);
+        _stick.StickHandled += OnStickHandled;
+        _stick.StickValueChanged += OnStickValueChanged;
+        _stick.SetActiveIfNotNull(true);
     }
 
     private void OnDisable()
     {
-        _userInput.MainInput.StrikeVector.performed -= VectorMoved;
-        _userInput.MainInput.Shot.started -= OnShotStarted;
-        _userInput.MainInput.StrikeVector.performed -= OnStrikeVectorPerformed;
-        _view.SetActiveIfNotNull(false);
+        _stick.StickHandled -= OnStickHandled;
+        _stick.StickValueChanged -= OnStickValueChanged;
+        _stick.SetActiveIfNotNull(false);
     }
 
-    public Vector3 GetDirection()
+    private void OnStickHandled(bool isDragging)
     {
-        Vector3 final = _vector;
-        Debug.Log($"direction: {final.normalized * -1}");
-        return final.normalized * -1;
-    }
-
-    private void VectorMoved(InputAction.CallbackContext context)
-    {
-        _touchPoint = context.ReadValue<Vector2>();
-        _touchPoint.y = 0;
-        _view.ApplyPosition(GetDirection());
-    }
-
-    private void OnShotStarted(InputAction.CallbackContext context) => StartCoroutine(HandleEndOfFrame(EndFrameShotStarted));
-    private void OnShotCancelled(InputAction.CallbackContext context) => StartCoroutine(HandleEndOfFrame(EndFrameShotCancelled));
-    private void OnStrikeVectorPerformed(InputAction.CallbackContext context) => StartCoroutine(HandleEndOfFrame(EndFrameOnStrikeVectorPerformed));
-
-    private IEnumerator HandleEndOfFrame(Action action)
-    {
-        yield return _delay;
-        action.Invoke();
-    }
-
-    private void EndFrameShotStarted()
-    {
-        _inputCentre = _view.GetCenterPosition();
-
-        if (_view.IsInZone)
+        if (isDragging)
         {
-            _userInput.MainInput.StrikeVector.performed += OnStrikeVectorPerformed;
-            _userInput.MainInput.Shot.canceled += OnShotCancelled;
-            _view.EnterAim();
+            Debug.Log("is Dragging:" + isDragging);
+            _stick.EnterAim();
+            return;
         }
-    }
 
-    private void EndFrameShotCancelled()
-    {
-        _userInput.MainInput.Shot.canceled -= OnShotCancelled;
-        _userInput.MainInput.StrikeVector.performed -= OnStrikeVectorPerformed;
-
-        if (_view.IsInZone)
+        if (_stick.IsInZone)
         {
             Canceled?.Invoke();
-            _view.EnterMonitoring();
+            _stick.EnterMonitoring();
+            return;
         }
-        else
-        {
-            Vector3 dropVector = GetDirection();
-            _vector = Vector3.zero;
-            Dropped?.Invoke(dropVector);
-        }
+
+        OnShot();
     }
 
-    private void EndFrameOnStrikeVectorPerformed()
+    private void OnShot()
     {
-        if (!_view.IsInZone)
-        {
-            var newVector = _touchPoint - _inputCentre;
+        _stick.EnterShooting();
+        Vector3 dropVector = Vector;
+        Debug.Log("Shot Vector: " + dropVector);
+        Vector = Vector3.zero;
+        Dropped?.Invoke(dropVector);
+    }
 
-            if (newVector.Equals(_vector) == false)
-            {
-                _vector = newVector;
-                Changed?.Invoke(GetDirection());
-            }
+    private void OnStickValueChanged(float newVector)
+    {
+        float angle = newVector * 180f;
+        Vector3 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+
+        if (direction.Equals(Vector) == false)
+        {
+            Vector = direction;
+            Changed?.Invoke(Vector);
         }
     }
 }

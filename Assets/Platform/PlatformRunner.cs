@@ -20,12 +20,12 @@ public static class PlatformRunner
 #endif
     }
 
-    public static void RunOnIOS(Action IOSAction, Action nonIOSAction = null)
+    public static void RunOnWindowsMacPlatform(Action windowsAction, Action macAction)
     {
-#if UNITY_IOS                           
-        IOSAction?.Invoke();
-#else
-        nonIOSAction?.Invoke();
+#if UNITY_STANDALONE_WIN
+        windowsAction?.Invoke();
+#elif UNITY_STANDALONE_OSX
+        macAction?.Invoke();
 #endif
     }
 

@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
 
 [Serializable]
 public class SliderProperty : IDisposable
@@ -14,7 +12,6 @@ public class SliderProperty : IDisposable
     [SerializeField] private TMP_Text _label;
     [SerializeField] private TMP_Text _header;
     [SerializeField] private Image _fillImage;
-    [SerializeField] private SliderDragger _sliderDragger;
     [SerializeField] private SliderHandle _sliderHandle;
     [SerializeField] private string _key;
 
@@ -29,7 +26,6 @@ public class SliderProperty : IDisposable
     private ValueChanger _valueChanger;
     private bool _isDragging;
     private float _lastValue;
-    private Coroutine _animationRoute;
 
     public event Action<string, float> ValueChanged;
 
@@ -37,13 +33,13 @@ public class SliderProperty : IDisposable
     {
         _slider.onValueChanged.RemoveListener(OnSliderValueChanged);
         SettingData.StateChanged -= SetSliderState;
-        _sliderDragger.Handled -= OnStickHandled;
+        _sliderHandle.SliderHandled -= OnSliderHandled;
     }
 
     public void Init(IGameSettingData settingData)
     {
         _valueChanger = new ValueChanger();
-        _sliderDragger.Handled += OnStickHandled;
+        _sliderHandle.SliderHandled += OnSliderHandled;
         _sliderHandle.Init();
         SettingData = settingData;
         SettingData.StateChanged += SetSliderState;
@@ -105,7 +101,7 @@ public class SliderProperty : IDisposable
         return this;
     }
 
-    private void OnStickHandled(bool isDown)
+    private void OnSliderHandled(bool isDown)
     {
         if (isDown)
             OnPointerDown();
