@@ -17,8 +17,10 @@ public class DisplayApplier : IDisposable
 
     private bool _isResolutionLoaded;
     private bool _isScreenModeLoaded;
-    private bool _isEverythingLoaded;
     private bool _isResizable;
+    private float _lastWidth;
+    private float _lastHeight;
+    private FullScreenMode _lastFullScreenMode;
 
     public event Action<IGameSettingData> Applied;
 
@@ -26,7 +28,6 @@ public class DisplayApplier : IDisposable
     {
         _applyButton = applyButton;
         _applyButton.onClick.AddListener(ApplyResolutionAndTriggerChanges);
-        _isEverythingLoaded = true;
     }
 
     public void Dispose()
@@ -62,50 +63,57 @@ public class DisplayApplier : IDisposable
     private void SetLoadResolutionAndScreenMode()
     {
         if (_isResolutionLoaded == true && _isScreenModeLoaded == true)
+        {
             ApplyResolution();
+            _isResolutionLoaded = false;
+            _isScreenModeLoaded = false;
+        }
     }
 
     private void ApplyResolutionAndTriggerChanges()
     {
-        _isEverythingLoaded = false;
         ApplyResolution();
     }
 
     private void ApplyResolution()
     {
-        _isResolutionLoaded = false;
-        _isScreenModeLoaded = false;
-
         if (_fullScreenMode == FullScreenMode.MaximizedWindow)
-        {
-            _fullScreenMode = FullScreenMode.Windowed;
             SetResolutionAndResize(true);
-            _fullScreenMode = FullScreenMode.MaximizedWindow;
-        }
         else
-        {
             SetResolutionAndResize(false);
-        }
 
         _displayResolution.ChangeState(!_isResizable);
     }
 
     private void SetResolutionAndResize(bool resizeState)
     {
+        if (_lastWidth == _resolution.width && _lastHeight == _resolution.height && _lastFullScreenMode == _fullScreenMode)
+            return;
+
+        if (resizeState)
+        {
+            _fullScreenMode = FullScreenMode.Windowed;
+            SetResolution();
+            _fullScreenMode = FullScreenMode.MaximizedWindow;
+            _lastFullScreenMode = _fullScreenMode;
+        }
+        else
+        {
+            SetResolution();
+        }
+
         if (_isResizable == resizeState)
             return;
 
         _isResizable = resizeState;
-        SetResolution();
         CoroutineRunner.Instance.StartCoroutine(SetResizeNextFrame(_isResizable));
     }
 
     private void SetResolution()
     {
-        if (_isEverythingLoaded)
-            return;
-
-        _isEverythingLoaded = true;
+        _lastWidth = _resolution.width;
+        _lastHeight = _resolution.height;
+        _lastFullScreenMode = _fullScreenMode;
         Screen.SetResolution(_resolution.width, _resolution.height, _fullScreenMode);
         Applied?.Invoke(_displayModeData);
         Applied?.Invoke(_resolutionData);

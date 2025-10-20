@@ -25,7 +25,7 @@ public class DisplayMode : IGameSettingData
             { new DisplayType(FullScreenMode.FullScreenWindow, "Windowed Fullscreen") },
             { new DisplayType(FullScreenMode.ExclusiveFullScreen, "Fullscreen") },
             { new DisplayType(FullScreenMode.Windowed, "Windowed") },
-            { new DisplayType(FullScreenMode.MaximizedWindow, "Flexible")}
+            { new DisplayType(FullScreenMode.MaximizedWindow, "Resizable")}
         };
 
         CountOfPresets = _modes.Count - 1;

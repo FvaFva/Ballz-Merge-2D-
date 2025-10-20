@@ -40,7 +40,7 @@ namespace BallzMerge.Root
 
         public void PuckUp(RectTransform transform)
         {
-            _transform?.SetParent(transform);
+            _transform.PerformIfNotNull(rectTransform => rectTransform.SetParent(transform));
             _transform.position = _transform.position.DropZ();
         }
 
@@ -64,6 +64,7 @@ namespace BallzMerge.Root
         {
             _transform.SetParent(Group.Transform);
             _transform.position = _transform.position.DropZ();
+            _transform.anchoredPosition = Vector2.zero;
             _positionUpdater = null;
         }
 
