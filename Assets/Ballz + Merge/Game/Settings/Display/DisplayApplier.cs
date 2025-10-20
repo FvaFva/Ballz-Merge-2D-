@@ -18,6 +18,7 @@ public class DisplayApplier : IDisposable
     private bool _isResolutionLoaded;
     private bool _isScreenModeLoaded;
     private bool _isEverythingLoaded;
+    private bool _isResizable;
 
     public event Action<IGameSettingData> Applied;
 
@@ -77,25 +78,26 @@ public class DisplayApplier : IDisposable
 
         if (_fullScreenMode == FullScreenMode.MaximizedWindow)
         {
-            if (WindowResizer.IsResizable == false)
-            {
-                _fullScreenMode = FullScreenMode.Windowed;
-                SetResolution();
-                CoroutineRunner.Instance.StartCoroutine(SetResizeNextFrame(true));
-                _fullScreenMode = FullScreenMode.MaximizedWindow;
-            }
-
-            _displayResolution.ChangeState(false);
+            _fullScreenMode = FullScreenMode.Windowed;
+            SetResolutionAndResize(true);
+            _fullScreenMode = FullScreenMode.MaximizedWindow;
         }
         else
         {
-            SetResolution();
-
-            if (WindowResizer.IsResizable == true)
-                CoroutineRunner.Instance.StartCoroutine(SetResizeNextFrame(false));
-
-            _displayResolution.ChangeState(true);
+            SetResolutionAndResize(false);
         }
+
+        _displayResolution.ChangeState(!_isResizable);
+    }
+
+    private void SetResolutionAndResize(bool resizeState)
+    {
+        if (_isResizable == resizeState)
+            return;
+
+        _isResizable = resizeState;
+        SetResolution();
+        CoroutineRunner.Instance.StartCoroutine(SetResizeNextFrame(_isResizable));
     }
 
     private void SetResolution()
@@ -112,6 +114,15 @@ public class DisplayApplier : IDisposable
     private IEnumerator SetResizeNextFrame(bool state)
     {
         yield return new WaitForSeconds(ApplyDelay);
-        WindowResizer.SetResizable(state);
+
+        PlatformRunner.RunOnWindowsMacPlatform(
+        windowsAction: () =>
+        {
+            WindowResizerWindows.SetResizable(state);
+        },
+        macAction: () =>
+        {
+            WindowResizerMac.SetResizable(state);
+        });
     }
 }

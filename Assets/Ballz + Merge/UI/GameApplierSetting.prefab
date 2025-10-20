@@ -442,7 +442,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 66.8
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -674,7 +674,6 @@ MonoBehaviour:
     _label: {fileID: 5571629843018048621}
     _header: {fileID: 700330632416908599}
     _fillImage: {fileID: 5703740238674727704}
-    _sliderDragger: {fileID: 809885122301709331}
     _sliderHandle: {fileID: 6803844130026801213}
     _key: 
   _applyButton: {fileID: 896327689035055384}
@@ -787,6 +786,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f45bbab80387e6545a3f4ed0ab9a17ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SliderHandle
+  _sliderDragger: {fileID: 809885122301709331}
   _sliderView: {fileID: 4346084323003774072}
 --- !u!1 &5185200183102648237
 GameObject:
@@ -987,7 +987,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26fd513569e222f42869dc8062109d64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StickHandle
-  _sliderHandle: {fileID: 6803844130026801213}
 --- !u!1 &5593313603703751096
 GameObject:
   m_ObjectHideFlags: 0

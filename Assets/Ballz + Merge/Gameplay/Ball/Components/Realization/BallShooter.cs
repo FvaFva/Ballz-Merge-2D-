@@ -17,15 +17,11 @@ public class BallShooter : BallComponent
 
     private void OnEnable()
     {
-        if (Application.platform == RuntimePlatform.Android)
-            _userInput.MainInput.Shot.performed += ctx => OnPlayerShootOrder();
-
         _vectorReader.Dropped += OnInputVectorDrop;
     }
 
     private void OnDisable()
     {
-        _userInput.MainInput.Shot.performed -= ctx => OnPlayerShootOrder();
         _vectorReader.Dropped -= OnInputVectorDrop;
     }
 
@@ -39,7 +35,7 @@ public class BallShooter : BallComponent
         if (_isOverUI)
             return;
 
-        Shot(_vectorReader.GetDirection());
+        Shot(_vectorReader.Vector);
     }
 
     private void OnInputVectorDrop(Vector3 dropVector)

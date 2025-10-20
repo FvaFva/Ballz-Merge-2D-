@@ -4,36 +4,54 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SliderHandle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class SliderHandle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IDisposable
 {
     private const float StartScale = 1f;
     private const float PressedStateScale = 0.9f;
     private const float HighlightedStateScale = 1.05f;
     private const float Duration = 0.125f;
 
+    [SerializeField] private SliderDragger _sliderDragger;
     [SerializeField] private SliderView _sliderView;
 
     private Dictionary<bool, Action> _sliderViewStateActions;
+    private Dictionary<bool, Action> _handledStateActions;
     private Transform _transform;
     private bool _isPointerDown;
     private bool _isPointerEnter;
     private bool _isDragging;
 
+    public event Action<bool> SliderHandled;
+
     public void Init()
     {
-        _transform = transform;
-        _sliderView.Init();
-
         _sliderViewStateActions = new Dictionary<bool, Action>
         {
             { true, ActivateSliderView },
             { false, DeactivateSliderView }
         };
+
+        _handledStateActions = new Dictionary<bool, Action>
+        {
+            { true, Press },
+            { false, Release }
+        };
+
+        _transform = transform;
+        _sliderView.Init();
+        _sliderDragger.Handled += SetDraggingState;
+    }
+
+    public void Dispose()
+    {
+        _sliderDragger.Handled -= SetDraggingState;
     }
 
     public void SetDraggingState(bool isDragging)
     {
         _isDragging = isDragging;
+        _handledStateActions.GetValueOrDefault(isDragging)?.Invoke();
+        SliderHandled?.Invoke(isDragging);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

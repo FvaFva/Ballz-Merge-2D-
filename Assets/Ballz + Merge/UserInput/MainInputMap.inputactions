@@ -7,24 +7,6 @@
             "id": "335fc25a-de6c-4e91-a9bc-c302eb57db31",
             "actions": [
                 {
-                    "name": "StrikeVector",
-                    "type": "Value",
-                    "id": "1d5e6894-dc72-4a26-990c-11db221b666d",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Shot",
-                    "type": "Button",
-                    "id": "9c29a5e3-c9c1-45b0-ba7d-ea0bb9db0f48",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Escape",
                     "type": "Button",
                     "id": "9447dfd9-c755-430b-8585-d6a771e8dc33",
@@ -71,72 +53,6 @@
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "1a58d808-1a58-49e4-a119-57d7f1ab54a1",
-                    "path": "<Gamepad>/leftStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepade",
-                    "action": "StrikeVector",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a894bb7d-7bd9-490f-8960-64bba8f11b5e",
-                    "path": "<Touchscreen>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Sensor",
-                    "action": "StrikeVector",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "704629d2-a7dd-48c9-9f95-4f5423e103ed",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "StrikeVector",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5e01dff0-c1f2-4d6f-ab44-dde2a8a91b9a",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "Shot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8feb1e58-e1a9-4547-ae2b-e7d88efa96e3",
-                    "path": "<Touchscreen>/Press",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Sensor",
-                    "action": "Shot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "18d36b83-2a4a-4457-a32e-a3d7639bdeb2",
-                    "path": "<Touchscreen>/primaryTouch/tap",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Sensor",
-                    "action": "Shot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "80945a28-405e-4acb-822f-33ded3c94a7a",
