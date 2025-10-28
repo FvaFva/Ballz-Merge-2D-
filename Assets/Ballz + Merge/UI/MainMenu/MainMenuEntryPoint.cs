@@ -1,4 +1,5 @@
 using BallzMerge.Data;
+using BallzMerge.Gameplay;
 using BallzMerge.Root;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace BallzMerge.MainMenu
     public class MainMenuEntryPoint : MonoBehaviour, ISceneEnterPoint
     {
         [SerializeField] private UIView _view;
+        [SerializeField] private CamerasOperator _camerasOperator;
         [SerializeField] private LevelSelectorOperator _levelSelector;
         [SerializeField] private LevelContinueView _levelLoader;
         [SerializeField] private LevelInGame _level;
@@ -85,7 +87,7 @@ namespace BallzMerge.MainMenu
         public void Init(Action<SceneExitData> callback, bool isLoad)
         {
             _view.Init();
-            _rootUI.AttachSceneUI(_view);
+            _rootUI.AttachSceneUI(_view, _camerasOperator.UI);
             _callback = callback;
         }
 

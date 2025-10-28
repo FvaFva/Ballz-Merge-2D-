@@ -50,7 +50,7 @@ public class DisplayResolution : IGameSettingData
     {
         Value = CountOfPresets < value ? (float)CountOfPresets : value;
         Change(Value);
-        _displayApplier.SetLoadResolution();
+        _displayApplier.LoadResolution();
     }
 
     public void Change(float value)

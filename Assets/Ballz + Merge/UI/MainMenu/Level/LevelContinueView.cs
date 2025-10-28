@@ -1,34 +1,31 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BallzMerge.MainMenu
 {
     public class LevelContinueView : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _levelVew;
-        [SerializeField] private Button _continueGame;
-        [SerializeField] private AnimatedButton _continueGameButtonView;
+        [SerializeField] private TMP_Text _levelView;
+        [SerializeField] private ButtonProperty _continueGame;
 
         public event Action Selected;
 
         private void OnEnable()
         {
-            _continueGame.AddListener(OnActivate);
+            _continueGame.ChangeListeningState(OnActivate, true);
         }
 
         private void OnDisable()
         {
-            _continueGame.RemoveListener(OnActivate);
+            _continueGame.ChangeListeningState(OnActivate, false);
         }
 
         public void ChangeState(bool newState, string levelView = "")
         {
-            _levelVew.text = levelView;
-            _levelVew.gameObject.SetActive(newState);
-            _continueGame.interactable = newState;
-            _continueGameButtonView.SetState(newState);
+            _levelView.text = levelView;
+            _levelView.gameObject.SetActive(newState);
+            _continueGame.ChangeState(newState);
         }
 
         private void OnActivate() => Selected?.Invoke();

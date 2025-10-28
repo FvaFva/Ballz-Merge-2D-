@@ -76,8 +76,8 @@ namespace BallzMerge.Root
             _rootView.Containers.Init();
             _primary.OrientationObserver.CheckInRoot(_rootView.Containers);
             GlobalEffects globalEffects = GenerateDontDestroyFromHub<GlobalEffects>();
-            _gameSettings = new GameSettings(_rootView.SettingsMenu, _primary, _rootView.InfoPanelShowcase, globalEffects);
-            _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack, _gameSettings, _primary.OrientationObserver, globalEffects);
+            _gameSettings = new GameSettings(_rootView.SettingsMenu, _primary, _rootView.InfoPanelShowcase, _rootView.Questioner, globalEffects);
+            _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack, _gameSettings, _primary.OrientationObserver);
             var volumeMap = _primary.Hub.Get<BallVolumesMap>();
             volumeMap.ReBuild();
             BindSingleton(volumeMap);

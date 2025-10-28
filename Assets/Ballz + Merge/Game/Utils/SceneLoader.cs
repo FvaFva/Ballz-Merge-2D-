@@ -24,14 +24,13 @@ namespace BallzMerge.Root
         private readonly ScreenOrientationObserver _orientationObserver;
         private readonly GlobalEffects _globalEffects;
 
-        public SceneLoader(LoadScreen loadView, Action<SceneExitData> sceneExit, GameSettings settings, ScreenOrientationObserver orientationObserver, GlobalEffects globalEffects)
+        public SceneLoader(LoadScreen loadView, Action<SceneExitData> sceneExit, GameSettings settings, ScreenOrientationObserver orientationObserver)
         {
             _checkTime = new WaitForSeconds(SecondsCheckTime);
             _loadView = loadView;
             _sceneExit = sceneExit;
             _settings = settings;
             _orientationObserver = orientationObserver;
-            _globalEffects = globalEffects;
             _isLoad = false;
             ProjectContext.Instance.Container.Inject(this);
         }
