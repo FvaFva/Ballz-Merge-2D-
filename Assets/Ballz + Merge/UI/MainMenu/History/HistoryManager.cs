@@ -2,13 +2,11 @@ using BallzMerge.Achievement;
 using BallzMerge.Data;
 using BallzMerge.Root;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 public class HistoryManager : CyclicBehavior, IInitializable
 {
-    [SerializeField] private Button _openButton;
-    [SerializeField] private AnimatedButton _openButtonView;
+    [SerializeField] private ButtonProperty _openButton;
     [SerializeField] private GameHistoryView _historyView;
 
     [Inject] private DataBaseSource _source;
@@ -18,12 +16,12 @@ public class HistoryManager : CyclicBehavior, IInitializable
 
     private void OnEnable()
     {
-        _openButton.AddListener(OpenView);
+        _openButton.ChangeListeningState(OpenView, true);
     }
 
     private void OnDisable()
     {
-        _openButton.RemoveListener(OpenView);
+        _openButton.ChangeListeningState(OpenView, false);
     }
 
     public void Init()
@@ -34,8 +32,7 @@ public class HistoryManager : CyclicBehavior, IInitializable
     private void ChangeInit(bool state)
     {
         _isInited = state;
-        _openButton.interactable = _isInited;
-        _openButtonView.SetState(_isInited);
+        _openButton.ChangeState(_isInited);
     }
 
     private void OpenView()

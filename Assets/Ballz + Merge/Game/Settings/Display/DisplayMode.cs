@@ -12,7 +12,7 @@ public class DisplayMode : IGameSettingData
 
     private List<DisplayType> _modes;
     private DisplayApplier _displayApplier;
-    private FullScreenMode _fullScreenMode;
+    private ScreenMode _screenMode;
 
     public event Action<bool> StateChanged;
 
@@ -22,24 +22,14 @@ public class DisplayMode : IGameSettingData
 
         _modes = new List<DisplayType>
         {
-            { new DisplayType(FullScreenMode.FullScreenWindow, "Windowed Fullscreen") },
-            { new DisplayType(FullScreenMode.ExclusiveFullScreen, "Fullscreen") },
-            { new DisplayType(FullScreenMode.Windowed, "Windowed") },
-            { new DisplayType(FullScreenMode.MaximizedWindow, "Resizable")}
+            { new DisplayType(ScreenMode.Fullscreen, "Fullscreen") },
+            { new DisplayType(ScreenMode.WindowedFullscreen, "Windowed Fullscreen") },
+            { new DisplayType(ScreenMode.Windowed, "Windowed") },
+            { new DisplayType(ScreenMode.Resizable, "Resizable")}
         };
 
         CountOfPresets = _modes.Count - 1;
-
-        for (int i = 0; i < _modes.Count; i++)
-        {
-            if (_modes[i].FullScreenMode == Screen.fullScreenMode)
-            {
-                Value = i;
-                break;
-            }
-        }
-
-        _fullScreenMode = _modes[Mathf.RoundToInt(Value)].FullScreenMode;
+        _screenMode = _modes[0].ScreenMode;
     }
 
     public void SetDisplayApplier(DisplayApplier displayApplier)
@@ -51,14 +41,14 @@ public class DisplayMode : IGameSettingData
     {
         Value = CountOfPresets < value ? (float)CountOfPresets : value;
         Change(Value);
-        _displayApplier.SetLoadScreenMode();
+        _displayApplier.LoadScreenMode();
     }
 
     public void Change(float value)
     {
         Value = value;
         Label = _modes[Mathf.RoundToInt(Value)].DisplayName;
-        _fullScreenMode = _modes[Mathf.RoundToInt(Value)].FullScreenMode;
-        _displayApplier.SetScreenMode(_fullScreenMode, this);
+        _screenMode = _modes[Mathf.RoundToInt(Value)].ScreenMode;
+        _displayApplier.SetScreenMode(_screenMode, this);
     }
 }

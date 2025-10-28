@@ -20,7 +20,7 @@ namespace BallzMerge.Root.Settings
 
         private List<IDependentSceneSettings> _sceneElements = new List<IDependentSceneSettings>();
 
-        public GameSettings(GameSettingsMenu settingsMenu, OwnerPrimaryComponents primary, InfoPanelShowcase infoPanelShowcase, GlobalEffects globalEffects)
+        public GameSettings(GameSettingsMenu settingsMenu, OwnerPrimaryComponents primary, InfoPanelShowcase infoPanelShowcase, UserQuestioner questioner, GlobalEffects globalEffects)
         {
             var mixer = primary.Hub.Get<AudioMixer>();
             SoundVolumeGlobal = new GameSettingsDataProxyAudio(mixer, "Global");
@@ -62,8 +62,9 @@ namespace BallzMerge.Root.Settings
             desktopAction: () =>
             {
                 Button applyButton = _settingsMenu.GetApplyButton(GameSettingType.GameScreenResolutionSetting);
-                DisplayApplier = new DisplayApplier(applyButton);
+                DisplayApplier = new DisplayApplier(applyButton, questioner);
                 DisplayApplier.Applied += OnSettingsApplyChanges;
+                DisplayApplier.Discarded += ResetData;
                 DisplayResolution.SetDisplayApplier(DisplayApplier);
                 DisplayMode.SetDisplayApplier(DisplayApplier);
             });
@@ -93,6 +94,7 @@ namespace BallzMerge.Root.Settings
             _infoPanelShowcase.CloseTriggered -= ReadData;
             DisplayOrientation.Applied -= OnSettingsApplyChanges;
             DisplayApplier.Applied -= OnSettingsApplyChanges;
+            DisplayApplier.Discarded -= ResetData;
             _sceneSetting.Changed -= OnGlobalSettingChanged;
         }
 

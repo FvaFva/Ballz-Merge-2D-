@@ -1,18 +1,13 @@
-﻿using BallzMerge.Root;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
 
 public class UserQuestioner : MonoBehaviour
 {
     [SerializeField] private TMP_Text _label;
     [SerializeField] private Button _yes;
     [SerializeField] private Button _no;
-
-    [Inject] IGameTimeOwner _pauseController;
 
     private Queue<UserQuestion> _questions = new Queue<UserQuestion>();
     private UserQuestion _current;
@@ -33,7 +28,6 @@ public class UserQuestioner : MonoBehaviour
     {
         if (_current.IsEmpty())
         {
-            _pauseController.Stop();
             gameObject.SetActive(true);
             Display(question);
         }
@@ -42,6 +36,19 @@ public class UserQuestioner : MonoBehaviour
             _questions.Enqueue(question);
         }
     }
+
+    public void SetQuestionLabel(UserQuestion question, string label)
+    {
+        question.Description = label;
+        _label.text = question.Description;
+    }
+
+    public void SetQuestionFalse(UserQuestion question)
+    {
+        question.CallBack(false);
+        ButtonHandle();
+    }
+
 
     private void Display(UserQuestion question)
     {
@@ -52,15 +59,13 @@ public class UserQuestioner : MonoBehaviour
     private void Hide()
     {
         _current = default;
-        _pauseController.SetRegular();
         _label.text = string.Empty;
         gameObject.SetActive(false);
     }
 
     private void OnAnswerNo()
     {
-        _current.CallBack(false);
-        ButtonHandle();
+        SetQuestionFalse(_current);
     }
 
     private void OnAnswerYes()

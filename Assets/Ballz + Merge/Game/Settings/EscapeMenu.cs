@@ -1,16 +1,15 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BallzMerge.Root.Settings
 {
-    public class EscapeMenu: MonoBehaviour
+    public class EscapeMenu : MonoBehaviour
     {
-        [SerializeField] private Button _continueButton;
-        [SerializeField] private Button _restartButton;
-        [SerializeField] private Button _settingsButton;
-        [SerializeField] private Button _leftToMainMenu;
-        [SerializeField] private Button _leftGame;
+        [SerializeField] private ButtonProperty _continueButton;
+        [SerializeField] private ButtonProperty _restartButton;
+        [SerializeField] private ButtonProperty _settingsButton;
+        [SerializeField] private ButtonProperty _leftToMainMenuButton;
+        [SerializeField] private ButtonProperty _quitButton;
 
         public event Action<SceneExitData> QuitRequired;
         public event Action SettingsRequired;
@@ -28,10 +27,9 @@ namespace BallzMerge.Root.Settings
 
         public void UpdateButtonView(bool isActiveQuite, bool isActiveMainMenu)
         {
-            _leftToMainMenu.gameObject.SetActive(isActiveMainMenu);
-            _continueButton.gameObject.SetActive(isActiveMainMenu);
-            _restartButton.gameObject.SetActive(isActiveMainMenu);
-            _leftGame.gameObject.SetActive(isActiveQuite);
+            _leftToMainMenuButton.ChangeState(isActiveMainMenu);
+            _restartButton.ChangeState(isActiveMainMenu);
+            _quitButton.ChangeState(isActiveQuite);
         }
 
         private void LeftToMainMenu() => RequireQuite(new SceneExitData(ScenesNames.MAIN_MENU));
@@ -49,8 +47,8 @@ namespace BallzMerge.Root.Settings
             _continueButton.ChangeListeningState(CloseMenu, isActive);
             _restartButton.ChangeListeningState(Restart, isActive);
             _settingsButton.ChangeListeningState(OpenSettings, isActive);
-            _leftToMainMenu.ChangeListeningState(LeftToMainMenu, isActive);
-            _leftGame.ChangeListeningState(LeftGame, isActive);
+            _leftToMainMenuButton.ChangeListeningState(LeftToMainMenu, isActive);
+            _quitButton.ChangeListeningState(LeftGame, isActive);
         }
 
         private void RequireQuite(SceneExitData exitData)

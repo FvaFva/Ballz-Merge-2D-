@@ -2,12 +2,12 @@ using UnityEngine;
 
 public struct DisplayType
 {
-    public FullScreenMode FullScreenMode;
+    public ScreenMode ScreenMode;
     public string DisplayName;
 
-    public DisplayType(FullScreenMode fullScreenMode, string displayName)
+    public DisplayType(ScreenMode screenMode, string displayName)
     {
-        FullScreenMode = fullScreenMode;
+        ScreenMode = screenMode;
         DisplayName = displayName;
     }
 }
