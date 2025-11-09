@@ -14906,7 +14906,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4797103446319348793}
   - component: {fileID: 1579227058308850427}
-  - component: {fileID: 8307468009946145337}
   m_Layer: 5
   m_Name: ViewPort
   m_TagString: Untagged
@@ -14947,24 +14946,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4630955986685475762}
   m_CullTransparentMesh: 1
---- !u!114 &8307468009946145337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4630955986685475762}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86c795a318b44ca4d88e5b76575c42a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _upIndexForShow: 1
-  _interval: 1
-  _power: 2.8
-  _scalePower: 0.1
-  _isOne: 1
-  _isPointerReactor: 1
 --- !u!1 &5625175255340618457
 GameObject:
   m_ObjectHideFlags: 0
@@ -15047,7 +15028,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _view: {fileID: 1579010791069440702}
   _layout: {fileID: 1870657026858880751}
-  _viewPumper: {fileID: 8307468009946145337}
+  _viewPumper: {fileID: 2303255423356174688}
   _backlight: {fileID: 1516223417788242379}
   _highlight: {fileID: 1175077561119255914}
   _positive: {fileID: 9154072925553683923}

@@ -2,5 +2,6 @@ public enum LayoutAspectBehaviour
 {
     None,
     ScaleMainToFit,
-    SpacingRegulation
+    SpacingRegulation,
+    Empty
 }

@@ -59,9 +59,15 @@ public class BallVolumeCageElement : MonoBehaviour, IBeginDragHandler, IDropHand
     public void ChangeHighlight(bool isActive)
     {
         if (isActive)
+        {
+            _viewPumper.Highlight();
             _highlight.Play();
+        }
         else
+        {
+            _viewPumper.Hide();
             _highlight.Stop();
+        }
     }
 
     public void ShowEffect(bool isPositive)
