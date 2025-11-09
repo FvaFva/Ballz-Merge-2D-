@@ -36,10 +36,10 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
         return this;
     }
 
-    public void SetProperty(int separate, LayoutAspectBehaviour layoutAspectBehavior)
+    public void SetProperty(int separate = -1, LayoutAspectBehaviour layoutAspectBehavior = LayoutAspectBehaviour.Empty)
     {
-        _oversizeBehaviour = layoutAspectBehavior;
-        _separate = separate;
+        _oversizeBehaviour = layoutAspectBehavior == LayoutAspectBehaviour.Empty ? _oversizeBehaviour : layoutAspectBehavior;
+        _separate = separate == -1 ? _separate : separate;
         CalculateAttributes();
     }
 
@@ -75,11 +75,23 @@ public class AdaptiveLayoutGroupAspect : AdaptiveLayoutGroupBase
             : One;
     }
 
-    protected override float GetMainSize(int axis)
-    {
-        return ChildrenCrossSizes.Sum(x => Calculate(x.Value, rectTransform.rect.size[1 - axis]));
-    }
+protected override float GetMainSize(int axis)
+{
+    int count = Mathf.Max(1, ChildrenCrossSizes.Count);
+    int perLine = Mathf.Max(1, _separate);
+    int lines = Mathf.CeilToInt((float)count / perLine);
 
+    float crossSize = rectTransform.rect.size[1 - axis];
+
+    float avgAspect = ChildrenCrossSizes.Count > 0 ? 
+        ChildrenCrossSizes.First().Value : 1f;
+
+    float elementMain = Calculate(avgAspect, crossSize) / perLine;
+
+    return elementMain * lines +
+        Spacing * Mathf.Max(0, lines - 1) +
+        (axis == 0 ? (padding.left + padding.right) : (padding.top + padding.bottom));
+}
     protected override void Place(float totalSpacing, float totalMainSize, float totalCrossSize)
     {
         int mainAxis = IsVertical ? 1 : 0;

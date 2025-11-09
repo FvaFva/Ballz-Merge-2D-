@@ -3096,7 +3096,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 0}
+  m_SizeDelta: {x: 125, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &908312279
 MonoBehaviour:
@@ -4403,6 +4403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BallVolumeCarrierOrientationAdapter
   _body: {fileID: 2073392436}
+  _inventory: {fileID: 3583096913487056557}
   _currentView: {fileID: 768203036}
   _header: {fileID: 1656998678}
   _headerLayout: {fileID: 1656998679}
@@ -5979,7 +5980,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.5254902, g: 0.54901963, b: 1, a: 0.5019608}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -6164,7 +6165,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 768, y: 128}
+  m_SizeDelta: {x: 600, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1666288368
 MonoBehaviour:
@@ -6181,8 +6182,8 @@ MonoBehaviour:
   m_IgnoreLayout: 1
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
+  m_PreferredWidth: 7
+  m_PreferredHeight: 1
   m_FlexibleWidth: 1
   m_FlexibleHeight: 1
   m_LayoutPriority: 1
@@ -6199,7 +6200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _positionVertical: 4
-  _positionHorizontal: 4
+  _positionHorizontal: 5
 --- !u!222 &1666288370
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -26311,8 +26312,8 @@ RectTransform:
   - {fileID: 9040392883744251247}
   m_Father: {fileID: 2059548521}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.25, y: 0}
-  m_AnchorMax: {x: 1, y: 0.75}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -32003,7 +32004,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e40e409decc060b489e83297e4f74e6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _positionVertical: 5
+  _positionVertical: 0
   _positionHorizontal: 3
 --- !u!4 &6590069993068308292
 Transform:
@@ -43422,7 +43423,7 @@ MonoBehaviour:
   _portraitAvailableSpacePrecent: {x: 1, y: 0.7}
   _landscapeAvailableSpacePrecent: {x: 0.7, y: 0.85}
   _portraitOffset: {x: 0, y: -1.2}
-  _landscapeOffset: {x: 1.2, y: 0.75}
+  _landscapeOffset: {x: 3.3, y: 0.75}
   _main: {fileID: 5861595793454543064}
   _gameplay: {fileID: 6383732304970293113}
   _effects: {fileID: 3102068462393723306}

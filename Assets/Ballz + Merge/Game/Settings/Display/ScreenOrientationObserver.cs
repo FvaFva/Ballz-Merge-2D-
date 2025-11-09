@@ -16,12 +16,12 @@ namespace BallzMerge.ScreenOrientations
 
         private void Awake()
         {
-            PlatformRunner.RunOnDesktopPlatform(
-                desktopAction: () =>
+            PlatformRunner.RunOnMobilePlatform(
+                nonMobileAction: () =>
                 {
                     _orientation = () => Screen.orientation is ScreenOrientation.Portrait or ScreenOrientation.PortraitUpsideDown;
                 },
-                nonDesktopAction: () =>
+                mobileAction: () =>
                 {
                     _orientation = () => Screen.width < Screen.height;
                 });

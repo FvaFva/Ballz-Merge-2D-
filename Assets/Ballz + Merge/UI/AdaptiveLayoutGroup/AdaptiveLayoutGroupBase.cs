@@ -26,6 +26,7 @@ public abstract class AdaptiveLayoutGroupBase : LayoutGroup
         base.OnValidate();
     }
 #endif
+
     public virtual AdaptiveLayoutGroupBase Init()
     {
         Transform = GetComponent<RectTransform>();

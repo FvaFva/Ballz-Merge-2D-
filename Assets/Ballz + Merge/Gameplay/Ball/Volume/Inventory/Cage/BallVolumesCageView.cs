@@ -8,7 +8,7 @@ using Zenject;
 public class BallVolumesCageView : MonoBehaviour, IInitializable, IDependentScreenOrientation
 {
     private const float SlowMoTime = 0.7f;
-    private const float WeightInCage = 3;
+    private const float WeightInCage = 0.5f;
     private const float WeightOutCage = 7;
 
     [SerializeField] private Image _block;
@@ -131,8 +131,8 @@ public class BallVolumesCageView : MonoBehaviour, IInitializable, IDependentScre
             return default;
 
         var last = _cage.Dequeue();
-        HighlightNext();
         last.ChangeHighlight(false);
+        HighlightNext();
         return last.Current;
     }
 

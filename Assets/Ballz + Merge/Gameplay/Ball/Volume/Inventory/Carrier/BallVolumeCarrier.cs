@@ -91,6 +91,12 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView, IDependentScree
     public void UpdateScreenOrientation(bool isVertical)
     {
         _adapter.UpdateScreenOrientation(isVertical);
+
+        if(gameObject.activeSelf)
+        {
+            _cageContainerItem.PuckUp(_adapter.CagePosition);
+            _cage.UpdateCompellation(true, _adapter.CageSeparate);
+        }
     }
 
     private void OnTrigger()
