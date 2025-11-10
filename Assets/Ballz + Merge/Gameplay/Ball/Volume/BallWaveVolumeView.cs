@@ -9,9 +9,6 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
     [SerializeField] private BallWaveVolume _source;
     [SerializeField] private RectTransform _viewPort;
     [SerializeField] private GameDataVolumeMicView _viewPrefab;
-    [SerializeField] private ContentSizeFitter _fitter;
-    [SerializeField] private ScrollRect _scroll;
-    [SerializeField] private AdaptiveLayoutGroupBase _layout;
 
     private Queue<GameDataVolumeMicView> _free = new Queue<GameDataVolumeMicView>();
     private Queue<GameDataVolumeMicView> _busy = new Queue<GameDataVolumeMicView>();
@@ -27,6 +24,7 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
     {
         _update();
         _source.Changed += ShowVolumes;
+        _viewPort.sizeDelta = Vector2.zero;
     }
 
     private void OnDisable()
@@ -58,21 +56,6 @@ public class BallWaveVolumeView : CyclicBehavior, IDependentScreenOrientation, I
 
     public void UpdateScreenOrientation(bool isVertical)
     {
-        if (!_layout.IsInverse ^ isVertical)
-        {
-            _fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            _fitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
-            _scroll.vertical = false;
-            _scroll.horizontal = true;
-        }
-        else
-        {
-            _fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-            _fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            _scroll.vertical = true;
-            _scroll.horizontal = false;
-        }
-
         _viewPort.sizeDelta = Vector2.zero;
     }
 

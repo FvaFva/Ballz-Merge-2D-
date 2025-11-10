@@ -26,6 +26,8 @@ public class RectPumper : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private Tween _rotator;
     private Tween _scaler;
     private int _oldIndex;
+    private bool _isHighlighted;
+    private bool _isPointerEntered;
 
     private void Awake()
     {
@@ -63,6 +65,38 @@ public class RectPumper : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         _me.localScale = _scaleBase;
     }
 
+    public void Highlight()
+    {
+        if (_isHighlighted)
+            return;
+
+        _isHighlighted = true;
+
+        if (_upIndexForShow)
+        {
+            _oldIndex = _me.GetSiblingIndex();
+            _me.SetAsLastSibling();
+        }
+
+        ChangeScale(_scale);
+    }
+
+    public void Hide()
+    {
+        if (!_isHighlighted)
+            return;
+
+        _isHighlighted = false;
+
+        if (_upIndexForShow)
+        {
+            RerollRotation();
+            _me.SetSiblingIndex(_oldIndex);
+        }
+
+        ChangeScale(_scaleBase);
+    }
+    
     public void RerollRotation() => _reroller();
 
     private IEnumerator Animation()
@@ -88,26 +122,19 @@ public class RectPumper : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (_isPointerReactor)
+        if (_isPointerReactor && !_isHighlighted)
         {
-            if (_upIndexForShow)
-            {
-                _oldIndex = _me.GetSiblingIndex();
-                _me.SetAsLastSibling();
-            }
-
-            ChangeScale(_scale);
+            _isPointerEntered = true;
+            Highlight();
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (_isPointerReactor)
+        if (_isPointerReactor && _isPointerEntered)
         {
-            if (_upIndexForShow)
-            _me.SetSiblingIndex(_oldIndex);
-
-            ChangeScale(_scaleBase);
+            _isPointerEntered = false;
+            Hide();
         }
     }
 
