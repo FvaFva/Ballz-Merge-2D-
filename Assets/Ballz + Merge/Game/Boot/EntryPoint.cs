@@ -21,6 +21,7 @@ namespace BallzMerge.Root
         }
 
         private UIRootView _rootView;
+        private UIButtonChanger _uiChanger;
         private SceneLoader _sceneLoader;
         private GameSettings _gameSettings;
         private OwnerPrimaryComponents _primary;
@@ -75,6 +76,7 @@ namespace BallzMerge.Root
             _rootView = GenerateDontDestroyFromHub<UIRootView>();
             _rootView.Containers.Init();
             _primary.OrientationObserver.CheckInRoot(_rootView.Containers);
+            _primary.OrientationObserver.CheckInRoot(_rootView.ButtonChanger);
             GlobalEffects globalEffects = GenerateDontDestroyFromHub<GlobalEffects>();
             _gameSettings = new GameSettings(_rootView.SettingsMenu, _primary, _rootView.InfoPanelShowcase, _rootView.Questioner, globalEffects);
             _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack, _gameSettings, _primary.OrientationObserver);
@@ -96,6 +98,7 @@ namespace BallzMerge.Root
         {
             BindSingleton(_rootView.Questioner);
             BindSingleton(_rootView);
+            BindSingleton(_uiChanger);
             BindSingleton(_rootView.InfoPanelShowcase);
             BindSingleton(_rootView.EscapeMenu);
             BindSingleton(_gameSettings.SoundVolumeGlobal);

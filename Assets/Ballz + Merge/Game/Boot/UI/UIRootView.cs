@@ -17,6 +17,7 @@ namespace BallzMerge.Root
         [SerializeField] private GameSettingsMenu _settingsMenu;
         [SerializeField] private PopupDisplayer _popupDisplayer;
         [SerializeField] private Canvas _mainCanvas;
+        [SerializeField] private UIButtonChanger _buttonChanger;
 
         private UIView _sceneUI;
 
@@ -27,6 +28,7 @@ namespace BallzMerge.Root
         public InfoPanelShowcase InfoPanelShowcase => _infoPanelShowcase;
         public PopupDisplayer PopupsDisplayer => _popupDisplayer;
         public UIRootContainers Containers => _containers;
+        public UIButtonChanger ButtonChanger => _buttonChanger;
 
         private void Awake()
         {

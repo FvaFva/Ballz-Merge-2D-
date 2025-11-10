@@ -4,5 +4,5 @@ using UnityEngine.UI;
 public class SettingPanels : MonoBehaviour
 {
     public Button TriggerButton;
-    public PanelToggleView ToggleView;
+    public ToggleView ToggleView;
 }

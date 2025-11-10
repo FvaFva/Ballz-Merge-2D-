@@ -8,6 +8,7 @@ public class ButtonToggle : IDisposable
 {
     [SerializeField] private Button _toggle;
     [SerializeField] private TMP_Text _label;
+    [SerializeField] private ToggleView _toggleView;
 
     private string _originalLabel;
     private string _firstToggleLabel;
@@ -18,11 +19,9 @@ public class ButtonToggle : IDisposable
 
     public ButtonToggle Initialize(string firstToggleLabel, string secondToggleLabel)
     {
-        if (_label != null)
-            _originalLabel = _label.text;
-
-        if (_toggle != null)
-            _toggle.onClick.AddListener(ChangeState);
+        _originalLabel = _label.text;
+        _toggle.onClick.AddListener(ChangeState);
+        _toggleView.Initialize();
 
         _firstToggleLabel = firstToggleLabel;
         _secondToggleLabel = secondToggleLabel;
@@ -40,6 +39,7 @@ public class ButtonToggle : IDisposable
     public void ResetLabel()
     {
         _label.text = _originalLabel;
+        _toggleView.Unselect();
     }
 
     public void ChangeState()
@@ -49,6 +49,7 @@ public class ButtonToggle : IDisposable
 
         State = !State;
         _label.text = State ? $"{_originalLabel}{_firstToggleLabel}" : $"{_originalLabel}{_secondToggleLabel}";
+        _toggleView.Select();
         _triggered?.Invoke(this);
     }
 }

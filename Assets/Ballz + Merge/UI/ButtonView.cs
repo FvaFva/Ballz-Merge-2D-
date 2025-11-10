@@ -17,11 +17,6 @@ public class ButtonView : MonoBehaviour
     private Color _startViewColor;
     private Color _startLabelColor;
 
-    private void OnDisable()
-    {
-        SetDefault();
-    }
-
     public void Init()
     {
         _shadowColors = new Dictionary<ColorType, Color>();
@@ -73,6 +68,11 @@ public class ButtonView : MonoBehaviour
     public void ChangeViewColor(Color color)
     {
         _image.color = color;
+    }
+
+    public void ChangeSprite(Sprite sprite)
+    {
+        _image.sprite = sprite;
     }
 
     public void ChangeLabelColor(Color color)
