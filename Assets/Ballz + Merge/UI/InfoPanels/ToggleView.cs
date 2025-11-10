@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image), typeof(Shadow))]
-public class PanelToggleView : MonoBehaviour
+public class ToggleView : MonoBehaviour
 {
     [SerializeField] private Color _newColor;
     [SerializeField] private UIParticle _particle;

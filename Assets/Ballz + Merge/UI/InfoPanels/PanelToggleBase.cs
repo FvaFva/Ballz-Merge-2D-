@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public abstract class PanelToggleBase : MonoBehaviour
 {
     [SerializeField] private Button _triggerButton;
-    [SerializeField] private PanelToggleView _toggleView;
+    [SerializeField] private ToggleView _toggleView;
     [SerializeField] private RectTransform _content;
 
     public RectTransform Content => _content;

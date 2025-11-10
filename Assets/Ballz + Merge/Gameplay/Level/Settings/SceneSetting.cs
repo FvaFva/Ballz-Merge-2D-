@@ -1,7 +1,6 @@
 using BallzMerge.Data;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class SceneSetting : IDisposable
 {

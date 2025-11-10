@@ -28,6 +28,6 @@ public class SliderView : MonoBehaviour
 
     public void ChangeParameters(float newScale, float duration)
     {
-        _transform.DOScale(newScale, duration);
+        _transform.DOScale(new Vector3(newScale, 1f, 1f), duration).SetEase(Ease.InOutQuad);
     }
 }

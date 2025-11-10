@@ -23,27 +23,12 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private Action<bool> _viewChanger = (bool state) => { };
     private Dictionary<bool, Action> _buttonViewStateActions = new Dictionary<bool, Action>();
 
-    private void ConfigureViewChanger()
-    {
-        Action<bool> changer = _ => { };
-
-        if (_pumper != null)
-            changer += state => _pumper.enabled = state;
-        if (_hiddenField != null)
-            changer += state => _hiddenField.gameObject.SetActive(state);
-        if (_audio != null)
-            changer += exit => { if (!exit) _audio.Play(AudioEffectsTypes.Pick); };
-
-        _viewChanger = changer;
-    }
-
     private void Awake()
     {
         _transform = transform;
         _isPointerDown = false;
         _isPointerEnter = false;
         _buttonView.Init();
-        _buttonView.SetDefault();
 
         ConfigureViewChanger();
 
@@ -53,8 +38,8 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void OnEnable()
     {
+        _buttonView.SetDefault();
         _viewChanger(true);
-        _buttonView.enabled = true;
     }
 
     private void OnDisable()
@@ -62,7 +47,6 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         DOTween.Kill(_transform);
         _transform.localScale = Vector3.one * StartScale;
         _viewChanger(false);
-        _buttonView.enabled = false;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -120,6 +104,25 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         _buttonViewStateActions.GetValueOrDefault(state)?.Invoke();
         enabled = state;
+    }
+
+    public void ChangeSprite(Sprite sprite)
+    {
+        _buttonView.ChangeSprite(sprite);
+    }
+
+    private void ConfigureViewChanger()
+    {
+        Action<bool> changer = _ => { };
+
+        if (_pumper != null)
+            changer += state => _pumper.enabled = state;
+        if (_hiddenField != null)
+            changer += state => _hiddenField.gameObject.SetActive(state);
+        if (_audio != null)
+            changer += exit => { if (!exit) _audio.Play(AudioEffectsTypes.Pick); };
+
+        _viewChanger = changer;
     }
 
     private void ActivateButtonView()
