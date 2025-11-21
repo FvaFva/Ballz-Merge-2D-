@@ -337,7 +337,7 @@ MonoBehaviour:
   _apply:
     AnimatedButton: {fileID: 0}
     Button: {fileID: 0}
-  _dependentColorUI: {fileID: 8233790037099008965}
+  _dependentColorUI: {fileID: 5559352168349917656}
 --- !u!114 &3982754001058787278
 MonoBehaviour:
   m_ObjectHideFlags: 0
