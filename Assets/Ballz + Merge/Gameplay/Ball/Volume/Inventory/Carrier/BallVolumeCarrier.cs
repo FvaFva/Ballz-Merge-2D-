@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using BallzMerge.Root;
 using BallzMerge.Root.Audio;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView, IDependentScreenOrientation
+public class BallVolumeCarrier : DependentColorUI, IInfoPanelView, IDependentScreenOrientation
 {
     private const string ToBagHeader = "Drop here for bag";
     private const string ToCageHeader = "Click here for cage";
@@ -22,6 +23,7 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView, IDependentScree
     [SerializeField] private BallVolumeCarrierView _volumeView;
     [SerializeField] private DropHandlerProxy _dropHandler;
     [SerializeField] private AudioSourceHandler _audio;
+    [SerializeField] private List<BackgroundUI> _backgroundUIs;
 
     private RectTransform _transform;
     private Transform _baseParent;
@@ -59,6 +61,12 @@ public class BallVolumeCarrier : CyclicBehavior, IInfoPanelView, IDependentScree
         _volumesView.ActiveVolumePerformed -= OnBagSpellActivate;
         _dropHandler.Dropped -= OnDrop;
         _passiveView.VolumeActivated -= OnPassiveActivate;
+    }
+
+    public override void ApplyColors(GameColors gameColors)
+    {
+        foreach (var backgroundUI in _backgroundUIs)
+            backgroundUI.ApplyColors(gameColors);
     }
 
     public void OnDrop(PointerEventData _)

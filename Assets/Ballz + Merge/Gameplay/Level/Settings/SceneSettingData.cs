@@ -22,6 +22,7 @@ public class SceneSettingData : IGameSettingData
     };
 
     public event Action<bool> StateChanged;
+    public event Action Changed;
 
     public SceneSettingData(string name)
     {
@@ -29,16 +30,16 @@ public class SceneSettingData : IGameSettingData
         CountOfPresets = 1;
     }
 
-    public void Get(float value)
+    public void Load(float value)
     {
-        Value = CountOfPresets < value ? (float)CountOfPresets : value;
-        Change(Value);
+        Value = value;
+        Label = EffectsStates[Mathf.RoundToInt(Value)];
     }
 
     public void Change(float value)
     {
         Value = value;
         Label = EffectsStates[Mathf.RoundToInt(Value)];
-        StateChanged?.Invoke(true);
+        Changed?.Invoke();
     }
 }

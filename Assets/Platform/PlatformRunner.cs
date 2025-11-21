@@ -2,39 +2,24 @@ using System;
 
 public static class PlatformRunner
 {
-    public static void RunOnDesktopPlatform(Action desktopAction, Action nonDesktopAction = null)
+    public static void Run(Action basic, Action editorAction = null, Action windowsAction = null, Action macAction = null, Action androidAction = null, Action iosAction = null)
     {
-#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR
-        desktopAction?.Invoke();
-#else
-        nonDesktopAction?.Invoke();
-#endif
-    }
+        editorAction ??= basic;
+        windowsAction ??= basic;
+        macAction ??= basic;
+        androidAction ??= basic;
+        iosAction ??= basic;
 
-    public static void RunOnMobilePlatform(Action mobileAction, Action nonMobileAction = null)
-    {
-#if UNITY_ANDROID || UNITY_IOS                           
-        mobileAction?.Invoke();
-#else
-        nonMobileAction?.Invoke();
-#endif
-    }
-
-    public static void RunOnWindowsMacPlatform(Action windowsAction, Action macAction)
-    {
-#if UNITY_STANDALONE_WIN
+#if UNITY_EDITOR
+        editorAction?.Invoke();
+#elif UNITY_STANDALONE_WIN
         windowsAction?.Invoke();
 #elif UNITY_STANDALONE_OSX
         macAction?.Invoke();
-#endif
-    }
-
-    public static void RunOnEditor(Action editorAction, Action nonEditorAction = null)
-    {
-#if UNITY_EDITOR
-        editorAction?.Invoke();
-#else
-        nonEditorAction?.Invoke();
+#elif UNITY_ANDROID
+        androidAction?.Invoke();
+#elif UNITY_IOS
+        iosAction?.Invoke();
 #endif
     }
 

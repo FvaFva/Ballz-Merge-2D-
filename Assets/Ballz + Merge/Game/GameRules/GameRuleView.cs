@@ -2,14 +2,15 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class GameRuleView : MonoBehaviour
+public class GameRuleView : DependentColorUI
 {
     private float Padding = 20f;
     private RectTransform _rect;
 
     [SerializeField] private TMP_Text _header;
+    [SerializeField] private BackgroundUI _backgroundUI;
 
-    void OnEnable()
+    private void OnEnable()
     {
         StartCoroutine(UpdateSize());
     }
@@ -20,6 +21,11 @@ public class GameRuleView : MonoBehaviour
         _rect = (RectTransform)transform;
 
         return this;
+    }
+
+    public override void ApplyColors(GameColors gameColors)
+    {
+        _backgroundUI.ApplyColors(gameColors);
     }
 
     private IEnumerator UpdateSize()

@@ -1,15 +1,16 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PlayerScoresView : CyclicBehavior, IInitializable, ILevelStarter, ILevelFinisher
+public class PlayerScoresView : DependentColorUI, IInitializable, ILevelStarter, ILevelFinisher
 {
     [SerializeField] private List<ValueViewProperty> _valueViewProperties;
+    [SerializeField] private BackgroundUI _backgroundUI;
 
     private Dictionary<IValueViewScore, ValueViewProperty> ValueViews;
 
     private void OnValidate()
     {
-        PlatformRunner.RunOnEditor(
+        PlatformRunner.Run(null,
             editorAction: () =>
             {
                 foreach (var property in _valueViewProperties)
@@ -29,6 +30,14 @@ public class PlayerScoresView : CyclicBehavior, IInitializable, ILevelStarter, I
         }
     }
 
+    public override void ApplyColors(GameColors gameColors)
+    {
+        _backgroundUI.ApplyColors(gameColors);
+
+        foreach(var valueView in _valueViewProperties)
+            valueView.ApplyColors(gameColors);
+    }
+
     public void StartLevel(bool isAfterLoad = false)
     {
         foreach (var property in ValueViews)
@@ -39,8 +48,6 @@ public class PlayerScoresView : CyclicBehavior, IInitializable, ILevelStarter, I
     {
         foreach (var property in ValueViews)
             property.Value.Counter.ScoreChanged -= UpdateScore;
-
-        ValueViews.Clear();
     }
 
     private void UpdateScore(IValueViewScore viewScore, int current, int total)

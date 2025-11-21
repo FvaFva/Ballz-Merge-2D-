@@ -364,9 +364,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ea9188c08e29704da0da66fc82a595c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _initOrder: 0
   _buttonView: {fileID: 3903417554089259497}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
+  _audio: {fileID: 0}
+  _isSpriteChangeable: 0
 --- !u!114 &5503287498596837627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,7 +382,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3101b72a7c09e418796f79d96fdc46e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _trigger: {fileID: 1204684145928805699}
+  _trigger:
+    AnimatedButton: {fileID: 2917108611881012471}
+    Button: {fileID: 1204684145928805699}
   _header: {fileID: 7290853493117643967}
   _completed: {fileID: 5883537981658414485}
 --- !u!1 &5883537981658414485
@@ -638,3 +643,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d7f3c56da4e644abe9526a7f8e39bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _buttonColorType: 1
+  _shadowColorType: 0

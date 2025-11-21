@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
+public class AnimatedButton : DependentColorUI, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private const float Duration = 0.125f;
     private const float PressedStateScale = 0.9f;
@@ -16,12 +16,16 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [SerializeField] private RectPumper _pumper;
     [SerializeField] private RectTransform _hiddenField;
     [SerializeField] private AudioSourceHandler _audio;
+    [SerializeField] private bool _isSpriteChangeable;
 
     private bool _isPointerDown;
     private bool _isPointerEnter;
+    private bool _isInited;
     private Transform _transform;
     private Action<bool> _viewChanger = (bool state) => { };
     private Dictionary<bool, Action> _buttonViewStateActions = new Dictionary<bool, Action>();
+
+    public bool IsSpriteChangeable => _isSpriteChangeable;
 
     private void Awake()
     {
@@ -38,6 +42,9 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void OnEnable()
     {
+        if (!_isInited)
+            return;
+
         _buttonView.SetDefault();
         _viewChanger(true);
     }
@@ -47,6 +54,14 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         DOTween.Kill(_transform);
         _transform.localScale = Vector3.one * StartScale;
         _viewChanger(false);
+    }
+
+    public override void ApplyColors(GameColors colors)
+    {
+        _isInited = true;
+        GameColors = colors;
+        _buttonView.Init();
+        _buttonView.ApplyColors(GameColors);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -103,12 +118,13 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public void SetState(bool state)
     {
         _buttonViewStateActions.GetValueOrDefault(state)?.Invoke();
+        _buttonView.SetActiveState(state);
         enabled = state;
     }
 
-    public void ChangeSprite(Sprite sprite)
+    public void ChangeSprite(Sprite mainSprite, Sprite shaderSprite)
     {
-        _buttonView.ChangeSprite(sprite);
+        _buttonView.ChangeSprite(mainSprite, shaderSprite);
     }
 
     private void ConfigureViewChanger()
@@ -132,7 +148,7 @@ public class AnimatedButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void DeactivateButtonView()
     {
-        _buttonView.ChangeViewColor(Color.white);
-        _buttonView.ChangeLabelColor(Color.black);
+        _buttonView.ChangeViewColor(GameColors.GetForAccessibilityState()[true]);
+        _buttonView.ChangeLabelColor(GameColors.GetForAccessibilityState()[false]);
     }
 }

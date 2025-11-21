@@ -3,11 +3,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UserQuestioner : MonoBehaviour
+public class UserQuestioner : DependentColorUI
 {
     [SerializeField] private TMP_Text _label;
     [SerializeField] private Button _yes;
     [SerializeField] private Button _no;
+    [SerializeField] private List<BackgroundUI> _backgroundUIs;
 
     private Queue<UserQuestion> _questions = new Queue<UserQuestion>();
     private UserQuestion _current;
@@ -22,6 +23,12 @@ public class UserQuestioner : MonoBehaviour
     {
         _no.RemoveListener(OnAnswerNo);
         _yes.RemoveListener(OnAnswerYes);
+    }
+
+    public override void ApplyColors(GameColors gameColors)
+    {
+        foreach (var backgroundUI in _backgroundUIs)
+            backgroundUI.ApplyColors(gameColors);
     }
 
     public void Show(UserQuestion question)

@@ -17,6 +17,7 @@ public class DisplayOrientation : IGameSettingData, IDisposable
     private bool _isOrientationLoaded;
 
     public event Action<bool> StateChanged;
+    public event Action Changed;
 
     public event Action<IGameSettingData> Applied;
 
@@ -57,7 +58,7 @@ public class DisplayOrientation : IGameSettingData, IDisposable
         _applyButton.onClick.AddListener(ApplyOrientation);
     }
 
-    public void Get(float value)
+    public void Load(float value)
     {
         Value = CountOfPresets < value ? (float)CountOfPresets : value;
         Change(Value);

@@ -15,6 +15,7 @@ namespace BallzMerge.MainMenu
         [SerializeField] private LevelSelectorOperator _levelSelector;
         [SerializeField] private LevelContinueView _levelLoader;
         [SerializeField] private LevelInGame _level;
+        [SerializeField] private HistoryManager _historyManager;
         [SerializeField] private List<CyclicBehavior> _behaviors;
 
         [Inject] private UIRootView _rootUI;
@@ -29,22 +30,6 @@ namespace BallzMerge.MainMenu
         public IEnumerable<IDependentScreenOrientation> OrientationDepends => _orientationDependObjects;
         public IEnumerable<IDependentSceneSettings> SettingsDepends => _settingsDependObjects;
         public bool IsAvailable { get; private set; }
-
-        private void Start()
-        {
-            IsAvailable = true;
-            var load = _db.Saves.Get();
-
-            if (load.IsLoaded)
-            {
-                _level.Load(load);
-                _levelLoader.ChangeState(true, _level.Current.Title);
-            }
-            else
-            {
-                _levelLoader.ChangeState(false);
-            }
-        }
 
         private void Awake()
         {
@@ -63,6 +48,8 @@ namespace BallzMerge.MainMenu
                 if (component is IDependentSceneSettings settingDependent)
                     _settingsDependObjects.Add(settingDependent);
             }
+
+            IsAvailable = true;
         }
 
         private void OnEnable()
@@ -89,6 +76,23 @@ namespace BallzMerge.MainMenu
             _view.Init();
             _rootUI.AttachSceneUI(_view, _camerasOperator.UI);
             _callback = callback;
+        }
+
+        public void AfterLoad()
+        {
+            var load = _db.Saves.Get();
+
+            if (load.IsLoaded)
+            {
+                _level.Load(load);
+                _levelLoader.ChangeState(true, _level.Current.Title);
+            }
+            else
+            {
+                _levelLoader.ChangeState(false);
+            }
+
+            _historyManager.Init();
         }
 
         private void OnStartRequire()

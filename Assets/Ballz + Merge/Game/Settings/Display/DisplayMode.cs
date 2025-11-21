@@ -15,6 +15,7 @@ public class DisplayMode : IGameSettingData
     private ScreenMode _screenMode;
 
     public event Action<bool> StateChanged;
+    public event Action Changed;
 
     public DisplayMode(string name)
     {
@@ -37,7 +38,7 @@ public class DisplayMode : IGameSettingData
         _displayApplier = displayApplier;
     }
 
-    public void Get(float value)
+    public void Load(float value)
     {
         Value = CountOfPresets < value ? (float)CountOfPresets : value;
         Change(Value);

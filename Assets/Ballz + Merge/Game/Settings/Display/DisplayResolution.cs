@@ -15,6 +15,7 @@ public class DisplayResolution : IGameSettingData
     public int? CountOfPresets { get; private set; }
 
     public event Action<bool> StateChanged;
+    public event Action Changed;
 
     public DisplayResolution(string name)
     {
@@ -46,7 +47,7 @@ public class DisplayResolution : IGameSettingData
         StateChanged?.Invoke(state);
     }
 
-    public void Get(float value)
+    public void Load(float value)
     {
         Value = CountOfPresets < value ? (float)CountOfPresets : value;
         Change(Value);

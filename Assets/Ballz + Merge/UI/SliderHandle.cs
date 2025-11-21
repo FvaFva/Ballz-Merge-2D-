@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SliderHandle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IDisposable
+public class SliderHandle : DependentColorUI, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IDisposable
 {
     private const float StartScale = 1f;
     private const float PressedStateScale = 0.9f;
@@ -20,26 +20,18 @@ public class SliderHandle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private bool _isPointerDown;
     private bool _isPointerEnter;
     private bool _isDragging;
+    private bool _isInited;
+    private GameColors _gameColors;
 
     public event Action<bool> SliderHandled;
 
-    public void Init()
+    public override void ApplyColors(GameColors gameColors)
     {
-        _sliderViewStateActions = new Dictionary<bool, Action>
-        {
-            { true, ActivateSliderView },
-            { false, DeactivateSliderView }
-        };
+        _gameColors = gameColors;
+        Init();
 
-        _handledStateActions = new Dictionary<bool, Action>
-        {
-            { true, Press },
-            { false, Release }
-        };
-
-        _transform = transform;
-        _sliderView.Init();
-        _sliderDragger.Handled += SetDraggingState;
+        if (enabled)
+            _sliderView.ChangeViewColor(_gameColors.GetForSliderHandle());
     }
 
     public void Dispose()
@@ -118,6 +110,34 @@ public class SliderHandle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         enabled = state;
     }
 
+    public void SetColor(Color color)
+    {
+        _sliderView.ChangeViewColor(color);
+    }
+
+    private void Init()
+    {
+        if (_isInited)
+            return;
+
+        _isInited = true;
+        _sliderViewStateActions = new Dictionary<bool, Action>
+        {
+            { true, ActivateSliderView },
+            { false, DeactivateSliderView }
+        };
+
+        _handledStateActions = new Dictionary<bool, Action>
+        {
+            { true, Press },
+            { false, Release }
+        };
+
+        _transform = transform;
+        _sliderView.Init();
+        _sliderDragger.Handled += SetDraggingState;
+    }
+
     private void SetDefault()
     {
         _sliderView.ChangeParameters(StartScale, Duration);
@@ -125,11 +145,11 @@ public class SliderHandle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     private void ActivateSliderView()
     {
-        _sliderView.SetDefaultColor();
+        _sliderView.ChangeViewColor(_gameColors.GetForAccessibilitySliderState()[true]);
     }
 
     private void DeactivateSliderView()
     {
-        _sliderView.ChangeViewColor(Color.white);
+        _sliderView.ChangeViewColor(_gameColors.GetForAccessibilitySliderState()[false]);
     }
 }

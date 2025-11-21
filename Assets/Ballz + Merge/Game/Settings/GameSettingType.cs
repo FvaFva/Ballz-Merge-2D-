@@ -2,5 +2,6 @@ public enum GameSettingType
 {
     GameSetting,
     GameScreenResolutionSetting,
-    GameApplierSetting
+    GameApplierSetting,
+    GameColorSetting
 }

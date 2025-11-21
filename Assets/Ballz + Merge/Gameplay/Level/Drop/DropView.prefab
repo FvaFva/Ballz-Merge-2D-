@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47.5
+  m_fontSize: 41.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 3724593213809361328}
   - component: {fileID: 2092539861062529490}
   - component: {fileID: 6109237978046395878}
+  - component: {fileID: 4425985894176280266}
   m_Layer: 5
   m_Name: Description
   m_TagString: Untagged
@@ -196,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5254902, g: 0.54901963, b: 1, a: 0.5019608}
+  m_Color: {r: 0.5254902, g: 0.54901963, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -233,6 +234,20 @@ MonoBehaviour:
   m_FlexibleWidth: 4
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &4425985894176280266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858450916246832193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9cc8e2abaacb4342bd01537c9085cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundUI
+  _initOrder: 0
+  _backgroundColorType: 1
 --- !u!1 &1127717380930802437
 GameObject:
   m_ObjectHideFlags: 0
@@ -5385,10 +5400,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ea9188c08e29704da0da66fc82a595c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _initOrder: 0
   _buttonView: {fileID: 8069770069101142999}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
   _audio: {fileID: 0}
+  _isSpriteChangeable: 0
 --- !u!114 &3722925160500291492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5514,7 +5531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 1, b: 1, a: 0}
+  m_EffectColor: {r: 0.019607844, g: 0.8666667, b: 0.9254902, a: 0}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
 --- !u!114 &8069770069101142999
@@ -5529,6 +5546,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d7f3c56da4e644abe9526a7f8e39bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _buttonColorType: 1
+  _shadowColorType: 0
 --- !u!1 &4478483098689128109
 GameObject:
   m_ObjectHideFlags: 0
@@ -6027,6 +6046,7 @@ GameObject:
   - component: {fileID: 7183850511761635425}
   - component: {fileID: 6217208076217558398}
   - component: {fileID: 8046844880980968237}
+  - component: {fileID: 5419474331499509236}
   m_Layer: 5
   m_Name: DropView
   m_TagString: Untagged
@@ -6104,6 +6124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad155ef0953767c4a860ad8fd1b6338e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _initOrder: 0
   _name: {fileID: 5948315063413244415}
   _description: {fileID: 226011949594378606}
   _icon: {fileID: 6694574604386220100}
@@ -6111,6 +6132,24 @@ MonoBehaviour:
   _selector: {fileID: 931858161829284346}
   _particles: {fileID: 7107061818202809158}
   _shaderView: {fileID: 5060674935903714878}
+  _backgroundUIs:
+  - {fileID: 5419474331499509236}
+  - {fileID: 4425985894176280266}
+  - {fileID: 5612024669043368618}
+--- !u!114 &5419474331499509236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935306535311829759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9cc8e2abaacb4342bd01537c9085cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundUI
+  _initOrder: 0
+  _backgroundColorType: 1
 --- !u!1 &8479417349666785986
 GameObject:
   m_ObjectHideFlags: 0
@@ -6203,7 +6242,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 51.3
+  m_fontSize: 43.35
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
