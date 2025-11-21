@@ -7,7 +7,7 @@ using static UnityEngine.ParticleSystem;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class DropView : MonoBehaviour
+    public class DropView : DependentColorUI
     {
         private const string ShineColorProperty = "_ShinyColor";
 
@@ -18,6 +18,7 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private Button _selector;
         [SerializeField] private ParticleSystem _particles;
         [SerializeField] private ButtonShaderView _shaderView;
+        [SerializeField] private List<DependentColorUI> _backgroundUIs;
 
         private Drop _current;
         private Sprite _default;
@@ -47,6 +48,12 @@ namespace BallzMerge.Gameplay.Level
         private void OnDisable()
         {
             _selector.RemoveListener(OnSelect);
+        }
+
+        public override void ApplyColors(GameColors gameColors)
+        {
+            foreach(var backgroundUI in _backgroundUIs)
+                backgroundUI.ApplyColors(gameColors);
         }
 
         public void InitMaterial()

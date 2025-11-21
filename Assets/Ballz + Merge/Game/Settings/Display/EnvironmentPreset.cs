@@ -21,6 +21,7 @@ public class EnvironmentPreset : IGameSettingData
     public int? CountOfPresets { get; private set; }
 
     public event Action<bool> StateChanged;
+    public event Action Changed;
 
     public EnvironmentPreset(string name, GlobalEffects globalEffects)
     {
@@ -29,7 +30,7 @@ public class EnvironmentPreset : IGameSettingData
         CountOfPresets = 1;
     }
 
-    public void Get(float value)
+    public void Load(float value)
     {
         Value = CountOfPresets < value ? (float)CountOfPresets : value;
         Change(Value);

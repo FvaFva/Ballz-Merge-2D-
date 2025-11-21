@@ -35,6 +35,11 @@ public class LevelView : MonoBehaviour
         HideViews();
     }
 
+    public void ApplyColors(GameColors gameColors)
+    {
+        _triggerView.ApplyColors(gameColors);
+    }
+
     public void Show(LevelSettings level)
     {
         _current = level;

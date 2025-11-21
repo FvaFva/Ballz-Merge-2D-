@@ -8,19 +8,23 @@ using UnityEngine.UI;
 public class SliderValueView : MonoBehaviour, IDisposable
 {
     [SerializeField] private List<SliderProperty> _slidersProperty;
-    [SerializeField] private Button _applyButton;
+    [SerializeField] private ButtonProperty _apply;
+    [SerializeField] private DependentColorUI _dependentColorUI;
 
-    public Button ApplyButton => _applyButton;
     public RectTransform RectTransform { get; private set; }
+    public Button ApplyButton => _apply.Button;
+    public AnimatedButton AnimatedButton => _apply.AnimatedButton;
+    public DependentColorUI DependentColorUI => _dependentColorUI;
+    public IReadOnlyList<SliderProperty> SlidersProperty => _slidersProperty;
 
     private Dictionary<IGameSettingData, SliderProperty> _slidersTypes = new Dictionary<IGameSettingData, SliderProperty>();
 
     public event Action<string, float> ValueChanged;
 
-    public void Init(IGameSettingData settingData)
+    public void Init(IGameSettingData settingData, SliderPostInitType postInitType = SliderPostInitType.None)
     {
         SliderProperty sliderProperty = _slidersProperty.Where(sp => sp.SettingData == null).FirstOrDefault();
-        sliderProperty.Init(settingData);
+        sliderProperty.Init(settingData, postInitType);
         _slidersTypes.Add(sliderProperty.SettingData, sliderProperty);
         sliderProperty.ValueChanged += SetValue;
         RectTransform = (RectTransform)transform;

@@ -12,6 +12,13 @@ public class BallVolumeInventoryActivator : MonoBehaviour
     [Inject] private UIRootView _rootView;
     [Inject] private Ball _ball;
 
+    private bool _isShowing;
+
+    private void Awake()
+    {
+        _rootView.InfoPanelShowcase.UIViewStateChanged += ChangeStateInfoPanel;
+    }
+
     private void OnEnable()
     {
         _trigger.AddListener(Activate);
@@ -26,8 +33,31 @@ public class BallVolumeInventoryActivator : MonoBehaviour
         _ball.LeftAIM -= HideButton;
     }
 
-    private void Activate() => _rootView.InfoPanelShowcase.Show(_inventory);
+    private void OnDestroy()
+    {
+        _rootView.InfoPanelShowcase.UIViewStateChanged -= ChangeStateInfoPanel;
+    }
 
-    private void ShowButton() => _trigger.SetActiveIfNotNull(true);
-    private void HideButton() => _trigger.SetActiveIfNotNull(false);
+    private void Activate()
+    {
+        _rootView.InfoPanelShowcase.Show(_inventory);
+    }
+
+    private void ChangeStateInfoPanel(bool state)
+    {
+        if (_isShowing)
+            _trigger.SetActiveIfNotNull(state);
+    }
+
+    private void ShowButton()
+    {
+        _isShowing = true;
+        _trigger.SetActiveIfNotNull(true);
+    }
+
+    private void HideButton()
+    {
+        _isShowing = false;
+        _trigger.SetActiveIfNotNull(false);
+    }
 }

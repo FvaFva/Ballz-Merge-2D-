@@ -6,13 +6,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [Serializable]
-public class SliderProperty : IDisposable
+public class SliderProperty : DependentColorUI, IDisposable
 {
     [SerializeField] private Slider _slider;
     [SerializeField] private TMP_Text _label;
     [SerializeField] private TMP_Text _header;
+    [SerializeField] private RawImage _rawImage;
     [SerializeField] private Image _fillImage;
     [SerializeField] private SliderHandle _sliderHandle;
+    [SerializeField] private List<DependentColorUI> _dependentColorUIs;
     [SerializeField] private string _key;
 
     public IGameSettingData SettingData { get; private set; }
@@ -21,11 +23,13 @@ public class SliderProperty : IDisposable
     private float _step;
     private int _preset;
     private bool _isStepByStep;
-    private Color _startFillImageColor;
-    private Dictionary<bool, Color> StateColors;
+    private GameColors _gameColors;
     private ValueChanger _valueChanger;
     private bool _isDragging;
     private float _lastValue;
+    private bool _isGradient;
+    private bool _isActive;
+    private Dictionary<SliderPostInitType, Action> _postInitTypeActions;
 
     public event Action<string, float> ValueChanged;
 
@@ -34,22 +38,39 @@ public class SliderProperty : IDisposable
         _slider.onValueChanged.RemoveListener(OnSliderValueChanged);
         SettingData.StateChanged -= SetSliderState;
         _sliderHandle.SliderHandled -= OnSliderHandled;
+        _slider.onValueChanged.RemoveListener(SetHandleColor);
     }
 
-    public void Init(IGameSettingData settingData)
+    public void Init(IGameSettingData settingData, SliderPostInitType postInitType)
     {
+        _isActive = true;
         _valueChanger = new ValueChanger();
         _sliderHandle.SliderHandled += OnSliderHandled;
-        _sliderHandle.Init();
         SettingData = settingData;
         SettingData.StateChanged += SetSliderState;
-        _startFillImageColor = _fillImage.color;
 
-        StateColors = new Dictionary<bool, Color>
+        _postInitTypeActions = new Dictionary<SliderPostInitType, Action>
         {
-            { true, _startFillImageColor },
-            { false, Color.white }
+            { SliderPostInitType.None, () => { } },
+            { SliderPostInitType.GenerateTexture, () => CreateGradientTexture() }
         };
+
+        _postInitTypeActions[postInitType]();
+    }
+
+    public override void ApplyColors(GameColors gameColors)
+    {
+        _gameColors = gameColors;
+        _sliderHandle.ApplyColors(_gameColors);
+
+        if (_isActive)
+            SetSliderState(true);
+
+        else
+            SetSliderState(false);
+
+        if (_isGradient)
+            SetHandleColor(_slider.value);
     }
 
     public SliderProperty SetValue(float value)
@@ -99,6 +120,33 @@ public class SliderProperty : IDisposable
     {
         _label.text = label;
         return this;
+    }
+
+    private void CreateGradientTexture()
+    {
+        int width = 256;
+        Texture2D gradientTexture = new Texture2D(width, 1, TextureFormat.RGB24, false);
+        gradientTexture.wrapMode = TextureWrapMode.Clamp;
+
+        for (int x = 0; x < width; x++)
+        {
+            float t = x / (float)(width - 1);
+            Color color = Color.HSVToRGB(t, 1f, 1f);
+            gradientTexture.SetPixel(x, 0, color);
+        }
+
+        gradientTexture.Apply();
+        _rawImage.enabled = true;
+        _fillImage.enabled = false;
+        _rawImage.texture = gradientTexture;
+        _slider.onValueChanged.AddListener(SetHandleColor);
+        _isGradient = true;
+    }
+
+    private void SetHandleColor(float value)
+    {
+        if (_isActive)
+            _sliderHandle.SetColor(Color.HSVToRGB(value, 1f, 1f));
     }
 
     private void OnSliderHandled(bool isDown)
@@ -167,9 +215,17 @@ public class SliderProperty : IDisposable
 
     private void SetSliderState(bool state)
     {
+        _isActive = state;
         _slider.interactable = state;
-        _sliderHandle.SetState(state);
-        _fillImage.color = StateColors[state];
+
+        if (_gameColors != null)
+        {
+            _sliderHandle.SetState(_isActive);
+            _fillImage.color = _gameColors.GetForAccessibilitySliderState()[_isActive];
+
+            foreach (var dependentColorUI in _dependentColorUIs)
+                dependentColorUI.ApplyColors(_gameColors);
+        }
     }
 
     private bool CheckStepByStep(int? countOfPresets)

@@ -4,19 +4,28 @@ using UnityEngine.UI;
 using System.Linq;
 using System;
 
-public class PanelSwitch : MonoBehaviour
+public class PanelSwitch : DependentColorUI
 {
     [SerializeField] private List<PanelToggle> _panelToggles;
     [SerializeField] private ScrollRect _scrollRect;
 
     private PanelToggleBase _currentToggle;
+    private bool _isInited;
 
     public event Action PanelSwitched;
 
-    private void Awake()
+    public override void ApplyColors(GameColors gameColors)
     {
-        foreach (var panelToggle in _panelToggles)
-            panelToggle.Initialize(OnInitialized);
+        foreach(var panelToggle in _panelToggles)
+            panelToggle.ApplyColors(gameColors);
+
+        if (!_isInited)
+        {
+            Init();
+            return;
+        }
+
+        ApplyCurrentPanelToggle();
     }
 
     private void OnEnable()
@@ -47,27 +56,45 @@ public class PanelSwitch : MonoBehaviour
         return null;
     }
 
+    private void Init()
+    {
+        foreach (var panelToggle in _panelToggles)
+            panelToggle.Initialize(OnInitialized);
+
+        _isInited = true;
+    }
+
     private void OnInitialized(PanelToggleBase panelToggle)
     {
         if (!_panelToggles.Where(toggle => !toggle.IsInitialized).Any())
         {
-            PanelToggle defaultPanelToggle = _panelToggles.FirstOrDefault(panelToggle => panelToggle.PanelToggleType == PanelToggleType.GeneralToggle);
-            ApplyPanelToggle(defaultPanelToggle);
+            PanelToggle startPanelToggle = _panelToggles.FirstOrDefault(panelToggle => panelToggle.PanelToggleType == PanelToggleType.GeneralToggle);
+            ApplyPanelToggleWithoutNotify(startPanelToggle);
         }
+    }
+
+    private void ApplyPanelToggleWithoutNotify(PanelToggleBase panelToggle)
+    {
+        if (_currentToggle == panelToggle)
+            return;
+
+        _currentToggle = panelToggle;
+
+        ApplyCurrentPanelToggle();
     }
 
     private void ApplyPanelToggle(PanelToggleBase triggeredPanelToggle)
     {
-        if (_currentToggle == triggeredPanelToggle)
-            return;
+        ApplyPanelToggleWithoutNotify(triggeredPanelToggle);
+        PanelSwitched?.Invoke();
+    }
 
-        _currentToggle = triggeredPanelToggle;
-
+    private void ApplyCurrentPanelToggle()
+    {
         foreach (PanelToggle panelToggle in _panelToggles)
             panelToggle.Unselect();
 
         _currentToggle.Select(ApplyContent);
-        PanelSwitched?.Invoke();
     }
 
     private void ApplyContent(RectTransform content)

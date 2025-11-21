@@ -7,6 +7,9 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Shadow), typeof(Image))]
 public class ButtonView : MonoBehaviour
 {
+    [SerializeField] private ButtonColorType _buttonColorType;
+    [SerializeField] private ShadowColorType _shadowColorType;
+
     private RectTransform _transform;
     private Tween _shadowTween;
     private Image _image;
@@ -14,24 +17,51 @@ public class ButtonView : MonoBehaviour
     private TMP_Text _label;
     private ButtonShaderView _shaderView;
     private Dictionary<ColorType, Color> _shadowColors;
-    private Color _startViewColor;
-    private Color _startLabelColor;
+    private GameColors _gameColors;
+
+    private bool _isInited;
+    private bool _isActive;
+
+    public bool IsActive => _isActive;
 
     public void Init()
     {
-        _shadowColors = new Dictionary<ColorType, Color>();
+        if (_isInited)
+            return;
+
+        _isInited = true;
+        _isActive = true;
         _transform = (RectTransform)transform;
         _shadow = GetComponent<Shadow>();
         _image = GetComponent<Image>();
         _label = GetComponentInChildren<TMP_Text>();
         _shaderView = GetComponentInChildren<ButtonShaderView>(true);
-        _shadowColors.Add(ColorType.StartColor, _shadow.effectColor);
-        _startViewColor = _image.color;
-        _label.PerformIfNotNull(label => _startLabelColor = label.color);
-        Color targetShadowColor = _shadow.effectColor;
-        targetShadowColor.a = 1f;
-        _shadowColors.Add(ColorType.TargetColor, targetShadowColor);
         _shaderView.PerformIfNotNull(shaderView => shaderView.Init());
+
+        _shadowColors = new Dictionary<ColorType, Color>
+        {
+            { ColorType.StartColor, _image.color },
+            { ColorType.TargetColor, _image.color }
+        };
+    }
+
+    public void SetActiveState(bool state)
+    {
+        _isActive = state;
+    }
+
+    public void ApplyColors(GameColors colors = null)
+    {
+        _gameColors = colors;
+
+        if (_isActive)
+            _image.color = _gameColors.GetForButton(_buttonColorType);
+
+        _shadowColors = new Dictionary<ColorType, Color>
+        {
+            { ColorType.StartColor, _gameColors.GetForShadow(_shadowColorType, 0f) },
+            { ColorType.TargetColor, _gameColors.GetForShadow(_shadowColorType, 1f) }
+        };
     }
 
     public void SetDefault()
@@ -55,24 +85,16 @@ public class ButtonView : MonoBehaviour
         _shaderView.PerformIfNotNull(shaderView => shaderView.SetActive(state));
     }
 
-    private void ChangeShadowColor(Color newColor, float duration)
-    {
-        _shadowTween = DOTween.To(
-                () => _shadow.effectColor,
-                x => _shadow.effectColor = x,
-                newColor,
-                duration
-            ).SetEase(Ease.InOutQuad);
-    }
-
     public void ChangeViewColor(Color color)
     {
         _image.color = color;
     }
 
-    public void ChangeSprite(Sprite sprite)
+    public void ChangeSprite(Sprite mainSprite, Sprite shaderSprite)
     {
-        _image.sprite = sprite;
+        Init();
+        _image.sprite = mainSprite;
+        _shaderView.ChangeSprite(shaderSprite);
     }
 
     public void ChangeLabelColor(Color color)
@@ -82,8 +104,18 @@ public class ButtonView : MonoBehaviour
 
     public void SetDefaultColor()
     {
-        _image.color = _startViewColor;
-        _label.PerformIfNotNull(label => label.color = _startLabelColor);
+        _image.color = _gameColors.GetForButton(_buttonColorType);
+        _label.PerformIfNotNull(label => label.color = _gameColors.GetForLabel());
+    }
+
+    private void ChangeShadowColor(Color newColor, float duration)
+    {
+        _shadowTween = DOTween.To(
+                () => _shadow.effectColor,
+                x => _shadow.effectColor = x,
+                newColor,
+                duration
+            ).SetEase(Ease.InOutQuad);
     }
 
     private void StopAllAnimations()

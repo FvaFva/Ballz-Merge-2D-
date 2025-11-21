@@ -4,6 +4,7 @@ namespace BallzMerge.Root
 {
     using Data;
     using Settings;
+    using System;
 
     public class UIRootView : MonoBehaviour
     {
@@ -17,7 +18,7 @@ namespace BallzMerge.Root
         [SerializeField] private GameSettingsMenu _settingsMenu;
         [SerializeField] private PopupDisplayer _popupDisplayer;
         [SerializeField] private Canvas _mainCanvas;
-        [SerializeField] private UIButtonChanger _buttonChanger;
+        [SerializeField] private UIReorganizer _uiReorganizer;
 
         private UIView _sceneUI;
 
@@ -28,7 +29,7 @@ namespace BallzMerge.Root
         public InfoPanelShowcase InfoPanelShowcase => _infoPanelShowcase;
         public PopupDisplayer PopupsDisplayer => _popupDisplayer;
         public UIRootContainers Containers => _containers;
-        public UIButtonChanger ButtonChanger => _buttonChanger;
+        public UIReorganizer UIReorganizer => _uiReorganizer;
 
         private void Awake()
         {
@@ -50,7 +51,6 @@ namespace BallzMerge.Root
             _sceneUI = sceneUI;
             _containers.SetSettings(_sceneUI.RootContainerBehavior);
             ChangeStateUIView(true);
-            _escapeMenu.UpdateButtonView(_sceneUI.IsUseSettingsQuiteButton, _sceneUI.IsUseSettingsMaineMenuButton);
 
             if(uICamera != null)
             {
@@ -60,6 +60,11 @@ namespace BallzMerge.Root
             }
 
             _containers.TakeNewItems(sceneUI.Items);
+        }
+
+        public void UpdateViewButtons()
+        {
+            _escapeMenu.UpdateButtonView(_sceneUI.IsUseSettingsQuiteButton, _sceneUI.IsUseSettingsMaineMenuButton);
         }
 
         public void ClearSceneUI()

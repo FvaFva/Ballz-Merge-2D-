@@ -23,6 +23,14 @@ public class PanelToggle : PanelToggleBase
         afterInitialized?.Invoke(this);
     }
 
+    public override void ApplyColors(GameColors gameColors)
+    {
+        base.ApplyColors(gameColors);
+
+        foreach (PanelSubToggle panelSubToggle in _subToggles)
+            panelSubToggle.ApplyColors(gameColors);
+    }
+
     public override void Enable()
     {
         base.Enable();

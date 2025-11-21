@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using BallzMerge.Gameplay.BallSpace;
+﻿using BallzMerge.Gameplay.BallSpace;
 using DG.Tweening;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class Stick : CyclicBehavior, IInitializable, IDisposable
+public class Stick : DependentColorUI, IInitializable, IDisposable
 {
     private const float StartStickPosition = 0.5f;
-    private const float VisibleImage = 0.75f;
-    private const float HideVisibleImage = 0f;
     private const float StartScale = 1f;
     private const float HighlightedStateScale = 1.05f;
     private const float Duration = 0.125f;
@@ -24,28 +22,26 @@ public class Stick : CyclicBehavior, IInitializable, IDisposable
     [Inject] private Ball _ball;
 
     private Dictionary<bool, Color> _visibleImageState;
+    private GameColors _gameColors;
+    private bool _isInited;
 
     public event Action<float> StickValueChanged;
     public event Action<bool> StickHandled;
 
     public bool IsInZone { get; private set; }
 
-    private void Awake()
+    public override void ApplyColors(GameColors gameColors)
     {
-        Color visibleColor = _visibleImage.color;
-        visibleColor.a = VisibleImage;
-        Color hideColor = _visibleImage.color;
-        hideColor.a = HideVisibleImage;
+        _gameColors = gameColors;
+        _sliderHandle.ApplyColors(_gameColors);
+
         _visibleImageState = new Dictionary<bool, Color>
         {
-            { true, visibleColor },
-            { false, hideColor }
+            { true, _gameColors.GetForStick(0.75f) },
+            { false, _gameColors.GetForStick(0f) }
         };
 
-        _sliderHandle.Init();
-        _slider.onValueChanged.AddListener(OnSliderValueChanged);
-        _sliderHandle.SliderHandled += OnSliderHandled;
-        _inputZone.SetState(true);
+        Initialize();
     }
 
     public void Init()
@@ -85,6 +81,17 @@ public class Stick : CyclicBehavior, IInitializable, IDisposable
     public void EnterShooting()
     {
         TransitState(false);
+    }
+
+    private void Initialize()
+    {
+        if (_isInited)
+            return;
+
+        _isInited = true;
+        _slider.onValueChanged.AddListener(OnSliderValueChanged);
+        _sliderHandle.SliderHandled += OnSliderHandled;
+        _inputZone.SetState(true);
     }
 
     private void TransitState(bool state)

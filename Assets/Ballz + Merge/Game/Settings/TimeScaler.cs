@@ -27,7 +27,8 @@ namespace BallzMerge.Root.Settings
         private bool _isTimeScaled = false;
         private readonly int _labelMultiplier = (int)Math.Pow(10, AdditionalZero);
 
-        public event Action<bool> StateChanged; 
+        public event Action<bool> StateChanged;
+        public event Action Changed;
 
         public void Stop()
         {
@@ -41,7 +42,7 @@ namespace BallzMerge.Root.Settings
             Change(Value);
         }
 
-        public void Get(float value)
+        public void Load(float value)
         {
             Value = Mathf.Clamp01(value);
             Change(Value);

@@ -38,4 +38,9 @@ public class ButtonShaderView : MonoBehaviour
     {
         _imageMaterial.PerformIfPropertyExist(SHINY_COLOR_PROPERTY, material => material.SetColor(SHINY_COLOR_PROPERTY, color));
     }
+
+    public void ChangeSprite(Sprite sprite)
+    {
+        _image.sprite = sprite;
+    }
 }

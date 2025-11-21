@@ -10,6 +10,7 @@ public class QualityPreset : IGameSettingData
     public int? CountOfPresets { get; private set; }
 
     public event Action<bool> StateChanged;
+    public event Action Changed;
 
     public QualityPreset(string name)
     {
@@ -17,7 +18,7 @@ public class QualityPreset : IGameSettingData
         CountOfPresets = QualitySettings.count - 1;
     }
 
-    public void Get(float value)
+    public void Load(float value)
     {
         Value = CountOfPresets < value ? (float)CountOfPresets : value;
         Change(Value);
