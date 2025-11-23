@@ -24,6 +24,7 @@ namespace BallzMerge.Gameplay
         private Vector2 _currentAvailableSpacePrecent;
         private Vector2 _boardSize = Vector2.one;
         private Vector3 _offset;
+        private bool _isVertical;
 
         public Camera Effects { get { return _effects; } }
         public Camera Gameplay {  get { return _gameplay; } }
@@ -33,14 +34,13 @@ namespace BallzMerge.Gameplay
         {
             _values = new Dictionary<Camera, PositionScaleProperty>();
             _startPositions = new Dictionary<Camera, Vector3>();
-            _currentSize = _currentSize == 0 ? LandscapeSize : _currentSize;
 
             TryAddCamera(_main);
             TryAddCamera(_gameplay);
             TryAddCamera(_effects);
             TryAddCamera(_uI);
 
-            UpdateValues();
+            UpdateScreenOrientation(_isVertical);
         }
 
         public void AddValue(Camera camera, float size = 0, Vector2 position = default)
@@ -63,22 +63,23 @@ namespace BallzMerge.Gameplay
 
         public void UpdateScreenOrientation(bool isVertical)
         {
+            _isVertical = isVertical;
+
             if (isVertical)
             {
-                _currentSize = PortraitSize;
                 _currentAvailableSpacePrecent = _portraitAvailableSpacePrecent;
                 _offset = _portraitOffset;
-                UpdateGameplaySize();
+                _currentSize = PortraitSize;
             }
             else
             {
+                _currentAvailableSpacePrecent = _landscapeAvailableSpacePrecent;
                 _offset = _landscapeOffset;
                 _currentSize = LandscapeSize;
-                _currentAvailableSpacePrecent = _landscapeAvailableSpacePrecent;
-                UpdateGameplaySize();
             }
 
             UpdateValues();
+            UpdateGameplaySize();
         }
 
         public void SetGameplayBoardSize(Vector2 boardSize)
