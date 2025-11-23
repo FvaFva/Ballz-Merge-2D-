@@ -77,7 +77,7 @@ public class FieldExpander : CyclicBehavior, IInitializable, IWaveUpdater, ILeve
             _currentColumns = _gridSettings.Size.x;
 
         _currentRows = _gridSettings.Size.y;
-        //SetDefault();
+        SetDefault();
         _cameras.SetGameplayBoardSize(BoardSize());
     }
 
