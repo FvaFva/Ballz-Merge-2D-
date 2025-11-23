@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
+public class GameHistoryView : DependentColorUI, IInitializable, IInfoPanelView
 {
     private const int CountOfIteration = 3;
 
@@ -20,6 +20,7 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     [SerializeField] private RectTransform _dataParent;
     [SerializeField] private UIRootContainerItem _eraseButtonItem;
     [SerializeField] private Button _eraseButton;
+    [SerializeField] private List<DependentColorUI> _dependentColorUIs;
 
     private readonly List<ButtonToggle> _toggles = new List<ButtonToggle>();
     private readonly string[] _toggleLabels = { "ID", "Date", "(↑)", "(↓)" };
@@ -31,6 +32,24 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     private RectTransform _rootParent;
     private RectTransform _transform;
     private UnityAction _action = () => { };
+
+    public void Init()
+    {
+        _transform = (RectTransform)transform;
+        _rootParent = (RectTransform)_transform.parent;
+        Hide();
+    }
+
+    public override void ApplyColors(GameColors gameColors)
+    {
+        GameColors = gameColors;
+
+        foreach (var dependentColorUI in _dependentColorUIs)
+            dependentColorUI.ApplyColors(GameColors);
+
+        foreach(var view in _allViews)
+            view.ApplyColors(GameColors);
+    }
 
     public void Show(RectTransform showcase)
     {
@@ -77,13 +96,6 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
         gameObject.SetActive(false);
     }
 
-    public void Init()
-    {
-        _transform = (RectTransform)transform;
-        _rootParent = (RectTransform)_transform.parent;
-        Hide();
-    }
-
     private IEnumerator Show()
     {
         foreach (var view in _allViews)
@@ -118,7 +130,11 @@ public class GameHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
     private void GenerateViews(int count)
     {
         for (int i = 0; i < count; i++)
-            _allViews.Add(Instantiate(_gameDataPrefab, _dataParent).Init());
+        {
+            GameDataView gameDataView = Instantiate(_gameDataPrefab, _dataParent).Init();
+            gameDataView.ApplyColors(GameColors);
+            _allViews.Add(gameDataView);
+        }
     }
 
     private void ChangeStateView(ButtonToggle _) => StartCoroutine(Show());

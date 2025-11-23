@@ -21,7 +21,6 @@ namespace BallzMerge.Root
         }
 
         private UIRootView _rootView;
-        private UIButtonChanger _uiChanger;
         private SceneLoader _sceneLoader;
         private GameSettings _gameSettings;
         private OwnerPrimaryComponents _primary;
@@ -38,7 +37,7 @@ namespace BallzMerge.Root
         {
             string sceneName = ScenesNames.MAIN_MENU;
 
-            PlatformRunner.RunOnEditor(
+            PlatformRunner.Run(null,
             editorAction: () =>
             {
                 var checker = new DebugScenesChecker();
@@ -60,15 +59,9 @@ namespace BallzMerge.Root
         {
             _primary.UserInput.Disable();
 
-            PlatformRunner.RunOnEditor(
-            editorAction: () =>
-            {
-                PlatformRunner.QuitPlayMode();
-            },
-            nonEditorAction: () =>
-            {
-                Application.Quit();
-            });
+            void EditorAction() => PlatformRunner.QuitPlayMode();
+            void NonEditorAction() => Application.Quit();
+            PlatformRunner.Run(NonEditorAction, editorAction : EditorAction);
         }
 
         private void InitMinorComponents()
@@ -76,10 +69,10 @@ namespace BallzMerge.Root
             _rootView = GenerateDontDestroyFromHub<UIRootView>();
             _rootView.Containers.Init();
             _primary.OrientationObserver.CheckInRoot(_rootView.Containers);
-            _primary.OrientationObserver.CheckInRoot(_rootView.ButtonChanger);
+            _primary.OrientationObserver.CheckInRoot(_rootView.UIReorganizer);
             GlobalEffects globalEffects = GenerateDontDestroyFromHub<GlobalEffects>();
             _gameSettings = new GameSettings(_rootView.SettingsMenu, _primary, _rootView.InfoPanelShowcase, _rootView.Questioner, globalEffects);
-            _sceneLoader = new SceneLoader(_rootView.LoadScreen, SceneExitCallBack, _gameSettings, _primary.OrientationObserver);
+            _sceneLoader = new SceneLoader(_rootView.LoadScreen, _rootView.UIReorganizer, _rootView.UpdateViewButtons, SceneExitCallBack, _gameSettings, _primary.OrientationObserver);
             var volumeMap = _primary.Hub.Get<BallVolumesMap>();
             volumeMap.ReBuild();
             BindSingleton(volumeMap);
@@ -98,9 +91,7 @@ namespace BallzMerge.Root
         {
             BindSingleton(_rootView.Questioner);
             BindSingleton(_rootView);
-            BindSingleton(_uiChanger);
             BindSingleton(_rootView.InfoPanelShowcase);
-            BindSingleton(_rootView.EscapeMenu);
             BindSingleton(_gameSettings.SoundVolumeGlobal);
         }
 

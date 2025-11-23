@@ -1,13 +1,10 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameDataView : MonoBehaviour
+public class GameDataView : DependentColorUI
 {
     [SerializeField] private TMP_Text _volumesLabel;
     [SerializeField] private TMP_Text _score;
@@ -17,16 +14,23 @@ public class GameDataView : MonoBehaviour
     [SerializeField] private RectTransform _volumesParent;
     [SerializeField] private Image _backgroundView;
     [SerializeField] private GameDataVolumeMicView _volumeMicViewPrefab;
+    [SerializeField] private List<BackgroundUI> _backgroundUIs;
 
     private List<GameDataVolumeMicView> _allViews;
-    private Color LostColor = new(0.9176471f, 0.345098f, 0.345098f);
-    private Color CompleteColor = new(0.5607843f, 0.9843137f, 0.3686275f);
 
     public GameDataView Init()
     {
         _volumesLabel.gameObject.SetActive(false);
         _allViews = new List<GameDataVolumeMicView>();
         return this;
+    }
+
+    public override void ApplyColors(GameColors gameColors)
+    {
+        GameColors = gameColors;
+
+        foreach (var backgroundUI in _backgroundUIs)
+            backgroundUI.ApplyColors(GameColors);
     }
 
     public void Hide()
@@ -43,7 +47,7 @@ public class GameDataView : MonoBehaviour
         _score.text = score.ToString();
         _number.text = number.ToString();
         _level.text = level.ToString();
-        _backgroundView.color = isCompleted ? CompleteColor : LostColor;
+        _backgroundView.color = isCompleted ? GameColors.GetForDataView(DataViewType.Complete) : GameColors.GetForDataView(DataViewType.Lost);
         gameObject.SetActive(true);
 
         int current = 0;

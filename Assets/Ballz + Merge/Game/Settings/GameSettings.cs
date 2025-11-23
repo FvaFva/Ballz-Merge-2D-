@@ -15,8 +15,9 @@ namespace BallzMerge.Root.Settings
         private readonly TimeScaler _timeScaler;
         private readonly InfoPanelShowcase _infoPanelShowcase;
         private readonly List<EnvironmentPreset> _environmentPresets;
+        private readonly GameColors _gameColors;
+        private UIReorganizer _uiReorganizer;
         private Dictionary<string, IGameSettingData> _settings;
-        private SceneSetting _sceneSetting;
 
         private List<IDependentSceneSettings> _sceneElements = new List<IDependentSceneSettings>();
 
@@ -28,7 +29,8 @@ namespace BallzMerge.Root.Settings
             SoundVolumeMusic = new GameSettingsDataProxyAudio(mixer, "Music");
             DisplayQualityPreset = new QualityPreset("Quality");
             _environmentPresets = new List<EnvironmentPreset>();
-            _sceneSetting = new SceneSetting();
+            _gameColors = new GameColors("Theme");
+            SceneSetting = new SceneSetting(_gameColors);
 
             foreach (string name in globalEffects.AllEffects)
                 _environmentPresets.Add(new EnvironmentPreset(name, globalEffects));
@@ -37,51 +39,52 @@ namespace BallzMerge.Root.Settings
             _infoPanelShowcase = infoPanelShowcase;
             _settingsMenu = settingsMenu;
             _settingsMenu.ValueChanged += OnSettingsChanged;
-            _sceneSetting.Changed += OnGlobalSettingChanged;
-            _settingsMenu.PanelSwitch.PanelSwitched += ResetData;
-            _infoPanelShowcase.CloseTriggered += ReadData;
+            SceneSetting.Changed += OnGlobalSettingChanged;
+            _settingsMenu.PanelSwitch.PanelSwitched += OnPanelSwitched;
+            _infoPanelShowcase.CloseTriggered += OnPanelSwitched;
             _db = primary.Data.Settings;
 
-            PlatformRunner.RunOnDesktopPlatform(
-            desktopAction: () =>
+            void GenerateResolution()
             {
                 DisplayResolution = new DisplayResolution("Resolution");
                 DisplayMode = new DisplayMode("Display");
-            });
+            }
 
-            PlatformRunner.RunOnMobilePlatform(
-            mobileAction: () =>
+            void GenerateOrientation()
             {
                 DisplayOrientation = new DisplayOrientation("Orientation");
-            });
+            }
+
+            PlatformRunner.Run(GenerateResolution, () => { GenerateResolution(); GenerateOrientation(); }, androidAction: GenerateOrientation, iosAction: GenerateOrientation);
 
             GenerateMenu();
             CashSettings();
 
-            PlatformRunner.RunOnDesktopPlatform(
-            desktopAction: () =>
+            void DesktopSetup()
             {
                 Button applyButton = _settingsMenu.GetApplyButton(GameSettingType.GameScreenResolutionSetting);
                 DisplayApplier = new DisplayApplier(applyButton, questioner);
                 DisplayApplier.Applied += OnSettingsApplyChanges;
-                DisplayApplier.Discarded += ResetData;
+                DisplayApplier.Discarded += LoadSetting;
                 DisplayResolution.SetDisplayApplier(DisplayApplier);
                 DisplayMode.SetDisplayApplier(DisplayApplier);
-            });
+            }
 
-            PlatformRunner.RunOnMobilePlatform(
-            mobileAction: () =>
+            void MobileSetup()
             {
                 Button applyButton = _settingsMenu.GetApplyButton(GameSettingType.GameApplierSetting);
                 DisplayOrientation.SetApplyButton(applyButton);
                 DisplayOrientation.Applied += OnSettingsApplyChanges;
-            });
+            }
+
+            PlatformRunner.Run(DesktopSetup, () => { DesktopSetup(); MobileSetup(); }, androidAction: MobileSetup, iosAction: MobileSetup);
         }
 
         public readonly GameSettingsDataProxyAudio SoundVolumeGlobal;
         public readonly GameSettingsDataProxyAudio SoundVolumeEffects;
         public readonly GameSettingsDataProxyAudio SoundVolumeMusic;
         public readonly QualityPreset DisplayQualityPreset;
+        public readonly SceneSetting SceneSetting;
         public DisplayResolution DisplayResolution { get; private set; }
         public DisplayMode DisplayMode { get; private set; }
         public DisplayApplier DisplayApplier { get; private set; }
@@ -90,18 +93,18 @@ namespace BallzMerge.Root.Settings
         public void Dispose()
         {
             _settingsMenu.ValueChanged -= OnSettingsChanged;
-            _settingsMenu.PanelSwitch.PanelSwitched -= ResetData;
-            _infoPanelShowcase.CloseTriggered -= ReadData;
+            _settingsMenu.PanelSwitch.PanelSwitched -= OnPanelSwitched;
+            _infoPanelShowcase.CloseTriggered -= OnPanelSwitched;
             DisplayOrientation.Applied -= OnSettingsApplyChanges;
             DisplayApplier.Applied -= OnSettingsApplyChanges;
-            DisplayApplier.Discarded -= ResetData;
-            _sceneSetting.Changed -= OnGlobalSettingChanged;
+            DisplayApplier.Discarded -= LoadSetting;
+            SceneSetting.Changed -= OnGlobalSettingChanged;
         }
 
-        public void ReadData()
+        public void LoadData()
         {
             foreach (var setting in _settings.Values)
-                ResetData(setting);
+                LoadSetting(setting);
         }
 
         public void CheckInSceneElement(IDependentSceneSettings element)
@@ -110,7 +113,30 @@ namespace BallzMerge.Root.Settings
                 return;
 
             _sceneElements.Add(element);
-            element.ApplySetting(_sceneSetting);
+            element.ApplySetting(SceneSetting);
+
+            if (element is UIReorganizer)
+                _uiReorganizer = element as UIReorganizer;
+        }
+
+        public void ConnectSliders()
+        {
+            foreach (SliderValueView slider in _settingsMenu.Sliders)
+            {
+                foreach (DependentColorUI sliderProperty in slider.SlidersProperty)
+                    _uiReorganizer.ConnectUI(sliderProperty);
+
+                if (slider.AnimatedButton != null)
+                    _uiReorganizer.ConnectUI(slider.AnimatedButton);
+
+                _uiReorganizer.ConnectUI(slider.DependentColorUI);
+            }
+        }
+
+        public void OnGlobalSettingChanged()
+        {
+            foreach (var element in _sceneElements)
+                element.ApplySetting(SceneSetting);
         }
 
         public void CheckOutScene()
@@ -126,42 +152,41 @@ namespace BallzMerge.Root.Settings
                 { SoundVolumeEffects.Name, SoundVolumeEffects },
                 { SoundVolumeMusic.Name, SoundVolumeMusic },
                 { _timeScaler.Name, _timeScaler },
+                { _gameColors.Name, _gameColors },
                 { DisplayQualityPreset.Name, DisplayQualityPreset }
             };
 
             foreach (EnvironmentPreset preset in _environmentPresets)
                 _settings.Add(preset.Name, preset);
 
-            foreach (IGameSettingData preset in _sceneSetting.GameSettings)
+            foreach (SceneSettingData preset in SceneSetting.GameSettings)
                 _settings.Add(preset.Name, preset);
 
-            PlatformRunner.RunOnDesktopPlatform(
-            desktopAction: () =>
+            void AddResolution()
             {
                 _settings.Add(DisplayResolution.Name, DisplayResolution);
                 _settings.Add(DisplayMode.Name, DisplayMode);
-            });
+            }
 
-            PlatformRunner.RunOnMobilePlatform(
-            mobileAction: () =>
+            void AddOrientation()
             {
                 _settings.Add(DisplayOrientation.Name, DisplayOrientation);
-            });
-        }
-
-        private void ResetData()
-        {
-            foreach (var setting in _settings.Values)
-            {
-                if (setting == DisplayResolution || setting == DisplayMode || setting == DisplayOrientation)
-                    ResetData(setting);
             }
+
+            PlatformRunner.Run(AddResolution, () => { AddResolution(); AddOrientation(); }, androidAction: AddOrientation, iosAction: AddOrientation);
         }
 
-        private void ResetData(IGameSettingData settingData)
+        private void LoadSetting(IGameSettingData settingData)
         {
-            settingData.Get(_db.Get(settingData));
+            settingData.Load(_db.Get(settingData));
             _settingsMenu.UpdateStartValue(settingData);
+        }
+
+        private void OnPanelSwitched()
+        {
+            LoadSetting(DisplayResolution);
+            LoadSetting(DisplayOrientation);
+            LoadSetting(DisplayMode);
         }
 
         private void GenerateMenu()
@@ -170,27 +195,27 @@ namespace BallzMerge.Root.Settings
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeEffects, PanelToggleType.AudioToggle);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeMusic, PanelToggleType.AudioToggle);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, _timeScaler, PanelToggleType.GeneralToggle);
+            _settingsMenu.AddInstantiate(GameSettingType.GameColorSetting, _gameColors, PanelToggleType.GeneralToggle);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayQualityPreset, PanelToggleType.DisplayToggle);
 
-            foreach (IGameSettingData preset in _sceneSetting.GameSettings)
+            foreach (IGameSettingData preset in SceneSetting.GameSettings)
                 _settingsMenu.AddInstantiate(GameSettingType.GameSetting, preset, PanelToggleType.DisplayToggle, PanelSubToggleType.Second);
-            
+
             foreach (IGameSettingData preset in _environmentPresets)
                 _settingsMenu.AddInstantiate(GameSettingType.GameSetting, preset, PanelToggleType.DisplayToggle, PanelSubToggleType.Second);
 
-
-            PlatformRunner.RunOnDesktopPlatform(
-            desktopAction: () =>
+            void CreateResolutionSetting()
             {
                 _settingsMenu.AddInstantiate(GameSettingType.GameScreenResolutionSetting, DisplayResolution, PanelToggleType.DisplayToggle);
                 _settingsMenu.AddExist(GameSettingType.GameScreenResolutionSetting, DisplayMode);
-            });
+            }
 
-            PlatformRunner.RunOnMobilePlatform(
-            mobileAction: () =>
+            void CreateOrientationSetting()
             {
                 _settingsMenu.AddInstantiate(GameSettingType.GameApplierSetting, DisplayOrientation, PanelToggleType.DisplayToggle);
-            });
+            }
+
+            PlatformRunner.Run(CreateResolutionSetting, () => { CreateResolutionSetting(); CreateOrientationSetting(); }, androidAction: CreateOrientationSetting, iosAction: CreateOrientationSetting);
         }
 
         private void OnSettingsChanged(string key, float value)
@@ -212,12 +237,6 @@ namespace BallzMerge.Root.Settings
         private void OnSettingsApplyChanges(IGameSettingData settingData)
         {
             _db.Set(settingData);
-        }
-
-        private void OnGlobalSettingChanged()
-        {
-            foreach (var element in _sceneElements)
-                element.ApplySetting(_sceneSetting);
         }
     }
 }

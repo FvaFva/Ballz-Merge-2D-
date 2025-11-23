@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ namespace BallzMerge.Data
         private Dictionary<IGameSettingData, SliderValueView> _sliders = new Dictionary<IGameSettingData, SliderValueView>();
         private Dictionary<GameSettingType, GameSettingProperty> _settingsTypes = new Dictionary<GameSettingType, GameSettingProperty>();
 
+        public IReadOnlyList<SliderValueView> Sliders => _sliders.Values.ToList();
         public PanelSwitch PanelSwitch => _settingsPanelController;
 
         public event Action<string, float> ValueChanged;
@@ -39,7 +41,7 @@ namespace BallzMerge.Data
         {
             GameSettingProperty settingProperty = _settingsTypes[settingType];
             SliderValueView newSlider = Instantiate(settingProperty.SliderValueView, _settingsPanelController.GetContent(panelType, panelSubType));
-            newSlider.Init(settingData);
+            newSlider.Init(settingData, _settingsTypes[settingType].PostInitType);
             newSlider.SetProperty(settingData, countOfPresets: settingData.CountOfPresets, key: settingData.Name, header: settingData.Name);
             newSlider.RectTransform.sizeDelta = new Vector2(newSlider.RectTransform.sizeDelta.x, _settingsTypes[settingType].Height);
             _settingsTypes[settingType].SetSliderView(newSlider);

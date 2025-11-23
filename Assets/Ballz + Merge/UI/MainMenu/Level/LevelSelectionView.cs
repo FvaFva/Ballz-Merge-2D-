@@ -1,11 +1,10 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class LevelSelectionView : MonoBehaviour
 {
-    [SerializeField] private Button _trigger;
+    [SerializeField] private ButtonProperty _trigger;
     [SerializeField] private TMP_Text _header;
     [SerializeField] private GameObject _completed;
 
@@ -15,7 +14,12 @@ public class LevelSelectionView : MonoBehaviour
 
     private void OnEnable()
     {
-        _trigger.AddListener(OnTriggered);
+        _trigger.ChangeListeningState(OnTriggered, true);
+    }
+
+    private void OnDisable()
+    {
+        _trigger.ChangeListeningState(OnTriggered, false);
     }
 
     public LevelSelectionView Init(LevelSettings level)
@@ -23,6 +27,11 @@ public class LevelSelectionView : MonoBehaviour
         _data = level;
         _header.text = _data.Title;
         return this;
+    }
+
+    public void ApplyColors(GameColors gameColors)
+    {
+        _trigger.ApplyColors(gameColors);
     }
 
     public void ShowStatus(bool completed)

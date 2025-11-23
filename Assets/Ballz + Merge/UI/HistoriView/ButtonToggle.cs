@@ -3,17 +3,17 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[Serializable]
-public class ButtonToggle : IDisposable
+public class ButtonToggle : DependentColorUI, IDisposable
 {
     [SerializeField] private Button _toggle;
     [SerializeField] private TMP_Text _label;
     [SerializeField] private ToggleView _toggleView;
 
+    public bool State { get; private set; }
+
     private string _originalLabel;
     private string _firstToggleLabel;
     private string _secondToggleLabel;
-    public bool State { get; private set; }
 
     private Action<ButtonToggle> _triggered;
 
@@ -26,6 +26,11 @@ public class ButtonToggle : IDisposable
         _firstToggleLabel = firstToggleLabel;
         _secondToggleLabel = secondToggleLabel;
         return this;
+    }
+
+    public override void ApplyColors(GameColors gameColors)
+    {
+        _toggleView.ApplyColors(gameColors);
     }
 
     public void SetTrigger(Action<ButtonToggle> onTrigger) => _triggered = onTrigger;

@@ -15,4 +15,6 @@ public struct ButtonProperty
     }
 
     public readonly void ChangeListeningState(UnityAction action, bool isActive) => Button.ChangeListeningState(action, isActive);
+
+    public readonly void ApplyColors(GameColors gameColors) => AnimatedButton.ApplyColors(gameColors);
 }

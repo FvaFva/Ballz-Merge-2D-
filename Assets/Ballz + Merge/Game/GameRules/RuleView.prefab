@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 4011635578120420474}
   - component: {fileID: 8912013398934364466}
   - component: {fileID: 4319307762652865774}
+  - component: {fileID: 2393873289682315904}
   m_Layer: 5
   m_Name: RuleView
   m_TagString: Untagged
@@ -225,4 +226,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b6ae5e9ab89430085686b10efc89b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _initOrder: 0
   _header: {fileID: 9216532898242406611}
+  _backgroundUI: {fileID: 2393873289682315904}
+--- !u!114 &2393873289682315904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3808907009661277615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9cc8e2abaacb4342bd01537c9085cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundUI
+  _initOrder: 0
+  _backgroundColorType: 0

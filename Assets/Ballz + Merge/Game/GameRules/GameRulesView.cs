@@ -1,21 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameRulesView : CyclicBehavior, IInfoPanelView, IInitializable
+public class GameRulesView : DependentColorUI, IInfoPanelView, IInitializable
 {
     [SerializeField] private GameRuleView _prefab;
     [SerializeField] private GameRulesList _rules;
     [SerializeField] private RectTransform _content;
+    [SerializeField] private List<DependentColorUI> _backgroundUIs;
 
     private List<GameRuleView> _views;
     private RectTransform _transform;
     private RectTransform _oldParent;
-
-    public void Hide()
-    {
-        gameObject.SetActive(false);
-        _transform.SetParent(_oldParent);
-    }
 
     public void Init()
     {
@@ -26,6 +21,21 @@ public class GameRulesView : CyclicBehavior, IInfoPanelView, IInitializable
 
         _transform = (RectTransform)transform;
         _oldParent = (RectTransform)_transform.parent;
+    }
+
+    public override void ApplyColors(GameColors gameColors)
+    {
+        foreach (var view in _views)
+            view.ApplyColors(gameColors);
+
+        foreach (var backgroundUI in _backgroundUIs)
+            backgroundUI.ApplyColors(gameColors);
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+        _transform.SetParent(_oldParent);
     }
 
     public void Show(RectTransform showcase)

@@ -4,12 +4,13 @@ using BallzMerge.Data;
 using UnityEngine;
 using Zenject;
 
-public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable, IDependentScreenOrientation
+public class LevelSelector : DependentColorUI, IInfoPanelView, IInitializable, IDependentScreenOrientation
 {
     [SerializeField] private RectTransform _box;
     [SerializeField] private LevelSelectionView _prefab;
     [SerializeField] private LevelView _level;
     [SerializeField] private AdaptiveLayoutGroupStretching _body;
+    [SerializeField] private List<DependentColorUI> dependentColorUIs;
 
     [Inject] private LevelSettingsMap _map;
     [Inject] private LevelSettingsContainer _container;
@@ -52,6 +53,19 @@ public class LevelSelector : CyclicBehavior, IInfoPanelView, IInitializable, IDe
 
         foreach (var level in _map.Available)
             _selectors.Add(Instantiate(_prefab, _box).Init(level));
+    }
+
+    public override void ApplyColors(GameColors gameColors)
+    {
+        GameColors = gameColors;
+
+        foreach (var selector in _selectors)
+            selector.ApplyColors(GameColors);
+
+        foreach (var dependentColorUI in dependentColorUIs)
+            dependentColorUI.ApplyColors(GameColors);
+
+        _level.ApplyColors(GameColors);
     }
 
     public void UpdateScreenOrientation(bool isVertical)

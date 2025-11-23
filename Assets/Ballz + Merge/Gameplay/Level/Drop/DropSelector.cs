@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace BallzMerge.Gameplay.Level
 {
-    public class DropSelector : CyclicBehavior, IInitializable, ILevelFinisher
+    public class DropSelector : DependentColorUI, IInitializable, ILevelFinisher
     {
         private const float AnimationTime = 0.8f;
 
@@ -14,6 +14,7 @@ namespace BallzMerge.Gameplay.Level
         [SerializeField] private DropView _firstSlot;
         [SerializeField] private DropView _secondSlot;
         [SerializeField] private AudioSourceHandler _audio;
+        [SerializeField] private List<BackgroundUI> _backgroundUIs;
 
         private List<IBallVolumesBagCell<BallVolume>> _dropsMap = new List<IBallVolumesBagCell<BallVolume>>();
         private Action _callback;
@@ -41,6 +42,15 @@ namespace BallzMerge.Gameplay.Level
         {
             _firstSlot.InitMaterial();
             _secondSlot.InitMaterial();
+        }
+
+        public override void ApplyColors(GameColors gameColors)
+        {
+            _firstSlot.ApplyColors(gameColors);
+            _secondSlot.ApplyColors(gameColors);
+
+            foreach(var backgroundUI in _backgroundUIs)
+                backgroundUI.ApplyColors(gameColors);
         }
 
         public void Show(Drop first, Drop second, Action callback)

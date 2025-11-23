@@ -10,9 +10,8 @@ public static class InterfaceExtension
         if (component is T @interface)
             return @interface;
 
-#if UNITY_EDITOR
-        Debug.LogError($"{component.name} does not implement {typeof(T).Name}", component);
-#endif
+        void ShowError() => Debug.LogError($"{component.name} does not implement {typeof(T).Name}", component);
+        PlatformRunner.Run(ShowError);
 
         return null;
     }

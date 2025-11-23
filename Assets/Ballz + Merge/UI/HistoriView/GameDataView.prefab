@@ -188,6 +188,7 @@ GameObject:
   - component: {fileID: 5164512792426841337}
   - component: {fileID: 1201343278657869696}
   - component: {fileID: 8572400209376460153}
+  - component: {fileID: 4971286623241118001}
   m_Layer: 5
   m_Name: ScorePanel
   m_TagString: Untagged
@@ -253,6 +254,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4971286623241118001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 819842398292110102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9cc8e2abaacb4342bd01537c9085cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundUI
+  _initOrder: 0
+  _backgroundColorType: 0
 --- !u!1 &1517475828484952124
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,6 +279,7 @@ GameObject:
   - component: {fileID: 3726585667197468552}
   - component: {fileID: 7673924422842612569}
   - component: {fileID: 3488620104309148090}
+  - component: {fileID: 4223031481746037176}
   m_Layer: 5
   m_Name: VolumesPanel
   m_TagString: Untagged
@@ -329,6 +345,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4223031481746037176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517475828484952124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9cc8e2abaacb4342bd01537c9085cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundUI
+  _initOrder: 0
+  _backgroundColorType: 0
 --- !u!1 &1745252530121993725
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,6 +508,7 @@ GameObject:
   - component: {fileID: 4905245234585098920}
   - component: {fileID: 339272027042861981}
   - component: {fileID: 4442869569209989458}
+  - component: {fileID: 2584359519289508737}
   m_Layer: 5
   m_Name: LevelPanel
   m_TagString: Untagged
@@ -543,6 +574,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2584359519289508737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2631213091462367056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9cc8e2abaacb4342bd01537c9085cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundUI
+  _initOrder: 0
+  _backgroundColorType: 0
 --- !u!1 &3927059227517955118
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,6 +729,12 @@ MonoBehaviour:
   _volumesParent: {fileID: 5131416129342063403}
   _backgroundView: {fileID: 2583503598700598026}
   _volumeMicViewPrefab: {fileID: 8566410916225177917, guid: cd3498f222591864783744c2a225494b, type: 3}
+  _backgroundUIs:
+  - {fileID: 4961878198024348510}
+  - {fileID: 5492483759805789318}
+  - {fileID: 2584359519289508737}
+  - {fileID: 4971286623241118001}
+  - {fileID: 4223031481746037176}
 --- !u!1 &4439224947956927445
 GameObject:
   m_ObjectHideFlags: 0
@@ -1075,6 +1126,7 @@ GameObject:
   - component: {fileID: 6879597088471468270}
   - component: {fileID: 8802401128230171518}
   - component: {fileID: 8371984846595364239}
+  - component: {fileID: 4961878198024348510}
   m_Layer: 5
   m_Name: IDPanel
   m_TagString: Untagged
@@ -1140,6 +1192,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4961878198024348510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5715246841234652614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9cc8e2abaacb4342bd01537c9085cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundUI
+  _initOrder: 0
+  _backgroundColorType: 0
 --- !u!1 &6236577271575831947
 GameObject:
   m_ObjectHideFlags: 0
@@ -1287,6 +1353,7 @@ GameObject:
   - component: {fileID: 5813604709622136069}
   - component: {fileID: 7181833877841346954}
   - component: {fileID: 4936742155998867925}
+  - component: {fileID: 5492483759805789318}
   m_Layer: 5
   m_Name: NumberPanel
   m_TagString: Untagged
@@ -1352,6 +1419,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5492483759805789318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6442673606316228341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9cc8e2abaacb4342bd01537c9085cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundUI
+  _initOrder: 0
+  _backgroundColorType: 0
 --- !u!1 &7360910712164318656
 GameObject:
   m_ObjectHideFlags: 0

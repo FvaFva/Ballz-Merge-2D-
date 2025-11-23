@@ -4,7 +4,7 @@ using BallzMerge.Root;
 using UnityEngine;
 using Zenject;
 
-public class HistoryManager : CyclicBehavior, IInitializable
+public class HistoryManager : MonoBehaviour
 {
     [SerializeField] private ButtonProperty _openButton;
     [SerializeField] private GameHistoryView _historyView;

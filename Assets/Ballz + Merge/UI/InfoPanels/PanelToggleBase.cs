@@ -7,6 +7,7 @@ public abstract class PanelToggleBase : MonoBehaviour
     [SerializeField] private Button _triggerButton;
     [SerializeField] private ToggleView _toggleView;
     [SerializeField] private RectTransform _content;
+    [SerializeField] private AnimatedButton _animatedButton;
 
     public RectTransform Content => _content;
     public bool IsInitialized { get; private set; }
@@ -17,6 +18,12 @@ public abstract class PanelToggleBase : MonoBehaviour
     {
         _toggleView.Initialize();
         IsInitialized = true;
+    }
+
+    public virtual void ApplyColors(GameColors gameColors)
+    {
+        _toggleView.ApplyColors(gameColors);
+        _animatedButton.ApplyColors(gameColors);
     }
 
     public virtual void Enable()

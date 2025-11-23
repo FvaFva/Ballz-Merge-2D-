@@ -16,6 +16,12 @@ public class InfoPanelView : MonoBehaviour, IInfoPanelView
         _baseParent = (RectTransform)_transform.parent;
     }
 
+    public void ChangeAnchors(Vector2 minAnchor, Vector2 maxAnchor)
+    {
+        _transform.anchorMin = minAnchor;
+        _transform.anchorMax = maxAnchor;
+    }
+
     public void Show(RectTransform showcase)
     {
         _transform.SetParent(showcase);

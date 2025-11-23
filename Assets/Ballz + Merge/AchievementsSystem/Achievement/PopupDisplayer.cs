@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PopupDisplayer : MonoBehaviour
+public class PopupDisplayer : DependentColorUI
 {
     private const float PopupDuration = 5f;
     private const float StartShift = 200f;
@@ -29,12 +29,21 @@ public class PopupDisplayer : MonoBehaviour
         _nextPosition = new Vector2(0, NextShift);
     }
 
+    public override void ApplyColors(GameColors gameColors)
+    {
+        GameColors = gameColors;
+
+        foreach (var popup in _activePopups)
+            popup.ApplyColors(GameColors);
+    }
+
     public void ShowPopup(AchievementData achievementData, int currentStep = 0, string message = null)
     {
         _currentMessage = message ?? achievementData.Name;
         _audio.Play();
 
         PopupView achievementView = Instantiate(_achievementView, _container);
+        achievementView.ApplyColors(GameColors);
 
         if (message == null)
             achievementView.SetData(achievementData.Name, achievementData.Description, achievementData.Image, currentStep, achievementData.MaxTargets);

@@ -185,7 +185,7 @@ public class DisplayApplier : IDisposable
     {
         yield return new WaitForSeconds(ApplyDelay);
 
-        PlatformRunner.RunOnWindowsMacPlatform(
+        PlatformRunner.Run(null,
         windowsAction: () =>
         {
             WindowResizerWindows.SetResizable(state);

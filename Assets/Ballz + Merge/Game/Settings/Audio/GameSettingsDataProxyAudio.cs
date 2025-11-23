@@ -20,6 +20,7 @@ namespace BallzMerge.Root.Settings
         private readonly AudioMixer _mixer;
 
         public event Action<bool> StateChanged;
+        public event Action Changed;
 
         public GameSettingsDataProxyAudio(AudioMixer mixer, string name)
         {
@@ -32,7 +33,7 @@ namespace BallzMerge.Root.Settings
         public string Label { get; private set; }
         public int? CountOfPresets { get; private set; }
 
-        public void Get(float value)
+        public void Load(float value)
         {
             Value = Mathf.Clamp01(value);
             Change(Value);

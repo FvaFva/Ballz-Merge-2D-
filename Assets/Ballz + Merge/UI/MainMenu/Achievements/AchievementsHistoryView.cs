@@ -2,10 +2,11 @@ using BallzMerge.Achievement;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AchievementsHistoryView : CyclicBehavior, IInitializable, IInfoPanelView
+public class AchievementsHistoryView : DependentColorUI, IInitializable, IInfoPanelView
 {
     [SerializeField] private PopupView _achievementViewPrefab;
     [SerializeField] private RectTransform _dataParent;
+    [SerializeField] private List<DependentColorUI> _dependentColorUIs;
 
     private readonly List<PopupView> _allViews = new List<PopupView>();
     private RectTransform _rootParent;
@@ -17,6 +18,17 @@ public class AchievementsHistoryView : CyclicBehavior, IInitializable, IInfoPane
         _transform = (RectTransform)transform;
         _rootParent = (RectTransform)_transform.parent;
         Hide();
+    }
+
+    public override void ApplyColors(GameColors gameColors)
+    {
+        GameColors = gameColors;
+
+        foreach (var dependentColorUI in _dependentColorUIs)
+            dependentColorUI.ApplyColors(GameColors);
+
+        foreach (var view in _allViews)
+            view.ApplyColors(GameColors);
     }
 
     public bool SetData(IDictionary<AchievementSettings, AchievementPointsStep> achievementData)
@@ -47,6 +59,10 @@ public class AchievementsHistoryView : CyclicBehavior, IInitializable, IInfoPane
     private void GenerateViews(int count)
     {
         for (int i = 0; i < count; i++)
-            _allViews.Add(Instantiate(_achievementViewPrefab, _dataParent));
+        {
+            PopupView popupView = Instantiate(_achievementViewPrefab, _dataParent);
+            popupView.ApplyColors(GameColors);
+            _allViews.Add(popupView);
+        }
     }
 }
