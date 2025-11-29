@@ -1,14 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 namespace BallzMerge.Root
 {
-    public class LoadScreen : MonoBehaviour
+    public class LoadScreen : DependentColorUI
     {
         [SerializeField] private Slider _progress;
         [SerializeField] private TMP_Text _hint;
         [SerializeField] private GameRulesList _rules;
+        [SerializeField] private List<DependentColorUI> _dependentColorUIs;
+
+        public override void ApplyColors(GameColors gameColors)
+        {
+            foreach(var dependentColorUI in _dependentColorUIs)
+                dependentColorUI.ApplyColors(gameColors);
+        }
 
         public void Show()
         {

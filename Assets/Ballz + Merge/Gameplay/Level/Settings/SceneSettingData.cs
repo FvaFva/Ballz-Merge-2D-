@@ -1,21 +1,18 @@
 using BallzMerge.Data;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class SceneSettingData : IGameSettingData
 {
     private const string Enabled = "On";
     private const string Disabled = "Off";
 
-    public bool IsDynamicBoards;
-
     public string Name { get; private set; }
     public float Value { get; private set; }
     public string Label { get; private set; }
     public int? CountOfPresets { get; private set; }
 
-    private readonly Dictionary<int, string> EffectsStates = new Dictionary<int, string>()
+    private readonly Dictionary<float, string> EffectsStates = new Dictionary<float, string>()
     {
         { 1, Enabled },
         { 0, Disabled }
@@ -23,6 +20,7 @@ public class SceneSettingData : IGameSettingData
 
     public event Action<bool> StateChanged;
     public event Action Changed;
+    public event Action<bool> ValueChanged;
 
     public SceneSettingData(string name)
     {
@@ -33,13 +31,15 @@ public class SceneSettingData : IGameSettingData
     public void Load(float value)
     {
         Value = value;
-        Label = EffectsStates[Mathf.RoundToInt(Value)];
+        Label = EffectsStates[Value];
+        ValueChanged?.Invoke(Convert.ToBoolean(Value));
     }
 
     public void Change(float value)
     {
         Value = value;
-        Label = EffectsStates[Mathf.RoundToInt(Value)];
+        Label = EffectsStates[Value];
+        ValueChanged?.Invoke(Convert.ToBoolean(Value));
         Changed?.Invoke();
     }
 }

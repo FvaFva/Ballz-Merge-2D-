@@ -18,7 +18,6 @@ public class GameHistoryView : DependentColorUI, IInitializable, IInfoPanelView
     [SerializeField] private ButtonToggle _level;
     [SerializeField] private GameDataView _gameDataPrefab;
     [SerializeField] private RectTransform _dataParent;
-    [SerializeField] private UIRootContainerItem _eraseButtonItem;
     [SerializeField] private Button _eraseButton;
     [SerializeField] private List<DependentColorUI> _dependentColorUIs;
 

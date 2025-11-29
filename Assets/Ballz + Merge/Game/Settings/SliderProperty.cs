@@ -39,11 +39,13 @@ public class SliderProperty : DependentColorUI, IDisposable
         SettingData.StateChanged -= SetSliderState;
         _sliderHandle.SliderHandled -= OnSliderHandled;
         _slider.onValueChanged.RemoveListener(SetHandleColor);
+        SettingData.StateChanged -= (bool _) => SetHandleColor(_slider.value);
     }
 
-    public void Init(IGameSettingData settingData, SliderPostInitType postInitType)
+    public void Init(IGameSettingData settingData)
     {
         _isActive = true;
+        name = settingData.Name;
         _valueChanger = new ValueChanger();
         _sliderHandle.SliderHandled += OnSliderHandled;
         SettingData = settingData;
@@ -54,8 +56,6 @@ public class SliderProperty : DependentColorUI, IDisposable
             { SliderPostInitType.None, () => { } },
             { SliderPostInitType.GenerateTexture, () => CreateGradientTexture() }
         };
-
-        _postInitTypeActions[postInitType]();
     }
 
     public override void ApplyColors(GameColors gameColors)
@@ -70,7 +70,11 @@ public class SliderProperty : DependentColorUI, IDisposable
             SetSliderState(false);
 
         if (_isGradient)
+        {
             SetHandleColor(_slider.value);
+            _slider.onValueChanged.AddListener(SetHandleColor);
+            SettingData.StateChanged += (bool _) => SetHandleColor(_slider.value);
+        }
     }
 
     public SliderProperty SetValue(float value)
@@ -93,10 +97,11 @@ public class SliderProperty : DependentColorUI, IDisposable
         return this;
     }
 
-    public SliderProperty SetProperty(int? countOfPresets, string header, string key)
+    public SliderProperty SetProperty(SliderPostInitType postInitType, int? countOfPresets, string header, string key)
     {
         bool isNewKey = string.IsNullOrEmpty(key) == false;
         _key = isNewKey ? key : _key;
+        _postInitTypeActions[postInitType]();
 
         if (CheckStepByStep(countOfPresets))
         {
@@ -139,7 +144,6 @@ public class SliderProperty : DependentColorUI, IDisposable
         _rawImage.enabled = true;
         _fillImage.enabled = false;
         _rawImage.texture = gradientTexture;
-        _slider.onValueChanged.AddListener(SetHandleColor);
         _isGradient = true;
     }
 

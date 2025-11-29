@@ -101,7 +101,7 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
             completer.Complete();
 
         _exitData.Put(CreateHistory(true));
-        _exitData.TargetScene = ScenesNames.MAIN_MENU;
+        _exitData.SetTargetScene(ScenesNames.MAIN_MENU);
         _mainUI.FinishView.Show(() => _sceneCallBack.Invoke(_exitData));
     }
 
@@ -172,11 +172,14 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     private void HandlerLoseQuestion(bool answer)
     {
         FinishLevel();
+        _exitData.Put(CreateHistory());
 
         if (answer)
             RestartLevel();
         else
-            _sceneCallBack.Invoke(new SceneExitData(ScenesNames.MAIN_MENU));
+            _exitData.SetTargetScene(ScenesNames.MAIN_MENU);
+
+        _sceneCallBack.Invoke(_exitData);
     }
 
     private void HandlerQuitQuestion(bool answer)
@@ -199,8 +202,6 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
     {
         if (answer)
             _exitData.Put(CreateSave());
-        else
-            _exitData.Put(CreateHistory());
 
         FinishLevel();
         _sceneCallBack.Invoke(_exitData);

@@ -9,22 +9,30 @@ public class SceneSetting : IDisposable
     private Dictionary<string, IGameSettingData> _data = new Dictionary<string, IGameSettingData>();
 
     public readonly GameColors Colors;
+    public readonly SceneSettingData AccentSwitch;
 
     public IEnumerable<IGameSettingData> GameSettings => _data.Values;
 
     public event Action Changed;
 
-    public SceneSetting(GameColors gameColors)
+    public SceneSetting(GameColors gameColors, SceneSettingData accentSwitch)
     {
         GenerateSetting(DynamicBoards);
         Colors = gameColors;
+        AccentSwitch = accentSwitch;
         SubscribeSetting(Colors);
+
+        if(AccentSwitch != null)
+            SubscribeSetting(AccentSwitch);
     }
 
     public void Dispose()
     {
         foreach (var setting in _data.Values)
             setting.Changed -= OnChanged;
+
+        UnsubscribeSetting(Colors);
+        UnsubscribeSetting(AccentSwitch);
     }
 
     private void GenerateSetting(string name)
@@ -37,6 +45,11 @@ public class SceneSetting : IDisposable
     private void SubscribeSetting(IGameSettingData data)
     {
         data.Changed += OnChanged;
+    }
+
+    private void UnsubscribeSetting(IGameSettingData data)
+    {
+        data.Changed -= OnChanged;
     }
 
     public float GetValue(string name)

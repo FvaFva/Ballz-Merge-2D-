@@ -1,4 +1,5 @@
 using BallzMerge.Root;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -49,6 +50,7 @@ namespace BallzMerge.Achievement
         public void Init()
         {
             LoadSettings();
+            _displayer.gameObject.SetActive(true);
         }
 
         public void ApplySettings(LevelSettings settings)

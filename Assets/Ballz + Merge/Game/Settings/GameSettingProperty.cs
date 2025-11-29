@@ -5,11 +5,10 @@ using UnityEngine;
 public class GameSettingProperty
 {
     [SerializeField] private SliderValueView _sliderValueView;
-    [SerializeField] private SettingTypeProperty _settingTypeProperty;
+    [SerializeField] private GameSettingType _settingType;
     [SerializeField] private float _height;
 
-    public GameSettingType SettingType => _settingTypeProperty.GameSettingType;
-    public SliderPostInitType PostInitType => _settingTypeProperty.PostInitType;
+    public GameSettingType SettingType => _settingType;
     public SliderValueView SliderValueView => _sliderValueView;
     public float Height => _height;
 

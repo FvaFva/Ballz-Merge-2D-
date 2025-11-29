@@ -120,7 +120,7 @@ namespace BallzMerge.Root
 
             if (exitData.IsGameQuit)
                 QuitGame();
-            else if (string.Empty.Equals(exitData.TargetScene) == false)
+            else if (string.Empty.Equals(exitData.TargetScene) == false && exitData.TargetScene != null)
                 LoadScene(exitData.TargetScene);
         }
     }

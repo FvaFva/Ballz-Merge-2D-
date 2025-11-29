@@ -1,4 +1,3 @@
-using BallzMerge.Gameplay.Level;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,7 +5,6 @@ using UnityEngine;
 public class GlobalEffects : MonoBehaviour
 {
     [SerializeField] private List<ParticleSystem> _particles;
-    [SerializeField] private List<ParticleSystem> _boardsEffects;
 
     public IReadOnlyList<string> AllEffects => _particles.Select(p => p.name).ToList();
 

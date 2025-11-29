@@ -144,11 +144,14 @@ public class AnimatedButton : DependentColorUI, IPointerDownHandler, IPointerUpH
     private void ActivateButtonView()
     {
         _buttonView.SetDefaultColor();
+        _buttonView.SetDefault();
     }
 
     private void DeactivateButtonView()
     {
         _buttonView.ChangeViewColor(GameColors.GetForAccessibilityState()[true]);
         _buttonView.ChangeLabelColor(GameColors.GetForAccessibilityState()[false]);
+        _buttonView.ChangeLabelOutline(GameColors.GetForAccessibilityState()[true]);
+        _buttonView.SetDefault();
     }
 }

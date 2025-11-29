@@ -106,7 +106,7 @@ public class SliderHandle : DependentColorUI, IPointerEnterHandler, IPointerExit
 
     public void SetState(bool state)
     {
-        _sliderViewStateActions.GetValueOrDefault(state)?.Invoke();
+        _sliderViewStateActions?.GetValueOrDefault(state)?.Invoke();
         enabled = state;
     }
 
@@ -115,17 +115,21 @@ public class SliderHandle : DependentColorUI, IPointerEnterHandler, IPointerExit
         _sliderView.ChangeViewColor(color);
     }
 
-    private void Init()
+    public void Init()
     {
         if (_isInited)
             return;
 
         _isInited = true;
-        _sliderViewStateActions = new Dictionary<bool, Action>
+
+        if (_gameColors != null)
         {
-            { true, ActivateSliderView },
-            { false, DeactivateSliderView }
-        };
+            _sliderViewStateActions = new Dictionary<bool, Action>
+            {
+                { true, ActivateSliderView },
+                { false, DeactivateSliderView }
+            };
+        }
 
         _handledStateActions = new Dictionary<bool, Action>
         {

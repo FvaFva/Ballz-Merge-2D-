@@ -10,6 +10,7 @@ public class ToggleView : MonoBehaviour
 
     private Image _image;
     private GameColors _gameColors;
+    private ButtonView _buttonView;
     private bool _isSelected;
 
     private void OnEnable()
@@ -21,17 +22,20 @@ public class ToggleView : MonoBehaviour
     public void Initialize()
     {
         _image = GetComponent<Image>();
+        _buttonView = GetComponent<ButtonView>();
+        _buttonView.Init();
         _particle.Init();
     }
 
-    public void ApplyColors(GameColors gameColors = null)
+    public void ApplyColors(GameColors gameColors)
     {
         _gameColors = gameColors;
     }
 
     public void Select()
     {
-        _image.color = _gameColors.GetForButton(_newColor);
+        _image.color = _gameColors.GetForButtonView(_newColor);
+        _buttonView.SetButtonType(_newColor);
         _particle.gameObject.SetActive(true);
         _particle.Play();
         _isSelected = true;
@@ -39,7 +43,8 @@ public class ToggleView : MonoBehaviour
 
     public void Unselect()
     {
-        _image.color = _gameColors.GetForButton(_startColor);
+        _image.color = _gameColors.GetForButtonView(_startColor);
+        _buttonView.SetButtonType(_startColor);
         _particle.Stop();
         _particle.gameObject.SetActive(false);
         _isSelected = false;
