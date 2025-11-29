@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class InfoPanelView : MonoBehaviour, IInfoPanelView
 {
@@ -16,10 +17,13 @@ public class InfoPanelView : MonoBehaviour, IInfoPanelView
         _baseParent = (RectTransform)_transform.parent;
     }
 
-    public void ChangeAnchors(Vector2 minAnchor, Vector2 maxAnchor)
+    public void ChangeAnchors(Vector2 minAnchor, Vector2 maxAnchor, Vector2 anchoredPosition)
     {
         _transform.anchorMin = minAnchor;
         _transform.anchorMax = maxAnchor;
+
+        if (anchoredPosition != default)
+            _transform.anchoredPosition = anchoredPosition;
     }
 
     public void Show(RectTransform showcase)

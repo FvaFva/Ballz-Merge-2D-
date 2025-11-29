@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
-public class GameFinishView : MonoBehaviour
+public class GameFinishView : DependentColorUI
 {
     [SerializeField] private Button _exit;
+    [SerializeField] private List<DependentColorUI> _backgroundUIs;
 
     private Action _callback;
 
@@ -16,6 +18,12 @@ public class GameFinishView : MonoBehaviour
     private void OnDisable()
     {
         _exit.RemoveListener(OnTrigger);
+    }
+
+    public override void ApplyColors(GameColors gameColors)
+    {
+        foreach(var backgroundUI in _backgroundUIs)
+            backgroundUI.ApplyColors(gameColors);
     }
 
     public void Show(Action callback)

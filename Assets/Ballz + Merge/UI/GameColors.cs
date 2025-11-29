@@ -17,7 +17,10 @@ public class GameColors : IGameSettingData
     private Color Background = new(0.5254902f, 0.5490196f, 1f); //#868CFF
     private Color Fill = new(0.372549f, 0.007843138f, 0.6588235f); //#5F02A8
     private Color UI = new(0f, 0.5058824f, 0.7647059f); //#0081C3
+    private Color ShadowMain = new(0.01960782f, 0.8652754f, 0.9254902f); //#05DDEC
     private Color ShadowUI = new(0.01960782f, 0.8652754f, 0.9254902f); //#05DDEC
+    private Color ButtonMainShader = new(0f, 1f, 1f); //#00FFFF
+    private Color ButtonUIShader = new(0.01960784f, 0.8666667f, 0.9254902f); //#05DDEC
     private Color FontOutline = new(0.4286905f, 0.4396572f, 0.6866854f); //HDR
 
     private readonly Color White = new(1f, 1f, 1f); //#FFFFFF
@@ -29,11 +32,14 @@ public class GameColors : IGameSettingData
     private readonly Color ShadowRed = new(0.8641509f, 0.5788181f, 0.5788181f); //#DC9494
     private readonly Color Close = new(0.5471698f, 0.004208999f, 0f); //#8C0100
     private readonly Color ShadowClose = new(1f, 0f, 0f); //#FF0000
+    private readonly Dictionary<DataViewType, Color> _dataViewColors;
 
-    private Dictionary<ShadowColorType, Color> _shadowColors;
-    private Dictionary<ButtonColorType, Color> _buttonColors;
+    private Dictionary<ButtonColorType, Color> _shadowColors;
+    private Dictionary<ButtonColorType, Color> _buttonViewColors;
     private Dictionary<BackgroundColorType, Color> _backgroundColors;
-    private Dictionary<DataViewType, Color> _dataViewColors;
+    private Dictionary<ButtonColorType, Color> _buttonShaderColors;
+    private bool _isAccent;
+    private float _previousValue;
 
     public event Action<bool> StateChanged;
     public event Action Changed;
@@ -52,32 +58,82 @@ public class GameColors : IGameSettingData
 
     public void Load(float value)
     {
+        if (_isAccent)
+            return;
+
         Value = value;
-        Main = Palette.FromHSL(Value, Saturation, BaseLight);
-        Background = Palette.FromHSL(Value, Saturation, 0.85f);
-        Fill = Palette.FromHSL(Value, Saturation, 0.20f);
-        UI = GenerateAccent(Main, Value, Saturation);
-        ShadowUI = Palette.FromHSL(ComputeAccentHue(Value), Saturation, 0.22f);
-        FontOutline = Palette.FromHSL(Value, Saturation, 0.85f);
-        ApplyColors();
+        SetColors(Value);
     }
 
     public void Change(float value)
     {
         Value = value;
-        Main = Palette.FromHSL(Value, Saturation, BaseLight);
-        Background = Palette.FromHSL(Value, Saturation, 0.85f);
-        Fill = Palette.FromHSL(Value, Saturation, 0.20f);
-        UI = GenerateAccent(Main, Value, Saturation);
-        ShadowUI = Palette.FromHSL(ComputeAccentHue(Value), Saturation, 0.22f);
-        FontOutline = Palette.FromHSL(Value, Saturation, 0.85f);
-        ApplyColors();
+        SetColors(Value);
         Changed?.Invoke();
     }
 
-    public Color GetForButton(ButtonColorType buttonColorType)
+    public void ChangeState(bool state)
     {
-        return _buttonColors[buttonColorType];
+        StateChanged?.Invoke(state);
+    }
+
+    public void GetAndroidDynamicAccent()
+    {
+        _isAccent = true;
+        using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+        using (var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+        using (var resources = activity.Call<AndroidJavaObject>("getResources"))
+        using (var theme = activity.Call<AndroidJavaObject>("getTheme"))
+        {
+            // Попытка получить динамический цвет Android 12+
+            int id = resources.Call<int>("getIdentifier",
+                "system_accent1_500", // основной динамический акцент
+                "color",
+                "android");
+
+            if (id != 0)
+            {
+                int colorInt = resources.Call<int>("getColor", id, theme);
+
+                float a = ((colorInt >> 24) & 0xff) / 255f;
+                float r = ((colorInt >> 16) & 0xff) / 255f;
+                float g = ((colorInt >> 8) & 0xff) / 255f;
+                float b = (colorInt & 0xff) / 255f;
+
+                ApplyMainColor(r, g, b, a);
+            }
+            else
+            {
+                // Fallback: старый Accent (до Android 12)
+                using (var typedValue = new AndroidJavaObject("android.util.TypedValue"))
+                {
+                    int colorAccentAttr = resources.GetStatic<int>("com.android.internal.R$attr.colorAccent");
+
+                    if (theme.Call<bool>("resolveAttribute", colorAccentAttr, typedValue, true))
+                    {
+                        int colorInt = typedValue.Get<int>("data");
+
+                        float a = ((colorInt >> 24) & 0xff) / 255f;
+                        float r = ((colorInt >> 16) & 0xff) / 255f;
+                        float g = ((colorInt >> 8) & 0xff) / 255f;
+                        float b = (colorInt & 0xff) / 255f;
+
+                        ApplyMainColor(r, g, b, a);
+                    }
+                }
+            }
+        }
+    }
+
+
+    public Color GetForButtonView(ButtonColorType buttonColorType)
+    {
+        return _buttonViewColors[buttonColorType];
+    }
+
+    public Color GetForButtonShader(ButtonColorType buttonColorType)
+    {
+        return _buttonShaderColors[buttonColorType];
     }
 
     public Color GetForSliderHandle()
@@ -95,14 +151,14 @@ public class GameColors : IGameSettingData
         return White;
     }
 
-    public Color GetForShadow(ShadowColorType shadowColorType, float alpha)
+    public Color GetForShadow(ButtonColorType buttonColorType, float alpha)
     {
-        Color color = _shadowColors[shadowColorType];
+        Color color = _shadowColors[buttonColorType];
         color.a = alpha;
         return color;
     }
 
-    public Color GetForStick(float alpha)
+    public Color GetForTexture(float alpha)
     {
         Color color = Black;
         color.a = alpha;
@@ -124,23 +180,65 @@ public class GameColors : IGameSettingData
         return new Dictionary<bool, Color> { { false, White }, { true, Fill } };
     }
 
+    public void ReturnGameColor()
+    {
+        if (!_isAccent)
+            return;
+
+        Value = _previousValue;
+        SetColors(Value);
+        _isAccent = false;
+    }
+
+    private void ApplyMainColor(float r, float g, float b, float a)
+    {
+        Main = new Color(r, g, b, a);
+        Color.RGBToHSV(Main, out float H, out float S, out float V);
+        _previousValue = Value;
+        SetColors(H);
+    }
+
+    private void SetColors(float value)
+    {
+        Main = Palette.FromHSL(value, Saturation, BaseLight);
+        Background = Palette.FromHSL(value, Saturation, 0.85f);
+        Fill = Palette.FromHSL(value, Saturation, 0.20f);
+        UI = GenerateAccent(Main, value, Saturation);
+        ShadowUI = Palette.FromHSL(ComputeAccentHue(value), Saturation, 0.22f);
+        ShadowMain = Palette.FromHSL(value, Saturation, 0.22f);
+        FontOutline = Palette.FromHSL(value, Saturation, 0.20f);
+        ButtonMainShader = Palette.FromHSL(value, Saturation, 0.6f);
+        ButtonUIShader = Palette.FromHSL(ComputeAccentHue(value), Saturation, 0.52f);
+        ApplyColors();
+    }
+
     private void ApplyColors()
     {
-        _shadowColors = new Dictionary<ShadowColorType, Color>
+        _shadowColors = new Dictionary<ButtonColorType, Color>
         {
-            { ShadowColorType.UI, ShadowUI },
-            { ShadowColorType.Green, ShadowGreen },
-            { ShadowColorType.Red, ShadowRed },
-            { ShadowColorType.Close, ShadowClose }
+            { ButtonColorType.UI, ShadowUI },
+            { ButtonColorType.Main, ShadowMain },
+            { ButtonColorType.Green, ShadowGreen },
+            { ButtonColorType.Red, ShadowRed },
+            { ButtonColorType.Close, ShadowClose }
         };
 
-        _buttonColors = new Dictionary<ButtonColorType, Color>
+        _buttonViewColors = new Dictionary<ButtonColorType, Color>
         {
             { ButtonColorType.Main, Main },
             { ButtonColorType.UI, UI },
             { ButtonColorType.Green, Green },
             { ButtonColorType.Red, Red },
             { ButtonColorType.Close, Close }
+        };
+
+        _buttonShaderColors = new Dictionary<ButtonColorType, Color>
+        {
+            { ButtonColorType.Main, ButtonMainShader },
+            { ButtonColorType.UI, ButtonUIShader },
+            { ButtonColorType.Green, White },
+            { ButtonColorType.Red, White },
+            { ButtonColorType.Close, White }
         };
 
         _backgroundColors = new Dictionary<BackgroundColorType, Color>
@@ -167,9 +265,15 @@ public class GameColors : IGameSettingData
         if (h >= 0.28f && h < 0.42f)
             return Palette.WrapHue(h - 0.10f);  // -35°
 
+        if (h >= 0.38f && h < 0.42f)
+            return Palette.WrapHue(h - 0.20f);
+
         // Бирюза / Голубой — высокая близость контрастов
         if (h >= 0.42f && h < 0.55f)
             return Palette.WrapHue(h + 0.08f);  // +30°
+
+        if (h >= 0.78 && h < 0.82f)
+            return Palette.WrapHue(h + 0.10f); // +36°
 
         // Белые зоны не требуют коррекции
         return Palette.WrapHue(h + 0.05f);  // +18°

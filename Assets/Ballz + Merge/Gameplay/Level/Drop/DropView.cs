@@ -9,8 +9,6 @@ namespace BallzMerge.Gameplay.Level
 {
     public class DropView : DependentColorUI
     {
-        private const string ShineColorProperty = "_ShinyColor";
-
         [SerializeField] private TMP_Text _name;
         [SerializeField] private TMP_Text _description;
         [SerializeField] private Image _icon;
@@ -54,6 +52,8 @@ namespace BallzMerge.Gameplay.Level
         {
             foreach(var backgroundUI in _backgroundUIs)
                 backgroundUI.ApplyColors(gameColors);
+
+            _shaderView.ApplyColors(gameColors);
         }
 
         public void InitMaterial()

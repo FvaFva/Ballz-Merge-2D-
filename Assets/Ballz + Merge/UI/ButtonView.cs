@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class ButtonView : MonoBehaviour
 {
     [SerializeField] private ButtonColorType _buttonColorType;
-    [SerializeField] private ShadowColorType _shadowColorType;
 
     private RectTransform _transform;
     private Tween _shadowTween;
@@ -18,11 +17,10 @@ public class ButtonView : MonoBehaviour
     private ButtonShaderView _shaderView;
     private Dictionary<ColorType, Color> _shadowColors;
     private GameColors _gameColors;
+    private Material _labelFontMaterial;
 
     private bool _isInited;
     private bool _isActive;
-
-    public bool IsActive => _isActive;
 
     public void Init()
     {
@@ -35,8 +33,15 @@ public class ButtonView : MonoBehaviour
         _shadow = GetComponent<Shadow>();
         _image = GetComponent<Image>();
         _label = GetComponentInChildren<TMP_Text>();
+
+        if (_label != null)
+        {
+            _labelFontMaterial = new Material(_label.fontMaterial);
+            _label.fontMaterial = _labelFontMaterial;
+        }
+
         _shaderView = GetComponentInChildren<ButtonShaderView>(true);
-        _shaderView.PerformIfNotNull(shaderView => shaderView.Init());
+        _shaderView.PerformIfNotNull(shaderView => shaderView.Init(_buttonColorType));
 
         _shadowColors = new Dictionary<ColorType, Color>
         {
@@ -50,18 +55,20 @@ public class ButtonView : MonoBehaviour
         _isActive = state;
     }
 
-    public void ApplyColors(GameColors colors = null)
+    public void ApplyColors(GameColors colors)
     {
         _gameColors = colors;
 
         if (_isActive)
-            _image.color = _gameColors.GetForButton(_buttonColorType);
+            _image.color = _gameColors.GetForButtonView(_buttonColorType);
 
         _shadowColors = new Dictionary<ColorType, Color>
         {
-            { ColorType.StartColor, _gameColors.GetForShadow(_shadowColorType, 0f) },
-            { ColorType.TargetColor, _gameColors.GetForShadow(_shadowColorType, 1f) }
+            { ColorType.StartColor, _gameColors.GetForShadow(_buttonColorType, 0f) },
+            { ColorType.TargetColor, _gameColors.GetForShadow(_buttonColorType, 1f) }
         };
+
+        _shaderView.PerformIfNotNull(shaderView => shaderView.ApplyColors(_gameColors));
     }
 
     public void SetDefault()
@@ -85,6 +92,13 @@ public class ButtonView : MonoBehaviour
         _shaderView.PerformIfNotNull(shaderView => shaderView.SetActive(state));
     }
 
+    public void SetButtonType(ButtonColorType buttonColorType)
+    {
+        _buttonColorType = buttonColorType;
+        _shaderView.PerformIfNotNull(shaderView => shaderView.SetButtonType(_buttonColorType));
+        _shadow.effectColor = _gameColors.GetForShadow(_buttonColorType, 0f);
+    }
+
     public void ChangeViewColor(Color color)
     {
         _image.color = color;
@@ -102,10 +116,27 @@ public class ButtonView : MonoBehaviour
         _label.PerformIfNotNull(label => label.color = color);
     }
 
+    public void ChangeLabelOutline(Color color)
+    {
+        if (_label != null)
+        {
+            _labelFontMaterial.SetColor("_OutlineColor", color);
+            _label.gameObject.SetActive(false);
+            _label.gameObject.SetActive(true);
+        }
+    }
+
     public void SetDefaultColor()
     {
-        _image.color = _gameColors.GetForButton(_buttonColorType);
+        _image.color = _gameColors.GetForButtonView(_buttonColorType);
         _label.PerformIfNotNull(label => label.color = _gameColors.GetForLabel());
+
+        if (_label != null)
+        {
+            _labelFontMaterial.SetColor("_OutlineColor", _gameColors.GetForAccessibilityState()[false]);
+            _label.gameObject.SetActive(false);
+            _label.gameObject.SetActive(true);
+        }
     }
 
     private void ChangeShadowColor(Color newColor, float duration)

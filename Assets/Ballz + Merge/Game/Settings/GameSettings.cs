@@ -30,7 +30,16 @@ namespace BallzMerge.Root.Settings
             DisplayQualityPreset = new QualityPreset("Quality");
             _environmentPresets = new List<EnvironmentPreset>();
             _gameColors = new GameColors("Theme");
-            SceneSetting = new SceneSetting(_gameColors);
+
+            void GenerateAccentTheme()
+            {
+                AccentThemeSwitch = new SceneSettingData("Accent");
+                ThemeApplier  = new ThemeApplier(AccentThemeSwitch, _gameColors);
+            }
+
+            PlatformRunner.Run(null, editorAction : GenerateAccentTheme, androidAction: GenerateAccentTheme);
+
+            SceneSetting = new SceneSetting(_gameColors, AccentThemeSwitch);
 
             foreach (string name in globalEffects.AllEffects)
                 _environmentPresets.Add(new EnvironmentPreset(name, globalEffects));
@@ -89,6 +98,8 @@ namespace BallzMerge.Root.Settings
         public DisplayMode DisplayMode { get; private set; }
         public DisplayApplier DisplayApplier { get; private set; }
         public DisplayOrientation DisplayOrientation { get; private set; }
+        public SceneSettingData AccentThemeSwitch { get; private set; }
+        public ThemeApplier ThemeApplier { get; private set; }
 
         public void Dispose()
         {
@@ -113,7 +124,7 @@ namespace BallzMerge.Root.Settings
                 return;
 
             _sceneElements.Add(element);
-            element.ApplySetting(SceneSetting);
+            //element.ApplySetting(SceneSetting);
 
             if (element is UIReorganizer)
                 _uiReorganizer = element as UIReorganizer;
@@ -152,7 +163,6 @@ namespace BallzMerge.Root.Settings
                 { SoundVolumeEffects.Name, SoundVolumeEffects },
                 { SoundVolumeMusic.Name, SoundVolumeMusic },
                 { _timeScaler.Name, _timeScaler },
-                { _gameColors.Name, _gameColors },
                 { DisplayQualityPreset.Name, DisplayQualityPreset }
             };
 
@@ -174,6 +184,18 @@ namespace BallzMerge.Root.Settings
             }
 
             PlatformRunner.Run(AddResolution, () => { AddResolution(); AddOrientation(); }, androidAction: AddOrientation, iosAction: AddOrientation);
+
+            void AddGameColors()
+            {
+                _settings.Add(_gameColors.Name, _gameColors);
+            }
+
+            void AddAccentThemeSetting()
+            {
+                _settings.Add(AccentThemeSwitch.Name, AccentThemeSwitch);
+            } 
+
+            PlatformRunner.Run(AddGameColors, () => { AddGameColors(); AddAccentThemeSetting(); }, androidAction: () => { AddGameColors(); AddAccentThemeSetting(); });
         }
 
         private void LoadSetting(IGameSettingData settingData)
@@ -184,9 +206,11 @@ namespace BallzMerge.Root.Settings
 
         private void OnPanelSwitched()
         {
-            LoadSetting(DisplayResolution);
-            LoadSetting(DisplayOrientation);
-            LoadSetting(DisplayMode);
+            void LoadResolution() => LoadSetting(DisplayResolution);
+            void LoadOrientation() => LoadSetting(DisplayOrientation);
+            void LoadDisplayMode() => LoadSetting(DisplayMode);
+
+            PlatformRunner.Run(() => { LoadResolution(); LoadDisplayMode(); }, () => { LoadResolution(); LoadOrientation(); LoadDisplayMode(); }, androidAction : () => { LoadOrientation(); }, iosAction : () => { LoadOrientation(); } );
         }
 
         private void GenerateMenu()
@@ -195,7 +219,20 @@ namespace BallzMerge.Root.Settings
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeEffects, PanelToggleType.AudioToggle);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, SoundVolumeMusic, PanelToggleType.AudioToggle);
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, _timeScaler, PanelToggleType.GeneralToggle);
-            _settingsMenu.AddInstantiate(GameSettingType.GameColorSetting, _gameColors, PanelToggleType.GeneralToggle);
+
+            void CreateThemeSetting()
+            {
+                _settingsMenu.AddInstantiate(GameSettingType.GameColorSetting, _gameColors, PanelToggleType.GeneralToggle, postInitType: SliderPostInitType.GenerateTexture);
+            }
+
+            void CreateAccentThemeSetting()
+            {
+                _settingsMenu.AddInstantiate(GameSettingType.GameThemeSetting, _gameColors, PanelToggleType.GeneralToggle, postInitType: SliderPostInitType.GenerateTexture);
+                _settingsMenu.AddExist(GameSettingType.GameThemeSetting, AccentThemeSwitch);
+            }
+
+            PlatformRunner.Run(CreateThemeSetting, CreateAccentThemeSetting, androidAction: CreateAccentThemeSetting);
+
             _settingsMenu.AddInstantiate(GameSettingType.GameSetting, DisplayQualityPreset, PanelToggleType.DisplayToggle);
 
             foreach (IGameSettingData preset in SceneSetting.GameSettings)

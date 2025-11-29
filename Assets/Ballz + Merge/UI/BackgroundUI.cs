@@ -13,7 +13,11 @@ public class BackgroundUI : DependentColorUI
     {
         GameColors = gameColors;
         Init();
-        _image.color = GameColors.GetForBackground(_backgroundColorType);
+        float alpha = _image.color.a;
+        Color color = GameColors.GetForBackground(_backgroundColorType);
+        color.a = alpha;
+        _image.color = color;
+        
     }
 
     private void Init()

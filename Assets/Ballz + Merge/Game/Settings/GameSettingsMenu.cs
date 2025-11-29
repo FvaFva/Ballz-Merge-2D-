@@ -37,23 +37,23 @@ namespace BallzMerge.Data
                 sliderProperty.ValueChanged -= OnSliderChanged;
         }
 
-        public void AddInstantiate(GameSettingType settingType, IGameSettingData settingData, PanelToggleType panelType, PanelSubToggleType panelSubType = PanelSubToggleType.First)
+        public void AddInstantiate(GameSettingType settingType, IGameSettingData settingData, PanelToggleType panelType, PanelSubToggleType panelSubType = PanelSubToggleType.First, SliderPostInitType postInitType = SliderPostInitType.None)
         {
             GameSettingProperty settingProperty = _settingsTypes[settingType];
             SliderValueView newSlider = Instantiate(settingProperty.SliderValueView, _settingsPanelController.GetContent(panelType, panelSubType));
-            newSlider.Init(settingData, _settingsTypes[settingType].PostInitType);
-            newSlider.SetProperty(settingData, countOfPresets: settingData.CountOfPresets, key: settingData.Name, header: settingData.Name);
+            newSlider.Init(settingData);
+            newSlider.SetProperty(settingData, postInitType, countOfPresets: settingData.CountOfPresets, key: settingData.Name, header: settingData.Name);
             newSlider.RectTransform.sizeDelta = new Vector2(newSlider.RectTransform.sizeDelta.x, _settingsTypes[settingType].Height);
             _settingsTypes[settingType].SetSliderView(newSlider);
             _sliders[settingData] = newSlider;
         }
 
-        public void AddExist(GameSettingType settingType, IGameSettingData settingData)
+        public void AddExist(GameSettingType settingType, IGameSettingData settingData, SliderPostInitType postInitType = SliderPostInitType.None)
         {
             GameSettingProperty settingsProperty = _settingsTypes[settingType];
             SliderValueView existSlider = settingsProperty.SliderValueView;
             existSlider.Init(settingData);
-            existSlider.SetProperty(settingData, countOfPresets: settingData.CountOfPresets, key: settingData.Name, header: settingData.Name);
+            existSlider.SetProperty(settingData, postInitType, countOfPresets: settingData.CountOfPresets, key: settingData.Name, header: settingData.Name);
             _settingsTypes[settingType].SetSliderView(existSlider);
             _sliders[settingData] = existSlider;
         }

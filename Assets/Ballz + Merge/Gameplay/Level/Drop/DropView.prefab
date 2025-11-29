@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1793490976298063706}
   - component: {fileID: 5948315063413244415}
   m_Layer: 5
-  m_Name: Lable
+  m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 41.1
+  m_fontSize: 39.5
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5651,7 +5651,7 @@ GameObject:
   - component: {fileID: 1368106101773530183}
   - component: {fileID: 5060674935903714878}
   m_Layer: 5
-  m_Name: Shyne
+  m_Name: Shine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5726,10 +5726,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a85015e292b344f83e5b966e785586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _initOrder: 0
   _isMask: 1
   _shinyBrightness: 5
-  _shinyColor: {r: 0.44705883, g: 0.29803923, b: 1, a: 1}
-  _textureColor: {r: 1, g: 1, b: 1, a: 0.5019608}
 --- !u!1 &6584910616356647173
 GameObject:
   m_ObjectHideFlags: 0
@@ -5742,7 +5741,7 @@ GameObject:
   - component: {fileID: 1908822785291280550}
   - component: {fileID: 226011949594378606}
   m_Layer: 5
-  m_Name: Lable
+  m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5954,10 +5953,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a85015e292b344f83e5b966e785586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _initOrder: 0
   _isMask: 0
   _shinyBrightness: 10
-  _shinyColor: {r: 0, g: 1, b: 1, a: 1}
-  _textureColor: {r: 1, g: 1, b: 1, a: 0.5019608}
 --- !u!1 &7400085227947689566
 GameObject:
   m_ObjectHideFlags: 0
@@ -6242,7 +6240,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 43.35
+  m_fontSize: 41.3
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1

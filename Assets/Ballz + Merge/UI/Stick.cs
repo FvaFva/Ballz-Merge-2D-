@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class Stick : DependentColorUI, IInitializable, IDisposable
+public class Stick : DependentColorUI, IDisposable
 {
     private const float StartStickPosition = 0.5f;
     private const float StartScale = 1f;
@@ -33,20 +33,15 @@ public class Stick : DependentColorUI, IInitializable, IDisposable
     public override void ApplyColors(GameColors gameColors)
     {
         _gameColors = gameColors;
-        _sliderHandle.ApplyColors(_gameColors);
+        _sliderHandle.Init();
 
         _visibleImageState = new Dictionary<bool, Color>
         {
-            { true, _gameColors.GetForStick(0.75f) },
-            { false, _gameColors.GetForStick(0f) }
+            { true, _gameColors.GetForTexture(0.75f) },
+            { false, _gameColors.GetForTexture(0f) }
         };
 
         Initialize();
-    }
-
-    public void Init()
-    {
-        _ball.EnterAIM += EnterMonitoring;
     }
 
     public void Dispose()
@@ -92,6 +87,8 @@ public class Stick : DependentColorUI, IInitializable, IDisposable
         _slider.onValueChanged.AddListener(OnSliderValueChanged);
         _sliderHandle.SliderHandled += OnSliderHandled;
         _inputZone.SetState(true);
+        _ball.EnterAIM += EnterMonitoring;
+        EnterMonitoring();
     }
 
     private void TransitState(bool state)

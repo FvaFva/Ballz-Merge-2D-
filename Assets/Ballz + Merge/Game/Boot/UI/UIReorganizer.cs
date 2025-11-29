@@ -7,6 +7,7 @@ public class UIReorganizer : CyclicBehavior, IDependentScreenOrientation, IDepen
     [SerializeField] private SpritesForDifferentUI _sprites;
     [SerializeField] private List<PanelViewProperty> _infoPanels;
     [SerializeField] private List<DependentColorUI> _dependentColorsUI;
+    [SerializeField] private PopupDisplayer _popupDisplayer;
 
     private GameColors _colors;
     private SceneSetting _sceneSetting;
@@ -63,7 +64,12 @@ public class UIReorganizer : CyclicBehavior, IDependentScreenOrientation, IDepen
                 ? (infoPanelProperty.VerticalAnchorsMin, infoPanelProperty.VerticalAnchorsMax)
                 : (infoPanelProperty.HorizontalAnchorsMin, infoPanelProperty.HorizontalAnchorsMax);
 
-            infoPanelProperty.ChangeAnchors(min, max);
+            var anchoredPosition = isVertical
+                ? infoPanelProperty.VerticalAnchoredPosition
+                : infoPanelProperty.HorizontalAnchoredPosition;
+
+            infoPanelProperty.ChangeAnchors(min, max, anchoredPosition);
+            _popupDisplayer.PerformIfNotNull(popupDisplayer => popupDisplayer.UpdatePositions());
         }
     }
 

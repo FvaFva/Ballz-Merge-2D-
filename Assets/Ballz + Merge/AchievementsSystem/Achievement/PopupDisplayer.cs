@@ -8,8 +8,6 @@ using UnityEngine;
 public class PopupDisplayer : DependentColorUI
 {
     private const float PopupDuration = 5f;
-    private const float StartShift = 200f;
-    private const float NextShift = 210f;
     private const float AnimationDuration = 0.5f;
 
     [SerializeField] private AudioSourceHandler _audio;
@@ -21,12 +19,11 @@ public class PopupDisplayer : DependentColorUI
     private Vector2 _currentPosition;
     private Vector2 _nextPosition;
     private string _currentMessage;
+    private RectTransform _rectTransform;
 
     private void Awake()
     {
-        _startPosition = new Vector2(0, StartShift);
-        _currentPosition = new Vector2(0, StartShift);
-        _nextPosition = new Vector2(0, NextShift);
+        _rectTransform = (RectTransform)transform;
     }
 
     public override void ApplyColors(GameColors gameColors)
@@ -35,6 +32,25 @@ public class PopupDisplayer : DependentColorUI
 
         foreach (var popup in _activePopups)
             popup.ApplyColors(GameColors);
+    }
+
+    public void UpdatePositions()
+    {
+        float height = Mathf.Abs(_rectTransform.anchoredPosition.y);
+        _startPosition = new Vector2(0, height);
+        _currentPosition = _startPosition;
+        _nextPosition = new Vector2(0, height - (height * 0.15f));
+
+        if (_activePopups.Count == 0)
+            return;
+
+        foreach (var popup in _activePopups)
+        {
+            popup.RectTransform.anchoredPosition = _currentPosition;
+            _currentPosition += _nextPosition;
+        }
+
+        _currentPosition = _startPosition;
     }
 
     public void ShowPopup(AchievementData achievementData, int currentStep = 0, string message = null)

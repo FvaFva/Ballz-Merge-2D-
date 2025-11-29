@@ -4,7 +4,7 @@ using BallzMerge.Data;
 public struct SceneExitData
 {
     public bool IsGameQuit;
-    public string TargetScene;
+    public string TargetScene { get; private set; }
     public SaveDataContainer Save { get; private set; }
     public GameHistoryData History;
     public bool IsLoad;
@@ -30,6 +30,11 @@ public struct SceneExitData
     public void Put(SaveDataContainer saver)
     {
         Save = saver;
+    }
+
+    public void SetTargetScene(string targetScene)
+    {
+        TargetScene = targetScene;
     }
 
     public void Put(GameHistoryData history) => History = history;

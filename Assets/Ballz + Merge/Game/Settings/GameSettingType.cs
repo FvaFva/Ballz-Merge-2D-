@@ -3,5 +3,6 @@ public enum GameSettingType
     GameSetting,
     GameScreenResolutionSetting,
     GameApplierSetting,
-    GameColorSetting
+    GameColorSetting,
+    GameThemeSetting
 }
