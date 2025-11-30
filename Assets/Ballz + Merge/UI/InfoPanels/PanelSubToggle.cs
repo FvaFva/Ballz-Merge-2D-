@@ -1,8 +1,5 @@
 using System;
 using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.UI;
-using System.Linq;
 
 public class PanelSubToggle : PanelToggleBase
 {

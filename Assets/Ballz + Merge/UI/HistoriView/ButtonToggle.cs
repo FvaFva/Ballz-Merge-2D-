@@ -1,11 +1,10 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ButtonToggle : DependentColorUI, IDisposable
 {
-    [SerializeField] private Button _toggle;
+    [SerializeField] private AnimatedButton _toggle;
     [SerializeField] private TMP_Text _label;
     [SerializeField] private ToggleView _toggleView;
 
@@ -20,7 +19,7 @@ public class ButtonToggle : DependentColorUI, IDisposable
     public ButtonToggle Initialize(string firstToggleLabel, string secondToggleLabel)
     {
         _originalLabel = _label.text;
-        _toggle.onClick.AddListener(ChangeState);
+        _toggle.Triggered += ChangeState;
         _toggleView.Initialize();
 
         _firstToggleLabel = firstToggleLabel;
@@ -37,8 +36,7 @@ public class ButtonToggle : DependentColorUI, IDisposable
 
     public void Dispose()
     {
-        if (_toggle != null)
-            _toggle.onClick.RemoveListener(ChangeState);
+        _toggle.PerformIfNotNull(toggle => toggle.Triggered -= ChangeState);
     }
 
     public void ResetLabel()
