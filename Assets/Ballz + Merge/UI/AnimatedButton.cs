@@ -27,6 +27,8 @@ public class AnimatedButton : DependentColorUI, IPointerDownHandler, IPointerUpH
 
     public bool IsSpriteChangeable => _isSpriteChangeable;
 
+    public event Action Triggered;
+
     private void Awake()
     {
         _transform = transform;
@@ -77,6 +79,7 @@ public class AnimatedButton : DependentColorUI, IPointerDownHandler, IPointerUpH
 
         if (_isPointerEnter)
         {
+            Triggered?.Invoke();
             _transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
             _buttonView.ChangeParameters(StartScale, ColorType.TargetColor, Duration);
             _buttonView.SetShaderView(true);

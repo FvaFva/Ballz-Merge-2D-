@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -15,7 +16,7 @@ public class ButtonView : MonoBehaviour
     private Shadow _shadow;
     private TMP_Text _label;
     private ButtonShaderView _shaderView;
-    private Dictionary<ColorType, Color> _shadowColors;
+    private Dictionary<ColorType, Func<Color>> _shadowColors;
     private GameColors _gameColors;
     private Material _labelFontMaterial;
 
@@ -43,10 +44,10 @@ public class ButtonView : MonoBehaviour
         _shaderView = GetComponentInChildren<ButtonShaderView>(true);
         _shaderView.PerformIfNotNull(shaderView => shaderView.Init(_buttonColorType));
 
-        _shadowColors = new Dictionary<ColorType, Color>
+        _shadowColors = new Dictionary<ColorType, Func<Color>>
         {
-            { ColorType.StartColor, _image.color },
-            { ColorType.TargetColor, _image.color }
+            { ColorType.StartColor, () => _image.color },
+            { ColorType.TargetColor, () => _image.color }
         };
     }
 
@@ -62,10 +63,10 @@ public class ButtonView : MonoBehaviour
         if (_isActive)
             _image.color = _gameColors.GetForButtonView(_buttonColorType);
 
-        _shadowColors = new Dictionary<ColorType, Color>
+        _shadowColors = new Dictionary<ColorType, Func<Color>>
         {
-            { ColorType.StartColor, _gameColors.GetForShadow(_buttonColorType, 0f) },
-            { ColorType.TargetColor, _gameColors.GetForShadow(_buttonColorType, 1f) }
+            { ColorType.StartColor, () => _gameColors.GetForShadow(_buttonColorType, 0f) },
+            { ColorType.TargetColor, () => _gameColors.GetForShadow(_buttonColorType, 1f) }
         };
 
         _shaderView.PerformIfNotNull(shaderView => shaderView.ApplyColors(_gameColors));
@@ -78,13 +79,13 @@ public class ButtonView : MonoBehaviour
         SetShaderView(false);
 
         _transform.localScale = Vector3.one;
-        _shadow.effectColor = _shadowColors[ColorType.StartColor];
+        _shadow.effectColor = _shadowColors[ColorType.StartColor]();
     }
 
     public void ChangeParameters(float newScale, ColorType colorType, float duration)
     {
         _transform.DOScale(newScale, duration);
-        ChangeShadowColor(_shadowColors[colorType], duration);
+        ChangeShadowColor(_shadowColors[colorType](), duration);
     }
 
     public void SetShaderView(bool state)
@@ -96,7 +97,6 @@ public class ButtonView : MonoBehaviour
     {
         _buttonColorType = buttonColorType;
         _shaderView.PerformIfNotNull(shaderView => shaderView.SetButtonType(_buttonColorType));
-        _shadow.effectColor = _gameColors.GetForShadow(_buttonColorType, 0f);
     }
 
     public void ChangeViewColor(Color color)

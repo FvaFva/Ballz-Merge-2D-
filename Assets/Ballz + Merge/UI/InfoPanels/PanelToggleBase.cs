@@ -1,10 +1,8 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class PanelToggleBase : MonoBehaviour
 {
-    [SerializeField] private Button _triggerButton;
     [SerializeField] private ToggleView _toggleView;
     [SerializeField] private RectTransform _content;
     [SerializeField] private AnimatedButton _animatedButton;
@@ -28,12 +26,12 @@ public abstract class PanelToggleBase : MonoBehaviour
 
     public virtual void Enable()
     {
-        _triggerButton.onClick.AddListener(OnClickButton);
+        _animatedButton.Triggered += OnClickButton;
     }
 
     public virtual void Disable()
     {
-        _triggerButton.onClick.RemoveListener(OnClickButton);
+        _animatedButton.Triggered -= OnClickButton;
     }
 
     private void OnClickButton()

@@ -23,10 +23,8 @@ namespace BallzMerge.Data
             IsCompleted = isCompleted;
         }
 
-        public void Add(string volume, List<int> value) => Volumes[volume] = value;
+        public readonly string GetDateOrID(bool state) => state ? ID : Date;
 
-        public string GetDateOrID(bool state) => state ? ID : Date;
-
-        public bool IsEmpty() => Volumes is null || Score == 0;
+        public readonly bool IsEmpty() => Volumes is null || Score == 0;
     }
 }
