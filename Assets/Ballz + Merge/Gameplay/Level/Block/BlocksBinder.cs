@@ -4,6 +4,7 @@ using Zenject;
 using BallzMerge.Gameplay.Level;
 using System;
 using System.Collections;
+using System.Linq;
 
 namespace BallzMerge.Gameplay.BlockSpace
 {
@@ -28,6 +29,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         public BlockAdditionalEffectHandler EffectHandler => _additionalEffectHandler;
         public bool IsReadyToComplete => _activeBlocks.NoBlocks;
         public event Action WaveSpawned;
+        public event Action BlocksOut;
 
         private void Awake()
         {
@@ -75,17 +77,6 @@ namespace BallzMerge.Gameplay.BlockSpace
             _spawner.ResetBlocksID();
         }
 
-        public bool TryFinish()
-        {
-            if (_activeBlocks.TryDeactivateUnderLine(_gridSettings.LastRowIndex))
-            {
-                _activeBlocks.Clear();
-                return true;
-            }
-
-            return false;
-        }
-
         public void StartMoveAllBlocks(Vector2Int direction, Action callBack) => StartCoroutine(BlocksMoving(direction, callBack));
 
         public void StartSpawnWave(Action callBAck) => StartCoroutine(WaveGeneration(callBAck));
@@ -94,6 +85,12 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             foreach (var _ in _mover.MoveAll(_activeBlocks.Blocks, direction, callBack))
                 yield return _sleep;
+
+            if (_mover.IsBlockOutside)
+            {
+                _activeBlocks.Clear();
+                BlocksOut?.Invoke();
+            }
         }
 
         private IEnumerator WaveGeneration(Action callBack)

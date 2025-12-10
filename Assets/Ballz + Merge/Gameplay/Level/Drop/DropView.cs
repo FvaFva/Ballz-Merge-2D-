@@ -50,7 +50,7 @@ namespace BallzMerge.Gameplay.Level
 
         public override void ApplyColors(GameColors gameColors)
         {
-            foreach(var backgroundUI in _backgroundUIs)
+            foreach (var backgroundUI in _backgroundUIs)
                 backgroundUI.ApplyColors(gameColors);
 
             _shaderView.ApplyColors(gameColors);
@@ -69,6 +69,11 @@ namespace BallzMerge.Gameplay.Level
                 Hide();
             else
                 Activate();
+        }
+
+        public void Deactivate()
+        {
+            _selector.enabled = false;
         }
 
         private void Activate()
@@ -93,8 +98,7 @@ namespace BallzMerge.Gameplay.Level
         {
             if (_current.IsEmpty)
                 return;
-            
-            _selector.enabled = false;
+
             Selected?.Invoke(_current);
         }
     }

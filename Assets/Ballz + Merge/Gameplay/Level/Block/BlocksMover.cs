@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
@@ -10,13 +11,13 @@ namespace BallzMerge.Gameplay.BlockSpace
 {
     public class BlocksMover
     {
-        private readonly Vector2Int WrongDirection = Vector2Int.down;
-
         [Inject] private GridSettings _grid;
         [Inject] private BlocksInGame _activeBlocks;
 
         private List<Block> _blocksInMove;
         private Action _onComeAllBlocks;
+
+        public bool IsBlockOutside { get; private set; }
 
         public BlocksMover()
         {
@@ -26,6 +27,10 @@ namespace BallzMerge.Gameplay.BlockSpace
         public IEnumerable MoveAll(IEnumerable<Block> blocks, Vector2Int direction, Action callback)
         {
             _onComeAllBlocks = callback;
+            IsBlockOutside = false;
+
+            while (_blocksInMove.Count != 0)
+                yield return null;
 
             if (blocks.Count() == 0)
             {
@@ -33,26 +38,21 @@ namespace BallzMerge.Gameplay.BlockSpace
                 yield break;
             }
 
-            if (direction == Vector2Int.up)
-                blocks = blocks.OrderByDescending(block => block.ID);
-
             foreach (var block in blocks)
             {
-                if (block.CanMove(direction, true))
-                {
-                    _blocksInMove.Add(block);
-                    block.Moved += OnCome;
-                    block.Deactivated += OnCome;
-                }
+                _blocksInMove.Add(block);
+                block.Moved += OnCome;
+                block.Deactivated += OnCome;
             }
 
-            yield return null;
-
-            foreach (Block block in _blocksInMove.ToList())
+            while (_blocksInMove.Count != 0)
             {
-                block.Move(direction, BlockMoveActionType.Move);
-                yield return null;
+                foreach (var _ in Move(direction))
+                    yield return null;
             }
+
+            if (!IsBlockOutside)
+                _onComeAllBlocks();
         }
 
         public bool IsFree(Vector2Int position)
@@ -71,11 +71,27 @@ namespace BallzMerge.Gameplay.BlockSpace
             block.Deactivated -= OnCome;
             bool isFound = _blocksInMove.Remove(block);
 
-            if (isFound == false)
-                Debug.Log($"{block.name} was not present in blocksMoved list! Callback worked several times!");
+            if (block.GridPosition.y < _grid.LastRowIndex)
+            {
+                IsBlockOutside = true;
+                block.Deactivate();
+            }
 
-            if (_blocksInMove.Count == 0)
-                _onComeAllBlocks();
+            if (isFound == false)
+                Debug.Log($"{block.name} was not present in blocksMoved list! Callback has been performed several times!");
+        }
+
+        private IEnumerable Move(Vector2Int direction)
+        {
+            IEnumerable<Block> blocksCopy = _blocksInMove.ToList();
+
+            foreach (Block block in blocksCopy)
+            {
+                if (block.CanMove(direction, false) && _blocksInMove.Contains(block))
+                    block.Move(direction, BlockMoveActionType.Move);
+
+                yield return null;
+            }
         }
     }
 }
