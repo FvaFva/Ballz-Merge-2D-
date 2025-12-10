@@ -29,6 +29,7 @@ public class InfoPanelShowcase : MonoBehaviour
     private void Start()
     {
         _closeArea.gameObject.SetActive(false);
+        _openDefaultButton.gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -51,6 +52,11 @@ public class InfoPanelShowcase : MonoBehaviour
         _escapeMenu.SettingsRequired -= OpenSettings;
         _openDefaultButton.RemoveListener(OpenDefault);
         _userInput.MainInput.Escape.performed += OnEscape;
+    }
+
+    public void InitOpenButton(bool state)
+    {
+        _openDefaultButton.gameObject.SetActive(state);
     }
 
     private void OnEscape(InputAction.CallbackContext context)

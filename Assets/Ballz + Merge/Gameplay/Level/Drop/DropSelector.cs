@@ -49,7 +49,7 @@ namespace BallzMerge.Gameplay.Level
             _firstSlot.ApplyColors(gameColors);
             _secondSlot.ApplyColors(gameColors);
 
-            foreach(var backgroundUI in _backgroundUIs)
+            foreach (var backgroundUI in _backgroundUIs)
                 backgroundUI.ApplyColors(gameColors);
         }
 
@@ -81,7 +81,7 @@ namespace BallzMerge.Gameplay.Level
         private void SelectDrop(Drop drop, Action<IBallVolumesBagCell<BallVolume>> action, int? id = null)
         {
             IBallVolumesBagCell<BallVolume> newCell = null;
-            
+
             if (drop.Volume is BallVolumePassive passive)
                 newCell = new BallVolumesBagCell<BallVolumePassive>(passive, drop.Rarity, id);
             else if (drop.Volume is BallVolumeOnHit hit)
@@ -95,6 +95,8 @@ namespace BallzMerge.Gameplay.Level
         {
             Hide();
             SelectDrop(drop, DropSelected);
+            _firstSlot.Deactivate();
+            _secondSlot.Deactivate();
         }
 
         private void Hide()

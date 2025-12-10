@@ -13,6 +13,7 @@ public class BallVolumeInventoryActivator : MonoBehaviour
     [Inject] private Ball _ball;
 
     private bool _isShowing;
+    private bool _forceShow;
 
     private void Awake()
     {
@@ -45,6 +46,8 @@ public class BallVolumeInventoryActivator : MonoBehaviour
 
     private void ChangeStateInfoPanel(bool state)
     {
+        _forceShow = true;
+
         if (_isShowing)
             _trigger.SetActiveIfNotNull(state);
     }
@@ -52,11 +55,14 @@ public class BallVolumeInventoryActivator : MonoBehaviour
     private void ShowButton()
     {
         _isShowing = true;
-        _trigger.SetActiveIfNotNull(true);
+
+        if (!_forceShow)
+            _trigger.SetActiveIfNotNull(true);
     }
 
     private void HideButton()
     {
+        _forceShow = false;
         _isShowing = false;
         _trigger.SetActiveIfNotNull(false);
     }

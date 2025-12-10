@@ -27,6 +27,7 @@ namespace BallzMerge.Gameplay.Level
         public void Start()
         {
             _binder.StartSpawnWave(() => { return; });
+            _binder.BlocksOut += OnBlocksOut;
         }
 
         public void Continue()
@@ -36,18 +37,6 @@ namespace BallzMerge.Gameplay.Level
 
         private void ProcessBinder()
         {
-            if (_binder.TryFinish())
-            {
-                GameIsLost?.Invoke();
-                return;
-            }
-
-            if (_isComplete())
-            {
-                GameIsComplete?.Invoke();
-                return;
-            }
-
             _binder.StartMoveAllBlocks(Vector2Int.down, AfterMoveBlock);
         }
 
@@ -55,6 +44,7 @@ namespace BallzMerge.Gameplay.Level
         {
             if (_isComplete())
             {
+                _binder.BlocksOut -= OnBlocksOut;
                 GameIsComplete?.Invoke();
                 return;
             }
@@ -65,12 +55,6 @@ namespace BallzMerge.Gameplay.Level
 
         private void ProcessDropper()
         {
-            if (_isComplete())
-            {
-                GameIsComplete?.Invoke();
-                return;
-            }
-            
             if (_dropper.IsReadyToDrop)
                 _dropper.ShowDrop(ProcessDropper);
             else
@@ -81,6 +65,12 @@ namespace BallzMerge.Gameplay.Level
         {
             _awaitBreaker.Break();
             WaveLoaded?.Invoke();
+        }
+
+        private void OnBlocksOut()
+        {
+            _binder.BlocksOut -= OnBlocksOut;
+            GameIsLost?.Invoke();
         }
     }
 }

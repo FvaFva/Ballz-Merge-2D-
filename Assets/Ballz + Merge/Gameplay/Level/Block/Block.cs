@@ -23,8 +23,9 @@ namespace BallzMerge.Gameplay.BlockSpace
         private TweenCallback _onCompleteTweenAction;
         private Dictionary<BlockMoveActionType, Action> _blockMoveTypeActions;
 
-        public bool IsInMerge{ get; private set; }
+        public bool IsInMerge { get; private set; }
         public bool IsAlive { get; private set; }
+        public bool IsInMove { get; private set; }
         public Vector2Int GridPosition { get; private set; }
         public Vector2 WorldPosition => _transform.position;
         public int ID { get; private set; }
@@ -76,6 +77,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             _physic.Init(virtualBox);
             IsAlive = true;
             IsInMerge = false;
+            IsInMove = false;
             Deactivate();
             return this;
         }
@@ -89,6 +91,7 @@ namespace BallzMerge.Gameplay.BlockSpace
             IsWithEffect = false;
             IsAlive = true;
             IsInMerge = false;
+            IsInMove = false;
             Number = number;
             GridPosition = gridPosition;
             _view.Activate(number, color);
@@ -101,12 +104,20 @@ namespace BallzMerge.Gameplay.BlockSpace
             IsWithEffect = true;
         }
 
-        public bool CanMove(Vector2Int step, bool isMoveDown = false)
+        public bool CanMove(Vector2Int step, bool isHit = true)
         {
             if (IsAlive == false)
                 return false;
 
-            if (CantMove(step, isMoveDown))
+            if (_mover.IsFree(GridPosition + step) == false)
+            {
+                if (isHit)
+                    PlayBounceAnimation(step);
+
+                return false;
+            }
+
+            if (step == Vector2Int.down && isHit)
             {
                 PlayBounceAnimation(step);
                 return false;
@@ -130,9 +141,10 @@ namespace BallzMerge.Gameplay.BlockSpace
 
         public void Move(Vector2Int step, BlockMoveActionType moveType)
         {
-            if (IsAlive == false || IsInMerge == true)
+            if (IsAlive == false || IsInMerge == true || IsInMove == true)
                 return;
 
+            IsInMove = true;
             Debug.Add($"Move {step}");
             StopCurrentMoveTween();
             GridPosition += step;
@@ -239,6 +251,7 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             Debug.Add($"OnComeToNewCell: {moveType}");
             action?.Invoke();
+            IsInMove = false;
 
             if (IsAlive)
                 _physic.Activate();
@@ -248,20 +261,6 @@ namespace BallzMerge.Gameplay.BlockSpace
         {
             Hit?.Invoke(this, direction);
             Debug.Add("OnBlockHit");
-        }
-
-        private bool CantMove(Vector2Int step, bool isMoveDown)
-        {
-            bool downVector = step == Vector2Int.down;
-            bool forceDownMove = isMoveDown && downVector;
-
-            if (forceDownMove)
-                return false;
-
-            if (downVector)
-                return true;
-
-            return _mover.IsFree(GridPosition + step) == false;
         }
     }
 }
