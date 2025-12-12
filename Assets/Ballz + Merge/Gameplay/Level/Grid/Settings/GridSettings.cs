@@ -39,7 +39,7 @@ namespace BallzMerge.Gameplay.Level
             return positions;
         }
 
-        public bool IsOutside(Vector2Int point) => point.x < StartPosition || point.y > FirstRowIndex || point.x >= Size.x;
+        public bool IsOutside(Vector2Int point) => point.x < StartPosition || point.x >= Size.x || point.y > FirstRowIndex;
 
         public void ReloadSize()
         {

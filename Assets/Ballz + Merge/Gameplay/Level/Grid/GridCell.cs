@@ -24,7 +24,8 @@ namespace BallzMerge.Gameplay.Level
 
         public void ChangeActivity(bool newState)
         {
-            gameObject.SetActive(newState);
+            if (gameObject != null)
+                gameObject.SetActive(newState);
         }
     }
 }

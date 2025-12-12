@@ -171,8 +171,8 @@ public class GameCycler : MonoBehaviour, ISceneEnterPoint
 
     private void HandlerLoseQuestion(bool answer)
     {
-        FinishLevel();
         _exitData.Put(CreateHistory());
+        FinishLevel();
 
         if (answer)
             RestartLevel();

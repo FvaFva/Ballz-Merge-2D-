@@ -30,21 +30,6 @@ namespace BallzMerge.Gameplay.BlockSpace
             return _blocks.Where(b => b.GridPosition == position).Any();
         }
 
-        public bool TryDeactivateUnderLine(int y)
-        {
-            var underLiners = _blocks.Where(block => block.GridPosition.y <= y);
-
-            if (underLiners.Any())
-            {
-                foreach (var underLiner in underLiners.ToList())
-                    underLiner.Deactivate();
-
-                return true;
-            }
-
-            return false;
-        }
-
         public void AddBlocks(Block block)
         {
             if (_blocks.Contains(block))
@@ -76,8 +61,10 @@ namespace BallzMerge.Gameplay.BlockSpace
             if (IsCanMerge(firstBlock, secondBlock))
             {
                 firstBlock.Debug.Add($"I Initialized merge with {secondBlock.name}");
-                firstBlock.Moved -= OnBlockCameNewPosition;
-                secondBlock.Moved -= OnBlockCameNewPosition;
+                firstBlock.ChangedPosition -= _ => OnBlockCameNewPosition(firstBlock);
+                secondBlock.ChangedPosition -= _ => OnBlockCameNewPosition(firstBlock);
+                firstBlock.NumberChanged -= (_, _) => OnBlockCameNewPosition(firstBlock);
+                secondBlock.NumberChanged -= (_, _) => OnBlockCameNewPosition(firstBlock);
                 MergeBlocks(firstBlock, secondBlock);
                 return true;
             }
@@ -137,16 +124,16 @@ namespace BallzMerge.Gameplay.BlockSpace
             {
                 block.Hit += OnBlockHit;
                 block.Deactivated += Remove;
-                block.ChangedPosition += OnBlockCameNewPosition;
-                block.Moved += OnBlockCameNewPosition;
+                block.ChangedPosition += _ => OnBlockCameNewPosition(block);
+                block.NumberChanged += (_, _) => OnBlockCameNewPosition(block);
                 block.Destroyed += OnBlockDestroy;
             }
             else
             {
                 block.Hit -= OnBlockHit;
                 block.Deactivated -= Remove;
-                block.ChangedPosition -= OnBlockCameNewPosition;
-                block.Moved -= OnBlockCameNewPosition;
+                block.ChangedPosition -= _ => OnBlockCameNewPosition(block);
+                block.NumberChanged -= (_, _) => OnBlockCameNewPosition(block);
                 block.Destroyed -= OnBlockDestroy;
             }
         }

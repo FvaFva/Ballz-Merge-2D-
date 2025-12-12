@@ -466,12 +466,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 224731362}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4774242119255931118}
+  m_Father: {fileID: 654301789767118303}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -592,7 +592,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7319059010125638760, guid: b8352ad48ccb0ba46bdc244b22444754, type: 3}
       propertyPath: m_fontSize
-      value: 11.05
+      value: 9.1
       objectReference: {fileID: 0}
     - target: {fileID: 8219055338031357135, guid: b8352ad48ccb0ba46bdc244b22444754, type: 3}
       propertyPath: _label
@@ -7887,6 +7887,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2283347335083284630}
+  - {fileID: 224731364}
   - {fileID: 4774242119255931118}
   - {fileID: 7756637308111048751}
   - {fileID: 4283370643278124473}
@@ -20274,7 +20275,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 224731364}
   - {fileID: 1229472954}
   - {fileID: 1846787483209508857}
   - {fileID: 6629967581525755974}
@@ -32087,7 +32087,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7319059010125638760, guid: b8352ad48ccb0ba46bdc244b22444754, type: 3}
       propertyPath: m_fontSize
-      value: 11.05
+      value: 9.1
       objectReference: {fileID: 0}
     - target: {fileID: 8219055338031357135, guid: b8352ad48ccb0ba46bdc244b22444754, type: 3}
       propertyPath: _label
@@ -32628,7 +32628,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7319059010125638760, guid: b8352ad48ccb0ba46bdc244b22444754, type: 3}
       propertyPath: m_fontSize
-      value: 11.7
+      value: 9.6
       objectReference: {fileID: 0}
     - target: {fileID: 8219055338031357135, guid: b8352ad48ccb0ba46bdc244b22444754, type: 3}
       propertyPath: _label

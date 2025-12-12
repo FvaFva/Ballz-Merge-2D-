@@ -51,6 +51,7 @@ namespace BallzMerge.Root
             _sceneUI = sceneUI;
             _containers.SetSettings(_sceneUI.RootContainerBehavior);
             ChangeStateUIView(true);
+            _infoPanelShowcase.InitOpenButton(true);
 
             if(uICamera != null)
             {
@@ -69,6 +70,7 @@ namespace BallzMerge.Root
 
         public void ClearSceneUI()
         {
+            _infoPanelShowcase.InitOpenButton(false);
             _mainCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
             if (_sceneUI is not null)

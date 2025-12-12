@@ -13,7 +13,7 @@ public class BallVolumeColossalPush : BallVolumeOnHit
             if (data.Block.CanMove(data.Direction))
             {
                 isWent = true;
-                data.Block.Move(data.Direction, BlockMoveActionType.Move);
+                data.Block.MoveTo(data.Block.GridPosition + data.Direction, BlockMoveActionType.ChangePosition);
             }
             else
             {
