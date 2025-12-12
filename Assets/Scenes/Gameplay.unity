@@ -31709,22 +31709,31 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.0031563789
-        value: 0.49999928
+        time: 0
+        value: 0.6986306
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 0.58219147
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.019607842, g: 0.34223726, b: 1, a: 1}
-      key1: {r: 0, g: 0.61885834, b: 1, a: 1}
-      key2: {r: 0.8023014, g: 0, b: 1, a: 0.5352942}
+      key0: {r: 0.019607842, g: 0.88550955, b: 1, a: 1}
+      key1: {r: 0, g: 1, b: 0.7780659, a: 1}
+      key2: {r: 0.91449475, g: 1, b: 0, a: 0.5352942}
       key3: {r: 0.8023014, g: 0, b: 1, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
@@ -31753,7 +31762,7 @@ LineRenderer:
     numCornerVertices: 10
     numCapVertices: 0
     alignment: 0
-    textureMode: 4
+    textureMode: 1
     textureScale: {x: 2.4, y: 1}
     shadowBias: 0.36
     generateLightingData: 0
