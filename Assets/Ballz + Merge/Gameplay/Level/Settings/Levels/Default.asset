@@ -53,7 +53,7 @@ MonoBehaviour:
       m_NumAlphaKeys: 2
     _spawnProperties:
     - Count:
-      - Value: 10
+      - Value: 3
         Weight: 1
       Number:
       - Value: 9
@@ -81,7 +81,7 @@ MonoBehaviour:
       - Value: 9
         Weight: 1
     - Count:
-      - Value: 10
+      - Value: 3
         Weight: 1
       Number:
       - Value: 2

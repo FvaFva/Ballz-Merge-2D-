@@ -29,7 +29,6 @@ public class BallStrikeVectorReader : BallComponent
     {
         if (isDragging)
         {
-            Debug.Log("is Dragging:" + isDragging);
             _stick.EnterAim();
             return;
         }
@@ -48,7 +47,6 @@ public class BallStrikeVectorReader : BallComponent
     {
         _stick.EnterShooting();
         Vector3 dropVector = Vector;
-        Debug.Log("Shot Vector: " + dropVector);
         Vector = Vector3.zero;
         Dropped?.Invoke(dropVector);
     }

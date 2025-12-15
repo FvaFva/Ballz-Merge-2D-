@@ -13,9 +13,6 @@ MonoBehaviour:
   m_Name: Rules list
   m_EditorClassIdentifier: 
   _rules:
-  - When the ball comes back down you get 3 volumes points and can choose it if you
-    have accumulated enough.
-  - Every 3 times the ball returns down the field increases by 1 column to the right.
   - If you push a block into another with the same number, they will be destroyed.
   - When you receive a volume it is placed in your inventory and is not used until
     you transfer it to the cage.
@@ -25,3 +22,5 @@ MonoBehaviour:
   - If blocks are connected by a line, they exchange all influences.
   - You can drag and drop volumes around the cage.
   - If the block crosses the lower border, you lose.
+  _rulesList:
+  - {fileID: 11400000, guid: bb34cff032fb3455f8bbe2257d734af9, type: 2}
