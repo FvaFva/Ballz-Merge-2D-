@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameRulesList : ScriptableObject
 {
     [SerializeField] private List<string> _rules;
+    [SerializeField] private List<GameRule> _rulesList;
 
     public IEnumerable<string> Rules => _rules;
 

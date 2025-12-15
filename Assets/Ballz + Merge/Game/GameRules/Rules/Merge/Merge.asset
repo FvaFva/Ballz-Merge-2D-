@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09641488e642347c583523280c69895c, type: 3}
+  m_Name: Merge
+  m_EditorClassIdentifier: Assembly-CSharp::GameRule
+  _label: Merge
+  _description: If you push a block into another with the same number, they will
+    be destroyed and you gain 2 volumes points.
+  _reference: {fileID: 7072655060173878110, guid: 0795fc4ca721141978b4aa2fbe48914a, type: 3}

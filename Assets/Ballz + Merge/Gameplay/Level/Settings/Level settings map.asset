@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Level settings map
   m_EditorClassIdentifier: 
   _all:
+  - {fileID: 11400000, guid: 30914e31f530a4042b4928653bda75fc, type: 2}
   - {fileID: 11400000, guid: 54f4752a88ae243a2bf7fd4ef0a1f76e, type: 2}
   - {fileID: 11400000, guid: 2da1a7b7f005a42ddb949e6419e7162e, type: 2}
   - {fileID: 11400000, guid: 197855ab9c6c245eca605ce97af7262e, type: 2}
@@ -37,4 +38,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0c0a9a8904f564f71a3cd60bb0a7ba45, type: 2}
   - {fileID: 11400000, guid: 11846e19f161e400f895e456c46f9e8f, type: 2}
   - {fileID: 11400000, guid: 9334790de108949e89aa5ee90cfc5409, type: 2}
+  - {fileID: 11400000, guid: 30914e31f530a4042b4928653bda75fc, type: 2}
   _settingsIDCounter: 3
