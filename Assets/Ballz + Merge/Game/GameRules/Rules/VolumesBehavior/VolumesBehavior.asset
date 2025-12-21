@@ -16,4 +16,4 @@ MonoBehaviour:
   _description: 'There are active volumes and passive volumes: the cage''s active
     volumes are activated in turn for each hit on the block, the cage''s passive
     volumes work constantly.'
-  _reference: {fileID: 0}
+  _reference: {fileID: 21300000, guid: df32f0ab13e0a4b20a7851dcb01afd87, type: 3}

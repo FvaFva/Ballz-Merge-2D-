@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 09641488e642347c583523280c69895c, type: 3}
-  m_Name: WinGame
+  m_Name: CageBuilding
   m_EditorClassIdentifier: Assembly-CSharp::GameRule
-  _label: Complete game
-  _description: To complete the level you must destroy all blocks on the field.
-  _reference: {fileID: 0}
+  _label: Cage Building
+  _description: You can drag and drop volumes around the cage.
+  _reference: {fileID: 21300000, guid: cd53411c9a21d4da8b15689133c85894, type: 3}
