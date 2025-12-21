@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 09641488e642347c583523280c69895c, type: 3}
-  m_Name: InventoryAndCage
+  m_Name: VolumesBehavior
   m_EditorClassIdentifier: Assembly-CSharp::GameRule
-  _label: Inventory
-  _description: When you receive a volume it is placed in your inventory and is not
-    used until you transfer it to the cage.
-  _reference: {fileID: 0}
+  _label: Volumes Behavior
+  _description: 'There are active volumes and passive volumes: the cage''s active
+    volumes are activated in turn for each hit on the block, the cage''s passive
+    volumes work constantly.'
+  _reference: {fileID: 21300000, guid: df32f0ab13e0a4b20a7851dcb01afd87, type: 3}

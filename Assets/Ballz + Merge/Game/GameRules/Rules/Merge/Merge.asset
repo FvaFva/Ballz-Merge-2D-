@@ -15,4 +15,4 @@ MonoBehaviour:
   _label: Merge
   _description: If you push a block into another with the same number, they will
     be destroyed and you gain 2 volumes points.
-  _reference: {fileID: -8026036002346254530, guid: 0ef7a21c444a67e44b817445d7a0e98d, type: 3}
+  _reference: {fileID: 21300000, guid: 0ef7a21c444a67e44b817445d7a0e98d, type: 3}

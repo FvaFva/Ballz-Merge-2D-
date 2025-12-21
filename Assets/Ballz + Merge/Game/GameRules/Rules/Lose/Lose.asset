@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameRule
   _label: Lose
   _description: If the block crosses the lower border, you lose.
-  _reference: {fileID: 0}
+  _reference: {fileID: 21300000, guid: be6ed05ee66fb425d9533d16d41832b9, type: 3}

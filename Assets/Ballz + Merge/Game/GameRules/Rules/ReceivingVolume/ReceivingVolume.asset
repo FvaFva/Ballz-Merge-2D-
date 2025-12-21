@@ -15,4 +15,4 @@ MonoBehaviour:
   _label: ReceivingVolume
   _description: When you receive a volume it is placed in your inventory and is not
     used until you transfer it to the cage.
-  _reference: {fileID: 0}
+  _reference: {fileID: 21300000, guid: ac894720e7c064b8e9eab754a46edbb9, type: 3}
