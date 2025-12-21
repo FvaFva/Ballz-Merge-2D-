@@ -26,6 +26,7 @@ namespace BallzMerge.Root.Settings
         {
             _mixer = mixer;
             Name = name;
+            Change(1f);
         }
 
         public float Value { get; private set; }

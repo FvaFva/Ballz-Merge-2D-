@@ -34,17 +34,6 @@ public class DisplayOrientation : IGameSettingData, IDisposable
         };
 
         CountOfPresets = _orientations.Count - 1;
-
-        for (int i = 0; i < _orientations.Count; i++)
-        {
-            if (_orientations[i].Orientation == Screen.orientation)
-            {
-                Value = i;
-                break;
-            }
-        }
-
-        _orientation = _orientations[Mathf.RoundToInt(Value)].Orientation;
     }
 
     public void Dispose()
