@@ -26,6 +26,7 @@ public class SceneSettingData : IGameSettingData
     {
         Name = name;
         CountOfPresets = 1;
+        Load((float)CountOfPresets);
     }
 
     public void Load(float value)

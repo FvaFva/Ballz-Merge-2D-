@@ -253,30 +253,25 @@ public class GameColors : IGameSettingData
 
     private float ComputeAccentHue(float h)
     {
-        // Красный диапазон (очень высокая путаница оттенков)
         if (h < 0.055f || h > 0.945f)
-            return Palette.WrapHue(h + 0.11f);  // +40°
+            return Palette.WrapHue(h + 0.11f);
 
-        // Желтовато-зелёный
         if (h >= 0.10f && h < 0.28f)
-            return Palette.WrapHue(h - 0.07f);  // -25°
+            return Palette.WrapHue(h - 0.07f);
 
-        // Чистый зелёный (самая слабая контрастность в природе)
         if (h >= 0.28f && h < 0.42f)
-            return Palette.WrapHue(h - 0.10f);  // -35°
+            return Palette.WrapHue(h - 0.10f);
 
         if (h >= 0.38f && h < 0.42f)
             return Palette.WrapHue(h - 0.20f);
 
-        // Бирюза / Голубой — высокая близость контрастов
         if (h >= 0.42f && h < 0.55f)
-            return Palette.WrapHue(h + 0.08f);  // +30°
+            return Palette.WrapHue(h + 0.08f);
 
         if (h >= 0.78 && h < 0.82f)
-            return Palette.WrapHue(h + 0.10f); // +36°
+            return Palette.WrapHue(h + 0.10f);
 
-        // Белые зоны не требуют коррекции
-        return Palette.WrapHue(h + 0.05f);  // +18°
+        return Palette.WrapHue(h + 0.05f);
     }
 
     private Color GenerateAccent(Color baseColor, float h, float saturation)
@@ -286,7 +281,6 @@ public class GameColors : IGameSettingData
 
         Color accent = Palette.FromHSL(accentHue, saturation, accentLightness);
 
-        // Гарантируем контраст
         if (WCAG.Contrast(accent, baseColor) < 4.5f)
         {
             float l1 = accentLightness + 0.20f;
@@ -295,7 +289,6 @@ public class GameColors : IGameSettingData
             Color brighter = Palette.FromHSL(accentHue, saturation, Mathf.Clamp01(l1));
             Color darker = Palette.FromHSL(accentHue, saturation, Mathf.Clamp01(l2));
 
-            // выбираем лучший вариант
             accent = (WCAG.Contrast(brighter, baseColor) > WCAG.Contrast(darker, baseColor))
                 ? brighter
                 : darker;

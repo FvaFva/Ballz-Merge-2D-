@@ -348,7 +348,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d71450ae8894c3745b48b6adb4ddf477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerButton: {fileID: 8365266279662622633}
   _toggleView: {fileID: 1875586122786039483}
   _content: {fileID: 4287819806255381349}
   _animatedButton: {fileID: 5103491478132100185}
@@ -370,7 +369,7 @@ MonoBehaviour:
   _buttonView: {fileID: 5329025000737362491}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
-  _audio: {fileID: 0}
+  _audio: {fileID: 5859001703680498512}
   _isSpriteChangeable: 0
 --- !u!1 &363331199077220497
 GameObject:
@@ -1644,7 +1643,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 69.6
+  m_fontSize: 67.3
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5124,7 +5123,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 820c858a3fe590b47882604418511e26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PanelSubToggle
-  _triggerButton: {fileID: 2368586521368616579}
   _toggleView: {fileID: 2673228281598944702}
   _content: {fileID: 1099814955244104052}
   _animatedButton: {fileID: 9121919180061591613}
@@ -5145,7 +5143,7 @@ MonoBehaviour:
   _buttonView: {fileID: 79888821258326461}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
-  _audio: {fileID: 0}
+  _audio: {fileID: 5859001703680498512}
   _isSpriteChangeable: 0
 --- !u!1 &4063891581585116080
 GameObject:
@@ -6640,7 +6638,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 820c858a3fe590b47882604418511e26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PanelSubToggle
-  _triggerButton: {fileID: 1565094015931672778}
   _toggleView: {fileID: 7083942403008614229}
   _content: {fileID: 473093376091473751}
   _animatedButton: {fileID: 622902727610475357}
@@ -6661,7 +6658,7 @@ MonoBehaviour:
   _buttonView: {fileID: 2409278972148896874}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
-  _audio: {fileID: 0}
+  _audio: {fileID: 5859001703680498512}
   _isSpriteChangeable: 0
 --- !u!1 &5221185020266601459
 GameObject:
@@ -8326,7 +8323,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64.75
+  m_fontSize: 62.6
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10546,7 +10543,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d71450ae8894c3745b48b6adb4ddf477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerButton: {fileID: 3322198978182789541}
   _toggleView: {fileID: 1078793884151534613}
   _content: {fileID: 2949182230184343171}
   _animatedButton: {fileID: 2294767394913599022}
@@ -10568,7 +10564,7 @@ MonoBehaviour:
   _buttonView: {fileID: 4711853278777118202}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
-  _audio: {fileID: 0}
+  _audio: {fileID: 5859001703680498512}
   _isSpriteChangeable: 0
 --- !u!1 &8543599871102176995
 GameObject:
@@ -10993,7 +10989,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d71450ae8894c3745b48b6adb4ddf477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerButton: {fileID: 5756092180667172879}
   _toggleView: {fileID: 3472589591565280616}
   _content: {fileID: 0}
   _animatedButton: {fileID: 5863806075842290498}
@@ -11017,7 +11012,7 @@ MonoBehaviour:
   _buttonView: {fileID: 4681836659757056850}
   _pumper: {fileID: 0}
   _hiddenField: {fileID: 0}
-  _audio: {fileID: 0}
+  _audio: {fileID: 5859001703680498512}
   _isSpriteChangeable: 0
 --- !u!1 &9118472421459869641
 GameObject:

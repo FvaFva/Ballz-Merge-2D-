@@ -16,6 +16,7 @@ public class QualityPreset : IGameSettingData
     {
         Name = name;
         CountOfPresets = QualitySettings.count - 1;
+        Load((float)CountOfPresets);
     }
 
     public void Load(float value)
