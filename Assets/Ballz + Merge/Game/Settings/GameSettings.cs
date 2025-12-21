@@ -124,7 +124,6 @@ namespace BallzMerge.Root.Settings
                 return;
 
             _sceneElements.Add(element);
-            //element.ApplySetting(SceneSetting);
 
             if (element is UIReorganizer)
                 _uiReorganizer = element as UIReorganizer;

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 09641488e642347c583523280c69895c, type: 3}
-  m_Name: Merge
+  m_Name: IncreaserEffect
   m_EditorClassIdentifier: Assembly-CSharp::GameRule
-  _label: Merge
-  _description: If you push a block into another with the same number, they will
-    be destroyed and you gain 2 volumes points.
-  _reference: {fileID: -8026036002346254530, guid: 0ef7a21c444a67e44b817445d7a0e98d, type: 3}
+  _label: Increaser effect
+  _description: If a block with a red glow spawns, then after each wave spawns, it
+    increases the number of a random other block.
+  _reference: {fileID: 0}

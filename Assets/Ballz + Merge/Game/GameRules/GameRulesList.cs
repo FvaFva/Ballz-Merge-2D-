@@ -7,7 +7,7 @@ public class GameRulesList : ScriptableObject
     [SerializeField] private List<string> _rules;
     [SerializeField] private List<GameRule> _rulesList;
 
-    public IEnumerable<string> Rules => _rules;
+    public IReadOnlyList<GameRule> Rules => _rulesList;
 
     public string Get() => _rules[Random.Range(0, _rules.Count)];
 }

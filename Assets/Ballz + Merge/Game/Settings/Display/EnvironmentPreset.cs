@@ -28,6 +28,7 @@ public class EnvironmentPreset : IGameSettingData
         Name = name;
         _globalEffects = globalEffects;
         CountOfPresets = 1;
+        Load((float)CountOfPresets);
     }
 
     public void Load(float value)
