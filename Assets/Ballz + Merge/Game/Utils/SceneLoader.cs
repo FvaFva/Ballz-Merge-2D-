@@ -45,10 +45,10 @@ namespace BallzMerge.Root
 
         public IEnumerator LoadScene(string name)
         {
-            _loadView.Show();
             _targetSceneEntryPoint.Clear();
             _orientationObserver.CheckOutScene();
             _settings.CheckOutScene();
+            _loadView.Show();
 
             foreach (var _ in LoadSceneFromBoot(name))
                 yield return _checkTime;

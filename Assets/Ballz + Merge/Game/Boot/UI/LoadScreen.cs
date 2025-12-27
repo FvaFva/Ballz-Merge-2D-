@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System.Collections.Generic;
+using System;
 
 namespace BallzMerge.Root
 {
     public class LoadScreen : DependentColorUI
     {
+        [SerializeField] private GameRulesView _rulesView;
+        [SerializeField] private InfoPanelShowcase _showcase;
         [SerializeField] private Slider _progress;
-        [SerializeField] private TMP_Text _hint;
-        [SerializeField] private GameRulesList _rules;
         [SerializeField] private List<DependentColorUI> _dependentColorUIs;
+
+        private Action _showRules = () => { };
+        private Action _hideRules = () => { };
 
         public override void ApplyColors(GameColors gameColors)
         {
@@ -21,13 +24,28 @@ namespace BallzMerge.Root
         public void Show()
         {
             _progress.value = 0;
+            _showRules();
             gameObject.SetActive(true);
-            _hint.text = _rules.Get();
         }
 
         public void Hide()
         {
+            _hideRules();
             gameObject.SetActive(false);
+        }
+
+        public void ReadyToShowRule()
+        {
+            _showRules = () =>
+            {
+                _showcase.Close();
+                _rulesView.ShowRule();
+            };
+
+            _hideRules = () =>
+            {
+                _showcase.Close();
+            };
         }
 
         public void MoveProgress(float target, float step)

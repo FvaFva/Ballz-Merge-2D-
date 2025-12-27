@@ -11,6 +11,7 @@ namespace BallzMerge.Root
         private const int StandardDistance = 0;
 
         [SerializeField] private LoadScreen _loadingScreen;
+        [SerializeField] private GameRulesView _rulesView;
         [SerializeField] private UIRootContainers _containers;
         [SerializeField] private UserQuestioner _questioner;
         [SerializeField] private EscapeMenu _escapeMenu;
@@ -23,6 +24,7 @@ namespace BallzMerge.Root
         private UIView _sceneUI;
 
         public LoadScreen LoadScreen => _loadingScreen;
+        public GameRulesView GameRulesView => _rulesView;
         public UserQuestioner Questioner => _questioner;
         public EscapeMenu EscapeMenu => _escapeMenu;
         public GameSettingsMenu SettingsMenu => _settingsMenu;
@@ -82,7 +84,7 @@ namespace BallzMerge.Root
 
         private void ChangeStateUIView(bool state)
         {
-            _sceneUI.ChangeState(state);
+            _sceneUI?.ChangeState(state);
         }
     }
 }
