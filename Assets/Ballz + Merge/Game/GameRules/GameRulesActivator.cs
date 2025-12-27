@@ -1,3 +1,4 @@
+using BallzMerge.Root;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +7,9 @@ using Zenject;
 
 public class GameRulesActivator : MonoBehaviour
 {
-    [SerializeField] private GameRulesView _view;
     [SerializeField] private Button _openButton;
 
-    [Inject] private InfoPanelShowcase _infoPanelShowcase;
+    [Inject] private UIRootView _rootView;
 
     private void OnEnable()
     {
@@ -23,6 +23,6 @@ public class GameRulesActivator : MonoBehaviour
 
     private void OnTrigger()
     {
-        _infoPanelShowcase.Show(_view);
+        _rootView.GameRulesView.ShowRule(0);
     }
 }

@@ -47,6 +47,7 @@ namespace BallzMerge.Root
             });
 
             LoadScene(sceneName);
+            _rootView.LoadScreen.ReadyToShowRule();
         }
 
         private void LoadScene(string targetScene)
@@ -68,8 +69,10 @@ namespace BallzMerge.Root
         {
             _rootView = GenerateDontDestroyFromHub<UIRootView>();
             _rootView.Containers.Init();
+            _rootView.GameRulesView.Init(_rootView.InfoPanelShowcase);
             _primary.OrientationObserver.CheckInRoot(_rootView.Containers);
             _primary.OrientationObserver.CheckInRoot(_rootView.UIReorganizer);
+            _primary.OrientationObserver.CheckInRoot(_rootView.GameRulesView);
             GlobalEffects globalEffects = GenerateDontDestroyFromHub<GlobalEffects>();
             _gameSettings = new GameSettings(_rootView.SettingsMenu, _primary, _rootView.InfoPanelShowcase, _rootView.Questioner, globalEffects);
             _sceneLoader = new SceneLoader(_rootView.LoadScreen, _rootView.UIReorganizer, _rootView.UpdateViewButtons, SceneExitCallBack, _gameSettings, _primary.OrientationObserver);
