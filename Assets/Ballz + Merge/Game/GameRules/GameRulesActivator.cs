@@ -23,6 +23,6 @@ public class GameRulesActivator : MonoBehaviour
 
     private void OnTrigger()
     {
-        _rootView.GameRulesView.ShowRule(0);
+        _rootView.GameRulesView.ShowRuleInPanel(0);
     }
 }

@@ -46,14 +46,14 @@ namespace BallzMerge.Root
                     return;
             });
 
-            LoadScene(sceneName);
+            LoadScene(sceneName, true);
             _rootView.LoadScreen.ReadyToShowRule();
         }
 
-        private void LoadScene(string targetScene)
+        private void LoadScene(string targetScene, bool isAutoEntering)
         {
             _rootView.ClearSceneUI();
-            _primary.Coroutines.StartCoroutine(_sceneLoader.LoadScene(targetScene));
+            _primary.Coroutines.StartCoroutine(_sceneLoader.LoadScene(targetScene, isAutoEntering));
         }
 
         private void QuitGame()
@@ -124,7 +124,7 @@ namespace BallzMerge.Root
             if (exitData.IsGameQuit)
                 QuitGame();
             else if (string.Empty.Equals(exitData.TargetScene) == false && exitData.TargetScene != null)
-                LoadScene(exitData.TargetScene);
+                LoadScene(exitData.TargetScene, false);
         }
     }
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09641488e642347c583523280c69895c, type: 3}
   m_Name: GrowingField
   m_EditorClassIdentifier: Assembly-CSharp::GameRule
-  _label: GrowingField
+  _label: Growing Field
   _description: Every 3 times the ball returns down the field increases by 1 column
     to the right.
   _reference: {fileID: 21300000, guid: 88519adcb0d884292867ecc6424f8c65, type: 3}

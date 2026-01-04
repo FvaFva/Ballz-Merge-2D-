@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09641488e642347c583523280c69895c, type: 3}
   m_Name: BallBackPoints
   m_EditorClassIdentifier: Assembly-CSharp::GameRule
-  _label: BallBackPoints
+  _label: Ball Back Points
   _description: When the ball comes back down you get 3 volumes points and can choose
     it if you have accumulated enough.
   _reference: {fileID: 21300000, guid: 1a54aefa66779499d86612a5750f1b88, type: 3}

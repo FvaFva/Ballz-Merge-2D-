@@ -1,7 +1,5 @@
-using BallzMerge.Root;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,13 +16,22 @@ public class GameRulesView : DependentColorUI, IInfoPanelView, IDependentScreenO
     [SerializeField] private Button _nextButton;
     [SerializeField] private TMP_Text _counter;
     [SerializeField] private List<DependentColorUI> _backgroundUIs;
+    [SerializeField] private GameObject _optionPanel;
+
+    private readonly Vector2[] _anchorsFull = new Vector2[2] { new Vector2(0.04f, 0.12f),  new Vector2(0.96f, 0.96f)};
+    private readonly Vector2[] _anchorsPanel = new Vector2[2] { new Vector2(0.04f, 0.04f),  new Vector2(0.84f, 0.96f)};
 
     private RectTransform _transform;
     private RectTransform _oldParent;
     private int _currentRuleIndex;
     private InfoPanelShowcase _showcase;
 
-    public void Update()
+    private void Start()
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void Update()
     {
         _fitter.aspectRatio = _imageRect.sizeDelta.x / _imageRect.sizeDelta.y;
     }
@@ -38,15 +45,24 @@ public class GameRulesView : DependentColorUI, IInfoPanelView, IDependentScreenO
         _showcase = showcase;
     }
 
-    public void ShowRule(int index = -1)
+    public void ShowRule()
     {
-        if (index == -1)
-            index = Random.Range(0, _rules.Rules.Count);
-        else
-            index = Mathf.Clamp(index, 0, _rules.Rules.Count - 1);
+        int index = Random.Range(0, _rules.Rules.Count);
 
         _currentRuleIndex = index;
         ApplyRule(_rules.Rules[_currentRuleIndex]);
+        _optionPanel.SetActive(false);
+        Resize(_anchorsFull);
+        gameObject.SetActive(true);
+    }
+
+    public void ShowRuleInPanel(int index)
+    {
+        index = Mathf.Clamp(index, 0, _rules.Rules.Count - 1);
+
+        _currentRuleIndex = index;
+        ApplyRule(_rules.Rules[_currentRuleIndex]);
+        _optionPanel.SetActive(true);
         _showcase.Show(this);
     }
 
@@ -70,6 +86,7 @@ public class GameRulesView : DependentColorUI, IInfoPanelView, IDependentScreenO
     public void Show(RectTransform showcase)
     {
         _transform.SetParent(showcase);
+        Resize(_anchorsPanel);
         gameObject.SetActive(true);
     }
 
@@ -95,5 +112,14 @@ public class GameRulesView : DependentColorUI, IInfoPanelView, IDependentScreenO
         _imageView.sprite = rule.Reference;
         _description.text = rule.Description;
         _counter.text = $"{_currentRuleIndex + 1} / {_rules.Rules.Count}";
+    }
+
+    private void Resize(Vector2[] anchors)
+    {
+        _transform.anchorMin = anchors[0];
+        _transform.anchorMax = anchors[1];
+
+        _transform.offsetMin = Vector2.zero;
+        _transform.offsetMax = Vector2.zero;
     }
 }

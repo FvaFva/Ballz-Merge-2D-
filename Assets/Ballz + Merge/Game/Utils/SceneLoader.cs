@@ -10,8 +10,8 @@ namespace BallzMerge.Root
 {
     public class SceneLoader
     {
-        private const float SceneGeneratePrecent = 0.3f;
-        private const float SecondsCheckTime = 0.05f;
+        private const float SceneGeneratePercent = 0.3f;
+        private const float SecondsCheckTime = 0.2f;
 
         [Inject] private TargetSceneEntryPointContainer _targetSceneEntryPoint;
 
@@ -43,7 +43,7 @@ namespace BallzMerge.Root
             _isLoad = state;
         }
 
-        public IEnumerator LoadScene(string name)
+        public IEnumerator LoadScene(string name, bool isAutoEntering = false)
         {
             _targetSceneEntryPoint.Clear();
             _orientationObserver.CheckOutScene();
@@ -56,6 +56,21 @@ namespace BallzMerge.Root
             foreach (var _ in InitScene())
                 yield return _checkTime;
 
+            if(isAutoEntering)
+            {
+                _loadView.Hide();
+                AfterLoad();
+            }
+            else
+            {
+                _loadView.WaitToClick(AfterLoad);
+            }
+        }
+
+        private void AfterLoad()
+        {
+            _targetSceneEntryPoint.Current.Init(_sceneExit, _isLoad);
+            _isLoad = false;
             _settings.ConnectSliders();
             _settings.LoadData();
             _uiReorganizer.ConnectToSetting(_settings.SceneSetting);
@@ -67,20 +82,20 @@ namespace BallzMerge.Root
         private IEnumerable LoadSceneFromBoot(string name)
         {
             SceneManager.LoadSceneAsync(ScenesNames.BOOT);
-            _loadView.MoveProgress(SceneGeneratePrecent, SecondsCheckTime);
+            _loadView.MoveProgress(SceneGeneratePercent, SecondsCheckTime);
             yield return null;
 
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);
-            _loadView.MoveProgress(SceneGeneratePrecent, SecondsCheckTime);
+            _loadView.MoveProgress(SceneGeneratePercent, SecondsCheckTime);
             yield return null;
 
             while (asyncLoad.progress < 0.9f)
             {
-                _loadView.MoveProgress(SceneGeneratePrecent, SecondsCheckTime);
+                _loadView.MoveProgress(SceneGeneratePercent, SecondsCheckTime);
                 yield return null;
             }
 
-            _loadView.MoveProgress(SceneGeneratePrecent, 1);
+            _loadView.MoveProgress(SceneGeneratePercent, 1);
             yield return null;
         }
 
@@ -99,17 +114,16 @@ namespace BallzMerge.Root
                 yield return null;
             }
 
-            foreach (IDependentScreenOrientation orientator in _targetSceneEntryPoint.Current.OrientationDepends)
-                _orientationObserver.CheckInSceneElements(orientator);
+            foreach (IDependentScreenOrientation orientated in _targetSceneEntryPoint.Current.OrientationDepends)
+                _orientationObserver.CheckInSceneElements(orientated);
+
+            yield return null;
 
             foreach (IDependentSceneSettings sceneSetting in _targetSceneEntryPoint.Current.SettingsDepends)
                 _settings.CheckInSceneElement(sceneSetting);
 
-            _targetSceneEntryPoint.Current.Init(_sceneExit, _isLoad);
             _loadView.MoveProgress(1, 1);
             yield return null;
-            _loadView.Hide();
-            _isLoad = false;
         }
     }
 }
