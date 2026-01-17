@@ -56,7 +56,7 @@ namespace BallzMerge.Root
             foreach (var _ in InitScene())
                 yield return _checkTime;
 
-            if(isAutoEntering)
+            if (isAutoEntering)
             {
                 _loadView.Hide();
                 AfterLoad();

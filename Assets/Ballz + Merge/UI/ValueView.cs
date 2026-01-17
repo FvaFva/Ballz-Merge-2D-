@@ -32,7 +32,7 @@ public class ValueView : DependentColorUI
 
     private void SetValue(float endValue, float maxValue)
     {
-        if (_view.gameObject.activeSelf == false)
+        if (_view == null)
             return;
 
         if (maxValue <= 0)
