@@ -102,6 +102,10 @@ public class AnimatedButton : DependentColorUI, IPointerDownHandler, IPointerUpH
         _transform.DOScale(HighlightedStateScale, Duration).SetEase(Ease.InOutQuad);
         _buttonView.SetShaderView(true);
         _buttonView.ChangeParameters(StartScale, ColorType.TargetColor, Duration);
+
+        if (_audio != null)
+            _audio.Play(AudioEffectsTypes.Pick);
+
         _viewChanger(false);
     }
 
@@ -138,8 +142,6 @@ public class AnimatedButton : DependentColorUI, IPointerDownHandler, IPointerUpH
             changer += state => _pumper.enabled = state;
         if (_hiddenField != null)
             changer += state => _hiddenField.gameObject.SetActive(state);
-        if (_audio != null)
-            changer += exit => { if (!exit) _audio.Play(AudioEffectsTypes.Pick); };
 
         _viewChanger = changer;
     }
