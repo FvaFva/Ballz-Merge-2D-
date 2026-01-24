@@ -1,12 +1,14 @@
 using UnityEngine;
 
-public class LevelSettings : ScriptableObject , ISerializationCallbackReceiver
+public class LevelSettings : ScriptableObject, ISerializationCallbackReceiver
 {
     [SerializeField] private int _iD;
     [SerializeField] private string _title;
+    [SerializeField] private LevelDifficult _difficult;
     [SerializeField] private BlocksSettings _blocksSettings;
     [SerializeField] private DropSettings _dropSettings;
 
+    public LevelDifficult Difficult => _difficult;
     public BlocksSettings BlocksSettings => _blocksSettings;
     public DropSettings DropSettings => _dropSettings;
     public string Title => _title;

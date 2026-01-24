@@ -9,10 +9,19 @@ public class LevelVolumesView : MonoBehaviour, IAvailable
     [SerializeField] private Image _flag;
     [SerializeField] private RectTransform _volumesContent;
     [SerializeField] private GameDataVolumeMicView _viewPrefab;
+    [SerializeField] private List<BackgroundUI> _backgrounds;
 
     private List<GameDataVolumeMicView> _views = new List<GameDataVolumeMicView>();
 
     public bool IsAvailable { get; private set; }
+
+    public LevelVolumesView ApplyColors(GameColors gameColors)
+    {
+        foreach (var background in _backgrounds)
+            background.ApplyColors(gameColors);
+
+        return this;
+    }
 
     public void Show(DropRarity rarity, IEnumerable<string> names)
     {

@@ -318,6 +318,7 @@ GameObject:
   - component: {fileID: 6447021969699510320}
   - component: {fileID: 1156381826578292293}
   - component: {fileID: 7487910952143435267}
+  - component: {fileID: 817049548790335998}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -365,7 +366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.25627726, g: 0.14079742, b: 0.26415092, a: 0.22745098}
+  m_Color: {r: 0.37254903, g: 0.007843138, b: 0.65882355, a: 0.22745098}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -382,6 +383,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &817049548790335998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3192194437764496572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9cc8e2abaacb4342bd01537c9085cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundUI
+  _initOrder: 0
+  _backgroundColorType: 2
 --- !u!1 &4071310349686795162
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,6 +453,7 @@ GameObject:
   - component: {fileID: 4108393654193012169}
   - component: {fileID: 5021307930336333716}
   - component: {fileID: 4736644162130499534}
+  - component: {fileID: 5889930960017409653}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -485,7 +501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.25627726, g: 0.14079742, b: 0.26415092, a: 0.22745098}
+  m_Color: {r: 0.5254902, g: 0.54901963, b: 1, a: 0.22745098}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -502,6 +518,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5889930960017409653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5543165884045029910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9cc8e2abaacb4342bd01537c9085cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundUI
+  _initOrder: 0
+  _backgroundColorType: 1
 --- !u!1 &6595873520269928850
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,6 +637,9 @@ MonoBehaviour:
   _flag: {fileID: 3188335366640460280}
   _volumesContent: {fileID: 8324912276468674839}
   _viewPrefab: {fileID: 8566410916225177917, guid: cd3498f222591864783744c2a225494b, type: 3}
+  _backgrounds:
+  - {fileID: 817049548790335998}
+  - {fileID: 5889930960017409653}
 --- !u!1 &7212512435342434808
 GameObject:
   m_ObjectHideFlags: 0

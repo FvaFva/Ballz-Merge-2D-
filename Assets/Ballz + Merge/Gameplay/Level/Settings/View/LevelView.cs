@@ -18,6 +18,7 @@ public class LevelView : MonoBehaviour
     [SerializeField] private RectTransform _blockContent;
 
     private LevelSettings _current;
+    private GameColors _gameColors;
     private List<LevelVolumesView> _volumes = new List<LevelVolumesView>();
     private List<LevelBlockView> _blocks = new List<LevelBlockView>();
 
@@ -37,7 +38,8 @@ public class LevelView : MonoBehaviour
 
     public void ApplyColors(GameColors gameColors)
     {
-        _triggerView.ApplyColors(gameColors);
+        _gameColors = gameColors;
+        _triggerView.ApplyColors(_gameColors);
     }
 
     public void Show(LevelSettings level)
@@ -55,7 +57,7 @@ public class LevelView : MonoBehaviour
 
         foreach (var map in level.DropSettings.DropMap)
         {
-            var view = GetView(_volumes, () => Instantiate(_volumesPrefab, _volumesContent));
+            var view = GetView(_volumes, () => Instantiate(_volumesPrefab, _volumesContent).ApplyColors(_gameColors));
             var names = map.Value.Select(v => v.Name);
             view.Show(map.Key, names);
         }
