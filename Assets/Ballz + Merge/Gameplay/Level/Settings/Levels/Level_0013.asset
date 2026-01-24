@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelSettings
   _iD: 3
   _title: "\u0421rush them all "
+  _difficult: 1
   _blocksSettings:
     _additionalEffectChance:
       serializedVersion: 2
@@ -48,7 +49,7 @@ MonoBehaviour:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 5
       m_NumAlphaKeys: 2
     _spawnProperties:

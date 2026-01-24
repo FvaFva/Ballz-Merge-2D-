@@ -8,7 +8,7 @@ public class LevelSelectionView : MonoBehaviour
     [SerializeField] private TMP_Text _header;
     [SerializeField] private GameObject _completed;
 
-    private LevelSettings _data;
+    public LevelSettings Data { get; private set; }
 
     public event Action<LevelSettings> Selected;
 
@@ -24,14 +24,19 @@ public class LevelSelectionView : MonoBehaviour
 
     public LevelSelectionView Init(LevelSettings level)
     {
-        _data = level;
-        _header.text = _data.Title;
+        Data = level;
+        _header.text = Data.Title;
         return this;
     }
 
     public void ApplyColors(GameColors gameColors)
     {
         _trigger.ApplyColors(gameColors);
+    }
+
+    public void SetState(bool state)
+    {
+        gameObject.SetActive(state);
     }
 
     public void ShowStatus(bool completed)
@@ -41,6 +46,6 @@ public class LevelSelectionView : MonoBehaviour
 
     private void OnTriggered()
     {
-        Selected?.Invoke(_data);
+        Selected?.Invoke(Data);
     }
 }

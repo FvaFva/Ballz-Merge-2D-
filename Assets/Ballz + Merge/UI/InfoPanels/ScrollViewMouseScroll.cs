@@ -1,21 +1,22 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Zenject;
 
-public class ScrollViewMouseScroll : MonoBehaviour
+public class ScrollViewMouseScroll : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private ScrollRect _scrollRect;
     [SerializeField] private float _scrollStep = 0.1f;
 
     [Inject] private MainInputMap _userInput;
 
-    private void OnEnable()
+    public void OnPointerEnter(PointerEventData eventData)
     {
         _userInput.MainInput.Scroll.performed += ChangePosition;
     }
 
-    private void OnDisable()
+    public void OnPointerExit(PointerEventData eventData)
     {
         _userInput.MainInput.Scroll.performed -= ChangePosition;
     }
