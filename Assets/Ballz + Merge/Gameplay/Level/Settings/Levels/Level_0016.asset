@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b11b28ddf7b1d4ac2a82f4a494e67ffe, type: 3}
-  m_Name: Level_0012
-  m_EditorClassIdentifier: 
-  _iD: 12
-  _title: 0012
+  m_Name: Level_0016
+  m_EditorClassIdentifier: Assembly-CSharp::LevelSettings
+  _iD: 0
+  _title: 
   _difficult: 0
   _blocksSettings:
     _additionalEffectChance:
@@ -54,10 +54,4 @@ MonoBehaviour:
       m_NumAlphaKeys: 2
     _spawnProperties: []
   _dropSettings:
-    _entries:
-    - Rarity: {fileID: 11400000, guid: a3ee3d68bf5a68a47b9136ccd18ae439, type: 2}
-      Volumes: []
-    - Rarity: {fileID: 11400000, guid: de1bfb22cde269241bb3c06c6f4ae76d, type: 2}
-      Volumes: []
-    - Rarity: {fileID: 11400000, guid: 0cf2a46033e6a4e41980736da5596fbd, type: 2}
-      Volumes: []
+    _entries: []
