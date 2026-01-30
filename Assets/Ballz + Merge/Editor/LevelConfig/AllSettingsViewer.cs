@@ -17,6 +17,8 @@ namespace BallzMerge.Editor
         private bool _isShow = true;
         private Vector2 _scroll;
         private List<AssetData<LevelSettings>> _allSettings;
+        private List<LevelDifficult> _difficultLevels;
+        private Dictionary<LevelDifficult, Vector2> _scrollPositions;
         private AssetData<LevelSettingsMap> _map;
         private SerializedProperty _available;
 
@@ -27,10 +29,12 @@ namespace BallzMerge.Editor
 
         public void LoadData()
         {
-            _allSettings = _service.LoadObjects<LevelSettings>().OrderBy(level => level.ScriptableObject.Title).ToList();
+            _allSettings = _service.LoadObjects<LevelSettings>().OrderBy(level => level.ScriptableObject.ID).ToList();
             _current = _service.LoadAsset<LevelSettings>();
             _map = _service.LoadAsset<LevelSettingsMap>();
             _available = _map.GetProperty("_available");
+            _difficultLevels = _allSettings.Select(setting => setting.ScriptableObject.Difficult).Distinct().ToList();
+            _scrollPositions = new Dictionary<LevelDifficult, Vector2>();
             RebuildMap();
         }
 
@@ -41,38 +45,54 @@ namespace BallzMerge.Editor
                 EditorGUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(200), GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(false));
                 {
                     EditorGUILayout.BeginHorizontal();
-                    if (GUILayout.Button("Add level", GUILayout.ExpandWidth(true)))
-                        CreateLevelSetting();
-                    EditorGUILayout.Space(4);
-                    if (GUILayout.Button("Copy level", GUILayout.ExpandWidth(true)))
-                        CreateLevelSetting(_current.ScriptableObject);
-                    EditorGUILayout.EndHorizontal();
+                    {
+                        if (GUILayout.Button("Add level", GUILayout.ExpandWidth(true)))
+                            CreateLevelSetting();
+                        EditorGUILayout.Space(4);
+                        if (GUILayout.Button("Copy level", GUILayout.ExpandWidth(true)))
+                            CreateLevelSetting(_current.ScriptableObject);
+                        EditorGUILayout.EndHorizontal();
+                    }
+
                     EditorGUILayout.Space(4);
 
                     EditorGUILayout.BeginHorizontal(GUI.skin.box);
-                    EditorGUILayout.LabelField("Levels", EditorStyles.boldLabel, GUILayout.Width(BUTTON_WIDTH));
-                    _service.DrawLine(EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
-                    EditorGUILayout.LabelField("Available", EditorStyles.boldLabel, GUILayout.Width(TOGGLE_WIDTH));
-                    EditorGUILayout.EndHorizontal();
+                    {
+                        EditorGUILayout.LabelField("Levels", EditorStyles.boldLabel, GUILayout.Width(BUTTON_WIDTH));
+                        _service.DrawLine(EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+                        EditorGUILayout.LabelField("Available", EditorStyles.boldLabel, GUILayout.Width(TOGGLE_WIDTH));
+                        EditorGUILayout.EndHorizontal();
+                    }
+
                     EditorGUILayout.Space(4);
 
-                    _scroll = EditorGUILayout.BeginScrollView(_scroll);
+                    foreach (var difficult in _difficultLevels)
                     {
-                        foreach (var setting in _allSettings)
+                        EditorGUILayout.LabelField(difficult.ToString(), EditorStyles.label);
+
+                        if (!_scrollPositions.ContainsKey(difficult))
+                            _scrollPositions[difficult] = Vector2.zero;
+
+                        _scrollPositions[difficult] = EditorGUILayout.BeginScrollView(_scrollPositions[difficult]);
                         {
-                            EditorGUILayout.BeginHorizontal(GUI.skin.box);
+                            foreach (var setting in _allSettings.Where(setting => setting.ScriptableObject.Difficult == difficult))
                             {
-                                ShowButton(setting);
-                                _service.DrawLine(EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
-                                ShowToggle(setting);
+                                EditorGUILayout.BeginHorizontal(GUI.skin.box);
+                                {
+                                    ShowButton(setting);
+                                    _service.DrawLine(EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+                                    ShowToggle(setting);
+                                    EditorGUILayout.EndHorizontal();
+                                    EditorGUILayout.Space(1);
+                                }
                             }
-                            EditorGUILayout.EndHorizontal();
-                            EditorGUILayout.Space(1);
+
+                            EditorGUILayout.EndScrollView();
                         }
                     }
-                    EditorGUILayout.EndScrollView();
+
+                    EditorGUILayout.EndVertical();
                 }
-                EditorGUILayout.EndVertical();
             }
 
             if (GUILayout.Button(_isShow ? "<" : ">", GUILayout.Width(20), GUILayout.ExpandHeight(true)))
@@ -83,7 +103,7 @@ namespace BallzMerge.Editor
         {
             if (source is null)
                 return;
-            
+
             Undo.RecordObject(_current.ScriptableObject, "Copy LevelSettings");
             _current.ScriptableObject.Copy(new BlocksSettings(source.BlocksSettings), new DropSettings(source.DropSettings));
             EditorUtility.SetDirty(_current.ScriptableObject);
@@ -128,7 +148,7 @@ namespace BallzMerge.Editor
 
         private void ShowButton(AssetData<LevelSettings> setting)
         {
-            if (GUILayout.Button(setting.ScriptableObject.Title, GUILayout.Width(BUTTON_WIDTH)))
+            if (GUILayout.Button($"{setting.ScriptableObject.ID} ({setting.ScriptableObject.Title})", GUILayout.Width(BUTTON_WIDTH)))
             {
                 _current = setting;
                 Changed?.Invoke();

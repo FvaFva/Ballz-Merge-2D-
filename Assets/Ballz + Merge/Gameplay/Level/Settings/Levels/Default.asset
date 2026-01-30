@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _iD: 0
   _title: Default Level
+  _difficult: 0
   _blocksSettings:
     _additionalEffectChance:
       serializedVersion: 2
