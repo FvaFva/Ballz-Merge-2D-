@@ -39,6 +39,7 @@ namespace BallzMerge.Editor
             EditorGUILayout.BeginHorizontal();
             {
                 _settings.OnGUI();
+
                 EditorGUILayout.BeginVertical(GUI.skin.box, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
                 {
                     _service.ShowAsset(_settings.Current.ScriptableObject);
@@ -47,9 +48,7 @@ namespace BallzMerge.Editor
 
                     EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
                     {
-                        EditorGUILayout.PropertyField(_settings.Current.GetProperty("_title"));
-
-                        if (GUILayout.Button("Copy settings"))
+                        if (GUILayout.Button("Copy settings", GUILayout.Height(50)))
                         {
                             _picking = true;
                             EditorGUIUtility.ShowObjectPicker<LevelSettings>(null, false, "", 0);
@@ -64,21 +63,51 @@ namespace BallzMerge.Editor
                             {
                                 _settings.CopyFrom(picked);
                                 GUI.FocusControl(null);
-                                Repaint(); 
+                                Repaint();
                             }
+
+                            EditorGUILayout.EndHorizontal();
                         }
+
+                        EditorGUILayout.EndHorizontal();
                     }
-                    EditorGUILayout.EndHorizontal();
+
+                    EditorGUILayout.Space(20);
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        var titleProp = _settings.Current.GetProperty("_title");
+                        var idProp = _settings.Current.GetProperty("_iD");
+
+                        EditorGUIUtility.labelWidth = 50;
+                        EditorGUILayout.PropertyField(idProp, GUILayout.Width(200));
+                        EditorGUILayout.Space(10, false);
+                        EditorGUILayout.PropertyField(titleProp, GUILayout.Width(200));
+                        EditorGUILayout.Space(10, false);
+                        EditorGUILayout.LabelField("Name:", EditorStyles.label, GUILayout.Width(50));
+                        EditorGUILayout.LabelField($"{idProp.intValue} ({titleProp.stringValue})", EditorStyles.label, GUILayout.Width(200));
+                        EditorGUILayout.EndHorizontal();
+                    }
 
                     EditorGUILayout.Space();
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUILayout.LabelField("Difficulty:", GUILayout.Width(100));
+                        EditorGUILayout.PropertyField(_settings.Current.GetProperty("_difficult"), GUIContent.none, GUILayout.Width(100));
+                        EditorGUILayout.EndHorizontal();
+                    }
+
+                    EditorGUILayout.Space(20);
                     DrawToolbar();
                     EditorGUILayout.Space();
                     _tabs[_selectedTab].OnGUI();
                     _settings.Current.SerializedObject.ApplyModifiedProperties();
+                    EditorGUILayout.EndVertical();
                 }
-                EditorGUILayout.EndVertical();
+
+                EditorGUILayout.EndHorizontal();
             }
-            EditorGUILayout.EndHorizontal();
         }
 
         private void DrawToolbar()

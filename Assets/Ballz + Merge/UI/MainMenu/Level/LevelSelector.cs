@@ -85,7 +85,11 @@ public class LevelSelector : DependentColorUI, IInfoPanelView, IInitializable, I
         foreach (var dependentColorUI in _dependentColorUIs)
             dependentColorUI.ApplyColors(GameColors);
 
-        OnDifficultSelected(_difficultViews[0]);
+        foreach (var difficultView in _difficultViews)
+            difficultView.Unselect();
+
+        _currentDifficult = _difficultViews[0];
+        OnDifficultSelected(_currentDifficult);
         _level.ApplyColors(GameColors);
     }
 
@@ -119,9 +123,10 @@ public class LevelSelector : DependentColorUI, IInfoPanelView, IInitializable, I
 
     private void OnDifficultSelected(LevelDifficultView difficultView)
     {
-        _currentDifficult?.Unselect();
+        _currentDifficult.Unselect();
         _currentDifficult = difficultView;
         _currentDifficult.Select();
+
         foreach (var selector in _selectors)
         {
             bool isActive = selector.Data.Difficult == difficultView.LevelDifficult;
